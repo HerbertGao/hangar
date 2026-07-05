@@ -1,0 +1,68 @@
+schema: spec-driven
+
+# 项目上下文：创建工件（提案/规格/任务）时向 AI 显示，是权威文档的浓缩摘要。
+# 权威文档（SOT，冲突以它们为准）：
+#   DESIGN.md（架构决策与为什么）· CLAUDE.md（不变量护栏）· ROADMAP.md（次序与闸门）· SKILL.md（控制面契约）
+context: |
+  项目名称：hangar
+  定位：一根无头的 AgentOS 脊柱——停放、调度、审计一队 *-pilot agent，自己不抢戏；
+  控制面 BYO（自带 harness），首选用 Claude Code 驱动。
+  不是「又一个你必须住进去的对话 Agent」（对比 OpenClaw / Hermes / Agno AgentOS）。
+  诊断：inbox-pilot / ppt-pilot / ai-radar 各自把「配置/持久化/调度/运行管线/动作执行/通知/日志/CLI」
+  重造了一遍；hangar = 把这根反复重造的脊柱抽出来一次，让每个 pilot 轻下来、专注把自己那件事做到极致。
+  服务对象：先只服务自己的 portfolio（我 + 小圈子自用）；「给别人用」是以后另立的赌注，当前不做。
+
+  权威文档（SOT，冲突以它们为准）：
+  - DESIGN.md   架构决策与为什么（7 个已锁分叉、内核对象、v0 边界、inbox 迁移备忘）
+  - CLAUDE.md   9 条架构不变量 + 技术/CLI 约定
+  - ROADMAP.md  阶段、完成判据、出口闸、止损
+  - SKILL.md    控制面 CLI 契约（Claude Code 照它驱动）
+
+  技术栈（定稿）：
+  - Runtime: Node.js + TypeScript + pnpm
+  - OS 状态库: SQLite（better-sqlite3，4 张表不用 ORM）
+  - 校验: zod | 日志: pino | 调度: node-cron
+  - app 域库自理（如 inbox 保留自己的 PostgreSQL），hangar 不碰
+  - 全部沿用 inbox-pilot 已在用依赖，零学习成本
+
+  架构不变量（fitness functions，违反即 bug，详见 CLAUDE.md）：
+  1. 脊柱零域概念——@hangar/core 出现 email/mail/任何业务名词 = bug；OS 只认 Run/RunEvent/Approval/App。
+  2. inbox 用不到 = 不许进脊柱（加能力前先答「inbox 哪一行用它」）——本项目唯一硬约束。
+  3. 一个 host、一个 SQLite、4 张表；加表/加库先改 DESIGN.md 论证为何 4 表不够。
+  4. app 定义唯一入口 app.yaml，方向由 executor 定；pipeline → 约定加载同目录 pipeline.ts；不引入第二种定义方式。
+  5. 审批只在 OS 层（Approval 表 + CLI）；executor/harness/app 不得自行处理审批。
+  6. v0 无 HTTP/IPC/消息队列；CLI 与 daemon 共享 SQLite，不互通。
+  7. 不上 MCP；控制面 = CLI + SKILL.md。
+  8. 不做通用 durable replay；PARK 只支持 propose → approve → execute 一种切点。
+
+  内核对象 / 数据模型（详见 DESIGN §3）：
+  - 4 张表：App / Run / RunEvent（append-only，状态之源）/ Approval
+  - Run 状态从 RunEvent 推导，不靠 LLM 自称
+  - Executor 接口（v0 唯一实现 PipelineExecutor）= 未来接任何 harness 的插孔
+  - Tool Gateway 上收 inbox 的 executeActions+retry+redact，治理活在这里；域细节只经 RunEvent.payload_json 流过
+
+  路线（详见 ROADMAP.md）：
+  - Phase 0 骨架：core + heartbeat 玩具 + CLI，跑通 run → park → approve → trace
+  - Phase 1 迁 inbox（里程碑「每天用」；出口闸 = 连续 7 天每天用，否则止损）
+  - Phase 2 pilot #2 + executor 泛化（逼出真正通用脊柱，防邮件形状过拟合）
+
+  非目标（除非「给别人用」升级成独立赌注，否则不做）：
+  对话助手 · 工作流画布 · prompt 管理平台 · 多租户/RBAC/计费 · marketplace/A2A ·
+  web workbench · 模型/向量库 · 通用 durable 引擎。
+
+  约定：
+  - GitHub CLI 一律用 `\gh`（反斜杠前缀）。
+  - 中文为主要书写语言。
+  - CLI：stdout=数据 / stderr=日志 / --json；退出码 0·1·2；写操作拒绝 root；doctor 必存在；无参 = 打印帮助。
+
+rules:
+  proposal:
+    - 必须对齐 DESIGN.md 与 CLAUDE.md 的 9 条不变量；冲突以 DESIGN.md 为准。
+    - 始终包含「非目标」部分。
+    - 任何给脊柱加能力的提案，必须回答「inbox-pilot 哪一行用它」（不变量 #2）；答不出即驳回。
+  specs:
+    - 涉及新增表/库/进程的需求，必须先论证「为何现有 4 表 / 单 host / 单 SQLite 不够」。
+    - 涉及高危动作的需求，必须显式声明走 propose → approve → execute 的 PARK 切点。
+  tasks:
+    - 按 ROADMAP 的 Phase 次序拆分，每个任务可独立验证。
+    - 非平凡逻辑（分支/循环/解析/审批/钱路）附一个可跑 self-check（assert 版 demo 或小 *.test.ts）。
