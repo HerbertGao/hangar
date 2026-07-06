@@ -9,7 +9,7 @@
 
 ## 3. 强制力设置(repo-admin,不在 YAML 里)
 
-- [ ] 3.1 把名为 `CI` 的 check 设为 `main` 的 required status check(context 名必须等于 task 1.1 的 job 名 `CI`)——`\gh api ... required_status_checks.contexts=["CI"]` 或 Rulesets 可**直接填名**;仅 classic Settings → Branches 的下拉需该 check **先跑过一次**才可选。不做这步则红 run 仍可合入、「合并门」名不副实(见 spec R1)
+- [x] 3.1 把名为 `CI` 的 check 设为 `main` 的 required status check(context 名必须等于 task 1.1 的 job 名 `CI`)——`\gh api ... required_status_checks.contexts=["CI"]` 或 Rulesets 可**直接填名**;仅 classic Settings → Branches 的下拉需该 check **先跑过一次**才可选。不做这步则红 run 仍可合入、「合并门」名不副实(见 spec R1)
 
 ## 4. 验证
 
