@@ -1,0 +1,17 @@
+id: heartbeat
+name: Heartbeat Toy
+executor: pipeline
+
+triggers:
+  - type: cron
+    schedule: "0 9 * * *"
+    timezone: "Asia/Shanghai"
+
+tools:
+  - demo.risky
+
+permissions:
+  approval:
+    - demo.risky
+
+config: {}

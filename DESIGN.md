@@ -21,14 +21,14 @@
 | # | 分叉 | 拍板 | 为什么 |
 |---|---|---|---|
 | Q1 | 服务对象 | **只服务自己的 portfolio**(我 + 小圈子) | 首用户/成功判据/动机/投入四项全指向自用;拼生态短期打不过 OpenClaw;掐掉外部野心 = 免掉多租户/计费/SSO/品牌全部负担。「给别人用」是**以后另立的赌注**,不是本项目阶段。 |
-| Q2 | 执行面架构 | **executor 可插拔**;v0 只实现 `pipeline` 一种,留好 `Executor` 接口 | inbox 是 pipeline 型,而成功判据 = inbox 迁上来每天用 → pipeline 必须先能跑。`Executor` 接口 = 未来接任何 harness 的插孔。 |
+| Q2 | 执行面架构 | **executor 可插拔**;v0 只实现 `pipeline` 一种,留好 `Executor` 接口 | inbox 是 pipeline 型,而成功判据 = inbox 迁上来每天用 → pipeline 必须先能跑。`Executor` 接口 = 未来接**进程内** executor 的插孔;外部 harness(claude-code/codex)只作**推理引擎**,副作用一律回流 `ctx.propose`、不得自带工具权限(否则绕过 OS 审批,破 #5/#6/#7,见 §3.5)。 |
 | Q3 | 脊柱与 pilot 关系 | **单一 `hangar` host 进程** + `apps/` 目录 | 「用 Claude Code 控制这个 OS」+「一处看所有状态」要求存在唯一可被一条 CLI 驱动、能看见所有 app 的东西。库模型退回「N 个各自为政的进程」= 老毛病复发。 |
 | Q4 | 状态库 | **OS 存 SQLite,只管 `Run/RunEvent/Approval/App`;app 各自管自己的域库** | 薄脊柱底线:OS 一旦管域表,每个新 pilot 的域模型漏进 OS schema,当场过拟合成「邮件形状」。域可见性走 event payload,不走共享表。SQLite = solo/本地/零运维,Claude Code 能直接读文件看状态。 |
 | Q5 | app 是代码还是数据 | **单一入口 `app.yaml`,`executor` 字段自选方向**;`pipeline` → 约定加载同目录 `pipeline.ts`;声明式 executor → 无代码。运维可调值单独一层数据配置。 | 约定 > 配置,没有字符串入口那层烂事,没有两种文件类型要嗅探。app 长重了 yaml 照旧、补个 `pipeline.ts` 即可就地毕业。 |
 | Q6 | 审批机制 | **PARK / resume**;v0 只做 `propose → approve → execute` 一种切点 | cron + solo + host 会崩 → BLOCK 会把进程占住跨天、一重启全丢。PARK 对 BYO harness 天然解耦(审批只在 OS 层),顺手白拿崩溃恢复。**不造通用 durable replay**(那是 Temporal 存在的理由)。 |
 | Q7 | v0 边界 | 见 §5。玩具先行,inbox 迁移作 v0.1。 | 专为「全职 solo」防 scope 爆炸;先拿 30 行玩具验骨架,再动 22K 行真 app。 |
 
-技术选型(已授权我定):**TypeScript + Node + pnpm**(与 portfolio 一致)、SQLite 用 `better-sqlite3`(4 张表不需要 ORM)、调度 `node-cron`、校验 `zod`、日志 `pino`。全部沿用 inbox-pilot 已在用的依赖,零学习成本。
+技术选型(已授权我定):**TypeScript + Node + pnpm**(与 portfolio 一致)、SQLite 用 `better-sqlite3`(4 张表不需要 ORM)、调度 `node-cron`、校验 `zod`、日志 `pino`。`zod/pino/node-cron/yaml` 沿用 inbox-pilot 已在用;**`better-sqlite3` 是净新原生依赖**(inbox 用 prisma+postgres,并无它),需验证目标平台预编译/node-gyp。
 
 ---
 
@@ -58,7 +58,7 @@
                                                   └──────────────────┘
 ```
 
-**关键简化(v0 无 HTTP / 无 IPC):** daemon 和 CLI 是 `@hangar/core` 的**两个入口**,操作**同一个 SQLite 文件**。daemon 只干「cron → 跑 run」;CLI 干「按需 run / approve / inspect」。`hangar approve` **自己在 CLI 进程里执行**那批已批动作,不用通知 daemon。SQLite WAL + 一个 run 锁行防重复执行。**没有服务器,没有消息队列。**
+**关键简化(v0 无 HTTP / 无 IPC):** daemon 和 CLI 是 `@hangar/core` 的**两个入口**,操作**同一个 SQLite 文件**。daemon 只干「cron → 跑 run」;CLI 干「按需 run / approve / inspect」。`hangar approve` **自己在 CLI 进程里执行**那批已批动作,不用通知 daemon。并发靠 SQLite `busy_timeout` + run 锁行(防重复触发)+ approve 的**原子认领**(`UPDATE … WHERE status='pending'` 防并发双执行)+ **启动期 reaper**(回收崩溃的孤儿 run)。**Phase 0 用 DELETE 回滚日志模式(非 WAL)**:只读命令(status/doctor/…)对已存在库**零写入、不留 root-owned `-wal/-shm` sidecar**(WAL 只读仍会造 -shm,会重踩 root DoS)。代价——WAL 的读写并发只在 daemon+并发 CLI 才有意义,那是多进程,已延后 Phase 1,`busy_timeout` 兜底 rare overlap。**没有服务器,没有消息队列。**
 
 ---
 
@@ -71,9 +71,12 @@ apps/
   inbox/
     app.yaml          # 单一入口,永远读它
     pipeline.ts       # executor: pipeline 时按约定加载,export run(ctx)
+    tools.ts          # 按名 handler 注册表 { [tool]: (args,ctx)=>Promise } —— 动作的实际执行体
     (域代码/域库自理:providers/classifier/normalizer/... + 自己的 postgres)
   heartbeat/
-    app.yaml          # executor 非 pipeline 时,无需任何代码
+    app.yaml
+    pipeline.ts       # emit 一条 + propose 两个假高危动作
+    tools.ts          # 假高危 tool 的可观测 handler(写 marker/计数),让 DoD 真证明执行发生
 ```
 
 ### 3.2 AgentAppSpec(`app.yaml`)
@@ -109,13 +112,15 @@ config:
 ### 3.3 OS 存储(`hangar.sqlite`,只此 4 表)
 
 ```sql
-App        (id PK, name, spec_hash, enabled, registered_at)
-Run        (id PK, app_id, state, trigger, started_at, ended_at, lock_owner)
-RunEvent   (id PK, run_id, seq, kind, payload_json, at)   -- append-only,状态之源
+App        (id PK, name, registered_at)                    -- FS 扫描的缓存/审计,非权威
+Run        (id PK, app_id, state, trigger, started_at, ended_at, lock_owner)  -- lock_owner=PID+启动时刻,供 reaper
+RunEvent   (id PK, run_id, seq, kind, payload_json, at, UNIQUE(run_id,seq))    -- append-only,状态之源
 Approval   (id PK, run_id, tool, args_json, status, requested_at, decided_at, decided_by)
 ```
 
 **OS 永远不知道「邮件」这个概念存在。** 域细节全在 `RunEvent.payload_json`(如 `{kind:"classified", count:12, flagged:2}`)。
+- App 表是 `apps/*/` 扫描的缓存,registry 每次加载重扫 FS(App 表非权威,避免漂移);`spec_hash/enabled` 等列 Phase 0 无消费者,有需求(漂移检测/启停)再加。
+- `Run.state` 是缓存列,真相源永远是 `RunEvent`:写终态事件、更新 `Run.state`、释放 app 锁**必须同一事务**(锁骑在 state 上,不同步即锁失真)。
 
 ### 3.4 Run 状态机(从事件推导,不靠 LLM 自称)
 
@@ -126,35 +131,51 @@ queued → running → [waiting_human] → executing → completed
                                                      └─ cancelled
 ```
 
-`classify(run)` 读 `RunEvent` 最新事件推出状态:`run.started`→running;`approval.requested`→waiting_human;`approval.granted`→executing;`run.completed/failed`→终态。UI 文案:思考中 / 等你拍板 / 卡住了 / 搞定 / 翻车。
+`classify(run)` 读 `RunEvent` **最新事件**推出状态(全映射,无悬空):空→`queued`;`run.started`→`running`;`approval.requested`→`waiting_human`;`approval.granted`/`action.executed`/`action.failed`→`executing`(**`action.*` 是逐动作进度、非终态**——一次 run 可多动作,单动作失败不等于 run 死);`run.completed`→`completed`;`run.failed`→`failed`;`run.cancelled`→`cancelled`。**只有 `run.*` 是终态**,且所有终态转换走**单一 choke-point**:同事务追加 `run.*` + 更新缓存 + 释放 app 锁 + 作废该 run 的 pending/granting Approval(锁释放挂钩终态转换本身、不校验 `lock_owner==self`)。UI 文案:排队 / 思考中 / 等你拍板 / 卡住了 / 搞定 / 翻车。
 
-### 3.5 Executor 接口(未来接任何 harness 的插孔)
+**崩溃回收(reaper):** 进程被杀(非抛错)会把 run 停在非终态、锁不释放。**写命令(run/approve/reject/daemon)启动时**跑一次 reaper(`doctor`/只读不跑,守「不写库」);按 `lock_owner` 的 **PID+启动时刻**指纹(非裸 PID,防复用误判)找出死进程持有的非终态 run(含 `queued`/`running`/`executing`)→ 经 choke-point 判 `run.failed` 释放锁并作废其 Approval;`waiting_human`(无进程持有)不动。approve 崩在第二阶段亦被此机制回收(它已取锁 → lock_owner 是死的 approve 进程)。
+
+### 3.5 Executor 接口(未来接进程内 executor 的插孔)
 
 ```ts
 interface Executor {
-  run(ctx: RunContext): Promise<void>   // 通过 ctx.emit / ctx.propose 产出;抛错 = run failed
+  run(ctx: RunContext): Promise<void>   // 抛错 = run failed;PARK 不抛错(见 §3.6 check-after-return)
 }
 // v0 唯一实现:PipelineExecutor —— import(`apps/${id}/pipeline.ts`).run(ctx)
 ```
 
 ```ts
 interface RunContext {
-  input: unknown
+  input: unknown                            // 来自 hangar run --input
   config: Record<string, unknown>          // 来自 spec.config
   logger: Logger                            // pino
   emit(kind: string, payload?: object): void          // 追加 RunEvent
-  propose(action: {tool: string; args: object}): void // 走 tool gateway;命中 approval 则 PARK
-  tools: ToolGateway                        // 直接执行非高危工具
+  propose(action: {tool: string; args: object}): Promise<unknown>  // 唯一动作入口(async):低危 await 执行拿结果,高危登记待批 resolve void;不抛错、不中断 run()
 }
 ```
 
-### 3.6 Tool Gateway(治理活在这里 · 上收 inbox 的 `executeActions`)
+**没有 `ctx.tools` 直执行入口**——那是让 app 绕过 `permissions.approval` 的后门(破 #5)。「要不要审批」是 OS 策略、不是 app 选哪个方法;一切动作走单一 `propose`,gateway 按名单决定 park 还是立即执行。
+**外部 harness 收窄**:`claude-code`/`codex` 那类独立进程 harness 只作**推理引擎**、零工具权限,副作用一律回流 `ctx.propose`;否则其工具调用绕开审批(破 #5)或要加 IPC/MCP(破 #6/#7)。接口类型不变,但这条**使用契约现在写死**,免得 Phase 2 逼你在「改脊柱」和「破不变量」间二选一。
 
-`ctx.propose({tool, args})` →
-- `tool ∈ spec.permissions.approval` → 写 `Approval(status=pending)` + `emit("approval.requested")`,**不执行**(PARK);run 结束退出。
-- 否则 → 执行(带 retry + error 脱敏,直接搬 inbox `src/actions/{executeActions,retryQueue,redactError}` ~700 行)+ `emit("action.executed")`。
+### 3.6 Tool Gateway(治理活在这里 · 泛化 inbox 的 `executeActions` 内存重试 + `redactError`)
 
-`hangar approve <run>`(CLI 进程内):取该 run 的 pending `Approval` → 逐个执行 → `emit("action.executed")` + `emit("run.completed")` → Approval `status=granted`。
+**动作的实际执行体 = app 的 `tools.ts` handler**(对称于 Executor 的插孔):`{ [tool]: (args, ctx) => Promise }`,gateway 按名加载、**独立于 `run()`**(approve 可能在重启后的另一进程执行,只能按 `{tool,args}` 重解析,不能靠 run() 闭包)。**没有它「执行动作」就是空洞**——heartbeat 用假 tool 盖住会让 execute 退化成「只 emit 事件」的 false-green;审批后的域回写(inbox 把「已发送」写回域库)只能住这里。
+
+**`propose` 是 async 登记入口**(不即时收束,否则一次 run 多次 propose 第一次就退出——inbox 一次发 N 封当场坏):
+- 低危(不在 `approval` 名单)→ `await` 调 handler 执行(内存重试 + 脱敏)+ `emit action.executed`,resolve 结果回 `run()`。
+- 高危 → 写 `Approval(pending)`,**不执行、不抛错、不中断 `run()`**,resolve void。
+- `run()` 返回后 **check-after-return** 评估一次:有 pending → 逐个 `emit approval.requested`、收束 `waiting_human`;无 → 经 choke-point `emit run.completed`。
+
+**app 作者契约(文档约定、非机制强制):** 高危 `propose` 即 run 终点——审批后 gateway 只跑那批 handler、**不重入 `run()`**。故 propose 后别放「审批后才该跑」的域逻辑:它会**在审批前、run() 里就执行**(基于「已成功」的假前提),若随后 reject 就成孤儿脏写。域回写请放进 handler。(违反不报错、是静默跑错——比「别放」暗示的更危险。)
+
+**`hangar approve/reject <run>`:** 先守 `state==waiting_human`(否则 `not_waiting`——防对 failed/completed run 误执行被作废的待批动作 = 破 #5)→ **取该 run 锁**(`waiting_human→executing`,lock_owner=自身 PID+启动时刻)使第二阶段单写者串行、崩溃可被 reaper 回收 →
+- approve:逐个 pending 执行 handler(`Approval.id` 作幂等键透传)→ `emit action.executed` + `granted`;全完成经 choke-point `run.completed`。某动作耗尽失败 → 经 choke-point `run.failed`(已 granted 不回滚)。
+- reject:不执行,pending 置 `rejected`,经 choke-point `run.cancelled`。
+- gateway 只保证「至多认领一次」(CAS);对外部副作用的「至多执行一次」取决于 handler/外部系统认不认幂等键。
+
+**只搬内存重试,不搬 durable 队列:** 泛化 `executeActions` 的 `MAX_ATTEMPTS` 内存有界重试 + `redactError`(35 行,剥残留域正则)。inbox 的 `retryQueue`(DB 持久化、跨重启、dead_letter)= 通用 durable execution,**破 #3/#8,不搬**。
+
+**Phase 0 单进程假设:** 上面守卫+取锁+reaper+幂等键覆盖崩溃恢复与「第二个 approver 被守卫挡掉」;**一切多进程并发的完整仲裁显式延后 Phase 1**——含 ① 同时审批同一 run(seq 竞争、approve-vs-reject 活 race、granting lease)② **reap 与并发 run/claim 的行级仲裁**(reap 在事务外读 `lock_owner`、另一进程可能在读后抢锁)。你 solo/单终端/heartbeat 玩具碰不到,inbox 上线才需要。已披露,非遗漏。
 
 ### 3.7 CLI 面(= 控制面 · 遵循你 CLAUDE.md 的 CLI 规范)
 
@@ -165,11 +186,11 @@ hangar runs [<app>] [--json]      run 历史
 hangar trace <run> [--json]       某 run 的完整事件时间线
 hangar approve <run>              执行该 run 的待批动作
 hangar reject <run> [--reason …]  驳回待批动作
-hangar doctor [--json]            环境自检(node/pnpm 版本、sqlite 可写、apps 目录、各 app.yaml 合法性、pipeline.ts 存在性)
+hangar doctor [--json]            环境自检(node 版本、sqlite **目录**可写(access(W_OK),不建库)、apps 目录、各 app.yaml 合法性、pipeline.ts 存在性)
 hangar daemon                     启动长驻进程(cron 调度)
 ```
 
-约定:日志 → stderr,数据 → stdout,`--json` 结构化输出,退出码 0/1/2 语义化。**写操作(run/approve/reject)拒绝 root(EUID==0)**;`doctor` 不拒绝。无参运行 = 打印帮助。
+约定:日志 → stderr,数据 → stdout,`--json` 结构化输出,退出码 0/1/2 语义化。**写操作(run/approve/reject)拒绝 root(EUID==0)**;`doctor` 不拒绝,但其可写检查**非破坏性**(绝不创建 `hangar.sqlite`)——否则 root 跑 doctor 会造 root-owned 库、之后非 root 的 run 永远写不进。`trace/approve/reject` 一个不存在的 run → `run_not_found`(退出码 1)。无参运行 = 打印帮助。
 
 ### 3.8 控制面 / SKILL
 
@@ -185,8 +206,9 @@ hangar daemon                     启动长驻进程(cron 调度)
 - **只一个 executor:`pipeline`**
 - scheduler:`node-cron` 读 `triggers`
 - OS SQLite:`Run/RunEvent/Approval/App`
-- tool gateway:上收 inbox 的 execute+retry+redact;查 approval 名单;发事件
-- 审批 PARK:`propose → waiting_human → approve → execute`
+- tool gateway:泛化 inbox 的 execute **内存重试** + redact(**不搬 durable retryQueue**);查 approval 名单;发事件
+- 审批 PARK:`propose`(登记)→ run 结束 check-after-return → `waiting_human` → `approve`(原子认领防双执行)→ execute
+- 崩溃回收:启动期 reaper 把死 PID 的孤儿非终态 run 判 `failed` 释放锁;daemon 遇活跃 run 跳过触发时落信号
 - CLI:`run/status/runs/trace/approve/reject/doctor/daemon`(`--json`)
 - `SKILL.md`(SOT)
 
@@ -209,11 +231,12 @@ hangar daemon                     启动长驻进程(cron 调度)
 
 | inbox 现有 | 去向 |
 |---|---|
-| `src/actions/{executeActions,retryQueue,redactError}` | **上收进 `@hangar/core` tool gateway** |
+| `src/actions/executeActions`(**仅内存重试部分**)+ `redactError` | **泛化进 `@hangar/core` tool gateway**(剥掉残留域正则) |
+| `src/actions/retryQueue`(DB 持久化 durable 队列) | **不搬**——通用 durable execution,破 #3/#8 |
 | `src/config` `src/db` `src/jobs` `src/logger` `src/cli` `src/pipeline` | 由 hangar 脊柱提供,inbox 侧删除 |
 | `src/classifier` `src/normalizer` `src/digest` `src/rules` `src/accounts` `src/providers/*` | **留在 `apps/inbox/`**(域逻辑,不进脊柱) |
 | prisma + postgres + 邮件域表 | **原封不动**,inbox app 自管(hangar 不碰) |
-| classify→act 主流程 | 收敛成 `apps/inbox/pipeline.ts` 的 `run(ctx)`:分类时 `ctx.emit`,`gmail.send` 走 `ctx.propose`(命中 approval → PARK) |
+| classify→act 主流程 | 收敛成 `apps/inbox/pipeline.ts` 的 `run(ctx)`:分类时 `ctx.emit`;需人确认的动作走 `ctx.propose`(命中 approval → PARK)。注:inbox 现有动作 reflect_priority/mark_read/notify 均**不自动发信**,`gmail.send` 是规划中动作而非现状——门控哪个动作由 inbox 迁移时定 |
 | `src/classifier/eval` | 暂留 inbox 内部,不进 OS |
 
 迁移完成判据:**inbox 作为 `apps/inbox/` 在 hangar host 上按 cron 每天跑,发送邮件走 `hangar approve`,而你每天真在用它。**
