@@ -24,7 +24,7 @@
 
 ## Phase 1 — 迁 inbox(v0.1)【里程碑:每天用】
 
-**目标:** `inbox-pilot` → `apps/inbox/`。脊柱上收其 `actions/`(execute+retry+redact);域逻辑(classifier/normalizer/digest/providers)留在 app;postgres+邮件表原封不动;主流程收敛成 `pipeline.ts` 的 `run(ctx)`,`gmail.send` 走 `ctx.propose`。(迁移映射见 DESIGN §5。)
+**目标:** `inbox-pilot` → `apps/inbox/`。脊柱泛化其 `executeActions` **内存重试** + `redactError`(**不搬 durable `retryQueue`**);域逻辑(classifier/normalizer/digest/providers)留在 app;postgres+邮件表原封不动;主流程收敛成 `pipeline.ts` 的 `run(ctx)`,需人确认的动作走 `ctx.propose`、实际执行体放 `apps/inbox/tools.ts` handler。(迁移映射见 DESIGN §5;注:inbox 现有动作 reflect_priority/mark_read/notify 均不自动发信,`gmail.send` 若要则是新动作。)
 
 **DoD:**
 - inbox 作为 `apps/inbox/` 在 hangar host 上按 cron 每天自动跑。
@@ -37,6 +37,13 @@
 
 **显式不做:** 把 inbox 的 eval 通用化(留在 app 内);为 inbox 特化脊柱(违反不变量 #2)。
 
+**从 Phase 0 review 延后到此(inbox 上线即触发,必须在「每天用」判据成立前补齐):**
+Phase 0 是单用户单进程玩具;下列问题只在「每天 cron + 可能多入口审批 + 真实外部副作用」下才成真,故当时**显式延后**(DESIGN/spec/design/proposal 四处已声明「单进程假设」——这是记账,不是遗漏。此处是兑现清单):
+- **多进程并发仲裁。** Phase 0 靠 run-state 守卫 + approve 取 run 锁 + reaper 覆盖单进程崩溃,但挡不住两个活进程真并发。需补:① 并发 approve-vs-approve 时 `UNIQUE(run_id,seq)` 竞争的败者**重取 `max(seq)` 重试**(而非事务崩溃)、approve-vs-reject 活 race 的仲裁、`granting` 中间态的 **lease/超时回收**;② **reap 与并发 run/claim 的行级事务仲裁**——reaper 在事务外读 `lock_owner` 判死,另一进程可能在「读后、杀前」抢到锁,需行级锁(单行事务内重读 `lock_owner` 未变再回收)。
+- **真实工具的「至多执行一次」。** Phase 0 gateway 只保证「至多认领一次」(CAS)。gmail 等真实副作用的 exactly-once 取决于 `apps/inbox/tools.ts` handler 把 `Approval.id` 幂等键透传给外部系统并被其接受——每个真实 handler 都要落实。
+- **审批后域回写的落点。** inbox 发信后「写回已发送」的域逻辑必须住 `apps/inbox/tools.ts` handler(不在 `run()`、不在 core;approve 不重入 `run()`)。迁移时验证这条接缝真能承接,否则单切点不够就得回头改脊柱。
+- **`openDbReadonly` 的 WAL 头 gate(review 延后,accepted-degraded)。** Phase 0 的「只读命令零写库」靠「hangar 自己从不写 WAL(openDb 强制 DELETE)」保证。但 `openDbReadonly` 不归一化一个**既有 WAL 库**的 sticky 头——若真存在一个 hangar 造不出来的 WAL 库(外部工具/假想旧版本)且读命令**先于**任何写命令跑,只读打开仍会造 root-owned sidecar。Phase 0 不可达(无前身、hangar 不造 WAL),写路径转换已覆盖正常升级,故**接受降级**。若将来真出 WAL 版本:让 `openDbReadonly` 检测 WAL 库头 → fail-loud(「先跑一次写命令迁移」)或 immutable 打开,使「读零写」对任意 journal 模式普适。
+
 ---
 
 ## Phase 2 — pilot #2 + executor 泛化
@@ -48,6 +55,8 @@
 - 若 #2 是声明式:`llm-direct` executor 落地,`app.yaml` 无 `pipeline.ts` 也能跑。
 
 **出口闸:** 脊柱同时托两个不同域的 pilot 而不变形(不变量 #1/#2 复查通过)。这是「邮件形状过拟合」的真正体检。
+
+**承接 Phase 0 收窄的契约(从 review 延后):** 若 #2 用 `claude-code`/`codex` 这类**独立进程 harness**,必须遵守 Phase 0 收窄的使用契约(DESIGN Q2/§3.5)——外部 harness 只作**推理引擎**、零工具权限,副作用一律回流 `ctx.propose`;否则其工具调用绕开 OS 审批(破 #5)或要加 IPC/MCP(破 #6/#7)。这条在 Phase 0 只是文档约定,#2 真落地时要用机制兑现(如给该 harness 挂零工具、副作用翻译层)。
 
 **显式不做:** 为「以后可能的 pilot」预留能力。只解决眼前这两个真的用到的。
 
