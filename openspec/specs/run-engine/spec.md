@@ -1,5 +1,8 @@
-## 新增需求
+# run-engine 规范
 
+## 目的
+待定 - 由归档变更 phase-0-skeleton 创建。归档后请更新目的。
+## 需求
 ### 需求:运行状态持久化于 SQLite 四表
 系统必须用单个 SQLite 文件的四张表 `App` / `Run` / `RunEvent` / `Approval` 承载运行状态;`RunEvent` 必须为 append-only 且带 `UNIQUE(run_id, seq)`(`seq` per-run 从 1 递增)。禁止新增第五张表或第二个库。创建 `Run` 行与其首个 `run.started`(seq=1)事件必须在**同一事务**(否则崩在两者之间会留一个 0 事件、`classify=queued` 却已带锁的孤儿)。
 
@@ -56,8 +59,9 @@
 - **那么** 必须在**创建 Run 之前**拒绝并报 `pipeline_missing`(退出码 1),不建 Run、不占锁
 
 ### 需求:run 锁防止重复执行
-同一 app 同一时刻只允许一个活跃(非终态)run,由 `Run` 活跃态 + 部分唯一索引保证(不新增表)。approve/reject 亦取该锁(见 tool-gateway),使审批第二阶段与触发互斥。
+同一 app 同一时刻必须只允许一个活跃(非终态)run,由 `Run` 活跃态 + 部分唯一索引保证(不新增表)。approve/reject 亦取该锁(见 tool-gateway),使审批第二阶段与触发互斥。
 
 #### 场景:重复触发被拒
 - **当** 某 app 已有活跃 run 又被触发
 - **那么** 报 `already_running`,不创建新 `Run`
+
