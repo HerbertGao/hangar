@@ -12,3 +12,6 @@ hangar.sqlite*
 .DS_Store
 .impeccable/
 
+
+# 外挂 pilot 符号链接(机器特定,部署时按各机 path 重建)
+/apps/inbox

@@ -225,7 +225,7 @@ export function doctorReport(): DoctorReport {
       spec: 'ok',
       pipeline: checkPipeline(a) === 'pipeline_missing' ? 'pipeline_missing' : 'ok',
     })),
-    ...load.errors.map((e) => ({ id: e.id, spec: 'spec_invalid', pipeline: 'unknown' })),
+    ...load.errors.map((e) => ({ id: e.id, spec: e.kind, pipeline: 'unknown' })),
   ];
 
   // Derive blocked apps (same rule as status) so "forgot to approve" surfaces here

@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { openDb, type DB } from './db.js';
@@ -244,6 +244,26 @@ test('runApp: missing pipeline.ts is rejected before the Run is created', async 
     (e: unknown) => e instanceof EngineError && e.kind === 'pipeline_missing',
   );
   assert.equal((db.prepare('SELECT count(*) c FROM Run').get() as { c: number }).c, 0);
+  db.close();
+});
+
+test('runApp: dist/pipeline.js is preferred over a sibling pipeline.ts', async () => {
+  const db = tmpDb();
+  const { gw } = stubGateway(db);
+  const dir = mkdtempSync(join(tmpdir(), 'hangar-app-'));
+  // realistic compiled external pilot: own package.json (ESM) + dist/pipeline.js
+  writeFileSync(join(dir, 'package.json'), '{"type":"module"}');
+  writeFileSync(join(dir, 'pipeline.ts'), `export async function run(ctx) { ctx.emit('from.ts'); }`);
+  mkdirSync(join(dir, 'dist'));
+  writeFileSync(join(dir, 'dist', 'pipeline.js'), `export async function run(ctx) { ctx.emit('from.dist'); }`);
+  const runId = await runApp(db, { appId: 'inbox', appDir: dir, executor: 'pipeline' }, gw);
+  const kinds = (
+    db.prepare('SELECT kind FROM RunEvent WHERE run_id=? ORDER BY seq').all(runId) as {
+      kind: string;
+    }[]
+  ).map((r) => r.kind);
+  assert.ok(kinds.includes('from.dist'), 'ran the compiled dist/pipeline.js entry');
+  assert.ok(!kinds.includes('from.ts'), 'did not run the flat pipeline.ts entry');
   db.close();
 });
 
