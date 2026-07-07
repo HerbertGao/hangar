@@ -1,9 +1,8 @@
-import { existsSync } from 'node:fs';
-import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import pino, { type Logger } from 'pino';
 import type { DB } from './db.js';
 import { EVENT } from './events.js';
+import { resolvePipelineEntry } from './registry.js';
 import { appendEvent, chokePoint, createRun, EngineError } from './store.js';
 
 export interface Action {
@@ -12,9 +11,12 @@ export interface Action {
 }
 
 /**
- * The app-facing run context. There is deliberately NO direct tool entry: every
- * side effect goes through `propose`, so the OS (tool gateway) decides park vs
- * immediate execution against `permissions.approval` — an app can't bypass approval.
+ * The app-facing run context. `propose` is the entry for approval-eligible actions:
+ * the OS (tool gateway) decides park vs immediate execution against
+ * `permissions.approval`. Per the DESIGN §3.5 carve-out an app MAY perform its own
+ * inherently-safe domain side-effects directly in `run()`; only approvable/high-risk
+ * actions MUST route through `propose`. So #5 is app-authoring discipline on the
+ * direct path, not a structural guarantee.
  */
 export interface RunContext {
   input: unknown;
@@ -40,14 +42,19 @@ export interface Gateway {
   reject(runId: string, reason?: string): Promise<void>;
 }
 
-/** v0's only Executor: import `apps/<id>/pipeline.ts` and call its `run(ctx)`. */
+/** v0's only Executor: import the app's resolved entry (dist/pipeline.js | pipeline.ts) and call its `run(ctx)`. */
 export class PipelineExecutor implements Executor {
   constructor(private readonly appDir: string) {}
   async run(ctx: RunContext): Promise<void> {
-    const url = pathToFileURL(join(this.appDir, 'pipeline.ts')).href;
-    const mod = (await import(url)) as { run?: (ctx: RunContext) => Promise<void> };
+    const entry = resolvePipelineEntry(this.appDir);
+    if (entry === null) {
+      throw new EngineError('pipeline_missing', `${this.appDir}: no dist/pipeline.js or pipeline.ts`);
+    }
+    const mod = (await import(pathToFileURL(entry).href)) as {
+      run?: (ctx: RunContext) => Promise<void>;
+    };
     if (typeof mod.run !== 'function') {
-      throw new EngineError('pipeline_invalid', `${this.appDir}/pipeline.ts has no exported run()`);
+      throw new EngineError('pipeline_invalid', `${entry} has no exported run()`);
     }
     await mod.run(ctx);
   }
@@ -66,8 +73,9 @@ export interface RunRequest {
 }
 
 /**
- * Drive one run end to end. Pre-flight (executor kind, pipeline.ts existence) runs
- * BEFORE createRun, so a bad app never takes the lock. A thrown pipeline error →
+ * Drive one run end to end. Pre-flight (executor kind, pipeline entry existence:
+ * dist/pipeline.js | pipeline.ts) runs BEFORE createRun, so a bad app never takes
+ * the lock. A thrown pipeline error →
  * `run.failed` via the choke-point. A normal return → gateway.evaluateAfterRun,
  * which decides PARK (waiting_human) vs completion — check-after-return, never via
  * throw. Returns the run id (even on failure, so the caller can trace it).
@@ -76,8 +84,8 @@ export async function runApp(db: DB, req: RunRequest, gateway: Gateway): Promise
   if (req.executor !== 'pipeline') {
     throw new EngineError('executor_unsupported', `executor '${req.executor}' is not implemented`);
   }
-  if (!existsSync(join(req.appDir, 'pipeline.ts'))) {
-    throw new EngineError('pipeline_missing', `${req.appDir}/pipeline.ts not found`);
+  if (resolvePipelineEntry(req.appDir) === null) {
+    throw new EngineError('pipeline_missing', `${req.appDir}: no dist/pipeline.js or pipeline.ts`);
   }
 
   const executor = new PipelineExecutor(req.appDir);

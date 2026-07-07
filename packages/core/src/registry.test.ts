@@ -1,9 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { loadApps, checkPipeline, type LoadedApp } from './registry.js';
+import { loadApps, checkPipeline, resolvePipelineEntry, type LoadedApp } from './registry.js';
 
 const VALID = `
 id: heartbeat
@@ -104,4 +104,55 @@ test('executor direction: pipeline needs pipeline.ts; others deferred', () => {
   // non-pipeline executor: no pipeline_missing gate here (run-time gate instead)
   const nonPipeline: LoadedApp = { ...app, spec: { ...app.spec, executor: 'codex' } };
   assert.equal(checkPipeline(nonPipeline), null);
+});
+
+test('resolvePipelineEntry: dist/pipeline.js preferred over a sibling pipeline.ts', () => {
+  const appsDir = makeApps({ inbox: VALID.replace('id: heartbeat', 'id: inbox') });
+  const dir = join(appsDir, 'inbox');
+  writeFileSync(join(dir, 'pipeline.ts'), 'export function run() {}\n');
+  mkdirSync(join(dir, 'dist'));
+  const js = join(dir, 'dist', 'pipeline.js');
+  writeFileSync(js, 'export function run() {}\n');
+  assert.equal(resolvePipelineEntry(dir), js);
+  assert.equal(checkPipeline(loadApps(appsDir).apps[0]), null);
+});
+
+test('resolvePipelineEntry: flat pipeline.ts (no dist/) still resolves; none → null', () => {
+  const appsDir = makeApps({ heartbeat: VALID });
+  const dir = join(appsDir, 'heartbeat');
+  assert.equal(resolvePipelineEntry(dir), null);
+  const ts = join(dir, 'pipeline.ts');
+  writeFileSync(ts, 'export function run() {}\n');
+  assert.equal(resolvePipelineEntry(dir), ts);
+});
+
+test('loadApps follows a symlinked pilot dir (external checkout registered by symlink)', () => {
+  // real pilot checkout lives outside apps/; register it via a symlink named <id>
+  const pilot = join(mkdtempSync(join(tmpdir(), 'hangar-ext-')), 'inbox-pilot');
+  mkdirSync(pilot);
+  writeFileSync(join(pilot, 'app.yaml'), VALID.replace('id: heartbeat', 'id: inbox'));
+  const appsDir = join(mkdtempSync(join(tmpdir(), 'hangar-reg-')), 'apps');
+  mkdirSync(appsDir);
+  symlinkSync(pilot, join(appsDir, 'inbox'));
+  const { apps, errors } = loadApps(appsDir);
+  assert.equal(errors.length, 0);
+  assert.equal(apps.length, 1);
+  assert.equal(apps[0].id, 'inbox');
+});
+
+test('a dangling symlink → app_unresolved recorded, loadApps does not throw, siblings still enumerated', () => {
+  const appsDir = join(mkdtempSync(join(tmpdir(), 'hangar-reg-')), 'apps');
+  mkdirSync(appsDir);
+  // healthy sibling
+  const hb = join(appsDir, 'heartbeat');
+  mkdirSync(hb);
+  writeFileSync(join(hb, 'app.yaml'), VALID);
+  // dangling symlink named like a pilot → target does not exist (statSync throws)
+  symlinkSync(join(appsDir, 'no-such-target'), join(appsDir, 'inbox'));
+  const { apps, errors } = loadApps(appsDir); // must NOT throw
+  assert.equal(apps.length, 1);
+  assert.equal(apps[0].id, 'heartbeat');
+  assert.equal(errors.length, 1);
+  assert.equal(errors[0].id, 'inbox');
+  assert.equal(errors[0].kind, 'app_unresolved');
 });
