@@ -238,7 +238,7 @@ hangar daemon                     启动长驻进程(cron 调度)
 
 | inbox 现有 | 去向 |
 |---|---|
-| `src/actions/executeActions`(**仅内存重试部分**)+ `redactError` | **泛化进 `@hangar/core` tool gateway**(剥掉残留域正则) |
+| `src/actions/executeActions`(**仅内存重试部分**)+ `redactError` | **泛化进 `@hangar/core` tool gateway**(剥掉残留域正则)——**供 propose'd/审批动作用(add-inbox-migration #9 精修);inbox 自动动作(reflect/mark_read/notify)迁移后在 `run()` 内直接编排、不经 gateway(见下行「classify→act 主流程」+ §3.6),故此泛化对 Phase 1 inbox 未被使用** |
 | `src/actions/retryQueue`(DB 持久化 durable 队列) | **不搬**——通用 durable execution,破 #3/#8 |
 | `src/config` `src/db` `src/jobs` `src/logger` `src/cli` `src/pipeline` | 由 hangar 脊柱提供,inbox 侧删除 |
 | `src/classifier` `src/normalizer` `src/digest` `src/rules` `src/accounts` `src/providers/*` | **留在 inbox 外部 repo**(域逻辑,不进脊柱) |

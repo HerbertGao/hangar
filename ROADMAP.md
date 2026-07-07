@@ -40,8 +40,8 @@
 **从 Phase 0 review 延后到此(inbox 上线即触发;各条按 inbox 现状分级:必补 / 顺延 Phase 2 / 接受降级):**
 Phase 0 是单用户单进程玩具;下列问题只在「每天 cron + 可能多入口审批 + 真实外部副作用」下才成真,故当时**显式延后**(DESIGN/spec/design/proposal 四处已声明「单进程假设」——这是记账,不是遗漏。此处是兑现清单):
 - **多进程并发仲裁。** Phase 0 靠 run-state 守卫 + approve 取 run 锁 + reaper 覆盖单进程崩溃,但挡不住两个活进程真并发。分两类,按 inbox 现状分级:① **并发审批仲裁**(approve-vs-approve 时 `UNIQUE(run_id,seq)` 竞争的败者**重取 `max(seq)` 重试**而非事务崩溃、approve-vs-reject 活 race 的仲裁、`granting` 中间态的 **lease/超时回收**)——inbox 无高危动作、run 永不 `waiting_human`,**本项对 inbox 不触发,顺延 Phase 2**(`gmail.send` 落地时补);② **reap 与并发 run/claim 的行级事务仲裁**——reaper 在事务外读 `lock_owner` 判死,另一进程可能在「读后、杀前」抢到锁,需行级锁(单行事务内重读 `lock_owner` 未变再回收);solo 单终端 + cron 单 daemon 下极罕见,**接受降级**、`busy_timeout` 兜底,真出多入口并发再补。
-- **真实工具的「至多执行一次」。** Phase 0 gateway 只保证「至多认领一次」(CAS)。gmail 等真实副作用的 exactly-once 取决于 `apps/inbox/tools.ts` handler 把 `Approval.id` 幂等键透传给外部系统并被其接受——每个真实 handler 都要落实。
-- **审批后域回写的落点。** inbox 发信后「写回已发送」的域逻辑必须住 `apps/inbox/tools.ts` handler(不在 `run()`、不在 core;approve 不重入 `run()`)。迁移时验证这条接缝真能承接,否则单切点不够就得回头改脊柱。
+- **真实工具的「至多执行一次」(→ Phase 2,对 Phase 1 moot)。** Phase 0 gateway 只保证「至多认领一次」(CAS)。gmail 等真实副作用的 exactly-once 取决于 propose'd 动作 handler 把 `Approval.id` 幂等键透传给外部系统并被其接受——**add-inbox-migration pivot 已移除 Phase 1 全部 approval 动作(inbox 自动动作在 `run()` 内直接编排、不发信),故此项对 Phase 1 moot,顺延 Phase 2 第二个 pilot(`gmail.send`)落地时兑现**。
+- **审批后域回写的落点(→ Phase 2,对 Phase 1 moot)。** 发信后「写回已发送」的域逻辑必须住 propose'd 动作 handler(不在 `run()`、不在 core;approve 不重入 `run()`)。**inbox 现状无高危动作、Phase 1 不发信,此接缝 Phase 1 不触发;Phase 2 落 `gmail.send` 时验证它真能承接,否则单切点不够就得回头改脊柱**。
 - **`openDbReadonly` 的 WAL 头 gate(review 延后,accepted-degraded)。** Phase 0 的「只读命令零写库」靠「hangar 自己从不写 WAL(openDb 强制 DELETE)」保证。但 `openDbReadonly` 不归一化一个**既有 WAL 库**的 sticky 头——若真存在一个 hangar 造不出来的 WAL 库(外部工具/假想旧版本)且读命令**先于**任何写命令跑,只读打开仍会造 root-owned sidecar。Phase 0 不可达(无前身、hangar 不造 WAL),写路径转换已覆盖正常升级,故**接受降级**。若将来真出 WAL 版本:让 `openDbReadonly` 检测 WAL 库头 → fail-loud(「先跑一次写命令迁移」)或 immutable 打开,使「读零写」对任意 journal 模式普适。
 
 ---

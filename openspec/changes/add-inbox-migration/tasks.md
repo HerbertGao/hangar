@@ -37,8 +37,8 @@
 
 ## 5. 上 cron 部署 + 文档记账
 
-- [ ] 5.1 `app.yaml` cron(timezone `Asia/Shanghai`,**亚小时**——P0 验证码会过期,见 design D3 P0 时效);`hangar daemon` 用户自起、优雅跳过 active-lock 拒绝的 tick;验证 daemon-run + 并发 CLI read 在 SQLite `busy_timeout` 内(reap-vs-run 边界,R5);**daemon 与所有 CLI 入口共享同一 `HANGAR_APPS`**(与共享 SQLite 并列,M3——否则 CLI 与 daemon 解析到不同 apps 根)、`hangar doctor` 回显解析到的 `HANGAR_APPS`/`HANGAR_DB`
-- [ ] 5.2 旧能力对照:分类质量对照;**放弃的能力逐条记为已接受降级**(durable drain / action-level durable / 退避粒度 / reflect·mark_read best-effort / gateway 通用动作执行不被 inbox 使用),不笼统称「无退化」
+- [x] 5.1 【done：ts.mac-mini launchd daemon(`com.herbertgao.hangar-inbox`）跑 `*/3` cron（Asia/Shanghai，= 老 `POLL_INTERVAL_SECONDS=180`；repo cron 回写 inbox-pilot PR #36），共享 `HANGAR_APPS=~/hangar/apps`、连生产 `mail_router`；daemon-run 已确认（8+ cron run 全 completed、处理真邮件 reflect/mark_read）。见 [[inbox-phase1-deployed]] 记忆】`app.yaml` cron(timezone `Asia/Shanghai`,**亚小时**——P0 验证码会过期,见 design D3 P0 时效);`hangar daemon` 用户自起、优雅跳过 active-lock 拒绝的 tick;验证 daemon-run + 并发 CLI read 在 SQLite `busy_timeout` 内(reap-vs-run 边界,R5);**daemon 与所有 CLI 入口共享同一 `HANGAR_APPS`**(与共享 SQLite 并列,M3——否则 CLI 与 daemon 解析到不同 apps 根)、`hangar doctor` 回显解析到的 `HANGAR_APPS`/`HANGAR_DB`
+- [x] 5.2 【done：放弃能力 + 对抗性 review(3 轮)补记的 Phase-1 已接受降级逐条记账，见下方 bullets】旧能力对照:分类质量对照;**放弃的能力逐条记为已接受降级**(durable drain / action-level durable / 退避粒度 / reflect·mark_read best-effort / gateway 通用动作执行不被 inbox 使用),不笼统称「无退化」
   - **review 补记的 Phase-1 已接受降级**(对抗性 review 发现,一并记账):
     - list 尾页瞬时失败 → 结束本轮、下 tick 重取(Phase 1 unread<100 = 单页无翻页触发,故当下无缺失;月级视野是 P0 时效债)
     - 最旧优先 × get-budget:notify 持续故障下最新 P0 被最旧积压推后(→ §6.1 调参:budget/窗口/频率)
@@ -51,7 +51,7 @@
     - **(r2)** get-5xx 归 benign 逐封 skip(非 end-round,防单封 poison 饿死整轮):Gmail-wide 5xx outage 下 ≤GET_BUDGET get/tick(有界、罕见)是较小恶
     - **(r2)** `withStatementTimeout` 的 URL 附加对「凭据/库名含 `?`」或「已带 `options=` 参」的 DATABASE_URL 不支持合并(realistic URL 罕见;命中则手动设 statement_timeout)
     - **(r2, nit)** notify 恰在 per-email 超时同刻返回 'sent' → fence 挡掉 `notify.sent` emit、下 tick 重发 → trace 少记一条已投递(accepted at-least-once,D4/D7)
-- [ ] 5.3 文档修正(M7,承接 0.1/0.2;按**内容**定位——0.2 追加已让行号漂移):`ROADMAP` Phase 1 DoD + `DESIGN §5` 两处「发送邮件走 approve」→「若存在高危动作则…」;**`ROADMAP` Phase 1 目标行尾部** pivot 前旧话(「需人确认的动作走 `ctx.propose`、实际执行体放 `apps/inbox/tools.ts` handler」)→ 清理为「自动动作在 `run()` 内直接编排、不经 gateway」;`ROADMAP`「能力无退化」→ 枚举降级(durable drain / action-level durable / 退避粒度 / reflect·mark_read best-effort / gateway 通用动作执行不被 inbox 用 / 硬 reauth 前该账号本 run 命中一次 token 端点 / **落库前失败每 tick 重取-skip** / **notify 耗尽再送与新邮件共用 is:unread+get-budget 车道**);`ROADMAP` 多进程仲裁段 approval 仲裁 → Phase 2、reap-vs-run → 已接受降级;**`ROADMAP` Phase 1「延后到此」的 approval 债项(gmail exactly-once / 审批后域回写落点,现引 `apps/inbox/tools.ts`)→ 重框为 Phase-2-gated**(pivot 已移除 Phase 1 全部 approval,这些项对 Phase 1 moot);`DESIGN §5` executeActions→gateway 备注精修;approval 债显式列 Phase 2
+- [x] 5.3 【done：本次补齐 `ROADMAP:43-44`(exactly-once / 审批后回写落点 → **重框 Phase-2-gated**)+ `DESIGN §5:241`(executeActions→gateway 备注精修：泛化供 propose'd 动作用、inbox 自动动作在 run() 编排、此泛化 Phase 1 未被 inbox 使用);其余「approve 判据、pivot 旧话、能力无退化、多进程仲裁 approval→Phase2 / reap→接受降级」0.1/0.2 已做】文档修正(M7,承接 0.1/0.2;按**内容**定位——0.2 追加已让行号漂移):`ROADMAP` Phase 1 DoD + `DESIGN §5` 两处「发送邮件走 approve」→「若存在高危动作则…」;**`ROADMAP` Phase 1 目标行尾部** pivot 前旧话(「需人确认的动作走 `ctx.propose`、实际执行体放 `apps/inbox/tools.ts` handler」)→ 清理为「自动动作在 `run()` 内直接编排、不经 gateway」;`ROADMAP`「能力无退化」→ 枚举降级(durable drain / action-level durable / 退避粒度 / reflect·mark_read best-effort / gateway 通用动作执行不被 inbox 用 / 硬 reauth 前该账号本 run 命中一次 token 端点 / **落库前失败每 tick 重取-skip** / **notify 耗尽再送与新邮件共用 is:unread+get-budget 车道**);`ROADMAP` 多进程仲裁段 approval 仲裁 → Phase 2、reap-vs-run → 已接受降级;**`ROADMAP` Phase 1「延后到此」的 approval 债项(gmail exactly-once / 审批后域回写落点,现引 `apps/inbox/tools.ts`)→ 重框为 Phase-2-gated**(pivot 已移除 Phase 1 全部 approval,这些项对 Phase 1 moot);`DESIGN §5` executeActions→gateway 备注精修;approval 债显式列 Phase 2
 
 ## 6. 出口闸
 
