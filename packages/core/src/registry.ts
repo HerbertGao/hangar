@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import cron from 'node-cron';
 import { parse as parseYaml } from 'yaml';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, resolve } from 'node:path';
@@ -26,24 +27,86 @@ import { join, resolve } from 'node:path';
 export const EXECUTORS = ['pipeline', 'llm-direct', 'claude-code', 'codex'] as const;
 export type ExecutorKind = (typeof EXECUTORS)[number];
 
-const CronTrigger = z.object({
-  type: z.literal('cron'),
-  schedule: z.string().min(1),
-  timezone: z.string().optional(),
-});
+// Each schedule string must be a valid cron expression. Rejecting bad/empty cron
+// at load time (→ spec_invalid, doctor error, app not registered) keeps an illegal
+// cron out of the daemon's cron.schedule loop — that loop has no try/catch, so a bad
+// expression would throw synchronously and crash the whole daemon (all apps stop).
+const cronString = z
+  .string()
+  .min(1)
+  .refine((s) => cron.validate(s), { message: 'invalid cron expression' });
+
+// A present timezone must be a valid IANA zone. Same rationale as cronString above: the
+// daemon's cron.schedule loop has no try/catch, so a bad zone throws synchronously and
+// crashes the whole daemon — reject it at load (spec_invalid) instead. Intl.DateTimeFormat
+// accepts exactly the zone set node-cron uses.
+const ianaTz = z.string().refine(
+  (tz) => {
+    try {
+      new Intl.DateTimeFormat(undefined, { timeZone: tz });
+      return true;
+    } catch {
+      return false;
+    }
+  },
+  { message: 'invalid IANA timezone' },
+);
+
+// `type` is a discriminant (v0 only 'cron'); webhook/manual/event are future arms
+// (Phase 3, #6-gated — no mechanism built here). `name` is the opaque trigger identity
+// routed via ctx.trigger; SpecSchema.superRefine enforces it when triggers.length > 1.
+// .strict(): a trigger carries ONLY these 4 fields — a stray per-trigger config/
+// permissions/executor is rejected (spec_invalid), not silently stripped (spec: MUST NOT).
+const CronTrigger = z
+  .object({
+    type: z.literal('cron'),
+    name: z.string().min(1).optional(),
+    schedule: z.union([cronString, z.array(cronString).min(1)]),
+    timezone: ianaTz.optional(),
+  })
+  .strict();
 
 /** AgentAppSpec — the sole app-definition entry (app.yaml). See DESIGN §3.2. */
-export const SpecSchema = z.object({
-  id: z.string().min(1),
-  name: z.string().min(1),
-  executor: z.enum(EXECUTORS),
-  triggers: z.array(CronTrigger),
-  tools: z.array(z.string()).default([]),
-  permissions: z
-    .object({ approval: z.array(z.string()).default([]) })
-    .default({ approval: [] }),
-  config: z.record(z.string(), z.unknown()).default({}),
-});
+export const SpecSchema = z
+  .object({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    executor: z.enum(EXECUTORS),
+    triggers: z.array(CronTrigger),
+    tools: z.array(z.string()).default([]),
+    permissions: z
+      .object({ approval: z.array(z.string()).default([]) })
+      .default({ approval: [] }),
+    config: z.record(z.string(), z.unknown()).default({}),
+  })
+  // >1 trigger ENTRIES (not array-schedule fan-out) ⇒ each needs a non-empty name,
+  // all names unique — name is the trigger identity for ctx.trigger / Run.trigger /
+  // pending dedup; a missing or duplicate name collapses that attribution.
+  .superRefine((spec, ctx) => {
+    if (spec.triggers.length <= 1) return;
+    const names = spec.triggers.map((t) => t.name);
+    if (names.some((n) => !n)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['triggers'],
+        message: 'trigger name required when triggers > 1',
+      });
+    }
+    const seen = new Set<string>();
+    const dup = new Set<string>();
+    for (const n of names) {
+      if (!n) continue;
+      if (seen.has(n)) dup.add(n);
+      else seen.add(n);
+    }
+    if (dup.size) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['triggers'],
+        message: `duplicate trigger name(s): ${[...dup].join(', ')}`,
+      });
+    }
+  });
 export type Spec = z.infer<typeof SpecSchema>;
 
 export interface LoadedApp {

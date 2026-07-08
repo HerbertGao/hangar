@@ -267,6 +267,37 @@ test('runApp: dist/pipeline.js is preferred over a sibling pipeline.ts', async (
   db.close();
 });
 
+test('runApp: triggerName threads to ctx.trigger + Run.trigger (name priority); absent → undefined/category', async () => {
+  const db = tmpDb();
+  const { gw } = stubGateway(db);
+  const seeTrigger = `export async function run(ctx){ ctx.emit('saw', { t: ctx.trigger ?? null }); }`;
+  const sawTrigger = (runId: string): unknown =>
+    JSON.parse(
+      (db.prepare("SELECT payload_json p FROM RunEvent WHERE run_id=? AND kind='saw'").get(runId) as { p: string }).p,
+    ).t;
+  const runTrigger = (runId: string): string =>
+    (db.prepare('SELECT trigger FROM Run WHERE id=?').get(runId) as { trigger: string }).trigger;
+
+  // named trigger → ctx.trigger === name, Run.trigger stores the name
+  const r1 = await runApp(
+    db,
+    { appId: 'a1', appDir: appDirWith(seeTrigger), executor: 'pipeline', trigger: 'cron', triggerName: 'digest' },
+    gw,
+  );
+  assert.equal(sawTrigger(r1), 'digest', 'ctx.trigger === triggerName');
+  assert.equal(runTrigger(r1), 'digest', 'Run.trigger stores the name (trace attribution)');
+
+  // no triggerName → ctx.trigger undefined, Run.trigger falls back to the category
+  const r2 = await runApp(
+    db,
+    { appId: 'a2', appDir: appDirWith(seeTrigger), executor: 'pipeline', trigger: 'cron' },
+    gw,
+  );
+  assert.equal(sawTrigger(r2), null, 'absent triggerName → ctx.trigger undefined');
+  assert.equal(runTrigger(r2), 'cron', 'Run.trigger falls back to category when no name');
+  db.close();
+});
+
 test('runApp: unknown executor → executor_unsupported, no Run created', async () => {
   const db = tmpDb();
   const { gw } = stubGateway(db);

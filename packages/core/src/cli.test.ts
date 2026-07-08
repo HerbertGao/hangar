@@ -4,7 +4,7 @@ import { mkdtempSync, mkdirSync, writeFileSync, existsSync, readFileSync, statSy
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { openDb } from './db.js';
-import { loadApps } from './registry.js';
+import { loadApps, type LoadedApp } from './registry.js';
 import { EVENT } from './events.js';
 import {
   dispatch,
@@ -13,6 +13,7 @@ import {
   daemonTasks,
   deriveBlocked,
   cronPeriodMs,
+  makeFireGate,
   nodeSupported,
   type Deps,
 } from './cli.js';
@@ -320,7 +321,7 @@ test('daemon helpers: hasActiveRun reflects active runs; daemonTasks flattens tr
   const { dbPath, appsDir } = tmpEnv();
   writeApp(appsDir, 'hb', { schedule: '*/2 * * * *', pipeline: 'export async function run(){}' });
   assert.deepEqual(daemonTasks(loadApps()), [
-    { appId: 'hb', schedule: '*/2 * * * *', timezone: undefined },
+    { appId: 'hb', name: undefined, schedule: '*/2 * * * *', timezone: undefined },
   ]);
   const db = openDb(dbPath);
   assert.equal(hasActiveRun(db, 'hb'), false);
@@ -329,6 +330,191 @@ test('daemon helpers: hasActiveRun reflects active runs; daemonTasks flattens tr
   ).run('r1', 'hb', 'waiting_human', 'cron', new Date().toISOString(), null);
   assert.equal(hasActiveRun(db, 'hb'), true, 'a parked run counts as active → cron would skip');
   db.close();
+});
+
+// ── 2.2 daemonTasks: array schedule fan-out (same name, dedup) + overdue min ──
+test('daemonTasks: array schedule fans out per cron with the same name (dup deduped); overdue period = min', () => {
+  const { appsDir } = tmpEnv();
+  const dir = join(appsDir, 'inbox');
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(
+    join(dir, 'app.yaml'),
+    [
+      'id: inbox',
+      'name: inbox',
+      'executor: pipeline',
+      'triggers:',
+      '  - type: cron',
+      '    name: poll',
+      '    schedule: "*/3 * * * *"',
+      '  - type: cron',
+      '    name: digest',
+      '    schedule: ["0 6 * * *", "0 6 * * *", "0 19 * * *"]', // dup "0 6" → deduped
+      'permissions:',
+      '  approval: []',
+    ].join('\n') + '\n',
+  );
+  writeFileSync(join(dir, 'pipeline.ts'), 'export async function run(){}');
+  const tasks = daemonTasks(loadApps());
+  assert.equal(tasks.length, 3, 'poll(1) + digest(2 after dedup) = 3 tasks');
+  assert.ok(tasks.every((t) => t.appId === 'inbox'));
+  assert.deepEqual(
+    tasks.filter((t) => t.name === 'digest').map((t) => t.schedule),
+    ['0 6 * * *', '0 19 * * *'],
+    'all array-fan-out tasks carry the same name; dup string dropped',
+  );
+  // cronPeriodMs on an array = min of each element's own period (each daily = 24h)
+  assert.equal(cronPeriodMs(['0 6 * * *', '0 19 * * *']), 24 * 60 * 60_000);
+  // overdue uses the FASTEST trigger's period (poll 3min), not the daily digest
+  assert.equal(
+    deriveBlocked(
+      [{ schedule: '*/3 * * * *' }, { schedule: ['0 6 * * *', '0 19 * * *'] }],
+      'waiting_human',
+      '2026-01-01T00:00:00Z',
+      Date.parse('2026-01-01T00:10:00Z'), // 10min > 3min fastest period
+    ),
+    true,
+  );
+});
+
+// ── 2.4 makeFireGate: per-app serialization, pending dedup/order, skip on active ─
+const deferred = (): { promise: Promise<void>; resolve: () => void } => {
+  let resolve!: () => void;
+  const promise = new Promise<void>((r) => (resolve = r));
+  return { promise, resolve };
+};
+const flush = (): Promise<void> => new Promise((r) => setImmediate(r));
+const fakeApp = (id: string): LoadedApp => ({ id }) as unknown as LoadedApp;
+
+test('makeFireGate: in-flight second trigger → pending (not skip); drains in insertion order; dedup keeps ≤1', async () => {
+  const app = fakeApp('inbox');
+  const runs: (string | undefined)[] = [];
+  const skips: (string | undefined)[] = [];
+  const gates: { resolve: () => void }[] = [];
+  const { fire } = makeFireGate({
+    hasActive: () => false,
+    runOne: (_a, name) => {
+      runs.push(name);
+      const d = deferred();
+      gates.push(d);
+      return d.promise;
+    },
+    logSkip: (_a, name) => skips.push(name),
+  });
+
+  // ① + ⑤ two same-tick fires (check-then-add, no await between) → one runs, one pending
+  fire(app, 'poll');
+  fire(app, 'digest');
+  assert.deepEqual(runs, ['poll'], 'only the first fire runs');
+  assert.deepEqual(skips, [], 'a same-app in-flight fire is queued, never skipped');
+  // ③ same trigger fired repeatedly while in-flight → at most one pending
+  fire(app, 'digest');
+  fire(app, 'digest');
+
+  // ② first run reaches terminal → pending drains (insertion order)
+  gates[0].resolve();
+  await flush();
+  assert.deepEqual(runs, ['poll', 'digest'], 'pending digest drained after poll settled');
+  gates[1].resolve();
+  await flush();
+  assert.deepEqual(runs, ['poll', 'digest'], 'digest ran exactly once despite 3 fires (dedup)');
+});
+
+test('makeFireGate: ④ active/park → skip+log, no run; a parked settle drains its pending to skip', async () => {
+  const app = fakeApp('inbox');
+  const runs: (string | undefined)[] = [];
+  const skips: (string | undefined)[] = [];
+  let active = false;
+  const d = deferred();
+  const { fire } = makeFireGate({
+    hasActive: () => active,
+    runOne: (_a, name) => {
+      runs.push(name);
+      return d.promise;
+    },
+    logSkip: (_a, name) => skips.push(name),
+  });
+
+  // cross-process / park with nothing in-flight → skip+log, never createRun
+  active = true;
+  fire(app, 'digest');
+  await flush();
+  assert.deepEqual(runs, [], 'no run started while an active run exists elsewhere');
+  assert.deepEqual(skips, ['digest'], 'fire is skip+logged');
+
+  // now let a run start, queue a pending, then have the run PARK (settle non-terminal):
+  active = false;
+  fire(app, 'poll'); // runs
+  fire(app, 'digest'); // pending
+  active = true; // run parked → still holds the active-lock
+  d.resolve();
+  await flush();
+  assert.deepEqual(runs, ['poll'], 'pending digest did NOT run — parked run still holds the lock');
+  assert.deepEqual(skips, ['digest', 'digest'], 'drain reused the guard → skip+log, no already_running');
+});
+
+test('makeFireGate: parked run with ≥2 residual pending → residual dropped, no spurious replay after recovery', async () => {
+  const app = fakeApp('inbox');
+  const runs: (string | undefined)[] = [];
+  const skips: (string | undefined)[] = [];
+  const gates: { resolve: () => void }[] = [];
+  let active = false;
+  const { fire } = makeFireGate({
+    hasActive: () => active,
+    runOne: (_a, name) => {
+      runs.push(name);
+      const d = deferred();
+      gates.push(d);
+      return d.promise;
+    },
+    logSkip: (_a, name) => skips.push(name),
+  });
+
+  // poll runs; two distinct residual triggers queue as pending
+  fire(app, 'poll');
+  fire(app, 'digest');
+  fire(app, 'weekly');
+  assert.deepEqual(runs, ['poll'], 'only poll runs; digest+weekly are pending');
+
+  // poll settles but the run PARKS (still holds the active-lock)
+  active = true;
+  gates[0].resolve();
+  await flush();
+  // drain shifts one pending → fire → hasActive → skip AND drops the whole residual queue
+  assert.deepEqual(runs, ['poll'], 'nothing drained into the parked app');
+  assert.deepEqual(skips, ['digest'], 'drained fire skip+logged; residual weekly dropped, not stranded');
+
+  // park resolves; a fresh fire runs — and no stale pending replays
+  active = false;
+  fire(app, 'poll');
+  await flush();
+  assert.deepEqual(runs, ['poll', 'poll'], 'no spurious weekly replay after recovery (residual was dropped)');
+});
+
+// ── 2.3/2.5 run --trigger threads ctx.trigger + Run.trigger; omitted → undefined ─
+test('run --trigger threads ctx.trigger and records Run.trigger; omitted → undefined/manual', async () => {
+  const { appsDir } = tmpEnv();
+  writeApp(appsDir, 'tr', {
+    pipeline: `export async function run(ctx){ ctx.emit('saw.trigger', { trigger: ctx.trigger ?? 'undefined' }); }`,
+  });
+  const sawTrigger = async (runId: string): Promise<string | undefined> => {
+    const tr = await dispatch(['trace', runId]);
+    return (tr.json as { events: { kind: string; payload: { trigger?: string } }[] }).events.find(
+      (e) => e.kind === 'saw.trigger',
+    )?.payload.trigger;
+  };
+
+  const withFlag = await dispatch(['run', 'tr', '--trigger', 'digest'], NONROOT);
+  const runId = (withFlag.json as { run: string }).run;
+  assert.equal(await sawTrigger(runId), 'digest', 'ctx.trigger === the --trigger name');
+  const runsRes = await dispatch(['runs', 'tr']); // one run so far → newest is this one
+  assert.equal((runsRes.json as { trigger: string }[])[0].trigger, 'digest', 'Run.trigger stores the name');
+
+  const noFlag = await dispatch(['run', 'tr'], NONROOT);
+  assert.equal(await sawTrigger((noFlag.json as { run: string }).run), 'undefined', 'no --trigger → ctx.trigger undefined');
+
+  // bare --trigger (no value) is a usage error
+  assert.equal((await dispatch(['run', 'tr', '--trigger'], NONROOT)).code, 2);
 });
 
 // ── R2-F2: daemon fails fast if the lock fingerprint is unresolvable ──────────

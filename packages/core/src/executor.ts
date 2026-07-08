@@ -20,6 +20,10 @@ export interface Action {
  */
 export interface RunContext {
   input: unknown;
+  /** Optional trigger identity (the trigger's opaque `name`); spine zero-domain (#1),
+   * app switches on it internally. Old spine / single unnamed trigger → undefined →
+   * default path (backward compatible). See DESIGN §3.5. */
+  trigger?: string;
   config: Record<string, unknown>;
   logger: Logger;
   emit(kind: string, payload?: object): void;
@@ -68,8 +72,10 @@ export interface RunRequest {
   executor: string;
   config?: Record<string, unknown>;
   input?: unknown;
-  /** Trigger label recorded on the Run (default 'manual'). */
+  /** Trigger category recorded on the Run when no name is given ('cron'/'manual'). */
   trigger?: string;
+  /** Named trigger identity → ctx.trigger + Run.trigger (name takes priority). */
+  triggerName?: string;
 }
 
 /**
@@ -89,7 +95,10 @@ export async function runApp(db: DB, req: RunRequest, gateway: Gateway): Promise
   }
 
   const executor = new PipelineExecutor(req.appDir);
-  const runId = createRun(db, req.appId, req.trigger ?? 'manual');
+  // Run.trigger stores the trigger name when present (trace attribution), else falls
+  // back to the category — so this column now carries BOTH names (digest/poll) and
+  // categories (cron/manual); consumers MUST NOT assume trigger ∈ {cron, manual}.
+  const runId = createRun(db, req.appId, req.triggerName ?? req.trigger ?? 'manual');
   const logger = pino(
     { level: process.env.LOG_LEVEL ?? 'info' },
     pino.destination(2),
@@ -97,6 +106,7 @@ export async function runApp(db: DB, req: RunRequest, gateway: Gateway): Promise
 
   const ctx: RunContext = {
     input: req.input,
+    trigger: req.triggerName,
     config: req.config ?? {},
     logger,
     emit: (kind, payload) => {

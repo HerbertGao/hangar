@@ -126,6 +126,90 @@ test('resolvePipelineEntry: flat pipeline.ts (no dist/) still resolves; none →
   assert.equal(resolvePipelineEntry(dir), ts);
 });
 
+// ── multi-trigger schema (2.1) ───────────────────────────────────────────────
+const multi = (triggers: string): string =>
+  `id: multi\nname: Multi\nexecutor: pipeline\ntriggers:\n${triggers}`;
+
+test('multi-trigger: a >1-trigger app with a name-less trigger → spec_invalid', () => {
+  const yaml = multi(
+    `  - type: cron\n    name: poll\n    schedule: "*/3 * * * *"\n  - type: cron\n    schedule: "0 6 * * *"\n`,
+  );
+  const { apps, errors } = loadApps(makeApps({ multi: yaml }));
+  assert.equal(apps.length, 0);
+  assert.equal(errors[0].kind, 'spec_invalid');
+  assert.match(errors[0].detail, /name required/);
+});
+
+test('multi-trigger: duplicate trigger names → spec_invalid', () => {
+  const yaml = multi(
+    `  - type: cron\n    name: dup\n    schedule: "*/3 * * * *"\n  - type: cron\n    name: dup\n    schedule: "0 6 * * *"\n`,
+  );
+  const { apps, errors } = loadApps(makeApps({ multi: yaml }));
+  assert.equal(apps.length, 0);
+  assert.equal(errors[0].kind, 'spec_invalid');
+  assert.match(errors[0].detail, /duplicate trigger name/);
+});
+
+test('single trigger may omit name; named multi-trigger with array schedule loads', () => {
+  // ③ single unnamed trigger (heartbeat) is valid, name stays undefined
+  const single = loadApps(makeApps({ heartbeat: VALID }));
+  assert.equal(single.errors.length, 0);
+  assert.equal(single.apps[0].spec.triggers[0].name, undefined);
+  // ④ two named triggers, one with an array schedule → valid, array preserved
+  const yaml = multi(
+    `  - type: cron\n    name: poll\n    schedule: "*/3 * * * *"\n  - type: cron\n    name: digest\n    schedule: ["0 6 * * *", "30 12 * * *", "0 19 * * *"]\n`,
+  );
+  const { apps, errors } = loadApps(makeApps({ multi: yaml }));
+  assert.equal(errors.length, 0);
+  assert.equal(apps.length, 1);
+  assert.deepEqual(apps[0].spec.triggers[1].schedule, ['0 6 * * *', '30 12 * * *', '0 19 * * *']);
+});
+
+test('invalid cron (bad expression / empty string) → spec_invalid, not registered', () => {
+  const bad = loadApps(
+    makeApps({
+      bad: `id: bad\nname: Bad\nexecutor: pipeline\ntriggers:\n  - type: cron\n    schedule: "30 12 * *"\n`,
+    }),
+  );
+  assert.equal(bad.apps.length, 0);
+  assert.equal(bad.errors[0].kind, 'spec_invalid');
+  const empty = loadApps(
+    makeApps({
+      empty: `id: empty\nname: Empty\nexecutor: pipeline\ntriggers:\n  - type: cron\n    schedule: ""\n`,
+    }),
+  );
+  assert.equal(empty.apps.length, 0);
+  assert.equal(empty.errors[0].kind, 'spec_invalid');
+});
+
+test('invalid IANA timezone → spec_invalid (else it crashes the daemon cron loop, like a bad cron)', () => {
+  const bad = loadApps(
+    makeApps({
+      badtz: `id: badtz\nname: BadTz\nexecutor: pipeline\ntriggers:\n  - type: cron\n    schedule: "*/3 * * * *"\n    timezone: "Not/AZone"\n`,
+    }),
+  );
+  assert.equal(bad.apps.length, 0);
+  assert.equal(bad.errors[0].kind, 'spec_invalid');
+  // a valid IANA zone still registers
+  const ok = loadApps(
+    makeApps({
+      oktz: `id: oktz\nname: OkTz\nexecutor: pipeline\ntriggers:\n  - type: cron\n    schedule: "*/3 * * * *"\n    timezone: "Asia/Shanghai"\n`,
+    }),
+  );
+  assert.equal(ok.errors.length, 0);
+  assert.equal(ok.apps.length, 1);
+});
+
+test('strict trigger: a stray per-trigger config key → spec_invalid (spec: triggers MUST NOT carry config/permissions/executor)', () => {
+  const stray = loadApps(
+    makeApps({
+      stray: `id: stray\nname: Stray\nexecutor: pipeline\ntriggers:\n  - type: cron\n    schedule: "*/3 * * * *"\n    config: { foo: bar }\n`,
+    }),
+  );
+  assert.equal(stray.apps.length, 0);
+  assert.equal(stray.errors[0].kind, 'spec_invalid');
+});
+
 test('loadApps follows a symlinked pilot dir (external checkout registered by symlink)', () => {
   // real pilot checkout lives outside apps/; register it via a symlink named <id>
   const pilot = join(mkdtempSync(join(tmpdir(), 'hangar-ext-')), 'inbox-pilot');

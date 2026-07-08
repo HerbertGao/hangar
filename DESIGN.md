@@ -89,9 +89,14 @@ id: inbox                      # 唯一,= 目录名
 name: Inbox Pilot
 executor: pipeline             # pipeline | llm-direct | claude-code | codex(v0 只实现 pipeline)
 
-triggers:
+triggers:                      # 一或多个具名触发器;name 在 >1 触发器时必填且同 app 内唯一
+  - type: cron                 # 判别字:v0 仅 'cron';webhook/manual/event 留作未来 type 臂(Phase 3、#6 门控,现不建机制)
+    name: poll                 # 不透明触发身份,经 ctx.trigger 传给 run();脊柱不解释其域含义(#1)
+    schedule: "*/3 * * * *"    # string | string[];每条须为合法 cron(非法/空串 → spec_invalid、不注册)
+    timezone: "Asia/Shanghai"
   - type: cron
-    schedule: "0 9 * * *"
+    name: digest
+    schedule: ["0 6 * * *", "30 12 * * *", "0 19 * * *"]  # 数组=同一触发器多时刻,展开成多个 cron 任务、都带同 name
     timezone: "Asia/Shanghai"
 
 tools:                         # 白名单:app 能碰哪些动作
@@ -110,6 +115,11 @@ config:
 
 - 加载:`registry` 扫 `<appsDir>/*/app.yaml`(`appsDir` 默认 `./apps`,`HANGAR_APPS` 覆盖;条目可为该根下的独立 repo checkout)→ `SpecSchema.parse()` → 带类型的 `Spec`。`id === 目录名` 约束不变。入口按 `<appDir>/dist/pipeline.js`(编译外部 pilot)解析、回退 `<appDir>/pipeline.ts`(仓内 dev)。
 - 约束:`app.yaml` 无 `dist/pipeline.js` 亦无 `pipeline.ts` 却写 `executor: pipeline` = doctor 报错。
+- **多触发契约(通用脊柱能力:一个 app 多个具名触发、各分派到不同行为;inbox poll+digest 是首用例、非过拟合 #2):** 每个触发器 `{ type, name?, schedule: string | string[], timezone? }`。
+  - `type` 是**判别字**(v0 仅 `z.literal('cron')`,单臂 union):为未来非-cron 形式(webhook/manual/event)留 **schema 形状 + 注释**,受 #6(v0 无 HTTP/IPC)门控、留待 Phase 3——**本变更不建任何机制**(分派已由 name 类型无关地兼容,扩展点可见可读但不投机)。
+  - `schedule` 接受**单条 cron 或非空 cron 数组**(数组 = 同一触发器多个时刻,如 digest 的 06:00/12:30/19:00 分钟不齐、一条 cron 表达不了)。**每条 schedule 须为合法 cron**,空串/非法(如 `"30 12 * *"`)→ `spec_invalid`、doctor 报错、app 不注册。**为何在 load 时拦**:daemon 的 `cron.schedule` 循环无 try/catch,非法 cron 会**同步抛并崩掉整个 daemon**、所有 app 停调度;load-时校验把这层挡在注册前,daemon 循环因此可假设 cron 已合法。
+  - `name` 可选,但 **app 的 triggers 条目数 > 1 时每个必填、且同 app 内各 name 互不重复**(否则 `spec_invalid`)。单触发可省 name(heartbeat/现 inbox poll → `ctx.trigger=undefined`、零改动)。为何唯一:name 是触发身份(§3.5 路由、§3.4 pending 去重都拿它当键),重名会使 `ctx.trigger`/`Run.trigger`/pending 归因塌陷。判定按**触发器条目数**、不按数组展开后的任务数。
+  - **`config`/`permissions` 仍 app 级**,触发器**不携带**自己的 config/permissions/executor(YAGNI/#2;`run(ctx)` 拿 app.config + ctx.trigger 自行分支即可)。这**不新增 app 定义方式**——`app.yaml` 仍是唯一入口(#4)。
 - `defineApp()` 不做了(Q5 采纳单入口方案后作废)。
 
 ### 3.3 OS 存储(`hangar.sqlite`,只此 4 表)
@@ -124,6 +134,7 @@ Approval   (id PK, run_id, tool, args_json, status, requested_at, decided_at, de
 **OS 永远不知道「邮件」这个概念存在。** 域细节全在 `RunEvent.payload_json`(如 `{kind:"classified", count:12, flagged:2}`)。
 - App 表是 `apps/*/` 扫描的缓存,registry 每次加载重扫 FS(App 表非权威,避免漂移);`spec_hash/enabled` 等列 Phase 0 无消费者,有需求(漂移检测/启停)再加。
 - `Run.state` 是缓存列,真相源永远是 `RunEvent`:写终态事件、更新 `Run.state`、释放 app 锁**必须同一事务**(锁骑在 state 上,不同步即锁失真)。
+- `Run.trigger` 列**复用**存触发身份(守 #3 不加表):值 = `triggerName ?? req.trigger ?? 'manual'`——具名触发器存其 `name`(供 trace 按触发器归因),缺 name 回退触发类别(`cron`/`manual`)。**该列自此混载 trigger name 与类别**,现无消费者 switch 它(仅 `hangar runs` 透传显示);未来消费者**不得假设**值域仅 `{cron, manual}`。
 
 ### 3.4 Run 状态机(从事件推导,不靠 LLM 自称)
 
@@ -138,6 +149,8 @@ queued → running → [waiting_human] → executing → completed
 
 **崩溃回收(reaper):** 进程被杀(非抛错)会把 run 停在非终态、锁不释放。**写命令(run/approve/reject/daemon)启动时**跑一次 reaper(`doctor`/只读不跑,守「不写库」);按 `lock_owner` 的 **PID+启动时刻**指纹(非裸 PID,防复用误判)找出死进程持有的非终态 run(含 `queued`/`running`/`executing`)→ 经 choke-point 判 `run.failed` 释放锁并作废其 Approval;`waiting_human`(无进程持有)不动。approve 崩在第二阶段亦被此机制回收(它已取锁 → lock_owner 是死的 approve 进程)。
 
+**daemon 多触发序列化(替换旧「`hasActiveRun` → skip」):** 保「每 app 至多一个活跃 run」不变量、不放宽为并发。daemon 进程内维护 per-app `inFlight` set + `pending`(按 `app + trigger name` 去重、每触发器至多 1 pending、封上界、插入序 drain)。**`pending` 是易失调度提示、非 run-state 真相**——RunEvent 仍是审计 SOT(守 #3),`pending` **不进 4 表**、不进 status/trace/doctor、daemon 崩即丢。`fire(app, name)`:本 daemon 正跑该 app(`inFlight.has`)→ 记 pending(去重)、不丢;否则别的进程持锁**或本 daemon 的 run 已 park 成 `waiting_human`(仍持 active-lock)**(`hasActiveRun` 真)→ skip+log(接受降级、同 reap-vs-run);否则跑。**drain 复用 fire 守卫、按 DB 活跃态而非 promise 生命周期判定**:`runApp` settle(`.finally`)清 `inFlight` 后,取一个 pending **走回 `fire`**——若此刻 run 已 resolve 但 park 成非终态、仍持锁,drain 落 skip+log,**不**盲跑撞 `createRun → already_running` 把 pending 丢掉。故多触发同刻 fire(12:30 digest 与 `*/3` poll 的 `:30` 对齐)本进程内**不丢** digest、堆积有界;park/跨进程/崩溃下降级为 skip+log 或靠下一周期/DB 自愈。**liveness 假设**:`inFlight` 只在 `runApp` settle 时清,pilot 的 `run()` **须自限时**(否则挂死的 run 永占 `inFlight`、该 app 再不调度——与现状 `hasActiveRun→skip` 同一 wedge、非本变更新引入;脊柱级 watchdog 属未来)。`daemonTasks` 把数组 schedule 展开成多个 `cron.schedule`、**都带同 name**(同串去重);overdue/blocked 检测对数组取**每条 cron 周期的最小值**(= 最快触发器一周期没跑即 overdue;诊断性告警、非执行门,最激进而非保守的判定)。
+
 ### 3.5 Executor 接口(未来接进程内 executor 的插孔)
 
 ```ts
@@ -150,6 +163,7 @@ interface Executor {
 ```ts
 interface RunContext {
   input: unknown                            // 来自 hangar run --input
+  trigger?: string                          // 可选触发身份(触发器 name,不透明字符串);脊柱零域 #1,app 内 switch 分派;老脊柱不传→undefined→默认路径(向后兼容)
   config: Record<string, unknown>          // 来自 spec.config
   logger: Logger                            // pino
   emit(kind: string, payload?: object): void          // 追加 RunEvent
@@ -157,9 +171,11 @@ interface RunContext {
 }
 ```
 
+**触发路由(`ctx.trigger`,多触发能力的分派契约):** 脊柱把触发该 run 的触发器 `name`(**不透明字符串**)塞进 `ctx.trigger` 传给 `run(ctx)`;**脊柱零域**(#1)——不认识 `poll`/`digest`,只透传。`run(ctx)` 是**单入口**,app 内 `switch(ctx.trigger)` 自行分派(可写成 `runPoll`/`runDigest` 保可读),并**自守 loud default**(既非 `undefined` 又非已知 name → throw,拼错/漏配触发器时响亮失败,而非静默走默认路径)——名→行为绑定是 app 内约定,脊柱无法内省其 switch。单个无名触发器 → `ctx.trigger === undefined` → 默认路径(heartbeat/现 inbox poll **零回归**)。`ctx.trigger` 是运行时**鸭子契约新增字段**且**可选**:老脊柱不传→pilot 读到 undefined→默认路径(向后兼容);pilot 须防御性读(`ctx.trigger === 'digest'`),fail-loud **不**断言它(可选)。`hangar run <app> [--trigger <name>]` 可手动注入 name,使任一具名触发行为(如 digest)可手动触发/重放(否则 `hangar run inbox` → undefined → 只跑默认路径、digest 无法手动验证或补发)。
+
 **没有 `ctx.tools` 直执行入口**——那是让 app 绕过 `permissions.approval` 的后门(破 #5)。「要不要审批」是 OS 策略、不是 app 选哪个方法;**可审批/高危动作走单一 `propose`**,gateway 按名单决定 park 还是立即执行。
 
-**carve-out(add-inbox-migration,#9):** `propose` 是**受审批策略约束的动作**的入口;app **可**在 `run()` 里直接调用自己**本质无害的域副作用**(inbox 的自动 reflect/mark_read/notify——打标签 / 标已读 / 推自己的 telegram,非破坏性、无需审批),**不必**经 `propose`;但任何**可审批/高危**动作(如 Phase 2 的 `gmail.send`)**必须**走 `propose`。故 #5 对直执行路径由**结构强制**降为 **app 编写纪律**(单用户 BYO 无对抗 app 作者,可接受;`run()` 本是任意 app TS、能 `import` 任何库,该「结构保证」历来约定邻近)。(`executor.ts:14-18` 的 RunContext 注释仍写旧「一切副作用走 propose」,记为 **stale-debt**、下次动 core 时改。)
+**carve-out(add-inbox-migration,#9):** `propose` 是**受审批策略约束的动作**的入口;app **可**在 `run()` 里直接调用自己**本质无害的域副作用**(inbox 的自动 reflect/mark_read/notify——打标签 / 标已读 / 推自己的 telegram,非破坏性、无需审批),**不必**经 `propose`;但任何**可审批/高危**动作(如 Phase 2 的 `gmail.send`)**必须**走 `propose`。故 #5 对直执行路径由**结构强制**降为 **app 编写纪律**(单用户 BYO 无对抗 app 作者,可接受;`run()` 本是任意 app TS、能 `import` 任何库,该「结构保证」历来约定邻近)。(`executor.ts` 的 `RunContext` 注释已同步反映此 carve-out。)
 **外部 harness 收窄**:`claude-code`/`codex` 那类独立进程 harness 只作**推理引擎**、零工具权限,副作用一律回流 `ctx.propose`;否则其工具调用绕开审批(破 #5)或要加 IPC/MCP(破 #6/#7)。接口类型不变,但这条**使用契约现在写死**,免得 Phase 2 逼你在「改脊柱」和「破不变量」间二选一。
 
 ### 3.6 Tool Gateway(治理活在这里 · 内存重试 + `redactError`,供 propose'd/审批动作;见 §3.5 carve-out)
@@ -213,7 +229,7 @@ hangar daemon                     启动长驻进程(cron 调度)
 - OS SQLite:`Run/RunEvent/Approval/App`
 - tool gateway:内存重试 + redact(供 propose'd/审批动作;**不搬 durable retryQueue**);查 approval 名单;发事件。(add-inbox-migration,#9:inbox 自动动作在 `run()` 直接编排、不经 gateway)
 - 审批 PARK:`propose`(登记)→ run 结束 check-after-return → `waiting_human` → `approve`(原子认领防双执行)→ execute
-- 崩溃回收:启动期 reaper 把死 PID 的孤儿非终态 run 判 `failed` 释放锁;daemon 遇活跃 run 跳过触发时落信号
+- 崩溃回收:启动期 reaper 把死 PID 的孤儿非终态 run 判 `failed` 释放锁;daemon 多触发**本进程内序列化**(fire → per-app inFlight/pending 去重 → 终态后 drain,替换旧「遇活跃 run 就 skip」;跨进程持锁/park 才 skip+log,见 §3.4)
 - CLI:`run/status/runs/trace/approve/reject/doctor/daemon`(`--json`)
 - `SKILL.md`(SOT)
 

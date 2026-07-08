@@ -43,7 +43,7 @@ const HELP = `hangar — headless AgentOS spine
 Usage: hangar <command> [options]
 
 Commands:
-  run <app> [--input <json>]    trigger a run
+  run <app> [--input <json>] [--trigger <name>]  trigger a run
   status                        each app's latest run state (+ derived block)
   runs [<app>]                  run history
   trace <run>                   full event timeline of a run
@@ -145,21 +145,29 @@ function runStateOf(db: DB, id: string): string {
 // longer than one cron period (i.e. it already ate at least one scheduled fire).
 // ponytail: node-cron's createTask.getNextRuns(2) gives the EXACT period (gap
 // between consecutive fires) — no cron-arithmetic guesswork, no 5th table.
-export function cronPeriodMs(schedule: string, timezone?: string): number | null {
-  try {
-    const opts = timezone
-      ? { timezone, name: `probe_${randomUUID()}` }
-      : { name: `probe_${randomUUID()}` };
-    const task = cron.createTask(schedule, () => {}, opts);
-    const runs = task.getNextRuns(2);
-    task.destroy();
-    return runs && runs.length === 2 ? runs[1].getTime() - runs[0].getTime() : null;
-  } catch {
-    return null;
-  }
+// An array schedule (one trigger, many cron times) collapses to the MIN of each
+// cron's own period — the most aggressive "overdue if the fastest one slipped" rule.
+export function cronPeriodMs(schedule: string | string[], timezone?: string): number | null {
+  const one = (s: string): number | null => {
+    try {
+      const opts = timezone
+        ? { timezone, name: `probe_${randomUUID()}` }
+        : { name: `probe_${randomUUID()}` };
+      const task = cron.createTask(s, () => {}, opts);
+      const runs = task.getNextRuns(2);
+      task.destroy();
+      return runs && runs.length === 2 ? runs[1].getTime() - runs[0].getTime() : null;
+    } catch {
+      return null;
+    }
+  };
+  const periods = (Array.isArray(schedule) ? schedule : [schedule])
+    .map(one)
+    .filter((p): p is number => p != null);
+  return periods.length ? Math.min(...periods) : null;
 }
 
-function appPeriodMs(triggers: { schedule: string; timezone?: string }[]): number | null {
+function appPeriodMs(triggers: { schedule: string | string[]; timezone?: string }[]): number | null {
   const periods = triggers
     .map((t) => cronPeriodMs(t.schedule, t.timezone))
     .filter((p): p is number => p != null);
@@ -167,7 +175,7 @@ function appPeriodMs(triggers: { schedule: string; timezone?: string }[]): numbe
 }
 
 export function deriveBlocked(
-  triggers: { schedule: string; timezone?: string }[],
+  triggers: { schedule: string | string[]; timezone?: string }[],
   state: string,
   startedAt: string,
   now: number,
@@ -405,7 +413,7 @@ async function cmdRun(
 ): Promise<Result> {
   const root = refuseRoot(deps);
   if (root) return root;
-  if (!appId) return usage('usage: hangar run <app> [--input <json>]');
+  if (!appId) return usage('usage: hangar run <app> [--input <json>] [--trigger <name>]');
 
   let input: unknown;
   if (typeof flags.input === 'string') {
@@ -417,6 +425,11 @@ async function cmdRun(
   } else if (flags.input === true) {
     return usage('--input requires a JSON value');
   }
+
+  // Optional trigger identity → ctx.trigger, letting any named trigger's behavior be
+  // manually fired/replayed (e.g. `run inbox --trigger digest`). Omitted → undefined.
+  if (flags.trigger === true) return usage('--trigger requires a name');
+  const triggerName = typeof flags.trigger === 'string' ? flags.trigger : undefined;
 
   const load = loadApps();
   const app = load.apps.find((a) => a.id === appId);
@@ -439,6 +452,7 @@ async function cmdRun(
         config: app.spec.config,
         input,
         trigger: 'manual',
+        triggerName,
       },
       gateway,
     );
@@ -554,19 +568,113 @@ export function hasActiveRun(db: DB, appId: string): boolean {
     .get(appId);
 }
 
-/** Flatten registry apps → one scheduling task per cron trigger (testable, pure). */
+/**
+ * Flatten registry apps → one scheduling task per (trigger, cron-string). An array
+ * schedule fans out into multiple tasks that ALL carry the trigger's name (same
+ * behavior) with duplicate cron strings deduped. Testable, pure.
+ */
 export function daemonTasks(
   load: RegistryLoad,
-): { appId: string; schedule: string; timezone?: string }[] {
+): { appId: string; name?: string; schedule: string; timezone?: string }[] {
   return load.apps.flatMap((app) =>
-    app.spec.triggers.map((t) => ({ appId: app.id, schedule: t.schedule, timezone: t.timezone })),
+    app.spec.triggers.flatMap((t) =>
+      [...new Set(Array.isArray(t.schedule) ? t.schedule : [t.schedule])].map((schedule) => ({
+        appId: app.id,
+        name: t.name,
+        schedule,
+        timezone: t.timezone,
+      })),
+    ),
   );
 }
 
+/** Injectable seams for the per-daemon fire gate (fake clock / fake runApp for self-check). */
+export interface FireGateDeps {
+  /** True when the app already has an active run — another process, OR this daemon's
+   *  own run that has parked to waiting_human (inFlight cleared but active-lock held). */
+  hasActive: (appId: string) => boolean;
+  /** Start one run for (app, name). Expected to log & swallow its own run failure so
+   *  the returned promise settles rather than rejects; the gate only awaits settle. */
+  runOne: (app: LoadedApp, name: string | undefined) => Promise<unknown>;
+  /** Log a skipped fire (app has an active run). */
+  logSkip: (appId: string, name: string | undefined) => void;
+}
+
 /**
- * Register cron per trigger; on fire, only start a run when the app has NO active
- * run (else skip + stderr log — the block is never persisted, it's derived by
- * status/doctor). Returns a Result on refusal (root), or null once started.
+ * Per-daemon serialization gate (replaces the old hasActiveRun→skip). Keeps every
+ * app to at most one active run WITHOUT dropping a same-instant multi-trigger fire.
+ *   inFlight — appIds this daemon is currently running.
+ *   pending  — per-app, name-deduped, insertion-ordered triggers waiting to drain
+ *              (each name at most one → bounded).
+ * Both are volatile scheduling hints, NOT run-state truth: RunEvent stays the audit
+ * SOT (#3); pending never touches the 4 tables and is lost on daemon crash (the next
+ * cron period / DB self-heals). Returns `{ fire }` — state lives per gate (one per
+ * daemon; a process runs one daemon), which is why this is a factory not a module global.
+ *
+ * ponytail: liveness — inFlight clears only when runOne settles, so a pilot's run()
+ * MUST self-bound its time; a hung run permanently pins inFlight and that app never
+ * schedules again (same wedge as the old skip; spine-level watchdog is future scope).
+ */
+export function makeFireGate(deps: FireGateDeps): {
+  fire: (app: LoadedApp, name: string | undefined) => void;
+} {
+  const inFlight = new Set<string>();
+  const pending = new Map<string, (string | undefined)[]>();
+
+  function fire(app: LoadedApp, name: string | undefined): void {
+    if (inFlight.has(app.id)) {
+      const q = pending.get(app.id) ?? [];
+      if (!q.includes(name)) {
+        q.push(name); // dedup by name, at most one per name → bounded queue
+        pending.set(app.id, q);
+      }
+      return;
+    }
+    if (deps.hasActive(app.id)) {
+      // Another process holds the lock, OR our own run parked non-terminal (still holds
+      // the active-lock) → skip+log; do NOT blind createRun into already_running.
+      deps.logSkip(app.id, name);
+      // The app is busy (parked / cross-process) and this daemon has no in-flight run to
+      // chain a drain → any residual pending for it is stale; drop it rather than strand
+      // it for a spurious replay after the lock releases. The next cron tick re-fires.
+      pending.delete(app.id);
+      return;
+    }
+    // check-then-add with NO await between: two fires in one node-cron tick → the first
+    // adds+runs, the second sees inFlight → pending. Relies on same-tick in-order flush.
+    inFlight.add(app.id);
+    // Drain reuses the fire guard (NOT runOne directly): if the run resolved but parked
+    // non-terminal, hasActive is still true → the drained fire lands skip+log, so it never
+    // collides with createRun → already_running.
+    const settle = (): void => {
+      inFlight.delete(app.id);
+      const q = pending.get(app.id);
+      if (q && q.length) {
+        const next = q.shift();
+        if (q.length === 0) pending.delete(app.id);
+        fire(app, next);
+      }
+    };
+    // deps.runOne is an injected seam contracted to return a Promise (runApp is async, so
+    // its own throws surface as rejections, not sync). Guard a synchronous throw regardless
+    // so a misbehaving seam can't pin inFlight forever and wedge the app.
+    let started: Promise<unknown>;
+    try {
+      started = Promise.resolve(deps.runOne(app, name));
+    } catch {
+      settle();
+      return;
+    }
+    void started.catch(() => {}).finally(settle); // runOne is expected to have logged its own failure
+  }
+
+  return { fire };
+}
+
+/**
+ * Register cron per (trigger, cron-string); on fire, run the fire gate which
+ * serializes per app and queues same-instant sibling triggers as pending (never a
+ * silent drop). Returns a Result on refusal (root), or null once started.
  * Long-running: main() keeps the process alive; cron timers do the rest.
  */
 export function startDaemon(
@@ -588,34 +696,40 @@ export function startDaemon(
   reap(db);
   const load = loadApps();
   const byId = new Map<string, LoadedApp>(load.apps.map((a) => [a.id, a]));
-  for (const t of daemonTasks(load)) {
+  const { fire } = makeFireGate({
+    hasActive: (appId) => hasActiveRun(db, appId),
+    runOne: (app, name) => {
+      const gateway = new PipelineGateway(db, app.dir, app.spec.permissions.approval);
+      // daemon fire records category 'cron'; a named trigger overrides Run.trigger +
+      // ctx.trigger via triggerName.
+      return runApp(
+        db,
+        {
+          appId: app.id,
+          appDir: app.dir,
+          executor: app.spec.executor,
+          config: app.spec.config,
+          trigger: 'cron',
+          triggerName: name,
+        },
+        gateway,
+      ).catch((err) =>
+        log.error({ app: app.id, err: String((err as Error)?.message ?? err) }, 'cron run failed'),
+      );
+    },
+    logSkip: (appId, name) =>
+      log.info({ app: appId, trigger: name }, 'cron fire skipped: app has an active run'),
+  });
+  const tasks = daemonTasks(load);
+  for (const t of tasks) {
     const app = byId.get(t.appId)!;
     cron.schedule(
       t.schedule,
-      () => {
-        if (hasActiveRun(db, t.appId)) {
-          log.info({ app: t.appId }, 'cron fire skipped: app has an active run');
-          return;
-        }
-        const gateway = new PipelineGateway(db, app.dir, app.spec.permissions.approval);
-        runApp(
-          db,
-          {
-            appId: t.appId,
-            appDir: app.dir,
-            executor: app.spec.executor,
-            config: app.spec.config,
-            trigger: 'cron',
-          },
-          gateway,
-        ).catch((err) =>
-          log.error({ app: t.appId, err: String((err as Error)?.message ?? err) }, 'cron run failed'),
-        );
-      },
+      () => fire(app, t.name),
       t.timezone ? { timezone: t.timezone } : undefined,
     );
   }
-  log.info({ tasks: daemonTasks(load).length, apps: load.apps.length }, 'daemon started');
+  log.info({ tasks: tasks.length, apps: load.apps.length }, 'daemon started');
   return null;
 }
 
