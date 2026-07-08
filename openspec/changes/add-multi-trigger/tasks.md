@@ -22,7 +22,7 @@
 
 ## 4. 部署 + 验证
 
-- [ ] 4.1 commit/PR:hangar(core + DESIGN)+ inbox-pilot(pipeline + app.yaml + 退役);CI 绿后合并。
-- [ ] 4.2 ts.mac-mini:`~/hangar` git pull + rebuild core;`~/inbox-pilot-hangar` git pull + build;`hangar doctor` 验两触发器加载(inbox spec ok)。
-- [ ] 4.3 重启 launchd daemon(`launchctl kickstart -k`);验证:hangar.sqlite 见 `trigger=digest` 与 `trigger=poll` 两类 cron run;下一个 digest 时刻(06:00/12:30/19:00)真收到 Telegram 摘要,或 `hangar run inbox --trigger digest` 手动触发一次验证(靠 2.5 的 `--trigger`)。
-- [ ] 4.4 观测:摘要恢复后并入 Phase 1 §6 出口闸的日常使用。
+- [x] 4.1 commit/PR:hangar(core + DESIGN)+ inbox-pilot(pipeline + app.yaml + 退役);CI 绿后合并。(hangar #5 → main d03a1de;inbox-pilot #37 → master 9964e87,rebase 解冲突。)
+- [x] 4.2 ts.mac-mini:`~/hangar` git pull + rebuild core;`~/inbox-pilot-hangar` 切 master + pull + build;`hangar doctor` 验两触发器加载(inbox spec ok、pipeline ok)。
+- [x] 4.3 重启 launchd daemon(kickstart -k,PID→79728、tasks:5 = poll+digest×3+heartbeat);hangar.sqlite 见 `trigger=poll`(daemon 自然 fire)与 `trigger=digest`(手动 run --trigger)两类 run;手动 digest → digest.sent×2 真推 Telegram 成功(首次 Telegram TimeoutError、重试补推,markDigested 幂等生效)。
+- [ ] 4.4 观测:摘要恢复后并入 Phase 1 §6 出口闸的日常使用(下一个自然 digest = 明早 06:00 Asia/Shanghai)。
