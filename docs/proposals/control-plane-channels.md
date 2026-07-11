@@ -8,6 +8,50 @@
 
 ---
 
+## 背景速览(冷读者 / 新 session 必读)
+
+本文默认读者「在场」过原始讨论。若你是第一次看(或是一个新会话),先读这一节——本文用到的术语、机制事实、不变量编号,这里给读懂全文所需的最小集;完整定义在仓根 `DESIGN.md`(架构 SOT)与 `CLAUDE.md`(护栏)。
+
+**这是什么项目。** hangar 是一根**无头的「AgentOS 脊柱」**:停放 / 调度 / 审计一队 `*-pilot` agent,自己不做业务。单用户、自托管、刻意极简。「脊柱」= `@hangar/core`,域无关;「pilot」= 一个具体 agent 应用(如邮件助手 inbox)。
+
+**核心对象(整个系统一个 SQLite,仅 4 表):**
+- `Run` / `RunEvent`(append-only,状态之源)/ `Approval` / `App`。
+- **pilot = 一个 app,由单一 `app.yaml` 定义、被 host 进程内 `import` 跑**;不是常驻 server。
+- pilot 的 `run(ctx)` 拿到:`ctx.input`(来自 CLI `hangar run --input`)、`ctx.trigger`(哪个具名触发器点的火,如 `poll`/`digest`)、`ctx.emit(kind, payload)`(追加一条 RunEvent)、`ctx.propose({tool, args})`(**唯一**动作入口)。
+- 控制面 = CLI(`hangar run/status/trace/approve/reject/doctor/daemon`)+ 一个**只读** web 前端 `hangar-view`。**无 HTTP/IPC/MQ、无 MCP**;CLI 与常驻 `daemon` 是同一份 core 的两个入口、共享 SQLite、互不通信。
+
+**审批 / PARK 流(#5 / #8):** 高危动作走 `ctx.propose` → 写 `Approval(pending)`、**不执行、不中断** `run()`;`run()` 返回后若有 pending → 该 run **park** 成 `waiting_human`;`hangar approve <run>` 执行**存在 Approval 行里的** `{tool, args}`(经 pilot 的 `tools.ts` handler),**不重入 `run()`**。全系统只此一个切点:`propose → approve → execute`。
+
+**两个反复被引用的机制事实(本文多条决策的根据):**
+- **park 占锁 → 会饿死调度。** 每 app 至多一个活跃 run;park 成 `waiting_human` 的 run **仍持 app 锁**,daemon 后续 cron 触发全部 `skip`(`DESIGN §3.4`)。→ **D1** 不 park 的根据。
+- **`hangar run` 不排队、忙则硬失败。** `createRun` 在 DB 层强制「每 app 一个活跃 run」,pilot 正忙时再 `hangar run` 会**抛 `already_running`、退出码 1**(不排队、不静默丢)。→ **§7**「忙就回复重发」的根据。
+
+**本文倚重的不变量(完整定义见 `DESIGN.md §1`,此处各一句话):**
+- **#1 脊柱零域概念** —— core 里出现 `email`/`notify` 等具体业务名词 = bug;域细节只经 `RunEvent.payload_json` 流过。
+- **#3 一 host / 一 SQLite / 4 表** —— 加第 5 张表要先在 DESIGN 论证。
+- **#5 审批只在 OS 层** —— executor / app 代码不得自行处理审批。
+- **#6 v0 脊柱内无 HTTP / IPC / 消息队列** —— 注意:pilot **对外**调第三方 API(Telegram/Lark)是普通 egress,不算破 #6;#6 管的是脊柱**内部**不搞 C/S 或消息总线。
+- **#8 只有 `propose→approve→execute` 一个切点** —— 不做通用 durable replay / 中途 checkpoint。
+
+**登场角色:**
+- **inbox** —— 邮件分类 pilot,**已在 hangar 上**跑(cron `poll` 每 3 分钟 + 每日 `digest`)。它每天把「最近高频发件人 TOP5(可加入 `noise_senders` 降噪)」推到 Telegram;`noise_senders` 是它**自己 repo 里 `rules.yaml`** 的降噪名单。**本文的入站 seed = 让你不 SSH 上生产机也能处理这条建议。**
+- **ai-radar / auto-developer / hostlens** —— 另外 3 个**独立 repo 的项目,目前尚未迁上 hangar**;都往**同一个群**推送、各写各的 Telegram 通知逻辑。它们是 **D8「集中通知」** 的多例证据(不是从一个例子猜出来的)。
+- **hangar-view** —— 脊柱外一个**只读**的 web 监控前端(Phase 1.5,设计见 `docs/proposals/hangar-view.md`),经 Cloudflare Access 鉴权。**本文的入站 seed = 给它加第一条窄写路径**(它此前只读)。
+
+**术语:**
+- **seed-then-generalize** —— 只为眼前**一个真实用例**建具体实现,通用注册表 / 抽象等第 2、第 3 个真用例出现再抽。反「从一个例子造抽象」。
+- **lane(车道)** —— 通知的抽象去向(`broadcast` / `private`);agent 只报 lane,真实目的地(哪个群 / DM / 平台)在配置里,agent 不知道。
+- **intent** —— pilot 声明的、可被 web 触发的一个 typed 动作;**本质 = 既有的 `(--trigger, 不透明 --input)` 对**,不是新脊柱概念。
+- **R1 / R2** —— 两条「接缝规则」候选;**R1(入站 = 审计过的 run)保留;R2(出站通知走审计日志给外部消费者)被毙**,见 §5。
+- **apprise** —— 一个成熟的开源通知库,一处调用可发往 100+ 平台(Telegram、Lark/Feishu、Slack、邮件…);**它是 Python 项目**,故 TS 侧只能经 ① 它的 CLI 子进程 或 ② 它的 HTTP API 服务(`apprise-api` 容器)去接,或 ③ 自己移植。
+- **apprise 集成的 A / B / C 三选项(D9/D10 反复引用):**
+  - **A** = 直接用官方 apprise(经上面的 CLI 或 HTTP API)。
+  - **B** = 只做你**实际在用的 2–3 个服务**的小 TS 库(~40 行,纯原生、零依赖)。
+  - **C** = 把 apprise 的 100+ 服务 **1:1 移植**成 TS(即将来的独立产品 `apprise.js`)。
+  - **抉择:近期走 A;长期认可 C 有价值,但 C 要从 B 增量长出、非大爆炸移植。**
+
+---
+
 ## 0. 起点:两个真实痛点
 
 1. **没有统一入口去指挥 agent。** 尤其:pilot 给出一个**推荐**(如 inbox digest 报「最近高频发件人 TOP5,可加入 `noise_senders` 降噪」),而要在推荐之上做处理(把某几个发件人加进降噪),今天必须 SSH 上生产机改 `rules.yaml`。外出时够不着。
