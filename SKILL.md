@@ -20,10 +20,10 @@ min_binary_version: "0.1.0"
 ```json
 { "ok": true,
   "checks": { "node": "ok", "pnpm": "ok", "sqlite_writable": "ok", "apps_dir": "ok",
-              "apps": [ { "id": "inbox", "spec": "ok", "pipeline": "ok" } ],
+              "apps": [ { "id": "inbox", "spec": "ok", "pipeline": "ok", "enabled": true } ],
               "blocked": [] } }
 ```
-**健康经 `ok` 表达(退出码恒 0、doctor 不抛 error kind):** 任一 check(`node`≥22.18 / `sqlite_writable` / `apps_dir` / 某 app 的 `spec`\|`pipeline`)非 `ok` → 顶层 `ok:false`。`checks.blocked` = 被过期 parked run 阻塞的 app id 列表(派生、非持久化)。`pnpm` 仅报形、不计入 `ok`。
+**健康经 `ok` 表达(退出码恒 0、doctor 不抛 error kind):** 任一 check(`node`≥22.18 / `sqlite_writable` / `apps_dir` / 某 app 的 `spec`\|`pipeline`)非 `ok` → 顶层 `ok:false`。`checks.apps[]` 每项的 `enabled` = 该 app 是否启用(取自 `app.yaml`,缺省 `true`);**注册失败分支(无解析 spec)省略此键,消费方缺字段视作 `true`**(hangar-view 花名册排除据此字段——见 hangar-view spec)。`checks.blocked` = 被过期 parked run 阻塞的 app id 列表(派生、非持久化;**`enabled:false` 的 app 除外——不派生阻塞**)。`pnpm` 仅报形、不计入 `ok`。
 **Agent 约定:** 任一 check 非 `ok` 时,先修环境,别急着 `run`。
 
 ## `hangar status [--json]`

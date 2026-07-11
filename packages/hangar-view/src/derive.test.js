@@ -271,6 +271,37 @@ test('附:卡死窗 clamp / per-app override / 配置卫生回落', () => {
   assert.equal(staleWindowMs(bad, 'x', 180_000), 360_000, '坏配置应回落默认 ×2');
 });
 
+// ⑫ 5.4 disable(office 层):enabled:false 的 healthy app 不上墙;缺 enabled(含 spec_invalid)
+// 照常上墙/照常呈「配置坏了」⚠️;broken 优先于 disabled(disabled 但 pipeline_missing 仍 ⚠️、不被藏)。
+test('⑫ enabled:false healthy 不上墙;缺 enabled / spec_invalid 照常上墙+⚠️;broken 优先于 disabled', () => {
+  const office = deriveOffice({
+    doctorApps: [
+      { id: 'disabled', spec: 'ok', pipeline: 'ok', enabled: false }, // healthy 且禁用 → 排除,不产出员工
+      { id: 'noenabled', spec: 'ok', pipeline: 'ok' }, // 缺 enabled → 视作 true、照常上墙
+      { id: 'brokenraw', spec: 'spec_invalid', pipeline: 'unknown' }, // 无解析 enabled(视作 true)→ ⚠️
+      { id: 'disabledbroken', spec: 'ok', pipeline: 'pipeline_missing', enabled: false }, // broken 优先 → ⚠️、不被藏
+    ],
+    statusById: { noenabled: { state: 'completed', since: ago(120_000), blocked: false, lastRun: 'n1' } },
+    runsByApp: {
+      noenabled: { ok: true, runs: [{ id: 'n1', app: 'noenabled', state: 'completed', trigger: 'cron', startedAt: ago(120_000), endedAt: ago(110_000) }] },
+    },
+    appPeriodMs: { noenabled: 180_000 },
+    config: DEFAULT_CONFIG,
+    now: NOW,
+  });
+  assert.equal(office.find((e) => e.employee === 'disabled'), undefined, 'enabled:false 的 healthy app 不上墙(显式排除)');
+  const ne = office.find((e) => e.employee === 'noenabled');
+  assert.ok(ne, '缺 enabled 视作 true、照常上墙(向后兼容)');
+  assert.equal(ne.mood, 'just_done');
+  const br = office.find((e) => e.employee === 'brokenraw');
+  assert.equal(br.mood, 'spec_broken');
+  assert.equal(br.alert, true, 'spec_invalid(无解析 enabled)照常呈「配置坏了」⚠️');
+  const db = office.find((e) => e.employee === 'disabledbroken');
+  assert.equal(db.mood, 'spec_broken', 'broken 优先于 disabled:disabled 但 pipeline_missing 仍 ⚠️、不被藏');
+  assert.equal(db.alert, true);
+  assert.equal(office.length, 3, '仅 disabled-healthy 被排除,其余 3 名上墙');
+});
+
 // ⑪ CX2:status.lastRun 落在 runs[1](TOCTOU 窗内更新的 run 顶掉 runs[0])→ 按 id 锁定那条,
 // 采用其 endedAt/trigger(不因 runs[0] 不匹配就置 null)。
 test('⑪ status.lastRun 在 runs[1] 时按 id 锁定、采用其 endedAt', () => {

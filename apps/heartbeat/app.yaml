@@ -2,6 +2,10 @@ id: heartbeat
 name: Heartbeat Toy
 executor: pipeline
 
+# Retired phase-0 skeleton / DoD fixture: kept for dod.test.ts §8.1 (manual run→approve
+# still fires) but not auto-scheduled or shown on the office wall. See add-app-disable.
+enabled: false
+
 triggers:
   - type: cron
     schedule: "0 9 * * *"

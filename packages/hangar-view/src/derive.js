@@ -132,6 +132,11 @@ export function deriveOffice({ doctorApps, statusById, runsByApp, appPeriodMs, c
       continue;
     }
 
+    // 禁用排除(broken 优先于 disabled):broken 检查已在先,仅对 spec=ok ∧ pipeline=ok 的
+    // otherwise-healthy app 施加 enabled === false 排除——坏 app 不能靠禁用藏起来(与「CLI 取数失败」
+    // 需求一致)。缺 enabled(undefined:旧 core 未上报 / 注册失败无解析 spec)视作 true、不排除。
+    if (a.enabled === false) continue;
+
     const st = statusById[a.id]; // 左连 status;缺失(两快照 skew)→ 视作 never-ran
     const blocked = st?.blocked ?? false;
     const state = st?.state ?? null;
