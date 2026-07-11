@@ -334,19 +334,28 @@ function cmdStatus(): Result {
   return { code: 0, json: rows, text };
 }
 
-function cmdRuns(appFilter?: string): Result {
+function cmdRuns(appFilter?: string, limitRaw?: string | true): Result {
+  // --limit N:只取最近 N 条(started_at DESC)。管道消费者(如 hangar-view)靠它把输出
+  // 收小,既避开大历史下 `process.exit` 截断管道 stdout(>~64KB)、也不无界增长。
+  let limit: number | undefined;
+  if (limitRaw !== undefined) {
+    const n = limitRaw === true ? NaN : Number(limitRaw);
+    if (!Number.isInteger(n) || n <= 0) return usage('--limit requires a positive integer');
+    limit = n;
+  }
+  const limitClause = limit !== undefined ? ` LIMIT ${limit}` : ''; // limit 已校验为正整数,无注入风险
   const db = openReadonlyOrNull();
   if (!db) return { code: 0, json: [], text: '(no runs)\n' };
   const rows = (
     appFilter
       ? db
           .prepare(
-            `SELECT id, app_id, state, trigger, started_at, ended_at FROM Run WHERE app_id=? ORDER BY started_at DESC, rowid DESC`,
+            `SELECT id, app_id, state, trigger, started_at, ended_at FROM Run WHERE app_id=? ORDER BY started_at DESC, rowid DESC${limitClause}`,
           )
           .all(appFilter)
       : db
           .prepare(
-            `SELECT id, app_id, state, trigger, started_at, ended_at FROM Run ORDER BY started_at DESC, rowid DESC`,
+            `SELECT id, app_id, state, trigger, started_at, ended_at FROM Run ORDER BY started_at DESC, rowid DESC${limitClause}`,
           )
           .all()
   ) as {
@@ -744,7 +753,7 @@ export async function dispatch(argv: string[], deps: Deps = defaultDeps): Promis
     case 'status':
       return cmdStatus();
     case 'runs':
-      return cmdRuns(positionals[0]);
+      return cmdRuns(positionals[0], flags.limit);
     case 'trace':
       return cmdTrace(positionals[0]);
     case 'run':

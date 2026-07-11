@@ -49,11 +49,15 @@
 - **那么** 对应 check 必须非 `ok`,顶层 `ok` 必须为 `false`
 
 ### 需求:只读命令映射事件状态
-`status` / `runs` / `trace` 必须为只读,并以 `RunEvent` 推导展示状态:`status` 显示各 app 最新 run 的 state;`trace` 显示某 run 的完整事件时间线与待批动作。
+`status` / `runs` / `trace` 必须为只读,并以 `RunEvent` 推导展示状态:`status` 显示各 app 最新 run 的 state;`runs [<app>]` 显示 run 历史(可按 app 过滤),`--limit N`(正整数,否则退出码 2)取最近 N 条(`started_at` DESC);`trace` 显示某 run 的完整事件时间线与待批动作。
 
 #### 场景:等审批可见
 - **当** 某 run 处于 `waiting_human`
 - **那么** `status --json` 必须显示该 state,`trace <run>` 必须列出其 `pendingApprovals`
+
+#### 场景:runs --limit 取最近 N 条
+- **当** 库中有 M 条 run 且执行 `runs --limit N`(N<M)
+- **那么** 必须只返回最近 N 条(`started_at` 倒序);`--limit` 非正整数则退出码 2(usage)
 
 #### 场景:完整时间线
 - **当** 某 run 已完成

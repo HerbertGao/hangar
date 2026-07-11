@@ -211,6 +211,34 @@ test('read-only commands on an unreadable existing db throw (not silent empty)',
   }
 });
 
+// ── runs --limit: 取最近 N 条(管道消费者收小输出、避 process.exit 截断 + 无界增长)──
+test('runs --limit N caps to the N most-recent runs; invalid limit is a usage error', async () => {
+  const { dbPath } = tmpEnv();
+  const db = openDb(dbPath);
+  const ins = db.prepare(
+    'INSERT INTO Run (id,app_id,state,trigger,started_at,lock_owner) VALUES (?,?,?,?,?,?)',
+  );
+  for (let i = 0; i < 5; i++) {
+    ins.run(`r${i}`, 'app', 'completed', 'poll', `2026-07-01T00:0${i}:00.000Z`, null);
+  }
+  db.close();
+
+  const all = await dispatch(['runs']);
+  assert.equal((all.json as unknown[]).length, 5, 'no --limit → all runs');
+
+  const two = await dispatch(['runs', '--limit', '2']);
+  const rows = two.json as { id: string }[];
+  assert.equal(rows.length, 2, '--limit 2 → 2 runs');
+  assert.deepEqual(
+    rows.map((r) => r.id),
+    ['r4', 'r3'],
+    '--limit keeps the most-recent (started_at DESC)',
+  );
+
+  assert.equal((await dispatch(['runs', '--limit', '0'])).code, 2, '--limit 0 → usage error');
+  assert.equal((await dispatch(['runs', '--limit', 'abc'])).code, 2, '--limit abc → usage error');
+});
+
 // ── 6.3 derived "blocked" ────────────────────────────────────────────────────
 test('deriveBlocked: waiting_human past one cron period is blocked; else not', () => {
   const triggers = [{ schedule: '* * * * *' }]; // 60s period
