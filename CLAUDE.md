@@ -22,7 +22,7 @@
 
 ## 非目标(别顺手做)
 
-对话助手 · 工作流画布 · prompt 管理平台 · 面向外部市场的产品 · 多租户/RBAC/计费 · marketplace/A2A · web workbench · 模型/向量库 · 通用 durable 引擎。这些**除非「给别人用」升级成真赌注,否则不在本项目范围**(见 `ROADMAP.md` 出口闸)。
+对话助手 · 工作流画布 · prompt 管理平台 · 面向外部市场的产品 · 多租户/RBAC/计费 · marketplace/A2A · **多用户** web workbench(单用户只读私人 view = `hangar-view`,ROADMAP Phase 1.5 已立项例外)· 模型/向量库 · 通用 durable 引擎。这些**除非「给别人用」升级成真赌注,否则不在本项目范围**(见 `ROADMAP.md` 出口闸)。
 
 ## CLI 规范(每条命令都遵守)
 
