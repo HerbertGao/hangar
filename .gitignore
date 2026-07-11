@@ -15,3 +15,6 @@ hangar.sqlite*
 
 # 外挂 pilot 符号链接(机器特定,部署时按各机 path 重建)
 /apps/inbox
+
+# cloudflared 凭据(secret;权威路径 ~/.cloudflared/<UUID>.json,防误落仓内 deploy 目录)
+packages/hangar-view/deploy/cloudflared/*.json

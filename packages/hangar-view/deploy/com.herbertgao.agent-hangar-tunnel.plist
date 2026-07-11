@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- agent-hangar cloudflared tunnel —— 用户域 launchd(免 sudo),开机自启 + 崩溃拉起。
+     config 走仓内 deploy/cloudflared/config.yml(权威 ingress);凭据在 ~/.cloudflared/<UUID>.json。
+     路径按 home=/Users/herbertgao、repo=~/hangar 写死;用户名/checkout 不同则改绝对路径。 -->
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.herbertgao.agent-hangar-tunnel</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/opt/homebrew/bin/cloudflared</string>
+    <string>tunnel</string>
+    <string>--config</string>
+    <string>/Users/herbertgao/hangar/packages/hangar-view/deploy/cloudflared/config.yml</string>
+    <string>--no-autoupdate</string>
+    <string>run</string>
+  </array>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><true/>
+  <key>ThrottleInterval</key><integer>10</integer>
+  <key>StandardOutPath</key><string>/Users/herbertgao/hangar-view-tunnel.out.log</string>
+  <key>StandardErrorPath</key><string>/Users/herbertgao/hangar-view-tunnel.err.log</string>
+  <key>EnvironmentVariables</key>
+  <dict><key>PATH</key><string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string></dict>
+</dict>
+</plist>

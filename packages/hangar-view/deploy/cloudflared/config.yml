@@ -1,0 +1,18 @@
+# agent-hangar —— Cloudflare Tunnel(locally-managed)。仓内 config = 权威 ingress
+# (照 ai-radar/model-radar 范式)。tunnel UUID / hostname 非 secret,提交进仓;
+# 凭据 JSON 另存 ~/.cloudflared/<UUID>.json(host-only、gitignore,由
+# `cloudflared tunnel create agent-hangar` 生成)。
+#
+# 定位:agent.heapcn.dev = 私有监控面(Access 门后看所有 pilot 的 hangar-view)。
+# 与 daemon / ai-radar 的 model-radar tunnel 隔离——此 tunnel 挂了不影响它们,反之亦然。
+tunnel: 5e23c28d-871c-4dd7-bd52-1ce3df9c88ae
+credentials-file: /Users/herbertgao/.cloudflared/5e23c28d-871c-4dd7-bd52-1ce3df9c88ae.json
+
+# 本机 UDP/QUIC 出网被拦(WARP/utun 改写边缘 IP 为 198.18.x.x),锁 http2/TCP
+# ——与 ai-radar 的 cloudflared 同法(precheck 也建议 http2)。
+protocol: http2
+
+ingress:
+  - hostname: agent.heapcn.dev
+    service: http://127.0.0.1:8787   # cloudflared 从本机 loopback 连 view(view 绑 127.0.0.1)
+  - service: http_status:404
