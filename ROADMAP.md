@@ -48,7 +48,7 @@ Phase 0 是单用户单进程玩具;下列问题只在「每天 cron + 可能多
 
 ## Phase 1.5 — hangar-view「虚拟办公室」监控前端(与出口闸并行)
 
-**目标:** 脊柱外一个**独立、只读**的呈现层——每个 pilot 一名虚拟员工,不碰 SSH/CLI、外出经 Cloudflare Tunnel+Access 就能看到「谁忙 / 谁翻车 / 谁等你拍板 + hangar 本体活没活」。**零改 core**(subprocess 调 `hangar … --json` + 只读 `app.yaml`)。定位:它**服务于** Phase 1 出口闸(好玩→更愿天天开),不与之竞争;换谁当 pilot 都复用。设计 SOT:`docs/proposals/hangar-view.md`。**先作 hangar 仓内独立 package**(零 import core、只 subprocess 调 CLI),真要给别人用再 graduate 成独立 repo。
+**目标:** 脊柱外一个**独立、只读**的呈现层——每个 pilot 一名虚拟员工,不碰 SSH/CLI、外出经 Cloudflare Tunnel+Access 就能看到「谁忙 / 谁翻车 / 谁等你拍板 + hangar 本体活没活」。**零改 core**(subprocess 调 `hangar … --json` + 只读 `app.yaml`)。定位:它**服务于** Phase 1 出口闸(好玩→更愿天天开),不与之竞争;换谁当 pilot 都复用。设计 SOT:`openspec/specs/hangar-view/spec.md`(历史设计提案见 `docs/proposals/hangar-view.md`,已加横幅标注权威源)。**先作 hangar 仓内独立 package**(零 import core、只 subprocess 调 CLI),真要给别人用再 graduate 成独立 repo。
 
 **DoD:**
 - 外出用手机打开(CF Tunnel + Access 边缘鉴权),3 秒看清 inbox 员工近况(情绪照最近一次 run 衰减)+ hangar 活没活(poll 逾期 2× → 全员 AWOL 报警),全程不碰 SSH/CLI。

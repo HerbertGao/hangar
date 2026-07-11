@@ -204,8 +204,9 @@ export interface DoctorReport {
     pnpm: string;
     sqlite_writable: string;
     apps_dir: string;
-    apps: { id: string; spec: string; pipeline: string }[];
-    /** apps blocked by an overdue parked run — derived, same rule as status. */
+    apps: { id: string; spec: string; pipeline: string; enabled?: boolean }[];
+    /** apps blocked by an overdue parked run — derived, same rule as status.
+     *  enabled:false apps are never listed here (not scheduled → never overdue). */
     blocked: string[];
   };
 }
@@ -232,7 +233,9 @@ export function doctorReport(): DoctorReport {
       id: a.id,
       spec: 'ok',
       pipeline: checkPipeline(a) === 'pipeline_missing' ? 'pipeline_missing' : 'ok',
+      enabled: a.spec.enabled, // zod default(true) ⇒ always boolean
     })),
+    // Registration failures have no parsed spec → omit `enabled` (consumers treat absent as true).
     ...load.errors.map((e) => ({ id: e.id, spec: e.kind, pipeline: 'unknown' })),
   ];
 
@@ -249,6 +252,9 @@ export function doctorReport(): DoctorReport {
       try {
         const nowMs = Date.now();
         for (const a of load.apps) {
+          // disabled apps are still listed in checks.apps, but never derived as blocked
+          // (deriveBlocked ignores enabled + disabled triggers stay non-empty → explicit guard, D5).
+          if (a.spec.enabled === false) continue;
           const latest = db
             .prepare(
               `SELECT state, started_at FROM Run WHERE app_id=? ORDER BY started_at DESC, rowid DESC LIMIT 1`,
@@ -314,9 +320,12 @@ function cmdStatus(): Result {
           )
           .get(app.id) as { id: string; state: string; started_at: string } | undefined)
       : undefined;
-    const blocked = latest
-      ? deriveBlocked(app.spec.triggers, latest.state, latest.started_at, now)
-      : false;
+    // disabled apps stay listed but never derive blocked (explicit guard, D5): deriveBlocked
+    // ignores enabled and disabled triggers stay non-empty, so there's no free equivalence.
+    const blocked =
+      app.spec.enabled !== false && latest
+        ? deriveBlocked(app.spec.triggers, latest.state, latest.started_at, now)
+        : false;
     return {
       app: app.id,
       lastRun: latest?.id ?? null,
@@ -585,16 +594,18 @@ export function hasActiveRun(db: DB, appId: string): boolean {
 export function daemonTasks(
   load: RegistryLoad,
 ): { appId: string; name?: string; schedule: string; timezone?: string }[] {
-  return load.apps.flatMap((app) =>
-    app.spec.triggers.flatMap((t) =>
-      [...new Set(Array.isArray(t.schedule) ? t.schedule : [t.schedule])].map((schedule) => ({
-        appId: app.id,
-        name: t.name,
-        schedule,
-        timezone: t.timezone,
-      })),
-    ),
-  );
+  return load.apps
+    .filter((app) => app.spec.enabled !== false) // enabled:false ⇒ not auto-scheduled
+    .flatMap((app) =>
+      app.spec.triggers.flatMap((t) =>
+        [...new Set(Array.isArray(t.schedule) ? t.schedule : [t.schedule])].map((schedule) => ({
+          appId: app.id,
+          name: t.name,
+          schedule,
+          timezone: t.timezone,
+        })),
+      ),
+    );
 }
 
 /** Injectable seams for the per-daemon fire gate (fake clock / fake runApp for self-check). */

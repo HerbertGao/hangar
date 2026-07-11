@@ -88,6 +88,7 @@ apps/                 # = HANGAR_APPS(默认 ./apps)
 id: inbox                      # 唯一,= 目录名
 name: Inbox Pilot
 executor: pipeline             # pipeline | llm-direct | claude-code | codex(v0 只实现 pipeline)
+enabled: true                  # 可选,默认 true;false = 禁用但保留(见下「disable 契约」)
 
 triggers:                      # 一或多个具名触发器;name 在 >1 触发器时必填且同 app 内唯一
   - type: cron                 # 判别字:v0 仅 'cron';webhook/manual/event 留作未来 type 臂(Phase 3、#6 门控,现不建机制)
@@ -120,6 +121,11 @@ config:
   - `schedule` 接受**单条 cron 或非空 cron 数组**(数组 = 同一触发器多个时刻,如 digest 的 06:00/12:30/19:00 分钟不齐、一条 cron 表达不了)。**每条 schedule 须为合法 cron**,空串/非法(如 `"30 12 * *"`)→ `spec_invalid`、doctor 报错、app 不注册。**为何在 load 时拦**:daemon 的 `cron.schedule` 循环无 try/catch,非法 cron 会**同步抛并崩掉整个 daemon**、所有 app 停调度;load-时校验把这层挡在注册前,daemon 循环因此可假设 cron 已合法。
   - `name` 可选,但 **app 的 triggers 条目数 > 1 时每个必填、且同 app 内各 name 互不重复**(否则 `spec_invalid`)。单触发可省 name(heartbeat/现 inbox poll → `ctx.trigger=undefined`、零改动)。为何唯一:name 是触发身份(§3.5 路由、§3.4 pending 去重都拿它当键),重名会使 `ctx.trigger`/`Run.trigger`/pending 归因塌陷。判定按**触发器条目数**、不按数组展开后的任务数。
   - **`config`/`permissions` 仍 app 级**,触发器**不携带**自己的 config/permissions/executor(YAGNI/#2;`run(ctx)` 拿 app.config + ctx.trigger 自行分支即可)。这**不新增 app 定义方式**——`app.yaml` 仍是唯一入口(#4)。
+- **disable 契约(app 生命周期开关,通用脊柱能力;退役 heartbeat 是首用例、非过拟合 #2):** `enabled: boolean` 可选、默认 `true`;`false` = **禁用但保留**该 app。语义三条:① daemon **跳过**其 cron 触发(不自动 park);② hangar-view 办公室**不上墙**(`doctor` 仍如实报 `enabled:false`,是**显式排除**、非静默省略);③ **手动 `hangar run <app>` 仍放行**(operator / DoD 夹具照跑)——一个 committed flag 同时满足「CI 里可测 + 生产里隐身」(disabled ≠ 完全动不了)。
+  - **落 `app.yaml` 不落 App 表列**:App 表非权威、一次 rescan 即与 FS 漂移;声明式 + 随仓版本可控(`git pull` 不冲掉)、零 DB 改动(#3)。取代 §「App 表」段早稿的「`enabled` 列」设想。
+  - **仅对 valid app 生效**:`enabled` 只在 `app.yaml` 整体过 zod 时解析,坏 app.yaml(`spec_invalid`)**无法**用此旗禁言(仍呈⚠️);disable 是 valid-app 的生命周期开关,不是压制注册错误的手段。**broken 优先于 disabled**——`spec`/`pipeline` 坏一律先呈「配置坏了」⚠️,禁用只排除 otherwise-healthy(`spec=ok ∧ pipeline=ok`)的 app。
+  - **D5 显式 guard(早稿「等价于无可调度触发器」被评审证伪):** disabled **不清空** `triggers`、`deriveBlocked` **不读** `enabled`,故无免费等价——调度馈入(daemon)+ blocked 派生(doctor/status)**三处各自显式 guard**(共享 `enabled !== false` 判据、非同一段代码);disabled app **仍列在** status/doctor(不 delist),guard 只作用于「排期 + 派生阻塞」,不作用于「是否列出」。
+  - **#2 论证**:disable 不在 inbox pipeline 里被调用,但属 **OS 层 app 生命周期管理**(与 `registry`/`doctor`/`status`/多触发调度同族、零域名词 #1);「App 表」段早预留「启停」、本变更是已预见需求的兑现;同「多触发 = 通用能力、inbox poll+digest 首用例」框架,disable 的首用例是**退役 heartbeat**(其 daily cron 在生产天天 park demo.risky、天天冒假警报,又是 DoD §8.1 夹具不可删)。缺省 `true`,现有 app 零变化(向后兼容)。
 - `defineApp()` 不做了(Q5 采纳单入口方案后作废)。
 
 ### 3.3 OS 存储(`hangar.sqlite`,只此 4 表)
@@ -132,7 +138,7 @@ Approval   (id PK, run_id, tool, args_json, status, requested_at, decided_at, de
 ```
 
 **OS 永远不知道「邮件」这个概念存在。** 域细节全在 `RunEvent.payload_json`(如 `{kind:"classified", count:12, flagged:2}`)。
-- App 表是 `apps/*/` 扫描的缓存,registry 每次加载重扫 FS(App 表非权威,避免漂移);`spec_hash/enabled` 等列 Phase 0 无消费者,有需求(漂移检测/启停)再加。
+- App 表是 `apps/*/` 扫描的缓存,registry 每次加载重扫 FS(App 表非权威,避免漂移);`spec_hash` 列 Phase 0 无消费者,有漂移检测需求再加。**「启停」需求(早稿设想的 `enabled` 列)已兑现为 `app.yaml` 声明式字段 `enabled`(见 §3.2 disable 契约),不落 App 表列**——App 表非权威、一次 rescan 即与 FS 漂移;开关属「这个 app 是什么」的声明,归唯一入口 `app.yaml`(#4)+ FS 即权威。
 - `Run.state` 是缓存列,真相源永远是 `RunEvent`:写终态事件、更新 `Run.state`、释放 app 锁**必须同一事务**(锁骑在 state 上,不同步即锁失真)。
 - `Run.trigger` 列**复用**存触发身份(守 #3 不加表):值 = `triggerName ?? req.trigger ?? 'manual'`——具名触发器存其 `name`(供 trace 按触发器归因),缺 name 回退触发类别(`cron`/`manual`)。**该列自此混载 trigger name 与类别**,现无消费者 switch 它(仅 `hangar runs` 透传显示);未来消费者**不得假设**值域仅 `{cron, manual}`。
 

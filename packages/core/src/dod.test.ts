@@ -80,7 +80,7 @@ test('8.1 doctor(no db) → run heartbeat→waiting_human(2 pending) → status 
   assert.equal(report.ok, true, 'doctor reports green');
   assert.deepEqual(
     report.checks.apps.find((a) => a.id === 'heartbeat'),
-    { id: 'heartbeat', spec: 'ok', pipeline: 'ok' },
+    { id: 'heartbeat', spec: 'ok', pipeline: 'ok', enabled: false },
   );
   assert.equal(existsSync(dbPath), false, 'doctor never creates hangar.sqlite');
 

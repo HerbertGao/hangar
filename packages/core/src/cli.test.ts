@@ -86,13 +86,13 @@ test('doctor never creates the db and reports ok on a green env (even as root)',
   assert.equal(res.code, 0);
   const report = res.json as {
     ok: boolean;
-    checks: { sqlite_writable: string; apps_dir: string; apps: { id: string; spec: string; pipeline: string }[] };
+    checks: { sqlite_writable: string; apps_dir: string; apps: { id: string; spec: string; pipeline: string; enabled?: boolean }[] };
   };
   assert.equal(report.checks.sqlite_writable, 'ok'); // dir writable, file absent
   assert.equal(report.checks.apps_dir, 'ok');
   assert.deepEqual(
     report.checks.apps.find((a) => a.id === 'good'),
-    { id: 'good', spec: 'ok', pipeline: 'ok' },
+    { id: 'good', spec: 'ok', pipeline: 'ok', enabled: true },
   );
   assert.equal(report.ok, true);
   assert.equal(existsSync(dbPath), false, 'doctor must not create hangar.sqlite');
@@ -127,6 +127,46 @@ test('doctor derives blocked for an app parked past its cron period (no db creat
   db.close();
   const report = (await dispatch(['doctor'])).json as { checks: { blocked: string[] } };
   assert.deepEqual(report.checks.blocked, ['stuck']);
+});
+
+// ── add-app-disable: disabled app not scheduled, never derived blocked, still listed ──
+test('disabled app: daemonTasks omits it; status/doctor list it with enabled:false but never blocked', async () => {
+  const { dbPath, appsDir } = tmpEnv();
+  writeApp(appsDir, 'live', { approval: ['fake.send'], pipeline: 'export async function run(){}' });
+  writeApp(appsDir, 'off', { approval: ['fake.send'], pipeline: 'export async function run(){}' });
+  const offYaml = join(appsDir, 'off', 'app.yaml');
+  writeFileSync(offYaml, readFileSync(offYaml, 'utf8') + 'enabled: false\n');
+
+  // daemon does not schedule the disabled app (both have a '* * * * *' trigger)
+  assert.deepEqual(
+    daemonTasks(loadApps()).map((t) => t.appId).sort(),
+    ['live'],
+    'enabled:false app is not fed into cron.schedule',
+  );
+
+  // both have an overdue parked run (5m ago > 60s cron period)
+  const db = openDb(dbPath);
+  const old = new Date(Date.now() - 5 * 60_000).toISOString();
+  const ins = db.prepare(
+    'INSERT INTO Run (id,app_id,state,trigger,started_at,lock_owner) VALUES (?,?,?,?,?,?)',
+  );
+  ins.run('r_live', 'live', 'waiting_human', 'cron', old, null);
+  ins.run('r_off', 'off', 'waiting_human', 'cron', old, null);
+  db.close();
+
+  // status: both listed; only the enabled one derives blocked
+  const rows = (await dispatch(['status'])).json as { app: string; blocked: boolean }[];
+  assert.ok(rows.some((r) => r.app === 'off'), 'disabled app still listed in status');
+  assert.equal(rows.find((r) => r.app === 'off')?.blocked, false, 'disabled app never blocked');
+  assert.equal(rows.find((r) => r.app === 'live')?.blocked, true);
+
+  // doctor: disabled app listed with enabled:false, and NOT in checks.blocked
+  const rep = (await dispatch(['doctor'])).json as {
+    checks: { apps: { id: string; enabled?: boolean }[]; blocked: string[] };
+  };
+  assert.equal(rep.checks.apps.find((a) => a.id === 'off')?.enabled, false);
+  assert.equal(rep.checks.apps.find((a) => a.id === 'live')?.enabled, true);
+  assert.deepEqual(rep.checks.blocked, ['live'], 'disabled app excluded from checks.blocked');
 });
 
 // ── 6.3 run_not_found ────────────────────────────────────────────────────────

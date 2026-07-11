@@ -64,7 +64,7 @@ function callCliJson(args) {
   }
 }
 
-/** 只读 apps 根下每个 app.yaml → { [id]: { triggers } }。零 import core;跟随 symlink app 目录。 */
+/** 只读 apps 根下每个 app.yaml → { [id]: { enabled, triggers } }。零 import core;跟随 symlink app 目录。 */
 export function loadAppSpecs(appsDir) {
   const specs = {};
   let entries;
@@ -82,6 +82,8 @@ export function loadAppSpecs(appsDir) {
         // 过滤非对象 trigger 元素(app.yaml 写成 `triggers: [ - ]` → [null] 会让下游 appPeriod/
         // mostFreqTrigger 对 null 取 .schedule 抛 TypeError → 整进程崩)。一处保护两个消费者。
         specs[spec.id] = {
+          // enabled 供 mostFreqTrigger 过滤(beacon 只在 enabled app 间选);缺省 undefined → 视作 true。
+          enabled: spec.enabled,
           triggers: (Array.isArray(spec.triggers) ? spec.triggers : []).filter((t) => t && typeof t === 'object'),
         };
       }
@@ -103,6 +105,7 @@ export function appPeriod(sp) {
 export function mostFreqTrigger(specs) {
   let best = { appId: null, name: null, period: null };
   for (const id of Object.keys(specs)) {
+    if (specs[id].enabled === false) continue; // beacon 只在 enabled app 间选(F1:否则禁用最频繁 cron app 毒化顶层 liveness → 误报「疑似停摆」)
     for (const t of specs[id].triggers) {
       const p = cronPeriodMs(t.schedule, t.timezone);
       if (p != null && (best.period == null || p < best.period)) best = { appId: id, name: t.name, period: p };
@@ -154,6 +157,7 @@ function buildState() {
   const runsByApp = {};
   for (const a of doctorApps) {
     if (a.spec !== 'ok') continue; // 注册失败者无需 per-app 取数
+    if (a.enabled === false) continue; // disabled 不上墙,取了也丢弃(3.3 省无谓子进程);与 deriveOffice 同源 doctor.enabled
     appPeriodMs[a.id] = appPeriod(specs[a.id]);
     // per-app 降级粒度;--limit 50:只取最近若干条(view 只需 latest + recentRuns[0..5] + beacon
     // 触发器最近一条),把输出收小到远小于 64KB —— 避开 core CLI 大历史下 process.exit 截断管道 stdout。

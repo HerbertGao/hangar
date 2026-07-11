@@ -39,6 +39,26 @@ test('valid app.yaml registers with defaults applied', () => {
   assert.deepEqual(app.spec.config, {}); // default
 });
 
+// ── enabled field (add-app-disable) ──────────────────────────────────────────
+test('enabled: default true; explicit false still registers (marked, not filtered); non-boolean → spec_invalid', () => {
+  // omitted → defaults to true (back-compat)
+  const def = loadApps(makeApps({ heartbeat: VALID }));
+  assert.equal(def.apps[0].spec.enabled, true);
+
+  // enabled:false is STILL loaded/registered (1.2: MUST NOT filter at loadApps — else
+  // run/approve/doctor lose track of it), just carries the disabled marker.
+  const off = loadApps(makeApps({ heartbeat: VALID + 'enabled: false\n' }));
+  assert.equal(off.errors.length, 0);
+  assert.equal(off.apps.length, 1, 'disabled app still in loadApps().apps');
+  assert.equal(off.apps[0].id, 'heartbeat');
+  assert.equal(off.apps[0].spec.enabled, false);
+
+  // non-boolean → the ordinary spec_invalid path (disable can't silence a bad app.yaml)
+  const bad = loadApps(makeApps({ heartbeat: VALID + 'enabled: "no"\n' }));
+  assert.equal(bad.apps.length, 0);
+  assert.equal(bad.errors[0].kind, 'spec_invalid');
+});
+
 test('missing executor → spec_invalid, not registered', () => {
   const { apps, errors } = loadApps(
     makeApps({ heartbeat: `id: heartbeat\nname: HB\ntriggers: []\n` }),
