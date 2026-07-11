@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  hangar-view launchd agent(ts.mac-mini)。装到 ~/Library/LaunchAgents/。
+  路径按 home=/Users/herbertgao、repo=~/hangar 写死;home/用户名不同则改这些绝对路径。
+  RunAtLoad + KeepAlive:开机自启 + 崩溃拉起。与 com.herbertgao.hangar-inbox 并列。
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.herbertgao.hangar-view</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>/Users/herbertgao/hangar/packages/hangar-view/deploy/hangar-view.sh</string>
+  </array>
+
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/herbertgao/hangar</string>
+
+  <key>StandardOutPath</key>
+  <string>/Users/herbertgao/hangar-view.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>/Users/herbertgao/hangar-view.err.log</string>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+    <!-- 覆盖端口/host/路径可在此加 key;默认见 hangar-view.sh。 -->
+  </dict>
+</dict>
+</plist>
