@@ -33,9 +33,9 @@ min_binary_version: "0.1.0"
 **state 取值:** `queued|running|waiting_human|executing|completed|failed|cancelled`(由 RunEvent 推导)。
 **Agent 约定:** 看到 `waiting_human` → 该 run 在等人拍板,引导用户去 `trace` 看待批动作。
 
-## `hangar runs [<app>] [--json]`
+## `hangar runs [<app>] [--limit N] [--json]`
 
-**用途:** run 历史(可按 app 过滤)。
+**用途:** run 历史(可按 app 过滤)。`--limit N`(正整数,否则退出码 2)只取最近 N 条(started_at DESC)——管道消费者(如 hangar-view)据此把输出收小,避开大历史下写完即 `process.exit` 截断管道 stdout 的坑,并防无界增长。
 **返回:** `[{ "id": "run_a3f", "app": "inbox", "state": "completed", "trigger": "cron", "startedAt": "<iso>", "endedAt": "<iso>" }]`
 
 ## `hangar trace <run> [--json]`

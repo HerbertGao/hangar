@@ -155,7 +155,9 @@ function buildState() {
   for (const a of doctorApps) {
     if (a.spec !== 'ok') continue; // 注册失败者无需 per-app 取数
     appPeriodMs[a.id] = appPeriod(specs[a.id]);
-    const rr = callCliJson(['runs', a.id]); // per-app 降级粒度
+    // per-app 降级粒度;--limit 50:只取最近若干条(view 只需 latest + recentRuns[0..5] + beacon
+    // 触发器最近一条),把输出收小到远小于 64KB —— 避开 core CLI 大历史下 process.exit 截断管道 stdout。
+    const rr = callCliJson(['runs', a.id, '--limit', '50']);
     runsByApp[a.id] = rr.ok ? { ok: true, runs: rr.data } : { ok: false };
   }
 
