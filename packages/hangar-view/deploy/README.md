@@ -54,7 +54,7 @@ tail -f ~/hangar-view.err.log              # 看启动日志(端口 / 路径回�
 brew install cloudflared                    # 若未装
 cloudflared tunnel login                    # 浏览器授权(需 `! cloudflared tunnel login` 在本会话跑,或你终端跑)
 cloudflared tunnel create hangar-view       # 生成 UUID + ~/.cloudflared/<UUID>.json
-cloudflared tunnel route dns hangar-view hangar.<你的域名>
+cloudflared tunnel route dns hangar-view agent.heapcn.dev
 ```
 
 写 `~/.cloudflared/config.yml`:
@@ -63,7 +63,7 @@ cloudflared tunnel route dns hangar-view hangar.<你的域名>
 tunnel: hangar-view
 credentials-file: /Users/herbertgao/.cloudflared/<上一步的 UUID>.json
 ingress:
-  - hostname: hangar.<你的域名>
+  - hostname: agent.heapcn.dev
     service: http://127.0.0.1:8787      # cloudflared 从本机连 view 的 loopback
   - service: http_status:404
 ```
@@ -82,7 +82,7 @@ cloudflared tunnel run hangar-view          # 前台先测通
 Zero Trust 面板(UI,非 CLI):
 
 1. **Access → Applications → Add an application → Self-hosted**。
-2. Application domain = `hangar.<你的域名>`。
+2. Application domain = `agent.heapcn.dev`。
 3. Policy:**Allow**,Include → **Emails** → `heapcn@gmail.com`(你的 Google 账号)。
 4. Session duration 按需(如 24h)。保存。
 
@@ -90,11 +90,11 @@ Zero Trust 面板(UI,非 CLI):
 
 ```bash
 # 4.2:未授权必须被边缘拦截(302 去 CF Access 登录 / 403),不能直接返回页面
-curl -sI https://hangar.<你的域名> | head -3
+curl -sI https://agent.heapcn.dev | head -3
 #  → 见 302 → *.cloudflareaccess.com 或 403 = Access 生效;若直接 200 返回 office = Access 没保护住,回第 5 步
 ```
 
-- **4.3**:手机浏览器开 `https://hangar.<你的域名>` → CF Access 登 Google → 3 秒看清
+- **4.3**:手机浏览器开 `https://agent.heapcn.dev` → CF Access 登 Google → 3 秒看清
   inbox 员工近况 + hangar 活没活,全程不碰 SSH/CLI。翻车时该员工 💥⚠️、等你拍板 🙋⚠️。
 
 ## 回滚
