@@ -64,6 +64,12 @@ function callCliJson(args) {
   }
 }
 
+// YAML 1.2 core parses `no`/`off`/`yes`/`on` as strings — coerce so the beacon skip below
+// (`=== false`) catches `enabled: no` (F1: else a disabled busiest-cron app poisons liveness).
+// Duplicated from @hangar/core registry.ts (view is zero-import-core; keep byte-identical).
+const BOOL_WORDS = { true: true, false: false, yes: true, no: false, on: true, off: false };
+const coerceEnabled = (v) => (typeof v === 'string' ? BOOL_WORDS[v.toLowerCase()] ?? v : v);
+
 /** 只读 apps 根下每个 app.yaml → { [id]: { enabled, triggers } }。零 import core;跟随 symlink app 目录。 */
 export function loadAppSpecs(appsDir) {
   const specs = {};
@@ -82,8 +88,8 @@ export function loadAppSpecs(appsDir) {
         // 过滤非对象 trigger 元素(app.yaml 写成 `triggers: [ - ]` → [null] 会让下游 appPeriod/
         // mostFreqTrigger 对 null 取 .schedule 抛 TypeError → 整进程崩)。一处保护两个消费者。
         specs[spec.id] = {
-          // enabled 供 mostFreqTrigger 过滤(beacon 只在 enabled app 间选);缺省 undefined → 视作 true。
-          enabled: spec.enabled,
+          // enabled 供 mostFreqTrigger 过滤;缺省(undefined)与留空(null)都 `!== false` → beacon 视作 enabled。
+          enabled: coerceEnabled(spec.enabled),
           triggers: (Array.isArray(spec.triggers) ? spec.triggers : []).filter((t) => t && typeof t === 'object'),
         };
       }

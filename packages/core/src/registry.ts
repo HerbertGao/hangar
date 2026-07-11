@@ -66,6 +66,9 @@ const CronTrigger = z
   })
   .strict();
 
+/** YAML 1.2 core parses these as strings, not booleans — coerce for `enabled`. */
+const BOOL_WORDS: Record<string, boolean> = { true: true, false: false, yes: true, no: false, on: true, off: false };
+
 /** AgentAppSpec — the sole app-definition entry (app.yaml). See DESIGN §3.2. */
 export const SpecSchema = z
   .object({
@@ -78,10 +81,14 @@ export const SpecSchema = z
       .object({ approval: z.array(z.string()).default([]) })
       .default({ approval: [] }),
     config: z.record(z.string(), z.unknown()).default({}),
-    // Lifecycle switch (FS-authoritative, see DESIGN §3.2). enabled:false ⇒ still
-    // loaded/registered but not auto-scheduled, not derived-blocked, excluded from the
-    // office roster; manual `run`/`approve` are unaffected. Default true = back-compat.
-    enabled: z.boolean().optional().default(true),
+    // Lifecycle switch (FS-authoritative, DESIGN §3.2). enabled:false ⇒ registered but not
+    // scheduled / not derived-blocked / off the office roster; manual run/approve unaffected.
+    // Missing OR blank(`enabled:` → null) ⇒ default true (both "unset", back-compat);
+    // BOOL_WORDS coerces yaml boolean-word strings (see const above).
+    enabled: z.preprocess(
+      (v) => (v == null ? undefined : typeof v === 'string' ? (BOOL_WORDS[v.toLowerCase()] ?? v) : v),
+      z.boolean().default(true),
+    ),
   })
   // >1 trigger ENTRIES (not array-schedule fan-out) ⇒ each needs a non-empty name,
   // all names unique — name is the trigger identity for ctx.trigger / Run.trigger /

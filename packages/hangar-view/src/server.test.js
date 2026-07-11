@@ -87,3 +87,22 @@ test('5.5:全 enabled app 无 cron → beacon unknown,不报停摆', () => {
     rmSync(dir, { recursive: true, force: true });
   }
 });
+
+// 5.5 coercion 一致性:`enabled: no`(YAML 字符串,非布尔)必须也让 beacon 跳过它。否则 core/daemon/
+// office 都按 `no` 禁用了它,唯独 view 的 beacon 用生 yaml 值(`'no' === false` 为 false)不跳 →
+// 复现 F1 假「疑似停摆」。loadAppSpecs MUST 与 core registry 同法 coerce。
+test('5.5:enabled: no(coerce)的最频繁 cron app 也被 beacon 跳过', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'hangar-view-beacon-no-'));
+  try {
+    mkdirSync(join(dir, 'fastno'));
+    writeFileSync(join(dir, 'fastno', 'app.yaml'), 'id: fastno\nenabled: no\ntriggers:\n  - schedule: "* * * * *"\n');
+    mkdirSync(join(dir, 'slowon'));
+    writeFileSync(join(dir, 'slowon', 'app.yaml'), 'id: slowon\ntriggers:\n  - name: poll\n    schedule: "*/5 * * * *"\n');
+    const specs = loadAppSpecs(dir);
+    assert.equal(specs.fastno.enabled, false, 'enabled: no coerces to false in loadAppSpecs (beacon path)');
+    const mf = mostFreqTrigger(specs);
+    assert.equal(mf.appId, 'slowon', 'enabled: no 的最频繁 cron app 不被选为 beacon(coerce 生效)');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
