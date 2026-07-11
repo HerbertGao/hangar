@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>hangar · 虚拟办公室</title>
+<style>
+  /* ── 房间氛围光 = 存活状态(焦点):data-live 切换整间办公室的灯 ──────────────── */
+  :root {
+    color-scheme: dark;
+    --ink: #e9edf7; --muted: #9aa4c4; --faint: #6b7597;
+    --panel: #1a1e2b; --line: #2b3145;
+    /* ambient(默认 unknown) */
+    --amb: #8a93b2; --amb-soft: rgba(138,147,178,.10); --amb-glow: rgba(138,147,178,.22);
+    --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .room[data-live="alive"]         { --amb:#43d6a0; --amb-soft:rgba(67,214,160,.11); --amb-glow:rgba(67,214,160,.30); }
+  .room[data-live="suspected_awol"]{ --amb:#f0a83a; --amb-soft:rgba(240,168,58,.13); --amb-glow:rgba(240,168,58,.34); }
+  .room[data-live="unknown"]       { --amb:#8a93b2; --amb-soft:rgba(138,147,178,.10); --amb-glow:rgba(138,147,178,.22); }
+  .room[data-live="fetch_failed"]  { --amb:#ef5a63; --amb-soft:rgba(239,90,99,.13); --amb-glow:rgba(239,90,99,.32); }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    /* ponytail: 系统字体栈刻意——私有只读运维面板,不打包 display 字体(零字节/移动端原生/无 FOUT)。 */
+    font-family: -apple-system, "PingFang SC", "Segoe UI", system-ui, sans-serif;
+    color: var(--ink); background: #0e1017;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--amb-glow); color: #fff; }
+  a, button { color: inherit; }
+  :focus-visible { outline: 2px solid var(--amb); outline-offset: 2px; border-radius: 6px; }
+
+  /* 整间房：背景随氛围光轻微染色 + 顶光晕 */
+  .room {
+    min-height: 100dvh; display: flex; flex-direction: column;
+    background:
+      radial-gradient(120% 80% at 50% -20%, var(--amb-soft), transparent 60%),
+      radial-gradient(140% 120% at 50% 0%, #232a41 0%, #161a27 52%, #0e1017 100%);
+    transition: background .6s var(--ease);
+  }
+
+  /* ── HUD:标题 · 存活焦点 · 配置角标 ─────────────────────────────────────────── */
+  .hud { display: flex; align-items: center; gap: 14px; padding: 16px 22px 4px; flex-wrap: wrap; }
+  .brand { font-size: 17px; font-weight: 700; letter-spacing: .3px; display: flex; align-items: center; gap: 8px; }
+  .brand .b { font-size: 20px; filter: saturate(1.1); }
+  .spacer { flex: 1; }
+
+  /* 存活焦点:比一切都醒目——一眼答「hangar 活没活」 */
+  .focal { display: inline-flex; align-items: center; gap: 9px; padding: 8px 15px 8px 12px;
+    border-radius: 999px; background: var(--amb-soft); border: 1px solid var(--amb);
+    font-weight: 650; font-size: 14px; color: var(--ink); white-space: nowrap;
+    box-shadow: 0 0 22px -6px var(--amb-glow); transition: all .5s var(--ease); }
+  .focal .beacon { width: 11px; height: 11px; border-radius: 50%; background: var(--amb);
+    box-shadow: 0 0 0 0 var(--amb-glow); position: relative; }
+  .room[data-live="alive"] .focal .beacon { animation: beat 2.6s var(--ease) infinite; }
+  .room[data-live="suspected_awol"] .focal .beacon,
+  .room[data-live="fetch_failed"] .focal .beacon { animation: beat 1.1s var(--ease) infinite; }
+  @keyframes beat { 0%,100%{ box-shadow:0 0 0 0 var(--amb-glow) } 50%{ box-shadow:0 0 0 7px transparent } }
+
+  .cfg { position: relative; }
+  .cfg-btn { width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line);
+    background: var(--panel); font-size: 15px; cursor: pointer; display: grid; place-items: center;
+    transition: transform .12s var(--ease), border-color .12s; }
+  .cfg-btn:hover { border-color: var(--amb); }
+  .cfg-btn:active { transform: scale(.94); }
+  .cfg-pop { position: absolute; right: 0; top: 42px; z-index: 6; width: min(360px, 82vw);
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 13px;
+    font-size: 12px; color: var(--muted); word-break: break-all; box-shadow: 0 18px 44px rgba(0,0,0,.5);
+    opacity: 0; transform: translateY(-6px) scale(.98); pointer-events: none; transition: all .16s var(--ease); }
+  .cfg[data-open="1"] .cfg-pop { opacity: 1; transform: none; pointer-events: auto; }
+  .cfg-pop code { color: #c6cff0; }
+  .cfg-pop .row { padding: 3px 0; }
+  .cfg-warn { display: block; margin-top: 9px; padding: 8px 10px; border-radius: 8px;
+    background: rgba(240,168,58,.12); border: 1px solid #a06a1e; color: #ffdca0; font-size: 12px; }
+  .cfg-dot { position: absolute; top: -2px; right: -2px; width: 9px; height: 9px; border-radius: 50%;
+    background: #f0a83a; box-shadow: 0 0 8px #f0a83a; } /* 未对齐告警时亮 */
+
+  .subline { padding: 2px 22px 0; font-size: 12px; color: var(--faint); }
+  .subline .live-note { color: var(--muted); }
+
+  .banner { margin: 10px 22px 0; padding: 11px 14px; border-radius: 10px; font-size: 13.5px;
+    background: rgba(239,90,99,.12); border: 1px solid #a03038; color: #ffb9bf; }
+  .banner.stale { background: rgba(240,168,58,.12); border-color: #a06a1e; color: #ffdca0; }
+
+  /* ── 办公室地板(透视)+ 工位 ───────────────────────────────────────────────── */
+  .stage { flex: 1; position: relative; display: grid; place-items: end center; padding: 20px 20px 9%; overflow: hidden; }
+  /* 地板：一块向后倾斜的网格平面,给房间纵深(角色不倾斜,只有地板倾斜) */
+  .stage::before { content: ""; position: absolute; left: 50%; bottom: -6%;
+    width: 150%; height: 62%; transform: translateX(-50%) perspective(560px) rotateX(64deg);
+    transform-origin: bottom center;
+    background:
+      linear-gradient(transparent, var(--amb-soft)),
+      repeating-linear-gradient(90deg, transparent 0 46px, rgba(255,255,255,.045) 46px 47px),
+      repeating-linear-gradient(0deg, transparent 0 46px, rgba(255,255,255,.045) 46px 47px),
+      linear-gradient(#1b2132, #121626);
+    border-top: 1px solid var(--amb-soft);
+    -webkit-mask-image: linear-gradient(#000 40%, transparent); mask-image: linear-gradient(#000 40%, transparent);
+    pointer-events: none; transition: background .6s var(--ease); }
+
+  .desks { position: relative; z-index: 1; display: flex; flex-wrap: wrap; justify-content: center;
+    align-items: flex-start; gap: 30px 34px; max-width: 980px; } /* 顶对齐:桌子上方角色区等高 → 桌子成一条线 */
+  .empty { color: var(--faint); font-size: 14px; padding: 60px 0; }
+
+  /* 一个工位 */
+  .ws { position: relative; width: 148px; display: flex; flex-direction: column; align-items: center;
+    cursor: pointer; padding-top: 26px; }
+  .ws:focus-visible { outline: none; } .ws:focus-visible .desk { outline: 2px solid var(--amb); outline-offset: 4px; }
+
+  /* 头顶任务标记(⚠️)——游戏式,浮在角色上方,只在 alert 时出现 */
+  .marker { position: absolute; top: -6px; font-size: 21px; line-height: 1;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,.5)); animation: hover 1.9s var(--ease) infinite; }
+  @keyframes hover { 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-6px) } }
+
+  /* 角色 */
+  .char { font-size: 46px; line-height: 1; position: relative; z-index: 2; margin-bottom: -8px;
+    filter: drop-shadow(0 6px 5px rgba(0,0,0,.35)); transform-origin: bottom center; }
+  /* 桌子:一块桌面 + 台灯暖光 + 一台小显示器 */
+  .desk { position: relative; width: 118px; height: 30px; border-radius: 7px 7px 5px 5px;
+    background: linear-gradient(#2a3350, #202741); border: 1px solid #333d5c;
+    box-shadow: 0 10px 18px -8px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.06); }
+  .desk::before { content: ""; position: absolute; top: -12px; left: 16px; width: 26px; height: 15px;
+    border-radius: 3px; background: #11151f; border: 1px solid #39456b;
+    box-shadow: 0 0 12px -1px var(--amb-glow); } /* 显示器,随氛围光发微光 */
+  .desk::after { content: ""; position: absolute; top: -20px; right: 12px; width: 34px; height: 34px;
+    border-radius: 50%; background: radial-gradient(circle at 50% 40%, var(--amb-glow), transparent 68%);
+    opacity: .8; pointer-events: none; } /* 台灯暖光晕 */
+  /* 铭牌锁高:状态钳到 ≤2 行 + 预留固定高度 → 每个工位等高、桌子对齐、子行位置固定,换行不错乱 */
+  .plate { display: block; margin-top: 13px; text-align: center; }
+  .plate .name { display: block; font-weight: 700; font-size: 14.5px; letter-spacing: .2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .plate .status { display: block; margin: 4px auto 0; font-size: 12px; color: var(--muted); line-height: 1.4;
+    max-width: 156px; min-height: calc(2 * 1.4em); /* 恒占 2 行高:主状态 1 行 + 括号注 1 行(或留白),桌子/sub 位置锁死 */
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .plate .status .detail { display: block; font-size: 11px; color: var(--faint);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .plate .sub { display: block; margin-top: 5px; font-size: 10.5px; color: var(--faint); font-variant-numeric: tabular-nums;
+    min-height: 13px; } /* 无 sub 的员工(never_worked/spec_broken)也占位,工位不缩 */
+
+  .ws:hover .char { transform: translateY(-3px); }
+  .ws:active .desk { transform: scale(.98); }
+
+  /* 待机情绪动画(角色) —— 慢、克制,卖「活的办公室」不抢戏 */
+  .ws[data-mood="napping"] .char,
+  .ws[data-mood="wrapped_up"] .char { animation: breathe 3.4s var(--ease) infinite; }
+  .ws[data-mood="working"] .char    { animation: type 1.5s var(--ease) infinite; }
+  .ws[data-mood="just_done"] .char  { animation: cheer 2.2s var(--ease) infinite; }
+  .ws[data-mood="stuck"] .char      { animation: fret .5s ease-in-out infinite; }
+  .ws[data-mood="crashed"] .char    { transform: rotate(-8deg) translateY(2px); filter: drop-shadow(0 6px 5px rgba(0,0,0,.35)) grayscale(.3); }
+  .ws[data-mood="raising_hand"] .char,
+  .ws[data-mood="raising_hand_overdue"] .char { animation: wave 1.4s var(--ease) infinite; }
+  .ws[data-mood="never_worked"] .char { opacity: .8; }
+  /* 打盹的 zzz */
+  .ws[data-mood="napping"] .char::after { content: "💤"; position: absolute; top: -14px; right: -14px;
+    font-size: 15px; animation: drift 3.4s var(--ease) infinite; }
+  @keyframes breathe { 0%,100%{ transform: translateY(0) scale(1) } 50%{ transform: translateY(1px) scale(1.04) } }
+  @keyframes type    { 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-2px) } }
+  @keyframes cheer   { 0%,100%{ transform: translateY(0) rotate(0) } 30%{ transform: translateY(-4px) rotate(-3deg) } 60%{ transform: translateY(0) rotate(2deg) } }
+  @keyframes fret    { 0%,100%{ transform: translateX(0) } 25%{ transform: translateX(-1.5px) } 75%{ transform: translateX(1.5px) } }
+  @keyframes wave    { 0%,100%{ transform: rotate(-4deg) } 50%{ transform: rotate(6deg) } }
+  @keyframes drift   { 0%{ opacity:0; transform: translateY(2px) } 50%{ opacity:.9 } 100%{ opacity:0; transform: translateY(-8px) } }
+
+  /* 告警工位的桌子高亮 */
+  .ws.alert .desk { border-color: #c56a2a; box-shadow: 0 10px 18px -8px rgba(0,0,0,.6), 0 0 0 1px rgba(197,106,42,.4) inset, 0 0 20px -6px rgba(197,106,42,.5); }
+  .ws[data-mood="crashed"].alert .desk { border-color: #a03038; box-shadow: 0 10px 18px -8px rgba(0,0,0,.6), 0 0 20px -6px rgba(224,85,95,.5); }
+
+  .updated { text-align: center; font-size: 11px; color: var(--faint); padding: 10px 0 18px;
+    font-variant-numeric: tabular-nums; }
+
+  /* ── 抽屉 ──────────────────────────────────────────────────────────────────── */
+  .overlay { position: fixed; inset: 0; background: rgba(6,8,15,.62); z-index: 10;
+    animation: fade .16s var(--ease); }
+  .drawer { position: fixed; z-index: 11; top: 0; right: 0; height: 100%; width: min(430px, 92vw);
+    background: #141a2c; border-left: 1px solid var(--line); padding: 20px; overflow-y: auto;
+    box-shadow: -14px 0 44px rgba(0,0,0,.5); animation: slide .26s var(--ease); }
+  @keyframes fade { from{ opacity: 0 } } @keyframes slide { from{ transform: translateX(24px); opacity: .4 } }
+  .drawer h2 { margin: 0 0 2px; font-size: 19px; display: flex; align-items: center; gap: 8px; }
+  .drawer .meta { font-size: 13px; color: var(--muted); }
+  .drawer .close { position: absolute; top: 14px; right: 16px; background: none; border: none;
+    color: var(--muted); font-size: 24px; cursor: pointer; line-height: 1; }
+  .drawer h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--faint);
+    margin: 22px 0 9px; }
+  .tl, .runs { list-style: none; margin: 0; padding: 0; }
+  .tl li { display: flex; gap: 10px; align-items: baseline; padding: 7px 0 7px 13px; border-left: 2px solid #39456b; }
+  .tl .kind { font-weight: 600; font-size: 13px; } .tl .at { font-size: 11px; color: var(--faint); margin-left: auto; }
+  .runs li { display: flex; align-items: center; gap: 8px; padding: 8px 0; font-size: 12.5px; border-bottom: 1px solid #232a42; }
+  .chip { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .st-completed { background: rgba(67,214,160,.16); color: #8ee6bf; }
+  .st-failed { background: rgba(239,90,99,.16); color: #ff9ba2; }
+  .st-cancelled { background: #262c40; color: #a7b0cf; }
+  .st-running,.st-executing,.st-queued,.st-waiting_human { background: rgba(120,160,255,.14); color: #9cc2ff; }
+  .runs .tg { color: var(--muted); } .runs .tm { margin-left: auto; color: var(--faint); font-size: 11px; font-variant-numeric: tabular-nums; }
+  .note { font-size: 12px; color: var(--muted); background: #1c2338; border: 1px dashed #414d73; border-radius: 8px; padding: 11px; }
+  .appr { font-size: 12.5px; color: #ffd08a; padding: 5px 0; }
+
+  /* ── 移动端:地板收起,工位竖排成一列货架 ───────────────────────────────────── */
+  @media (max-width: 560px) {
+    .stage::before { display: none; }
+    .stage { padding: 10px 14px; align-items: start; }
+    .desks { gap: 16px; }
+    .ws { width: 100%; flex-direction: row; align-items: center; gap: 14px; padding-top: 0;
+      background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; }
+    .ws.alert { border-color: #c56a2a; }
+    .marker { position: static; order: 3; margin-left: auto; animation: none; }
+    .char { font-size: 38px; margin: 0; }
+    .desk { display: none; }
+    .plate { margin: 0; text-align: left; } .plate .status { max-width: none; }
+    .drawer { top: auto; bottom: 0; right: 0; width: 100%; height: min(82vh, 640px); border-radius: 16px 16px 0 0; border-left: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="room" id="room" data-live="unknown">
+  <div class="hud">
+    <span class="brand"><span class="b">🏢</span> hangar 办公室</span>
+    <span class="spacer"></span>
+    <span class="focal" id="focal"><span class="beacon"></span><span id="focalText">连接中…</span></span>
+    <span class="cfg" id="cfg">
+      <button class="cfg-btn" id="cfgBtn" aria-label="配置信息">⚙<span class="cfg-dot" id="cfgDot" hidden></span></button>
+      <div class="cfg-pop" id="cfgPop"></div>
+    </span>
+  </div>
+  <div class="subline"><span id="liveNote" class="live-note"></span></div>
+  <div id="banner" class="banner" hidden></div>
+  <main class="stage"><div class="desks" id="desks"><div class="empty">加载中…</div></div></main>
+  <div class="updated" id="updated"></div>
+</div>
+
+<script>
+"use strict";
+
+// 美术层:mood → 员工小人 emoji。全 12 mood + 兜底,与数据解耦(后可换精灵图/等距)。
+const AVATAR = {
+  working: "🧑‍💻", stuck: "😰", just_done: "🙆", napping: "😴", crashed: "🤕",
+  raising_hand: "🙋", raising_hand_overdue: "🙋", wrapped_up: "🚶",
+  never_worked: "🐣", spec_broken: "🛠️", fetch_failed: "📡", idle: "🧑",
+};
+const avatarFor = (m) => AVATAR[m] || "🧑";
+const LIVE_TEXT = { alive: "hangar 活着", suspected_awol: "hangar 疑似停摆",
+  unknown: "存活未知", fetch_failed: "取数失败 · 重试中" };
+
+const $ = (id) => document.getElementById(id);
+
+function fmtClock(iso) { const d = new Date(iso); return isNaN(d) ? "" : d.toLocaleTimeString("zh-CN", { hour12: false }); }
+function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+
+// 存活状态 = 整间房的氛围光(焦点)
+function renderLiveness(l) {
+  const live = (l && l.live) || "unknown";
+  $("room").dataset.live = live;
+  $("focalText").textContent = LIVE_TEXT[live] || live;
+  $("liveNote").textContent = (l && l.note) || "";
+}
+
+// 配置回显折进角标;未对齐告警时角标亮点 + 自动展开一次
+function renderConfig(c) {
+  if (!c) return;
+  $("cfgPop").innerHTML =
+    '<div class="row">apps: <code>' + esc(c.appsDir) + '</code></div>' +
+    '<div class="row">db: <code>' + esc(c.dbPath) + '</code></div>' +
+    (c.warning ? '<span class="cfg-warn">⚠️ ' + esc(c.warning) + '</span>' : '');
+  $("cfgDot").hidden = !c.warning;
+  if (c.warning && !renderConfig._warned) { $("cfg").dataset.open = "1"; renderConfig._warned = true; }
+}
+$("cfgBtn").addEventListener("click", (e) => {
+  e.stopPropagation();
+  const cfg = $("cfg"); cfg.dataset.open = cfg.dataset.open === "1" ? "0" : "1";
+});
+document.addEventListener("click", () => { $("cfg").dataset.open = "0"; });
+
+// 办公室:每个员工一个工位(角色 + 桌子 + 铭牌 + ⚠️ 标记)
+function renderRoom(office) {
+  const desks = $("desks");
+  if (!office || office.length === 0) { desks.innerHTML = '<div class="empty">暂无员工</div>'; return; }
+  desks.innerHTML = "";
+  office.forEach((e) => {
+    const ws = document.createElement("div");
+    ws.className = "ws" + (e.alert ? " alert" : "");
+    ws.dataset.mood = e.mood; ws.tabIndex = 0; ws.setAttribute("role", "button");
+    ws.setAttribute("aria-label", e.employee + " " + e.label);
+    const sub = e.state ? esc(e.state) + (e.lastTrigger ? " · " + esc(e.lastTrigger) : "") : "";
+    // 把 label 尾部的括号注(「(上次搞定 N 分前)」「(spec_invalid)」)拆到独立第二行
+    const lm = String(e.label).match(/^(.*?)\s*([(（].*[)）])\s*$/);
+    const stMain = lm ? lm[1] : e.label, stDetail = lm ? lm[2] : "";
+    ws.innerHTML =
+      (e.alert ? '<span class="marker">⚠️</span>' : "") +
+      '<span class="char">' + avatarFor(e.mood) + "</span>" +
+      '<span class="desk"></span>' +
+      '<span class="plate"><span class="name">' + esc(e.employee) + "</span>" +
+      '<span class="status">' + esc(stMain) +
+        (stDetail ? '<span class="detail">' + esc(stDetail) + "</span>" : "") + "</span>" +
+      (sub ? '<span class="sub">' + sub + "</span>" : "") + "</span>";
+    const open = () => openDrawer(e);
+    ws.addEventListener("click", open);
+    ws.addEventListener("keydown", (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); open(); } });
+    desks.appendChild(ws);
+  });
+}
+
+// ── 抽屉:最近几次成败(office.recentRuns,已 default-drop)+ 事件时间线(/api/trace)──
+async function openDrawer(emp) {
+  closeDrawer();
+  const overlay = document.createElement("div"); overlay.className = "overlay"; overlay.id = "overlay";
+  overlay.addEventListener("click", closeDrawer);
+  const d = document.createElement("aside"); d.className = "drawer"; d.id = "drawer";
+  d.setAttribute("role", "dialog"); d.setAttribute("aria-label", emp.employee + " 详情");
+  d.addEventListener("click", (ev) => ev.stopPropagation());
+
+  const runsHtml = (emp.recentRuns && emp.recentRuns.length)
+    ? '<ul class="runs">' + emp.recentRuns.map((r) => {
+        const dur = r.startedAt && r.endedAt ? Math.round((new Date(r.endedAt) - new Date(r.startedAt)) / 1000) + "s" : "";
+        return '<li><span class="chip st-' + esc(r.state) + '">' + esc(r.state) + "</span>" +
+          '<span class="tg">' + esc(r.trigger || "—") + "</span>" +
+          '<span class="tm">' + esc(fmtClock(r.startedAt)) + (dur ? " · " + dur : "") + "</span></li>";
+      }).join("") + "</ul>"
+    : '<div class="note">还没有 run 记录。</div>';
+
+  d.innerHTML =
+    '<button class="close" aria-label="关闭">×</button>' +
+    "<h2>" + avatarFor(emp.mood) + " " + esc(emp.employee) + "</h2>" +
+    '<div class="meta">' + esc(emp.label) + "</div>" +
+    "<h3>最近几次成败</h3>" + runsHtml +
+    '<h3>事件时间线</h3><div id="tl"><div class="note">加载中…</div></div>';
+  d.querySelector(".close").addEventListener("click", closeDrawer);
+  document.body.append(overlay, d);
+  document.addEventListener("keydown", escClose);
+
+  // run id(emp.lastRun / recentRuns[].id)是 /api/trace 的入参,非 payload/args。无 id 只发生在从没跑过。
+  const runId = emp.lastRun || (emp.recentRuns && emp.recentRuns[0] && emp.recentRuns[0].id);
+  const tl = $("tl");
+  if (!runId) { tl.innerHTML = '<div class="note">该 pilot 还没跑过 run,暂无事件时间线。</div>'; return; }
+  try {
+    const r = await fetch("/api/trace?run=" + encodeURIComponent(runId));
+    const t = await r.json();
+    if (!t || !t.ok) { tl.innerHTML = '<div class="note">取数失败(' + esc(t && t.kind) + ') · 稍后重试。</div>'; return; }
+    const ev = (t.events || []).map((x) =>
+      '<li><span class="kind">' + esc(x.kind) + '</span><span class="at">' + esc(fmtClock(x.at)) + "</span></li>").join("");
+    const appr = (t.pendingApprovals || []).map((a) =>
+      '<div class="appr">🙋 待审批:' + esc(a.tool) + ' <span class="tg">#' + esc(a.id) + "</span></div>").join("");
+    tl.innerHTML = (ev ? '<ul class="tl">' + ev + "</ul>" : '<div class="note">无事件。</div>') + appr;
+  } catch { tl.innerHTML = '<div class="note">连接失败 · 稍后重试。</div>'; }
+}
+function closeDrawer() { const o = $("overlay"), d = $("drawer"); if (o) o.remove(); if (d) d.remove();
+  document.removeEventListener("keydown", escClose); }
+function escClose(e) { if (e.key === "Escape") closeDrawer(); }
+
+// ── poll:递归 setTimeout(不重叠、慢轮不堆积)──────────────────────────────────
+async function poll() {
+  try {
+    const r = await fetch("/api/state", { cache: "no-store" });
+    const s = await r.json();
+    renderLiveness(s.liveness);
+    renderConfig(s.config);
+    $("updated").textContent = "更新于 " + fmtClock(s.generatedAt);
+    const banner = $("banner");
+    $("desks").classList.remove("dim");
+    if (s.frame === "fetch_failed") {
+      // 顶层取数失败:显式报错 + 不画员工(不冒充健康)。
+      banner.hidden = false; banner.className = "banner";
+      banner.textContent = "📡 取数失败 · 重试中" + (s.liveness && s.liveness.note ? " — " + s.liveness.note : "");
+      $("desks").innerHTML = '<div class="empty">等待下一轮取数…</div>';
+    } else { banner.hidden = true; renderRoom(s.office); }
+  } catch {
+    // 客户端连不到 view:显式报错(不假装健康),继续重试。
+    const banner = $("banner");
+    banner.hidden = false; banner.className = "banner stale";
+    banner.textContent = "⚠️ 无法连接 hangar-view · 重试中(上次快照可能已过期)";
+    $("room").dataset.live = "unknown"; $("desks").classList.add("dim");
+  } finally { setTimeout(poll, 10_000); }
+}
+poll();
+</script>
+</body>
+</html>

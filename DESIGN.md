@@ -240,7 +240,7 @@ hangar daemon                     启动长驻进程(cron 调度)
 - 成本/预算强制 → 某 run 真烧出意外账单再加(v0 只记 `config.budget`,不 enforce)
 - 多用户 / RBAC / 租户 → 永不,直到「给别人用」变真赌注
 - 通用 durable replay / 中途 checkpoint → 永不,直到某 app 需要非 propose/execute 切点
-- MCP / A2A / marketplace / web workbench → Claude Code 就是 workbench
+- MCP / A2A / marketplace / **多用户** web workbench → Claude Code 就是 workbench。**例外:单用户、只读、经 CLI `--json`(+ 只读 `app.yaml`)、零改 core 的私人巡检 view(`hangar-view`「虚拟办公室」)= 显式接受的独立赌注(Phase 1.5,SOT `docs/proposals/hangar-view.md`)——不破 #6(HTTP 在脊柱外、view 只作 CLI 消费者)。给别人用的多租户 workbench 仍永不做。**
 - 多根 / 多 repo 的**外部 pilot loader 子系统**(config 列 N 个外部路径、pilot index)→ **pilot #2 逼出「停一队 fleet」时再加**;单 pilot 用 `HANGAR_APPS` 覆盖 + 独立 checkout 即可,不建 loader 子系统。
 - 外部 pilot **marketplace / plugin store / publish-discover-install** → 永不,直到「给别人用」成真赌注(同 §6)。
 

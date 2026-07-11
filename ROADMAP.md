@@ -46,6 +46,22 @@ Phase 0 是单用户单进程玩具;下列问题只在「每天 cron + 可能多
 
 ---
 
+## Phase 1.5 — hangar-view「虚拟办公室」监控前端(与出口闸并行)
+
+**目标:** 脊柱外一个**独立、只读**的呈现层——每个 pilot 一名虚拟员工,不碰 SSH/CLI、外出经 Cloudflare Tunnel+Access 就能看到「谁忙 / 谁翻车 / 谁等你拍板 + hangar 本体活没活」。**零改 core**(subprocess 调 `hangar … --json` + 只读 `app.yaml`)。定位:它**服务于** Phase 1 出口闸(好玩→更愿天天开),不与之竞争;换谁当 pilot 都复用。设计 SOT:`docs/proposals/hangar-view.md`。**先作 hangar 仓内独立 package**(零 import core、只 subprocess 调 CLI),真要给别人用再 graduate 成独立 repo。
+
+**DoD:**
+- 外出用手机打开(CF Tunnel + Access 边缘鉴权),3 秒看清 inbox 员工近况(情绪照最近一次 run 衰减)+ hangar 活没活(poll 逾期 2× → 全员 AWOL 报警),全程不碰 SSH/CLI。
+- 点一名员工 → 抽屉展开该 pilot 最近一次 run 的事件时间线(= `trace`)。
+- `/api/state` 只回派生态(状态 / 时间 / 成败 / trigger 名),**不回**邮件主题 / 发件人 / 正文(数据最小化)。
+- hangar core **一行未改**(核对:无新 HTTP/IPC,view 只经 CLI + 只读 `app.yaml`)。
+
+**出口闸:** 你外出时**真的靠它**看 hangar,而不是 SSH。
+
+**显式不做(留 Phase C,各自过闸):** 从页面 approve/reject(写路径——接第一个带审批 pilot 时才做,届时引 app 级身份 + 防误触)· 多用户 / app 级登录 · 原始进程日志聚合 · WebSocket 实时推送 · 3D/精灵图美术升级。**⚠️ 警惕:别让做办公室抢了真正用 inbox 的注意力(那才是出口闸)。**
+
+---
+
 ## Phase 2 — pilot #2 + executor 泛化
 
 **目标:** 迁第二个 pilot(候选:`ppt-pilot` / `ai-radar`)。**第二个 pilot 才能逼出真正通用的脊柱**——也才在此时决定是否需要:`llm-direct` executor(若 #2 是声明式 agent)、通用 eval(若 #2 也要)、更多事件类型、多 repo 外部 pilot loader(pilot #2 逼出「停一队来自多个 repo 的 fleet」时落地)。
@@ -72,4 +88,4 @@ Phase 0 是单用户单进程玩具;下列问题只在「每天 cron + 可能多
 
 ## 明确不在路线图上
 
-除非**「给别人用」升级成一个明确的、独立立项的赌注**,否则以下永不做:多租户 · RBAC · 计费 · marketplace · A2A · 外部 pilot marketplace / plugin store · web workbench · MCP 控制面 · 通用 durable replay。届时它是**新项目 / 新阶段**,重新评估,不是 hangar 的自然延伸。
+除非**「给别人用」升级成一个明确的、独立立项的赌注**,否则以下永不做:多租户 · RBAC · 计费 · marketplace · A2A · 外部 pilot marketplace / plugin store · **多用户** web workbench(单用户只读私人 view = Phase 1.5 `hangar-view`,已立项例外)· MCP 控制面 · 通用 durable replay。届时它是**新项目 / 新阶段**,重新评估,不是 hangar 的自然延伸。
