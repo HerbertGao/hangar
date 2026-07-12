@@ -2,7 +2,8 @@
 // subprocess 调 `hangar … --json` + 只读 app.yaml,派生办公室模型上屏。ZERO import
 // @hangar/core;HTTP 只存在于 view↔浏览器(守不变量 #6/#7)。不直读 hangar.sqlite。
 import { createServer } from 'node:http';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import { readdirSync, readFileSync, existsSync, realpathSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -221,6 +222,169 @@ function sendJson(res, code, body) {
   res.end(s);
 }
 
+// ── 命令写路径(/api/command):白名单 (pilot,trigger) → subprocess 调 `hangar run` ──────
+// view 仍只作 CLI 消费者(不直连 pilot、不直写 sqlite),不新增表/库/进程/队列/游标——命令即时
+// 经 CLI 触发。白名单 = (pilot → trigger → 该 trigger 的事件契约);硬编码 v1 白名单(inbox 两
+// trigger),非白名单直接拒绝、不发起 run(不做「任意 app + 任意 input」firehose)。
+const COMMAND_WHITELIST = {
+  inbox: {
+    'interpret-feedback': { eventKind: 'interpretation.proposed', field: 'interpretation', fields: ['add'] },
+    'apply-feedback': { eventKind: 'feedback.applied', field: 'applied', fields: ['added', 'already_present'] },
+  },
+};
+
+/** 白名单 gate:返回该 (pilot,trigger) 的事件契约,非白名单→null(调用方据此 403、不发起 run)。 */
+export function commandSpec(pilot, trigger) {
+  // 只认自有属性:否则 ('inbox','toString')/('constructor','apply') 命中继承方法(truthy)绕过 gate。
+  if (!Object.hasOwn(COMMAND_WHITELIST, pilot)) return null;
+  const t = COMMAND_WHITELIST[pilot];
+  return Object.hasOwn(t, trigger) ? t[trigger] : null;
+}
+
+const safeParse = (s) => {
+  try {
+    return JSON.parse(s);
+  } catch {
+    return null;
+  }
+};
+
+/**
+ * subprocess **异步**调 `hangar run …`(写命令,超时 60s 上限,远大于只读 10s;async execFile
+ * 不阻塞事件循环——命令期 view 仍响应 /api/state 轮询,不再整段冻结)。与 callCliJson 不同:run
+ * 退出码语义丰富(0 成功 / 1 已忙或 run.failed),故非零退出也**保留 stdout**(async execFile 抛错时
+ * 非零退出 e.code=exit、stdout 挂 e.stdout、超时 e.killed=true)交给 classifyRunExit 判读,而非折叠 exec_failed。
+ */
+const execFileP = promisify(execFile);
+async function callCliRun(args) {
+  try {
+    const { stdout } = await execFileP(process.execPath, [CLI, ...args, '--json'], {
+      env: { ...process.env, HANGAR_APPS: APPS_DIR, HANGAR_DB: DB_PATH },
+      timeout: 60_000, maxBuffer: 32 * 1024 * 1024, encoding: 'utf8',
+    });
+    return { exit: 0, out: stdout };
+  } catch (e) {
+    if (e && e.killed) return { timeout: true };                 // execFile 超时 → killed:true(SIGTERM)
+    return { exit: typeof e?.code === 'number' ? e.code : 1, out: typeof e?.stdout === 'string' ? e.stdout : '' };
+  }
+}
+
+/**
+ * 退出码映射(纯函数,可 self-check):`hangar run --json` 的 { exit, out } →
+ *  - already_running(退 1,{ok:false,kind:'already_running'})→ { outcome:'busy' }(前端「稍后重发」)
+ *  - run.failed(退 1,{run,state:'failed'} 无 kind;含未知 trigger / apply 失败)→ { outcome:'failed', kind:'run_failed' }
+ *  - 其它 CLI 错误(app_not_found/usage/timeout…)→ { outcome:'failed', kind }
+ *  - parked/非终态(退 0,state≠'completed'≠'failed',如 waiting_human)→ { outcome:'failed', kind:'unexpected_state' }(白名单 trigger MUST NOT park)
+ *  - 成功(退 0,state==='completed')→ { outcome:'ok', runId }
+ * MUST NOT 把失败伪装成功;只有 completed 算成功。
+ */
+export function classifyRunExit(run) {
+  if (run.timeout) return { outcome: 'failed', kind: 'timeout' };
+  const parsed = safeParse(run.out);
+  if (run.exit !== 0) {
+    if (parsed?.kind === 'already_running') return { outcome: 'busy' };
+    return { outcome: 'failed', kind: parsed?.kind ?? 'run_failed' };
+  }
+  if (!parsed?.run) return { outcome: 'failed', kind: 'unparseable' };
+  if (parsed.state === 'failed') return { outcome: 'failed', kind: 'run_failed' };
+  if (parsed.state !== 'completed') return { outcome: 'failed', kind: 'unexpected_state' }; // ponytail: 白名单 trigger MUST NOT park;parked/非终态在此响亮失败,不当 ok
+  return { outcome: 'ok', runId: parsed.run };
+}
+
+/**
+ * 从 trace(全 payload)取指定 kind 事件的 payload——**受控数据最小化放宽仅限本命令路径**:
+ * 不经 sanitizeTrace 的 default-drop(default-drop 仍 governs /api/state 与 /api/trace,一行不改)。
+ * 数据是用户自己刚输入指令的解析回显、单用户、Access 门后。找不到该事件→undefined(契约漂移)。
+ */
+export function pickEventPayload(traceData, eventKind) {
+  const ev = (Array.isArray(traceData?.events) ? traceData.events : []).find((e) => e.kind === eventKind);
+  return ev ? ev.payload : undefined;
+}
+
+/** 白名单投影:只取 spec 声明字段、且每个必须是 string[];缺字段/非 string[] → null(契约不符)。 */
+export function projectPayload(payload, fields) {
+  if (payload == null || typeof payload !== 'object' || Array.isArray(payload)) return null;
+  const out = {};
+  for (const f of fields) {
+    const v = payload[f];
+    if (!Array.isArray(v) || v.some((x) => typeof x !== 'string')) return null;
+    out[f] = v;
+  }
+  return out;
+}
+
+/** 读 POST body(JSON,≤64KB);超限/坏 JSON → reject(调用方映射 400 usage)。 */
+export function readJsonBody(req, limit = 64 * 1024) {
+  return new Promise((resolve, reject) => {
+    req.setEncoding?.('utf8'); // 多字节 UTF-8(中文指令)跨 chunk 边界:真实 IncomingMessage 用 StringDecoder 缓冲半个字符;fake EventEmitter 无此法 → 可选链跳过
+    let raw = '';
+    let tooBig = false;
+    req.on('data', (c) => {
+      if (tooBig) return; // 超限后丢弃后续 chunk(内存有界)
+      if (raw.length + c.length > limit) {
+        tooBig = true;
+        return reject(new Error('body_too_large')); // 只 reject、不 destroy;413 由 handleCommand 先发响应、再 destroy
+      }
+      raw += c;
+    });
+    req.on('end', () => {
+      try {
+        resolve(JSON.parse(raw || '{}'));
+      } catch {
+        reject(new Error('bad_json'));
+      }
+    });
+    req.on('error', reject);
+  });
+}
+
+/**
+ * POST /api/command { pilot, trigger, input } → 同步阻塞在 `hangar run` 上,一次响应返回终态。
+ * 白名单外 → 403 not_whitelisted、不发起 run;busy → {ok:false,busy:true};失败 → {ok:false,kind};
+ * 成功 → 读该 run trace 取白名单事件 payload → {ok:true,<field>:payload}。view 只透传 input(域无关)。
+ */
+async function handleCommand(req, res) {
+  if (req.method !== 'POST') return sendJson(res, 405, { ok: false, kind: 'method_not_allowed' });
+  if (!String(req.headers['content-type'] || '').startsWith('application/json'))
+    return sendJson(res, 415, { ok: false, kind: 'bad_content_type' }); // CSRF 纵深:挡跨站 text/plain 表单
+  let body;
+  try {
+    body = await readJsonBody(req);
+  } catch (err) {
+    if (err && err.message === 'body_too_large') {
+      sendJson(res, 413, { ok: false, kind: 'payload_too_large' }); // 先发响应、再 destroy,使 413 可靠送达
+      req.destroy?.();
+      return;
+    }
+    return sendJson(res, 400, { ok: false, kind: 'usage' });
+  }
+  const { pilot, trigger, input } = body ?? {};
+  if (
+    typeof pilot !== 'string' ||
+    typeof trigger !== 'string' ||
+    typeof input !== 'object' ||
+    input === null ||
+    Array.isArray(input)
+  ) {
+    return sendJson(res, 400, { ok: false, kind: 'usage' });
+  }
+  const spec = commandSpec(pilot, trigger);
+  if (!spec) return sendJson(res, 403, { ok: false, kind: 'not_whitelisted' }); // 非白名单:不发起 run
+
+  const run = await callCliRun(['run', pilot, '--trigger', trigger, '--input', JSON.stringify(input)]);
+  const c = classifyRunExit(run);
+  if (c.outcome === 'busy') return sendJson(res, 200, { ok: false, busy: true });
+  if (c.outcome === 'failed') return sendJson(res, 200, { ok: false, kind: c.kind });
+  // 成功 → 读该 run 的 trace 取白名单事件 payload(受控放宽仅此路径,不经 sanitizeTrace)。
+  const tr = callCliJson(['trace', c.runId]);
+  if (!tr.ok) return sendJson(res, 200, { ok: false, kind: `trace_${tr.kind}` });
+  const payload = pickEventPayload(tr.data, spec.eventKind);
+  if (payload === undefined) return sendJson(res, 200, { ok: false, kind: 'missing_event' });
+  const proj = projectPayload(payload, spec.fields); // 只投影声明字段、校验 string[](契约漂移不当成功)
+  if (!proj) return sendJson(res, 200, { ok: false, kind: 'contract_mismatch' });
+  return sendJson(res, 200, { ok: true, [spec.field]: proj });
+}
+
 const server = createServer((req, res) => {
   const url = new URL(req.url, 'http://localhost');
   if (url.pathname === '/api/state') {
@@ -243,6 +407,14 @@ const server = createServer((req, res) => {
     } catch {
       return sendJson(res, 200, { ok: false, kind: 'internal' });
     }
+  }
+  if (url.pathname === '/api/command') {
+    // async(读 body + 阻塞 subprocess);createServer 不 await 回调,故 fire-and-forget + 兜底不崩进程。
+    handleCommand(req, res).catch((err) => {
+      console.error('hangar-view: /api/command 意外错误', err);
+      if (!res.headersSent) sendJson(res, 200, { ok: false, kind: 'internal' });
+    });
+    return;
   }
   if (url.pathname === '/') {
     res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' });

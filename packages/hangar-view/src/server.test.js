@@ -6,7 +6,8 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { loadAppSpecs, appPeriod, mostFreqTrigger } from './server.js';
+import { EventEmitter } from 'node:events';
+import { loadAppSpecs, appPeriod, mostFreqTrigger, commandSpec, classifyRunExit, pickEventPayload, projectPayload, readJsonBody } from './server.js';
 import { deriveLiveness } from './derive.js';
 
 // A8:app.yaml 的 triggers 写成含 null/非对象元素 → loadAppSpecs MUST 过滤掉,
@@ -105,4 +106,106 @@ test('5.5:enabled: no(coerce)的最频繁 cron app 也被 beacon 跳过', () => 
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+// 7.1 命令写路径:白名单 gate —— 只 (inbox, interpret-feedback)/(inbox, apply-feedback) 放行,
+// 白名单外(别的 app / 未知 trigger)MUST 返回 null(调用方据此 403、不发起 run)。
+test('7.1:白名单 gate —— 白名单内放行、白名单外被拒', () => {
+  assert.deepEqual(commandSpec('inbox', 'interpret-feedback'), {
+    eventKind: 'interpretation.proposed',
+    field: 'interpretation',
+    fields: ['add'],
+  });
+  assert.deepEqual(commandSpec('inbox', 'apply-feedback'), {
+    eventKind: 'feedback.applied',
+    field: 'applied',
+    fields: ['added', 'already_present'],
+  });
+  assert.equal(commandSpec('inbox', 'digest'), null, '白名单外 trigger 被拒');
+  assert.equal(commandSpec('inbox', 'poll'), null, '白名单外 trigger 被拒');
+  assert.equal(commandSpec('mailbox', 'interpret-feedback'), null, '白名单外 pilot 被拒(不做任意 app firehose)');
+  assert.equal(commandSpec('inbox', ''), null, '空 trigger 被拒');
+  assert.equal(commandSpec('__proto__', 'x'), null, '原型链 key 不被误当白名单');
+  // 原型链绕过回归:继承方法名(toString/constructor)MUST NOT 被误当白名单
+  assert.equal(commandSpec('inbox', 'toString'), null, '继承方法名不被误当 trigger');
+  assert.equal(commandSpec('inbox', 'constructor'), null, '继承方法名不被误当 trigger');
+  assert.equal(commandSpec('constructor', 'apply'), null, '继承方法名不被误当 pilot');
+});
+
+// 7.1 退出码映射:already_running→busy、run.failed→失败、成功→取 runId(供后续读 trace)。
+test('7.1:classifyRunExit —— busy / 失败 / 成功 三路映射', () => {
+  // already_running(退 1,CLI 错误 emit)→ busy(前端「稍后重发」)
+  assert.deepEqual(
+    classifyRunExit({ exit: 1, out: '{"ok":false,"kind":"already_running"}' }),
+    { outcome: 'busy' },
+  );
+  // run.failed(退 1,{run,state:'failed'} 无 kind;含未知 trigger / apply 失败)→ 失败,不伪装成功
+  assert.deepEqual(
+    classifyRunExit({ exit: 1, out: '{"run":"r1","state":"failed"}' }),
+    { outcome: 'failed', kind: 'run_failed' },
+  );
+  // 其它 CLI 错误 kind(app_not_found/usage…)透传
+  assert.deepEqual(
+    classifyRunExit({ exit: 1, out: '{"ok":false,"kind":"app_not_found"}' }),
+    { outcome: 'failed', kind: 'app_not_found' },
+  );
+  // 超时 → 失败
+  assert.deepEqual(classifyRunExit({ timeout: true }), { outcome: 'failed', kind: 'timeout' });
+  // 成功(退 0,completed)→ ok + runId
+  assert.deepEqual(
+    classifyRunExit({ exit: 0, out: '{"run":"r2","state":"completed"}' }),
+    { outcome: 'ok', runId: 'r2' },
+  );
+  // 防御:退 0 却 state:failed / 不可解析 → 失败(不当成功)
+  assert.deepEqual(
+    classifyRunExit({ exit: 0, out: '{"run":"r3","state":"failed"}' }),
+    { outcome: 'failed', kind: 'run_failed' },
+  );
+  assert.deepEqual(classifyRunExit({ exit: 0, out: 'not json' }), { outcome: 'failed', kind: 'unparseable' });
+  // parked(退 0,waiting_human):白名单 trigger 不该 park → 响亮失败,不当 ok
+  assert.deepEqual(
+    classifyRunExit({ exit: 0, out: '{"run":"r","state":"waiting_human"}' }),
+    { outcome: 'failed', kind: 'unexpected_state' },
+  );
+});
+
+// 7.1 成功后从 trace 取白名单事件 payload(受控放宽仅此路径);找不到该 kind → undefined(契约漂移)。
+test('7.1:pickEventPayload —— 成功取事件 payload,缺事件→undefined', () => {
+  const interpretTrace = {
+    events: [
+      { seq: 1, kind: 'run.started', payload: {} },
+      { seq: 2, kind: 'interpretation.proposed', payload: { add: ['ci@github.com'] } },
+    ],
+  };
+  assert.deepEqual(pickEventPayload(interpretTrace, 'interpretation.proposed'), { add: ['ci@github.com'] });
+
+  const applyTrace = {
+    events: [{ seq: 2, kind: 'feedback.applied', payload: { added: ['x@y.com'], already_present: [] } }],
+  };
+  assert.deepEqual(pickEventPayload(applyTrace, 'feedback.applied'), { added: ['x@y.com'], already_present: [] });
+
+  assert.equal(pickEventPayload({ events: [] }, 'interpretation.proposed'), undefined, '缺事件→undefined');
+  assert.equal(pickEventPayload({}, 'feedback.applied'), undefined, '无 events 字段→undefined,不抛');
+});
+
+// 7.1 事件 payload 白名单投影:只取 spec.fields、且每个校验为 string[];非数组/缺字段 → null(契约不符)。
+test('7.1:projectPayload —— 只投影声明字段并校验 string[]', () => {
+  assert.deepEqual(projectPayload({ add: ['a@b'] }, ['add']), { add: ['a@b'] });
+  assert.equal(projectPayload({ add: 'x' }, ['add']), null, '非数组 → null');
+  assert.deepEqual(projectPayload({ add: ['x'], leak: 's', reasoning: 'y' }, ['add']), { add: ['x'] }, '多余字段被丢(MUST NOT 透传整 payload)');
+  assert.equal(projectPayload({ add: [1] }, ['add']), null, '非 string 元素 → null(契约不符)');
+  assert.deepEqual(
+    projectPayload({ added: ['a'], already_present: [] }, ['added', 'already_present']),
+    { added: ['a'], already_present: [] },
+  );
+  assert.equal(projectPayload({ added: ['a'] }, ['added', 'already_present']), null, '缺字段 → null');
+});
+
+// 7.1 body 超限:MUST 立即 reject(不 hang)、且不在 readJsonBody 内 destroy——413 由 handleCommand
+// 先发响应、再 destroy(fake EventEmitter 无 destroy 也不会被调)。
+test('7.1:readJsonBody 超限立即 reject、不 destroy', async () => {
+  const req = new EventEmitter();
+  const p = readJsonBody(req);
+  req.emit('data', 'x'.repeat(64 * 1024 + 1));
+  await assert.rejects(p, /body_too_large/);
 });
