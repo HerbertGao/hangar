@@ -43,8 +43,8 @@
 ## 7. 端到端验证 + self-check
 
 - [x] 7.1 self-check(hangar-view):白名单 gate(白名单外被拒)+ 退出码映射(`already_running`→busy、`run.failed`→失败、成功→取事件)的可跑断言(小 `*.test.ts`,无框架)
-- [ ] 7.2 端到端:读 digest 通知 → web 输入「把 github 和 cloudflare 加进降噪」→ 确认视图显示解析 → 确认 → `feedback.applied`,inbox `noise_senders.overlay` 真被 set-union;全程不 SSH
-- [ ] 7.3 忙路径:inbox 正跑 poll 时下达命令 → 页面「稍后重发」,重发成功(幂等无重复)
+- [x] 7.2 端到端:读 digest 通知 → web 输入「把 github 和 cloudflare 加进降噪」→ 确认视图显示解析 → 确认 → `feedback.applied`,inbox `noise_senders.overlay` 真被 set-union;全程不 SSH
+- [x] 7.3 忙路径:inbox 正跑 poll 时下达命令 → 页面「稍后重发」,重发成功(幂等无重复)
 
 ## 不在本变更(留后续,各自过闸)
 
