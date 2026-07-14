@@ -46,8 +46,8 @@ importers:
         specifier: ^26.1.0
         version: 26.1.0
       tsx:
-        specifier: ^4.23.0
-        version: 4.23.0
+        specifier: ^4.23.1
+        version: 4.23.1
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -74,8 +74,8 @@ importers:
         specifier: ^26.1.0
         version: 26.1.0
       tsx:
-        specifier: ^4.23.0
-        version: 4.23.0
+        specifier: ^4.23.1
+        version: 4.23.1
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -428,8 +428,8 @@ packages:
     resolution: {integrity: sha512-e2zZ96wSChazBsbENf/Pcm/4swHt2cEKQ92rhUjkL9GCKiTDJIaTBenjE/m9DXi0QBmTMDkFDdOomUy20A1tDQ==}
     engines: {node: '>=20'}
 
-  tsx@4.23.0:
-    resolution: {integrity: sha512-eUdUIaCr963q2h5u3+QwvYp0+eqPvn+egeqZUm0hwERCqqx1E3kK5ehbGCvqSE5MQAULr67ww0cA3jKc3YkM1w==}
+  tsx@4.23.1:
+    resolution: {integrity: sha512-GQHnkIfxyx1wYCOS/wonik5MVRZU9hi1TEZmzGZSCJB1y9YgoZ8H6itNE/u4suE+yLmOzuE4E5S4TZ/ZX2wcWQ==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -758,7 +758,7 @@ snapshots:
     dependencies:
       real-require: 1.0.0
 
-  tsx@4.23.0:
+  tsx@4.23.1:
     dependencies:
       esbuild: 0.28.1
     optionalDependencies:
