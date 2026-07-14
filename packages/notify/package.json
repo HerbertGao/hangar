@@ -1,6 +1,7 @@
 {
   "name": "@herbertgao/hangar-notify",
   "version": "0.1.0",
+  "description": "Spine-external notification config resolver for hangar pilots: maps (app, lane) to a delivery destination from channels.yaml, tokens in ${ENV}. No transport.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
