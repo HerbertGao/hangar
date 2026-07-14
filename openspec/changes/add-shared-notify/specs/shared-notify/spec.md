@@ -85,7 +85,7 @@
 
 ### 需求:密钥不入日志
 - 插值后的 bot token MUST NOT 被 `@hangar/notify` 记入任何日志,MUST NOT 出现在任何返回给调用方的诊断字段里(只返回 `varName`,不返回值)。
-- 调用方 SHALL 在自己的 logger redact 名单里逐个枚举自己用到的 `TG_BOT_<APP>`(pino 不支持 key 后缀通配)。`@hangar/notify` **不导出**共享 redact 清单——只有单个 app 在场时,共享清单是死条目 + 反向发布耦合。
+- 调用方 SHALL 在自己的 logger redact 名单里逐个枚举自己用到的 `TG_BOT_<APP>`(pino 不支持 key 后缀通配),**并 SHALL 一并 redact `botToken` 键(及 `*.botToken`)**——`resolve()` 把密钥以 `{ botToken, chatId }` 返回,`botToken` 是密钥的**另一表示**;仅 redact env 变量名挡不住「调用方日志记录了返回的 `Destination` 对象」这条路(CodeRabbit review 发现)。`@hangar/notify` **不导出**共享 redact 清单——只有单个 app 在场时,共享清单是死条目 + 反向发布耦合。
 
 #### 场景:诊断不泄密
 - **当** token 形状非法被 resolver 拒绝

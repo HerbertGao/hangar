@@ -45,7 +45,7 @@
 - **`@hangar/core`**:零改动。
 - **inbox-pilot(独立 repo)**:`telegramChannelFromConfig()` 改读 resolver(小改);`configSchema.ts` 去 `TELEGRAM_*`;`logger.ts` 的 redact 换成 `TG_BOT_INBOX`。**传输/渲染/测试 fixture 不动。**
 - **inbox-pilot 自己的 OpenSpec 须出 delta**:`notifications/spec.md:61`(触发条件措辞:`TELEGRAM_*` 缺失 → resolver 无条目/配置不可用;「必须降级 skipped、禁抛未捕获异常」**保持有效**——它正是本设计的规范依据)、`:68`(chat id 改从 `channels.yaml` 读)、`service-bootstrap/spec.md:9`(`TELEGRAM_*` → `TG_BOT_INBOX`,仍为可选)。
-- **脱敏**:inbox 的 `logger.ts:39-44` 是 bot token 目前唯一的 pino redact;退役 `TELEGRAM_BOT_TOKEN` 的**同一次提交**里必须换上 `TG_BOT_INBOX`(否则覆盖 1→0——hangar core 建 pino 没有 `redact`)。**由 inbox 自己维护**,`@hangar/notify` 不导出共享 redact 清单(只有一个 app 在范围内)。
+- **脱敏**:inbox 的 `logger.ts:39-44` 是 bot token 目前唯一的 pino redact;退役 `TELEGRAM_BOT_TOKEN` 的**同一次提交**里必须换上 `TG_BOT_INBOX` **及 `botToken`(+ 各自 `*.` 变体)**——`botToken` 是 resolver 返回密钥的对象键,须一并 redact(CodeRabbit review 发现);否则覆盖 1→0(hangar core 建 pino 没有 `redact`)。**由 inbox 自己维护**,`@hangar/notify` 不导出共享 redact 清单(只有一个 app 在范围内)。
 - **部署(ts.mac-mini)**:先**确认 `TELEGRAM_*` 当前在生产上的真实来源**(hangar root 无 `.env`,大概率已在 plist);再把 `TG_BOT_INBOX` + `HANGAR_NOTIFY_CONFIG` 写进 daemon 的 plist,**且保证 `hangar run` 手动入口也拿得到**;放置 `channels.yaml`;部署前**在 daemon 的 env 里**跑 preflight。考虑把 plist 模板 check 进 `deploy/`(仿 `packages/hangar-view/deploy/`)。
 - **docker-compose 路径**:inbox 有一条 compose 部署(`openspec/specs/deployment/`)。本变更须给它出 delta——要么挂载 `channels.yaml` + 两个 env,要么显式声明该路径退役;**不得留一条静默无通知的已规范部署**。
 - **文档债(一并清)**:`control-plane-channels.md` 的 D9/D10/§10 与 `followups-command-write-path.md` 的 A 表仍写「apprise-api 容器 / 长期 apprise.js」,本变更把方向改成「只共享配置、传输留 pilot」,须记一笔;`DESIGN.md §0` 把「通知」列在脊柱吸收清单里,给出确定措辞。

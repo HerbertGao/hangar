@@ -33,7 +33,7 @@
 ## 6. 部署与切换(ts.mac-mini)
 
 - [ ] 6.1 **先确认 `TELEGRAM_*` 当前在生产上的真实来源**(hangar root 无 `.env` → 大概率已在 daemon plist;查清楚再写 BREAKING 步骤)
-- [ ] 6.2 daemon plist `EnvironmentVariables` 加 `TG_BOT_INBOX` + `HANGAR_NOTIFY_CONFIG`(或用约定默认路径);保证 `hangar run inbox` 手动入口在同环境下也拿得到
+- [ ] 6.2 daemon plist `EnvironmentVariables` 加 `TG_BOT_INBOX` + `HANGAR_NOTIFY_CONFIG`(plist 须**显式**设后者——`hangar-notify check --from-plist` 强制它存在;约定默认路径仅兜底 `hangar run` shell 入口,不覆盖 plist);保证 `hangar run inbox` 手动入口在同环境下也拿得到
 - [ ] 6.3 放置 `channels.yaml`(inbox 的 `private` = `{ bot: "${TG_BOT_INBOX}", chat: "886699001" }`);考虑把 plist 模板 check 进 `deploy/`(仿 `packages/hangar-view/deploy/`)
 - [ ] 6.4 **在 daemon 的 env 里**跑 `hangar-notify check --from-plist`,通过才继续
 - [ ] 6.5 切 inbox 到新来源,发布
@@ -42,7 +42,7 @@
 ## 7. 收尾:删旧路径 + 清文档债(观察期通过后才做)
 
 - [ ] 7.1 `configSchema.ts` 下线 `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID`(含 `:106` 注释)
-- [ ] 7.2 **`logger.ts` redact:删旧条目的同一次提交里加 `TG_BOT_INBOX` + `*.TG_BOT_INBOX`**(core pino 无 redact,只删不补 = 覆盖 1→0);验证 `redactError.ts:24` 的形状正则仍捕获 bot token,且与 resolver 的接受形状对齐。**对齐的具体修法(review-loop round-1 Security 发现)**:`redactError.ts:24` 现为 `/\b\d{6,}:[A-Za-z0-9_-]{20,}\b/`,leading `\b` 使嵌入式 token(如 `bot<token>/` 这类 URL 形态)漏刷;去掉 `\b` → `/\d{6,}:[A-Za-z0-9_-]{20,}/g` 使其与 resolver 无锚形状一致。(注:group B 不可达此路径——`errorKind` 只取 `err.name`;此为防御纵深预存弱点,随 7.2 一并修。)
+- [ ] 7.2 **`logger.ts` redact:删旧条目的同一次提交里加 `TG_BOT_INBOX` + `*.TG_BOT_INBOX` + `botToken` + `*.botToken`**(core pino 无 redact,只删不补 = 覆盖 1→0;`botToken` 是 resolver 返回密钥的对象键,须一并 redact——CodeRabbit review 发现。注:`TG_BOT_INBOX`/`botToken` 的**增**已在 group B 做,本 7.2 只做 `TELEGRAM_*` 的**删**);验证 `redactError.ts:24` 的形状正则仍捕获 bot token,且与 resolver 的接受形状对齐。**对齐的具体修法(review-loop round-1 Security 发现)**:`redactError.ts:24` 现为 `/\b\d{6,}:[A-Za-z0-9_-]{20,}\b/`,leading `\b` 使嵌入式 token(如 `bot<token>/` 这类 URL 形态)漏刷;去掉 `\b` → `/\d{6,}:[A-Za-z0-9_-]{20,}/g` 使其与 resolver 无锚形状一致。(注:group B 不可达此路径——`errorKind` 只取 `err.name`;此为防御纵深预存弱点,随 7.2 一并修。)
 - [ ] 7.3 `notifier.test.ts:84` 的 no-channel 触发从「子进程清空 `TELEGRAM_*`」改为「resolver 无 inbox 条目 / 指向空配置」(否则退役后清的是不存在的变量,**测试仍绿但断言已空**)
 - [ ] 7.4 `.env.example` / `PROJECT_INIT.md` 同步为 `TG_BOT_INBOX=`
 - [ ] 7.5 **inbox-pilot 自己的 OpenSpec 出 delta**:`notifications/spec.md:61`(触发条件措辞;「必须降级 skipped、禁抛未捕获异常」保持有效)、`:68`(chat id 改从 channels.yaml 读)、`service-bootstrap/spec.md:9`(`TELEGRAM_*` → `TG_BOT_INBOX`,仍可选)

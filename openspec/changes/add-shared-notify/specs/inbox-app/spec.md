@@ -46,7 +46,7 @@ inbox SHALL 移除 `TELEGRAM_BOT_TOKEN` 与 `TELEGRAM_CHAT_ID`。token 改由 `T
 - **那么** 零命中(归档目录不计)
 
 ### 需求:bot token 的脱敏覆盖不得降为零
-inbox 的 pino `redact` 名单 SHALL 在退役 `TELEGRAM_*` 的**同一次提交**里换上 `TG_BOT_INBOX`(及 `*.TG_BOT_INBOX`),SHALL NOT 只删旧条目。
+inbox 的 pino `redact` 名单 SHALL 在退役 `TELEGRAM_*` 的**同一次提交**里换上 `TG_BOT_INBOX`(及 `*.TG_BOT_INBOX`),SHALL NOT 只删旧条目。inbox 的 pino `redact` 名单 SHALL **另含 `botToken` 与 `*.botToken`**——resolver 以 `{ botToken, chatId }` 返回密钥,`botToken` 是密钥流经的对象键;若任何调用方日志记录了 `Destination` 对象,仅靠 env 变量名 redact 挡不住(CodeRabbit review 发现)。
 
 **理由**:hangar core 建 pino **没有** `redact`,inbox 的 `logger.ts:39-44` 是 bot token 唯一的 pino redact——只删不补 = 覆盖 1→0。
 
