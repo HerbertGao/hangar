@@ -41,3 +41,7 @@ hangar-notify check --from-plist <path>   # validate against a launchd plist's E
 ```
 
 Offline shape + presence check only; it does not verify a token is live.
+
+## License
+
+[Apache-2.0](./LICENSE)
