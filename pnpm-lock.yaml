@@ -61,6 +61,25 @@ importers:
         specifier: ^2.9.0
         version: 2.9.0
 
+  packages/notify:
+    dependencies:
+      yaml:
+        specifier: ^2.9.0
+        version: 2.9.0
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
+    devDependencies:
+      '@types/node':
+        specifier: ^26.1.0
+        version: 26.1.0
+      tsx:
+        specifier: ^4.23.0
+        version: 4.23.0
+      typescript:
+        specifier: ^6.0.3
+        version: 6.0.3
+
 packages:
 
   '@esbuild/aix-ppc64@0.28.1':
