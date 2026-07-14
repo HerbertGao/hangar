@@ -1,4 +1,4 @@
-// hangar-notify — a CONFIG RESOLVER for notification destinations, NOT a transport.
+// @herbertgao/hangar-notify — a CONFIG RESOLVER for notification destinations, NOT a transport.
 // It reads channels.yaml, interpolates ${ENV} into a bot token, validates shape,
 // and hands the caller the raw destination. It contains ZERO HTTP/fetch/apprise
 // code and imports no logger (see design.md D2/D5). How to deliver is the pilot's job.

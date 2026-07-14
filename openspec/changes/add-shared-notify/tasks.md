@@ -20,9 +20,9 @@
 - [ ] 3.1 `packages/core/src` 全文搜索 `notify` / `lane` / `channels` **零命中**(不变量 #1;当前已零命中,回归守卫)
 - [ ] 3.2 `packages/notify` 对 `@hangar/core` 无 import 依赖、不 import 任何传输/HTTP 库;不读写 `hangar.sqlite`、不新增表(#3);无常驻进程/容器
 
-## 4. 分发:同机兄弟 checkout 用 file: 依赖
+## 4. 分发:npm 发布(@herbertgao/hangar-notify)
 
-- [x] 4.1 inbox 经 `file:../hangar/packages/notify` 依赖它(hangar 与 inbox-pilot 是同机兄弟 checkout,已确认)——**不需 npm 发版**。发布 `hangar-notify` 到 npm **推迟**到第 2 个非兄弟仓(ai-radar 等)采用时
+- [x] 4.1 ~~inbox 经 `file:../hangar/packages/notify` 兄弟依赖~~ → **改走 npm 发布**(原计划推迟到 ai-radar,被 CI 现实推翻):`@herbertgao/hangar-notify@0.1.0` 已发布;inbox 依赖 `@herbertgao/hangar-notify@^0.1.0`(registry)。file: 兄弟依赖会炸 inbox **每个** install 的 workflow(ci.yml + eval.yml)、unpinned-main lockstep、pnpm 快照 stale、跨仓 rename 破坏——故提前发版
 
 ## 5. inbox 接入(改动在 inbox-pilot 独立 repo;传输不动)
 

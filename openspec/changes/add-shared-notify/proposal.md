@@ -40,7 +40,7 @@
 
 ## Impact
 
-- **新增**:`packages/notify`(仓内小包,~40 行配置解析)。inbox 经 `file:../hangar/packages/notify`(同机兄弟 checkout)依赖它——**不需要 npm 发版**;发布 `hangar-notify` 到 npm 推迟到第 2 个非兄弟仓(如 ai-radar)采用时。
+- **新增**:`packages/notify`(仓内小包,~40 行配置解析),**发布为 npm 包 `@herbertgao/hangar-notify`(Apache-2.0)**。inbox 依赖 `@herbertgao/hangar-notify@^0.1.0`(registry)——原计划 file: 兄弟依赖、推迟发版,被 CI 现实(inbox 每个 install 的 workflow 都要 sibling checkout + 跨仓 rename 破坏)推翻,提前发版。
 - **运行时依赖**:`packages/notify` 只需 `yaml`(复用仓里已有的 `yaml@^2.9.0`)+ `zod`(已有)。**无 apprise、无 markdown-it、无第三方发版挂在关键路径上。**
 - **`@hangar/core`**:零改动。
 - **inbox-pilot(独立 repo)**:`telegramChannelFromConfig()` 改读 resolver(小改);`configSchema.ts` 去 `TELEGRAM_*`;`logger.ts` 的 redact 换成 `TG_BOT_INBOX`。**传输/渲染/测试 fixture 不动。**

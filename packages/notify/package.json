@@ -1,11 +1,25 @@
 {
-  "name": "hangar-notify",
+  "name": "@herbertgao/hangar-notify",
   "version": "0.1.0",
+  "description": "Spine-external notification config resolver for hangar pilots: maps (app, lane) to a delivery destination from channels.yaml, tokens in ${ENV}. No transport.",
+  "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
     "hangar-notify": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HerbertGao/hangar.git",
+    "directory": "packages/notify"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "engines": {
     "node": ">=22.18.0"
@@ -13,7 +27,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "node --import tsx --test src/*.test.ts"
+    "test": "node --import tsx --test src/*.test.ts",
+    "prepack": "pnpm run build"
   },
   "dependencies": {
     "yaml": "^2.9.0",
