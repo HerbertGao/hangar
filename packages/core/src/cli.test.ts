@@ -694,8 +694,8 @@ test('run --trigger daily colliding with a same-named cron trigger stays kind=ma
 // Direct test of the extracted daemonRunOne — the true cron-arm proof, not a
 // makeFireGate-injected stub: real LoadedApp from loadApps() + real PipelineGateway/runApp
 // inside daemonRunOne, and two app ids so createRun's single-active-run lock never collides
-// between the two fires. (startDaemon's routing through daemonRunOne is verified by inspection,
-// not asserted here — an automated wiring test would need startDaemon to expose its fire.)
+// between the two fires. The following test separately guards startDaemon's real handle.fire
+// wiring so this direct proof cannot go green while production uses another run path.
 test('daemonRunOne: cron fire yields ctx.triggerKind==="cron" for named and unnamed triggers', async () => {
   const { appsDir } = tmpEnv();
   writeApp(appsDir, 'cron-named', { pipeline: KIND_PIPELINE });
@@ -722,6 +722,37 @@ test('daemonRunOne: cron fire yields ctx.triggerKind==="cron" for named and unna
     const unnamedRun = (await daemonRunOne(db, unnamed, undefined)) as string;
     assert.equal(sawKind(unnamedRun).kind, 'cron', 'unnamed cron fire → still triggerKind cron');
     assert.equal(sawKind(unnamedRun).name, 'undefined', 'unnamed cron → triggerName undefined');
+  } finally {
+    db.close();
+  }
+});
+
+test('startDaemon handle.fire wires cron triggerKind and triggerName through daemonRunOne', async (t) => {
+  const { dbPath, appsDir } = tmpEnv();
+  writeApp(appsDir, 'wired-cron', {
+    schedule: '0 0 1 1 *',
+    triggerName: 'daily',
+    pipeline: KIND_PIPELINE,
+  });
+  const app = loadApps().apps.find((candidate) => candidate.id === 'wired-cron')!;
+  const h = startDaemon(NONROOT);
+  assert.ok('shutdown' in h, 'non-root start returns a DaemonHandle');
+  t.after(stopDaemonEffects);
+
+  h.fire(app, 'daily');
+  const db = openDb(dbPath);
+  try {
+    const runId = await pollRunId(db, app.id);
+    await pollEventKind(db, 'saw.kind');
+    await h.shutdown(2000);
+    const seen = JSON.parse(
+      (
+        db
+          .prepare("SELECT payload_json p FROM RunEvent WHERE run_id=? AND kind='saw.kind'")
+          .get(runId) as { p: string }
+      ).p,
+    ) as { kind?: string; name?: string };
+    assert.deepEqual(seen, { kind: 'cron', name: 'daily' });
   } finally {
     db.close();
   }
