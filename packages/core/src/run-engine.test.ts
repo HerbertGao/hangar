@@ -10,6 +10,8 @@ import { classify, EVENT } from './events.js';
 import { appendEvent, chokePoint, createRun, EngineError, stateOf } from './store.js';
 import { reap } from './reaper.js';
 import { runApp, type Gateway } from './executor.js';
+import { HOST_CAPABILITIES } from './capabilities.js';
+import { doctorReport } from './cli.js';
 
 function tmpDb(): DB {
   const dir = mkdtempSync(join(tmpdir(), 'hangar-re-'));
@@ -211,7 +213,7 @@ test('runApp: pipeline runs, gateway.evaluateAfterRun decides completion', async
        await ctx.propose({ tool: 'fake.send', args: {} });
      }`,
   );
-  const runId = await runApp(db, { appId: 'heartbeat', appDir: dir, executor: 'pipeline' }, gw);
+  const runId = await runApp(db, { appId: 'heartbeat', appDir: dir, executor: 'pipeline', triggerKind: 'manual' }, gw);
   assert.equal(calls.propose, 1);
   assert.equal(calls.evaluate, 1);
   assert.equal(runState(db, runId), 'completed');
@@ -228,7 +230,7 @@ test('runApp: a thrown pipeline goes to run.failed via choke-point (PARK is not 
   const db = tmpDb();
   const { gw, calls } = stubGateway(db);
   const dir = appDirWith(`export async function run() { throw new Error('boom'); }`);
-  const runId = await runApp(db, { appId: 'hb', appDir: dir, executor: 'pipeline' }, gw);
+  const runId = await runApp(db, { appId: 'hb', appDir: dir, executor: 'pipeline', triggerKind: 'manual' }, gw);
   assert.equal(runState(db, runId), 'failed');
   assert.equal(lockOf(db, runId), null, 'failed run releases the lock');
   assert.equal(calls.evaluate, 0, 'evaluateAfterRun is not called on failure');
@@ -240,7 +242,7 @@ test('runApp: missing pipeline.ts is rejected before the Run is created', async 
   const { gw } = stubGateway(db);
   const dir = mkdtempSync(join(tmpdir(), 'hangar-empty-')); // no pipeline.ts
   await assert.rejects(
-    runApp(db, { appId: 'hb', appDir: dir, executor: 'pipeline' }, gw),
+    runApp(db, { appId: 'hb', appDir: dir, executor: 'pipeline', triggerKind: 'manual' }, gw),
     (e: unknown) => e instanceof EngineError && e.kind === 'pipeline_missing',
   );
   assert.equal((db.prepare('SELECT count(*) c FROM Run').get() as { c: number }).c, 0);
@@ -256,7 +258,7 @@ test('runApp: dist/pipeline.js is preferred over a sibling pipeline.ts', async (
   writeFileSync(join(dir, 'pipeline.ts'), `export async function run(ctx) { ctx.emit('from.ts'); }`);
   mkdirSync(join(dir, 'dist'));
   writeFileSync(join(dir, 'dist', 'pipeline.js'), `export async function run(ctx) { ctx.emit('from.dist'); }`);
-  const runId = await runApp(db, { appId: 'inbox', appDir: dir, executor: 'pipeline' }, gw);
+  const runId = await runApp(db, { appId: 'inbox', appDir: dir, executor: 'pipeline', triggerKind: 'manual' }, gw);
   const kinds = (
     db.prepare('SELECT kind FROM RunEvent WHERE run_id=? ORDER BY seq').all(runId) as {
       kind: string;
@@ -281,7 +283,7 @@ test('runApp: triggerName threads to ctx.trigger + Run.trigger (name priority); 
   // named trigger → ctx.trigger === name, Run.trigger stores the name
   const r1 = await runApp(
     db,
-    { appId: 'a1', appDir: appDirWith(seeTrigger), executor: 'pipeline', trigger: 'cron', triggerName: 'digest' },
+    { appId: 'a1', appDir: appDirWith(seeTrigger), executor: 'pipeline', triggerKind: 'cron', triggerName: 'digest' },
     gw,
   );
   assert.equal(sawTrigger(r1), 'digest', 'ctx.trigger === triggerName');
@@ -290,7 +292,7 @@ test('runApp: triggerName threads to ctx.trigger + Run.trigger (name priority); 
   // no triggerName → ctx.trigger undefined, Run.trigger falls back to the category
   const r2 = await runApp(
     db,
-    { appId: 'a2', appDir: appDirWith(seeTrigger), executor: 'pipeline', trigger: 'cron' },
+    { appId: 'a2', appDir: appDirWith(seeTrigger), executor: 'pipeline', triggerKind: 'cron' },
     gw,
   );
   assert.equal(sawTrigger(r2), null, 'absent triggerName → ctx.trigger undefined');
@@ -298,13 +300,285 @@ test('runApp: triggerName threads to ctx.trigger + Run.trigger (name priority); 
   db.close();
 });
 
+// ── 4.4 plumbing: runApp threads req.triggerKind/triggerName onto ctx ─────────
+// This proves the executor faithfully PASSES the host-written kind onto the ctx — NOT that
+// the kind is unforgeable. At this layer triggerKind is just a literal we hand to runApp, so
+// asserting it here is plumbing only; unforgeability is proven at the CLI/daemon entries
+// (cli.test.ts: run --trigger is always manual; daemonRunOne is always cron).
+test('runApp: threads req.triggerKind/triggerName onto ctx (plumbing, not an unforgeability proof)', async () => {
+  const db = tmpDb();
+  const { gw } = stubGateway(db);
+  const seeKind = `export async function run(ctx){ ctx.emit('saw', { kind: ctx.triggerKind, name: ctx.triggerName ?? null, trigger: ctx.trigger ?? null }); }`;
+  const saw = (runId: string): { kind: string; name: string | null; trigger: string | null } =>
+    JSON.parse(
+      (db.prepare("SELECT payload_json p FROM RunEvent WHERE run_id=? AND kind='saw'").get(runId) as { p: string }).p,
+    );
+  const runId = await runApp(
+    db,
+    { appId: 'a', appDir: appDirWith(seeKind), executor: 'pipeline', triggerKind: 'cron', triggerName: 'digest' },
+    gw,
+  );
+  assert.equal(saw(runId).kind, 'cron', 'ctx.triggerKind === req.triggerKind');
+  assert.equal(saw(runId).name, 'digest', 'ctx.triggerName === req.triggerName');
+  assert.equal(saw(runId).trigger, 'digest', 'ctx.trigger (deprecated) still mirrors triggerName');
+  db.close();
+});
+
+test('runApp: each run gets a fresh frozen canonical capability snapshot that app data cannot replace', async () => {
+  const db = tmpDb();
+  const { gw } = stubGateway(db);
+  const dir = appDirWith(`
+    let previous;
+    export async function run(ctx) {
+      let writeThrew = false;
+      let deleteThrew = false;
+      let sortThrew = false;
+      const canonical = [...ctx.capabilities];
+      try { ctx.capabilities[0] = 'forged'; } catch { writeThrew = true; }
+      const writeIneffective = ctx.capabilities[0] === canonical[0];
+      try { delete ctx.capabilities[0]; } catch { deleteThrew = true; }
+      const deleteIneffective = ctx.capabilities.length === canonical.length && ctx.capabilities[0] === canonical[0];
+      try { ctx.capabilities.sort(); } catch { sortThrew = true; }
+      const sortIneffective = JSON.stringify(ctx.capabilities) === JSON.stringify(canonical);
+      ctx.emit('saw.capabilities', {
+        capabilities: [...ctx.capabilities],
+        frozen: Object.isFrozen(ctx.capabilities),
+        sameAsPrevious: previous === ctx.capabilities,
+        writeThrew,
+        writeIneffective,
+        deleteThrew,
+        deleteIneffective,
+        sortThrew,
+        sortIneffective,
+        inputCapabilities: ctx.input?.capabilities,
+        configCapabilities: ctx.config?.capabilities,
+      });
+      previous = ctx.capabilities;
+    }
+  `);
+  const request = {
+    appId: 'caps',
+    appDir: dir,
+    executor: 'pipeline',
+    triggerKind: 'manual' as const,
+    triggerName: 'runtime-capabilities',
+    input: { capabilities: ['input-forged'] },
+    config: { capabilities: ['config-forged'] },
+    capabilities: ['request-forged'],
+  };
+
+  const first = await runApp(db, request, gw);
+  const second = await runApp(db, request, gw);
+  const seen = (runId: string) => JSON.parse(
+    (db.prepare("SELECT payload_json p FROM RunEvent WHERE run_id=? AND kind='saw.capabilities'").get(runId) as { p: string }).p,
+  ) as {
+    capabilities: string[];
+    frozen: boolean;
+    sameAsPrevious: boolean;
+    writeThrew: boolean;
+    writeIneffective: boolean;
+    deleteThrew: boolean;
+    deleteIneffective: boolean;
+    sortThrew: boolean;
+    sortIneffective: boolean;
+    inputCapabilities: string[];
+    configCapabilities: string[];
+  };
+
+  for (const observation of [seen(first), seen(second)]) {
+    assert.deepEqual(observation.capabilities, HOST_CAPABILITIES);
+    assert.equal(observation.frozen, true);
+    assert.equal(observation.sameAsPrevious, false, 'every run receives a fresh array reference');
+    assert.ok(observation.writeThrew || observation.writeIneffective, 'index write throws or is ineffective');
+    assert.ok(observation.deleteThrew || observation.deleteIneffective, 'delete throws or is ineffective');
+    assert.ok(observation.sortThrew || observation.sortIneffective, 'sort throws or is ineffective');
+    assert.deepEqual(observation.inputCapabilities, ['input-forged']);
+    assert.deepEqual(observation.configCapabilities, ['config-forged']);
+  }
+  assert.deepEqual(HOST_CAPABILITIES, [
+    'hangar.run.trigger-kind/v1',
+    'hangar.run.abort-signal/v1',
+    'hangar.run.cancelled-terminal/v1',
+    'hangar.run.runtime-capabilities/v1',
+  ], 'snapshot mutation attempts do not alter the canonical set');
+  const doctorCapabilities = doctorReport().capabilities;
+  assert.strictEqual(
+    doctorCapabilities,
+    HOST_CAPABILITIES,
+    'the real doctor report still reads the same canonical module instance',
+  );
+  assert.equal(Object.isFrozen(doctorCapabilities), true);
+  assert.deepEqual(doctorCapabilities, [
+    'hangar.run.trigger-kind/v1',
+    'hangar.run.abort-signal/v1',
+    'hangar.run.cancelled-terminal/v1',
+    'hangar.run.runtime-capabilities/v1',
+  ], 'runtime mutation attempts do not pollute doctor output');
+  db.close();
+});
+
 test('runApp: unknown executor → executor_unsupported, no Run created', async () => {
   const db = tmpDb();
   const { gw } = stubGateway(db);
   await assert.rejects(
-    runApp(db, { appId: 'hb', appDir: '/nope', executor: 'claude-code' }, gw),
+    runApp(db, { appId: 'hb', appDir: '/nope', executor: 'claude-code', triggerKind: 'manual' }, gw),
     (e: unknown) => e instanceof EngineError && e.kind === 'executor_unsupported',
   );
   assert.equal((db.prepare('SELECT count(*) c FROM Run').get() as { c: number }).c, 0);
+  db.close();
+});
+
+// ── 5.1/5.2/5.6 cancellation: abort → single run.cancelled terminal ───────────
+/** The only terminal events on a run (run.started is non-terminal). Exactly one is
+ *  ever allowed through the choke-point, so this doubles as the "single writer" check. */
+function terminalKinds(db: DB, runId: string): string[] {
+  return (
+    db
+      .prepare(
+        "SELECT kind FROM RunEvent WHERE run_id=? AND kind IN ('run.completed','run.failed','run.cancelled') ORDER BY seq",
+      )
+      .all(runId) as { kind: string }[]
+  ).map((r) => r.kind);
+}
+function insertPendingApproval(db: DB, runId: string): void {
+  db.prepare(
+    'INSERT INTO Approval (id,run_id,tool,args_json,status,requested_at) VALUES (?,?,?,?,?,?)',
+  ).run(`ap_${runId}`, runId, 'fake.send', '{}', 'pending', new Date().toISOString());
+}
+function approvalStatuses(db: DB, runId: string): string[] {
+  return (
+    db.prepare('SELECT status FROM Approval WHERE run_id=? ORDER BY id').all(runId) as {
+      status: string;
+    }[]
+  ).map((r) => r.status);
+}
+/** Yield until the pipeline has emitted `kind` — proof it is genuinely mid-run (parked). */
+async function waitEvent(db: DB, runId: string, kind: string): Promise<void> {
+  for (let i = 0; i < 5000; i++) {
+    if (db.prepare('SELECT 1 FROM RunEvent WHERE run_id=? AND kind=?').get(runId, kind)) return;
+    await new Promise((r) => setImmediate(r));
+  }
+  throw new Error(`timeout waiting for ${kind}`);
+}
+
+// A pipeline that parks on the abort signal (with an entry guard for abort-before-park)
+// and rejects when cancelled — the cooperative shape a real trusted pilot uses.
+const PARK_UNTIL_ABORT = `export async function run(ctx){
+  ctx.emit('domain.ready', {});
+  await new Promise((_res, reject) => {
+    if (ctx.signal.aborted) return reject(new Error('cancelled'));
+    ctx.signal.addEventListener('abort', () => reject(new Error('cancelled')), { once: true });
+  });
+}`;
+
+test('5.1 runApp: pre-aborted run (pipeline throws) → single run.cancelled, lock freed, pending approval superseded', async () => {
+  const db = tmpDb();
+  const { gw, calls } = stubGateway(db);
+  const dir = appDirWith(
+    `export async function run(ctx){ if (ctx.signal.aborted) throw new Error('pre-aborted boom'); ctx.emit('ran', {}); }`,
+  );
+  let runId!: string;
+  await runApp(
+    db,
+    { appId: 'a', appDir: dir, executor: 'pipeline', triggerKind: 'manual' },
+    gw,
+    { onActive: (id, abort) => { runId = id; insertPendingApproval(db, id); abort(); } }, // abort before the pipeline body
+  );
+  assert.equal(runState(db, runId), 'cancelled');
+  assert.deepEqual(terminalKinds(db, runId), ['run.cancelled'], 'aborted throw → cancelled, not failed');
+  assert.equal(lockOf(db, runId), null, 'cancel releases the lock');
+  assert.deepEqual(approvalStatuses(db, runId), ['superseded'], 'pending approval superseded on cancel');
+  assert.equal(calls.evaluate, 0, 'aborted run never reaches evaluateAfterRun');
+  db.close();
+});
+
+test('5.1 runApp: aborted run that RETURNS normally records cancelled (evaluate-guard), never completed', async () => {
+  const db = tmpDb();
+  const { gw, calls } = stubGateway(db);
+  // observes abort but returns normally (no throw); without the pre-evaluate guard this would complete.
+  const dir = appDirWith(
+    `export async function run(ctx){ if (ctx.signal.aborted) return; ctx.emit('would.complete', {}); }`,
+  );
+  let runId!: string;
+  await runApp(
+    db,
+    { appId: 'a', appDir: dir, executor: 'pipeline', triggerKind: 'manual' },
+    gw,
+    { onActive: (id, abort) => { runId = id; abort(); } },
+  );
+  assert.equal(runState(db, runId), 'cancelled', 'normal return under abort → cancelled, not completed');
+  assert.deepEqual(terminalKinds(db, runId), ['run.cancelled']);
+  assert.equal(calls.evaluate, 0, 'evaluate-guard skips evaluateAfterRun when aborted');
+  assert.equal(lockOf(db, runId), null);
+  db.close();
+});
+
+test('5.1/5.6 runApp: mid-run abort → single run.cancelled (no later completed/failed), lock freed once, approval superseded', async () => {
+  const db = tmpDb();
+  const { gw, calls } = stubGateway(db);
+  const dir = appDirWith(PARK_UNTIL_ABORT);
+  let runId!: string;
+  let abortFn!: () => void;
+  const p = runApp(
+    db,
+    { appId: 'a', appDir: dir, executor: 'pipeline', triggerKind: 'manual' },
+    gw,
+    { onActive: (id, abort) => { runId = id; abortFn = abort; insertPendingApproval(db, id); } },
+  );
+  await waitEvent(db, runId, 'domain.ready'); // pipeline is genuinely parked mid-run
+  abortFn();
+  await p;
+  assert.equal(runState(db, runId), 'cancelled');
+  // 5.6 single-writer: exactly one terminal, cancelled — nothing written after it.
+  assert.deepEqual(terminalKinds(db, runId), ['run.cancelled'], '5.6: no run.completed/run.failed after cancel');
+  assert.equal(lockOf(db, runId), null, '5.6: lock released once (single terminal = single release)');
+  assert.deepEqual(approvalStatuses(db, runId), ['superseded']);
+  assert.equal(calls.evaluate, 0);
+  db.close();
+});
+
+test('5.1 runApp: aborting twice / a redundant late terminal → still a single run.cancelled (idempotent)', async () => {
+  const db = tmpDb();
+  const { gw } = stubGateway(db);
+  const dir = appDirWith(PARK_UNTIL_ABORT);
+  let runId!: string;
+  let abortFn!: () => void;
+  const p = runApp(
+    db,
+    { appId: 'a', appDir: dir, executor: 'pipeline', triggerKind: 'manual' },
+    gw,
+    { onActive: (id, abort) => { runId = id; abortFn = abort; } },
+  );
+  await waitEvent(db, runId, 'domain.ready');
+  abortFn();
+  abortFn(); // second abort on the same controller is a no-op
+  await p;
+  chokePoint(db, runId, EVENT.runCancelled, {}); // a late duplicate terminal is a no-op too
+  assert.equal(runState(db, runId), 'cancelled');
+  assert.deepEqual(terminalKinds(db, runId), ['run.cancelled'], 'repeat cancel never doubles the terminal event');
+  db.close();
+});
+
+test('5.2 runApp: a pipeline that ignores ctx.signal still runs to natural completion (no regression)', async () => {
+  const db = tmpDb();
+  const { gw, calls } = stubGateway(db);
+  const dir = appDirWith(
+    `export async function run(ctx){ ctx.emit('sig', { has: typeof ctx.signal !== 'undefined', aborted: ctx.signal.aborted }); }`,
+  );
+  const runId = await runApp(
+    db,
+    { appId: 'a', appDir: dir, executor: 'pipeline', triggerKind: 'manual' },
+    gw,
+  );
+  assert.equal(runState(db, runId), 'completed', 'signal field present but unread → still completes');
+  assert.equal(calls.evaluate, 1, 'no abort → normal evaluateAfterRun path');
+  assert.deepEqual(terminalKinds(db, runId), ['run.completed']);
+  const sig = JSON.parse(
+    (db.prepare("SELECT payload_json p FROM RunEvent WHERE run_id=? AND kind='sig'").get(runId) as {
+      p: string;
+    }).p,
+  );
+  assert.equal(sig.has, true, 'ctx.signal is delivered to the pipeline');
+  assert.equal(sig.aborted, false, 'unaborted run sees signal.aborted === false');
   db.close();
 });

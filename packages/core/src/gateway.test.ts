@@ -87,7 +87,7 @@ test('PARK end-to-end: two high-risk proposes park, approve runs both handlers, 
 
   const runId = await runApp(
     db,
-    { appId: 'hb', appDir: dir, executor: 'pipeline', config: { marker } },
+    { appId: 'hb', appDir: dir, executor: 'pipeline', config: { marker }, triggerKind: 'manual' },
     gw,
   );
 
@@ -140,7 +140,7 @@ test('reject a parked run → run.cancelled, pending rejected, no side effect', 
   const gw = new PipelineGateway(db, dir, ['fake.send']);
   const runId = await runApp(
     db,
-    { appId: 'hb', appDir: dir, executor: 'pipeline', config: { marker } },
+    { appId: 'hb', appDir: dir, executor: 'pipeline', config: { marker }, triggerKind: 'manual' },
     gw,
   );
   assert.equal(runState(db, runId), 'waiting_human');
@@ -163,7 +163,7 @@ test('low-risk propose executes inline (awaitable result) and the run completes'
 
   const runId = await runApp(
     db,
-    { appId: 'hb', appDir: dir, executor: 'pipeline', config: { marker } },
+    { appId: 'hb', appDir: dir, executor: 'pipeline', config: { marker }, triggerKind: 'manual' },
     gw,
   );
 
@@ -191,7 +191,7 @@ test('approve partial failure → run.failed, already-granted kept, remaining su
   const gw = new PipelineGateway(db, dir, ['fake.send']);
   const runId = await runApp(
     db,
-    { appId: 'hb', appDir: dir, executor: 'pipeline', config: { marker, failSecond: true } },
+    { appId: 'hb', appDir: dir, executor: 'pipeline', config: { marker, failSecond: true }, triggerKind: 'manual' },
     gw,
   );
   assert.equal(runState(db, runId), 'waiting_human');

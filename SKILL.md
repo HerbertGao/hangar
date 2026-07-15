@@ -19,11 +19,13 @@ min_binary_version: "0.1.0"
 **返回:**
 ```json
 { "ok": true,
+  "capabilities": [ "hangar.run.trigger-kind/v1", "hangar.run.abort-signal/v1", "hangar.run.cancelled-terminal/v1", "hangar.run.runtime-capabilities/v1" ],
   "checks": { "node": "ok", "pnpm": "ok", "sqlite_writable": "ok", "apps_dir": "ok",
               "apps": [ { "id": "inbox", "spec": "ok", "pipeline": "ok", "enabled": true } ],
               "blocked": [] } }
 ```
 **健康经 `ok` 表达(退出码恒 0、doctor 不抛 error kind):** 任一 check(`node`≥22.18 / `sqlite_writable` / `apps_dir` / 某 app 的 `spec`\|`pipeline`)非 `ok` → 顶层 `ok:false`。`checks.apps[]` 每项的 `enabled` = 该 app 是否启用(取自 `app.yaml`,缺省 `true`);**注册失败分支(无解析 spec)省略此键,消费方缺字段视作 `true`**(hangar-view 花名册排除据此字段——见 hangar-view spec)。`checks.blocked` = 被过期 parked run 阻塞的 app id 列表(派生、非持久化;**`enabled:false` 的 app 除外——不派生阻塞**)。`pnpm` 仅报形、不计入 `ok`。
+**`capabilities[]`(顶层、独立于 `ok`/`checks`,不计入健康):** 真机 host 二进制的版本化能力集(`hangar.run.<name>/vN`),现含 `hangar.run.trigger-kind/v1` + `hangar.run.abort-signal/v1` + `hangar.run.cancelled-terminal/v1` + `hangar.run.runtime-capabilities/v1`。它是给**外部 adapter** 的部署期契约广播:部署脚本在启动前读它并对自带 required 集做精确匹配(`/v2` 不满足 `/v1`),缺任一即 fail closed。host 在每次 `run(ctx)` 时还会从同一 canonical set 注入新鲜冻结的 `ctx.capabilities`;adapter 应在 run 内业务副作用前再校验该快照。模块 import 必须无业务副作用,因为运行期快照只能从 `run(ctx)` 入口开始保护。
 **Agent 约定:** 任一 check 非 `ok` 时,先修环境,别急着 `run`。
 
 ## `hangar status [--json]`
@@ -53,8 +55,8 @@ min_binary_version: "0.1.0"
 
 ## `hangar run <app> [--input <json>] [--json]`
 
-**用途:** 手动触发一次 run(绕过 cron)。**写操作,拒绝 root。**
-**返回:** `{ "run": "run_a3f", "state": "waiting_human|completed|failed" }`(`state:"failed"` → 退出码 1;`waiting_human`(停泊等审批)/ `completed` → 0)
+**用途:** 手动触发一次 run(绕过 cron)。**写操作,拒绝 root。** 运行中按 Ctrl-C(SIGINT)→ abort 该 run、配合的 pipeline 经 choke-point 记 `run.cancelled`;第二次 Ctrl-C 回落 Node 默认强杀。
+**返回:** `{ "run": "run_a3f", "state": "waiting_human|completed|failed|cancelled" }`(`state:"failed"` 或 `state:"cancelled"`(被 SIGINT/abort 取消)→ 退出码 1;`waiting_human`(停泊等审批)/ `completed` → 0)
 **错误 kind:** `app_not_found` · `spec_invalid` · `already_running`(run 锁)· `pipeline_missing`(run 时缺 `pipeline.ts`)· `executor_unsupported`(已知但未实现的 executor)· `internal`(如无法解析进程指纹时 fail loud)。
 
 ## `hangar approve <run> [--json]`
@@ -67,14 +69,14 @@ min_binary_version: "0.1.0"
 ## `hangar reject <run> [--reason <text>] [--json]`
 
 **用途:** 驳回待批动作,run 收束(不执行)。**写操作,拒绝 root。**
-**返回:** `{ "run": "run_a3f", "state": "cancelled", "rejected": ["apr_1"] }`
+**返回:** `{ "run": "run_a3f", "state": "cancelled", "rejected": ["apr_1"] }`(用户主动驳回、语义上成功 → 退出码 `0`;与 `hangar run` 被 SIGINT/abort 取消的 `cancelled`(退出码 1)靠命令来源区分,同为 `cancelled` 态不同码)
 **错误 kind:** `run_not_found` · `app_not_found`(run 的 app 已注销)· `not_waiting`(run 非 `waiting_human`)。
 
 ---
 
 ## 不暴露给 Agent 的能力(别调)
 
-- **`hangar daemon`** —— 长驻 cron 进程,会挂住会话。由用户/系统在自己终端或容器里跑,Agent 不碰。
+- **`hangar daemon`** —— 长驻 cron 进程,会挂住会话。由用户/系统在自己终端或容器里跑,Agent 不碰。**停机语义(优雅取消 vs 硬杀):** 收 SIGINT/SIGTERM → 优雅停机:置 `shuttingDown`(停机窗口内 cron 不再 fire)→ abort 全部 active run → 宽限期(`HANGAR_SHUTDOWN_GRACE_MS`,默认 ~5s)内等配合 signal 的 pipeline 收束记 `run.cancelled`(非盲 sleep)后退出;宽限内未收束者(忽略 signal / cleanup 过久)留非终态,由下次启动的 reaper 判 `run.failed`(cleanup-timeout)。二次信号(SIGINT 后 SIGTERM)幂等、不重入。硬杀(SIGKILL / 掉电)不走此路径——同样留非终态、靠 reaper 回收。
 - **直接读写 `hangar.sqlite`** —— 一切经 CLI。绕过 = 破坏 run 锁与事件时序。
 - **`hangar run` 的无限循环重试** —— `already_running` 时不要盲目重试,先 `status`/`trace` 看清。
 

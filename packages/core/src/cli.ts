@@ -22,6 +22,7 @@ import { runApp } from './executor.js';
 import { PipelineGateway } from './gateway.js';
 import { reap } from './reaper.js';
 import { EngineError } from './store.js';
+import { HOST_CAPABILITIES } from './capabilities.js';
 
 // Logs → stderr, data → stdout (CLI contract).
 const log = pino({ level: process.env.LOG_LEVEL ?? 'info' }, pino.destination(2));
@@ -199,6 +200,10 @@ function pnpmOk(): boolean {
 
 export interface DoctorReport {
   ok: boolean;
+  /** Host's static versioned capability set, broadcast verbatim (C2: an out-of-process
+   *  adapter reads this via `doctor --json` to fail-closed before deploying a pilot that
+   *  needs cancellation). Not part of `ok` — it's an offered set, not a health check. */
+  capabilities: readonly string[];
   checks: {
     node: string;
     pnpm: string;
@@ -277,7 +282,7 @@ export function doctorReport(): DoctorReport {
     sqlite_writable === 'ok' &&
     apps_dir === 'ok' &&
     apps.every((a) => a.spec === 'ok' && a.pipeline === 'ok');
-  return { ok, checks: { node, pnpm, sqlite_writable, apps_dir, apps, blocked } };
+  return { ok, capabilities: HOST_CAPABILITIES, checks: { node, pnpm, sqlite_writable, apps_dir, apps, blocked } };
 }
 
 function cmdDoctor(): Result {
@@ -290,6 +295,7 @@ function cmdDoctor(): Result {
     `apps_dir: ${report.checks.apps_dir}`,
     ...report.checks.apps.map((a) => `  ${a.id}: spec=${a.spec} pipeline=${a.pipeline}`),
     `blocked: ${report.checks.blocked.length ? report.checks.blocked.join(', ') : '-'}`,
+    `capabilities: ${report.capabilities.join(', ')}`,
   ];
   // doctor is a diagnostic: it always exits 0 when it produced a report; health
   // rides in the `ok` field (the Agent pings `doctor --json` and reads `ok`).
@@ -458,6 +464,10 @@ async function cmdRun(
   }
 
   const db = openDb();
+  // Ctrl-C aborts this one run. `once` (not `on`) keeps the escape valve: a 2nd Ctrl-C
+  // falls back to Node's default hard-kill (a pipeline that ignores signal won't settle
+  // on the first). Removed in finally so repeated in-process driving (tests) can't leak it.
+  let sigintAbort: (() => void) | undefined;
   try {
     reap(db);
     const gateway = new PipelineGateway(db, app.dir, app.spec.permissions.approval);
@@ -469,22 +479,30 @@ async function cmdRun(
         executor: app.spec.executor,
         config: app.spec.config,
         input,
-        trigger: 'manual',
+        triggerKind: 'manual',
         triggerName,
       },
       gateway,
+      {
+        onActive: (_runId, abort) => {
+          sigintAbort = abort;
+          process.once('SIGINT', abort);
+        },
+      },
     );
     const state = runStateOf(db, runId);
     // Mirror approve: a thrown pipeline collapses the run to 'failed' via chokePoint
     // (runApp returns, not throws), so map the terminal state to the exit code —
-    // failed → 1 (business failure), waiting_human (parked) / completed → 0. No errKind:
-    // keep run/state detail, which emit()'s {ok:false,kind} error branch would drop.
-    const code = state === 'failed' ? 1 : 0;
+    // cancelled (SIGINT/abort) or failed → 1 (both non-success; the emitted `state`
+    // distinguishes them), waiting_human (parked) / completed → 0. No errKind: keep
+    // run/state detail, which emit()'s {ok:false,kind} error branch would drop.
+    const code = state === 'cancelled' || state === 'failed' ? 1 : 0;
     return { code, json: { run: runId, state }, text: `${runId} -> ${state}\n` };
   } catch (e) {
     if (e instanceof EngineError) return { code: 1, errKind: e.kind, errMsg: e.message };
     throw e;
   } finally {
+    if (sigintAbort) process.removeListener('SIGINT', sigintAbort);
     db.close();
   }
 }
@@ -618,6 +636,10 @@ export interface FireGateDeps {
   runOne: (app: LoadedApp, name: string | undefined) => Promise<unknown>;
   /** Log a skipped fire (app has an active run). */
   logSkip: (appId: string, name: string | undefined) => void;
+  /** During daemon shutdown, gate every fire so a cron/pending/drain tick can't
+   *  `createRun` a run born AFTER the abort-all scan (it would escape cancellation and
+   *  stay non-terminal). undefined ⇒ never gated. */
+  shuttingDown?: () => boolean;
 }
 
 /**
@@ -642,6 +664,7 @@ export function makeFireGate(deps: FireGateDeps): {
   const pending = new Map<string, (string | undefined)[]>();
 
   function fire(app: LoadedApp, name: string | undefined): void {
+    if (deps.shuttingDown?.()) return; // shutdown latched: stop scheduling new/queued runs
     if (inFlight.has(app.id)) {
       const q = pending.get(app.id) ?? [];
       if (!q.includes(name)) {
@@ -692,15 +715,70 @@ export function makeFireGate(deps: FireGateDeps): {
 }
 
 /**
+ * Start one daemon cron run for (app, name). Module-level + exported (not an inline
+ * closure) so the cron arm's unforgeable `triggerKind:'cron'` is directly unit-testable —
+ * startDaemon wires makeFireGate.runOne through this. daemon fire records category 'cron';
+ * a named trigger overrides Run.trigger + ctx.trigger via triggerName (unnamed → name
+ * undefined, still 'cron'). Logs & swallows its own failure so the fire gate only awaits
+ * settle. Internal cli export, not a package public API.
+ */
+export function daemonRunOne(
+  db: DB,
+  app: LoadedApp,
+  name: string | undefined,
+  opts?: { onActive?(runId: string, abort: () => void): void },
+): Promise<string | void> {
+  const gateway = new PipelineGateway(db, app.dir, app.spec.permissions.approval);
+  return runApp(
+    db,
+    {
+      appId: app.id,
+      appDir: app.dir,
+      executor: app.spec.executor,
+      config: app.spec.config,
+      triggerKind: 'cron',
+      triggerName: name,
+    },
+    gateway,
+    opts,
+  ).catch((err) =>
+    log.error({ app: app.id, err: String((err as Error)?.message ?? err) }, 'cron run failed'),
+  );
+}
+
+/** A started daemon's control surface. `shutdown`/`fire` share one closure state
+ *  (the cancel `Map` + `shuttingDown` flag) so tests drive the REAL map through real
+ *  fire/onActive, not a stub (avoids the #16 "assert the injected stub = vacuous" trap). */
+export interface DaemonHandle {
+  /** Abort every active run, then wait up to `grace` ms (default HANGAR_SHUTDOWN_GRACE_MS
+   *  or ~5000) for them to truly settle — polls `Map.size`, not a blind sleep — then
+   *  resolves. Idempotent: a 2nd call (SIGINT→SIGTERM) early-returns. Decoupled from
+   *  process.exit so it's directly awaitable in tests. */
+  shutdown: (grace?: number) => Promise<void>;
+  fire: (app: LoadedApp, name: string | undefined) => void;
+}
+
+/**
+ * Shutdown grace window (ms): HANGAR_SHUTDOWN_GRACE_MS if a finite ≥0 number
+ * (0 = abort then exit at once), else 5000. A bare `|| 5000` would wrongly snap a
+ * legitimate `0` back to the default.
+ */
+export function shutdownGraceMs(): number {
+  const g = Number(process.env.HANGAR_SHUTDOWN_GRACE_MS);
+  return Number.isFinite(g) && g >= 0 ? g : 5000;
+}
+
+/**
  * Register cron per (trigger, cron-string); on fire, run the fire gate which
  * serializes per app and queues same-instant sibling triggers as pending (never a
- * silent drop). Returns a Result on refusal (root), or null once started.
- * Long-running: main() keeps the process alive; cron timers do the rest.
+ * silent drop). Returns a Result on refusal (root) / unresolvable lock, or a
+ * DaemonHandle once started. Long-running: main() keeps the process alive (the signal
+ * handlers installed here own graceful shutdown + exit); cron timers do the rest.
  */
 export function startDaemon(
   deps: Deps = defaultDeps,
   probeLock: () => string = lockOwner,
-): Result | null {
+): Result | DaemonHandle {
   const root = refuseRoot(deps);
   if (root) return root;
   // Pre-check the lock fingerprint before wiring cron. If this host can't resolve
@@ -716,29 +794,29 @@ export function startDaemon(
   reap(db);
   const load = loadApps();
   const byId = new Map<string, LoadedApp>(load.apps.map((a) => [a.id, a]));
+
+  // Per-daemon cancel registry (runId → abort) + shutdown latch, shared with fire/shutdown.
+  const active = new Map<string, () => void>();
+  let shuttingDown = false;
+
   const { fire } = makeFireGate({
     hasActive: (appId) => hasActiveRun(db, appId),
+    // Register each run's abort in `active` on onActive (synchronous, pre-pipeline) and
+    // drop it when the run settles, so shutdown's abort-all sees exactly the live runs.
     runOne: (app, name) => {
-      const gateway = new PipelineGateway(db, app.dir, app.spec.permissions.approval);
-      // daemon fire records category 'cron'; a named trigger overrides Run.trigger +
-      // ctx.trigger via triggerName.
-      return runApp(
-        db,
-        {
-          appId: app.id,
-          appDir: app.dir,
-          executor: app.spec.executor,
-          config: app.spec.config,
-          trigger: 'cron',
-          triggerName: name,
+      let id: string | undefined;
+      return daemonRunOne(db, app, name, {
+        onActive: (runId, abort) => {
+          id = runId;
+          active.set(runId, abort);
         },
-        gateway,
-      ).catch((err) =>
-        log.error({ app: app.id, err: String((err as Error)?.message ?? err) }, 'cron run failed'),
-      );
+      }).finally(() => {
+        if (id !== undefined) active.delete(id);
+      });
     },
     logSkip: (appId, name) =>
       log.info({ app: appId, trigger: name }, 'cron fire skipped: app has an active run'),
+    shuttingDown: () => shuttingDown,
   });
   const tasks = daemonTasks(load);
   for (const t of tasks) {
@@ -749,8 +827,37 @@ export function startDaemon(
       t.timezone ? { timezone: t.timezone } : undefined,
     );
   }
+
+  // Abort-all + await-settle, decoupled from process.exit (awaitable in tests). First call
+  // latches `shuttingDown` — which gates fire() (no run born after abort-all) and makes the
+  // shutdown BODY idempotent (a 2nd call early-returns: no re-abort, no re-poll).
+  async function shutdown(grace: number = shutdownGraceMs()): Promise<void> {
+    if (shuttingDown) return;
+    shuttingDown = true;
+    for (const abort of active.values()) abort();
+    // Wait for the aborted runs to truly settle (map empties), bounded by grace — a
+    // poll, not a blind sleep. Runs still unsettled at the deadline stay non-terminal
+    // for the next daemon's reaper (dead-PID → cleanup-timeout → failed).
+    const deadline = Date.now() + grace;
+    while (active.size > 0 && Date.now() < deadline) {
+      await new Promise((r) => setTimeout(r, 25));
+    }
+  }
+
+  // startDaemon owns the signal wiring (it holds the map + grace). Only the first signal
+  // owns the shutdown+exit sequence: later SIGINT/SIGTERM signals must not truncate the
+  // grace window by scheduling another process.exit around shutdown's idempotent no-op.
+  let signalExitStarted = false;
+  const onSignal = (): void => {
+    if (signalExitStarted) return;
+    signalExitStarted = true;
+    void shutdown().finally(() => process.exit());
+  };
+  process.on('SIGINT', onSignal);
+  process.on('SIGTERM', onSignal);
+
   log.info({ tasks: tasks.length, apps: load.apps.length }, 'daemon started');
-  return null;
+  return { shutdown, fire };
 }
 
 // ── dispatch + main ──────────────────────────────────────────────────────────
@@ -797,11 +904,14 @@ async function main(argv: string[], deps: Deps = defaultDeps): Promise<number> {
   const jsonMode = argv.includes('--json');
   if (argv[0] === 'daemon') {
     const r = startDaemon(deps);
-    if (r) {
+    if (!('shutdown' in r)) {
+      // refusal / unresolvable lock → a Result: emit + exit with its code.
       emit(r, jsonMode);
       return r.code;
     }
-    return await new Promise<number>(() => {}); // never resolves: cron timers keep us alive
+    // started (DaemonHandle): startDaemon installed the SIGINT/SIGTERM handlers, which
+    // own graceful shutdown + exit. Block forever; cron timers keep us alive.
+    return await new Promise<number>(() => {});
   }
   let r: Result;
   try {

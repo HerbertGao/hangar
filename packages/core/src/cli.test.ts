@@ -1,20 +1,26 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { spawn } from 'node:child_process';
 import { mkdtempSync, mkdirSync, writeFileSync, existsSync, readFileSync, statSync, chmodSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
-import { openDb } from './db.js';
+import { join, resolve } from 'node:path';
+import cron from 'node-cron';
+import { openDb, type DB } from './db.js';
 import { loadApps, type LoadedApp } from './registry.js';
 import { EVENT } from './events.js';
+import { reap } from './reaper.js';
+import { HOST_CAPABILITIES } from './capabilities.js';
 import {
   dispatch,
   startDaemon,
+  daemonRunOne,
   hasActiveRun,
   daemonTasks,
   deriveBlocked,
   cronPeriodMs,
   makeFireGate,
   nodeSupported,
+  shutdownGraceMs,
   type Deps,
 } from './cli.js';
 
@@ -35,7 +41,7 @@ function tmpEnv(): { root: string; dbPath: string; appsDir: string } {
 function writeApp(
   appsDir: string,
   id: string,
-  opts: { approval?: string[]; pipeline: string; tools?: string; schedule?: string },
+  opts: { approval?: string[]; pipeline: string; tools?: string; schedule?: string; triggerName?: string },
 ): void {
   const dir = join(appsDir, id);
   mkdirSync(dir, { recursive: true });
@@ -47,6 +53,8 @@ function writeApp(
       `executor: pipeline`,
       `triggers:`,
       `  - type: cron`,
+      // 4.2: an optional named cron trigger (default fixture is a single unnamed one).
+      ...(opts.triggerName ? [`    name: ${opts.triggerName}`] : []),
       `    schedule: "${opts.schedule ?? '* * * * *'}"`,
       `permissions:`,
       `  approval: [${approval}]`,
@@ -65,7 +73,9 @@ test('write commands refuse root (EUID==0) and do not create the db', async () =
     assert.equal(res.errKind, 'refuse_root');
   }
   const d = startDaemon(ROOT);
-  assert.ok(d && d.code === 1 && d.errKind === 'refuse_root', 'daemon refuses root');
+  assert.ok(!('shutdown' in d), 'root refusal returns a Result, not a started daemon');
+  assert.equal(d.code, 1);
+  assert.equal(d.errKind, 'refuse_root');
   assert.equal(existsSync(dbPath), false, 'root-refused writes must not create the db');
 });
 
@@ -298,6 +308,25 @@ test('nodeSupported: 22.17 unsupported (would crash on app .ts import), 22.18+ o
   assert.equal(nodeSupported('23.6.0'), true); // default from here
   assert.equal(nodeSupported('20.11.0'), false); // too old entirely
   assert.equal(nodeSupported('24.0.0'), true);
+});
+
+test('shutdownGraceMs: env coercion — 0 kept (not snapped to default), invalid/negative → 5000', () => {
+  const prev = process.env.HANGAR_SHUTDOWN_GRACE_MS;
+  try {
+    delete process.env.HANGAR_SHUTDOWN_GRACE_MS;
+    assert.equal(shutdownGraceMs(), 5000, 'unset → default');
+    process.env.HANGAR_SHUTDOWN_GRACE_MS = '0';
+    assert.equal(shutdownGraceMs(), 0, '0 → immediate exit, NOT snapped back by `|| 5000`');
+    process.env.HANGAR_SHUTDOWN_GRACE_MS = '250';
+    assert.equal(shutdownGraceMs(), 250, 'finite ≥0 honored');
+    process.env.HANGAR_SHUTDOWN_GRACE_MS = '-1';
+    assert.equal(shutdownGraceMs(), 5000, 'negative → default');
+    process.env.HANGAR_SHUTDOWN_GRACE_MS = 'abc';
+    assert.equal(shutdownGraceMs(), 5000, 'non-numeric → default');
+  } finally {
+    if (prev === undefined) delete process.env.HANGAR_SHUTDOWN_GRACE_MS;
+    else process.env.HANGAR_SHUTDOWN_GRACE_MS = prev;
+  }
 });
 
 // ── 6.4 e2e: run → park → status → trace → approve (handler really runs) ──────
@@ -575,6 +604,10 @@ test('run --trigger threads ctx.trigger and records Run.trigger; omitted → und
   const withFlag = await dispatch(['run', 'tr', '--trigger', 'digest'], NONROOT);
   const runId = (withFlag.json as { run: string }).run;
   assert.equal(await sawTrigger(runId), 'digest', 'ctx.trigger === the --trigger name');
+  // 4.4 (zero-regression): this pipeline reads ONLY ctx.trigger — it never touches the new
+  // ctx.triggerKind field. Adding triggerKind/triggerName to the ctx must not perturb it:
+  // the old-style pilot still runs to completion exactly as before.
+  assert.equal((withFlag.json as { state: string }).state, 'completed', 'triggerKind-unaware pipeline unaffected');
   const runsRes = await dispatch(['runs', 'tr']); // one run so far → newest is this one
   assert.equal((runsRes.json as { trigger: string }[])[0].trigger, 'digest', 'Run.trigger stores the name');
 
@@ -585,12 +618,404 @@ test('run --trigger threads ctx.trigger and records Run.trigger; omitted → und
   assert.equal((await dispatch(['run', 'tr', '--trigger'], NONROOT)).code, 2);
 });
 
+// Read a pipeline-emitted { kind, name } snapshot of the ctx trigger fields back from a run's trace.
+const sawTriggerKind = async (
+  runId: string,
+): Promise<{ kind?: string; name?: string } | undefined> => {
+  const tr = await dispatch(['trace', runId]);
+  return (
+    tr.json as { events: { kind: string; payload: { kind?: string; name?: string } }[] }
+  ).events.find((e) => e.kind === 'saw.kind')?.payload;
+};
+const KIND_PIPELINE = `export async function run(ctx){ ctx.emit('saw.kind', { kind: ctx.triggerKind, name: ctx.triggerName ?? 'undefined' }); }`;
+
+// ── 4.1 manual boundary: triggerKind is host-written 'manual', unforgeable by --trigger ──
+// MUST go through `hangar run` (CLI dispatch): at the runApp layer triggerKind is just a
+// literal we hand in, so only the manual ENTRY (cmdRun) writing it proves unforgeability.
+test('run --trigger: ctx.triggerKind is always manual (named + unnamed); flag cannot forge kind', async () => {
+  const { appsDir } = tmpEnv();
+  writeApp(appsDir, 'mk', { pipeline: KIND_PIPELINE });
+
+  const named = await dispatch(['run', 'mk', '--trigger', 'digest'], NONROOT);
+  const namedSeen = await sawTriggerKind((named.json as { run: string }).run);
+  assert.equal(namedSeen?.kind, 'manual', '--trigger <name> is manual — flag sets name, never kind');
+  assert.equal(namedSeen?.name, 'digest', 'triggerName carries the flag value');
+
+  const unnamed = await dispatch(['run', 'mk'], NONROOT);
+  const unnamedSeen = await sawTriggerKind((unnamed.json as { run: string }).run);
+  assert.equal(unnamedSeen?.kind, 'manual', 'unnamed manual run is manual');
+  assert.equal(unnamedSeen?.name, 'undefined', 'no --trigger → triggerName undefined');
+});
+
+test('run input cannot forge host-written triggerKind or triggerName', async () => {
+  const { appsDir } = tmpEnv();
+  writeApp(appsDir, 'input-forge', {
+    pipeline: `export async function run(ctx){ ctx.emit('saw.kind', {
+      kind: ctx.triggerKind,
+      name: ctx.triggerName,
+      inputKind: ctx.input?.triggerKind,
+      inputName: ctx.input?.triggerName,
+    }); }`,
+  });
+  const res = await dispatch([
+    'run',
+    'input-forge',
+    '--trigger',
+    'host-name',
+    '--input',
+    JSON.stringify({ triggerKind: 'cron', triggerName: 'input-name' }),
+  ], NONROOT);
+  const trace = await dispatch(['trace', (res.json as { run: string }).run]);
+  const seen = (trace.json as { events: { kind: string; payload: Record<string, string> }[] })
+    .events.find((event) => event.kind === 'saw.kind')!.payload;
+  assert.deepEqual(seen, {
+    kind: 'manual',
+    name: 'host-name',
+    inputKind: 'cron',
+    inputName: 'input-name',
+  });
+});
+
+// ── 4.2 name collision: manual --trigger daily on an app with a cron trigger named daily ──
+// Honest note (per spec): cmdRun does not read app.spec.triggers, so kind has no path to leak
+// from the spec — the load-bearing assertion is "host writes manual". The same-named `daily`
+// cron trigger is a faithful-to-spec regression guard, not the source of discrimination.
+test('run --trigger daily colliding with a same-named cron trigger stays kind=manual, name=daily', async () => {
+  const { appsDir } = tmpEnv();
+  writeApp(appsDir, 'coll', { triggerName: 'daily', pipeline: KIND_PIPELINE });
+
+  const res = await dispatch(['run', 'coll', '--trigger', 'daily'], NONROOT);
+  const seen = await sawTriggerKind((res.json as { run: string }).run);
+  assert.equal(seen?.kind, 'manual', 'name collision with a cron trigger does NOT promote the run to cron');
+  assert.equal(seen?.name, 'daily');
+});
+
+// ── 4.3①② cron arm: daemonRunOne writes an unforgeable triggerKind==='cron' (named + unnamed) ──
+// Direct test of the extracted daemonRunOne — the true cron-arm proof, not a
+// makeFireGate-injected stub: real LoadedApp from loadApps() + real PipelineGateway/runApp
+// inside daemonRunOne, and two app ids so createRun's single-active-run lock never collides
+// between the two fires. (startDaemon's routing through daemonRunOne is verified by inspection,
+// not asserted here — an automated wiring test would need startDaemon to expose its fire.)
+test('daemonRunOne: cron fire yields ctx.triggerKind==="cron" for named and unnamed triggers', async () => {
+  const { appsDir } = tmpEnv();
+  writeApp(appsDir, 'cron-named', { pipeline: KIND_PIPELINE });
+  writeApp(appsDir, 'cron-unnamed', { pipeline: KIND_PIPELINE });
+  const apps = loadApps().apps;
+  const named = apps.find((a) => a.id === 'cron-named')!;
+  const unnamed = apps.find((a) => a.id === 'cron-unnamed')!;
+
+  const db = openDb();
+  try {
+    const sawKind = (runId: string): { kind?: string; name?: string } =>
+      JSON.parse(
+        (
+          db
+            .prepare("SELECT payload_json p FROM RunEvent WHERE run_id=? AND kind='saw.kind'")
+            .get(runId) as { p: string }
+        ).p,
+      );
+    // daemonRunOne resolves to the run id on success (runApp's return passes through .catch).
+    const namedRun = (await daemonRunOne(db, named, 'daily')) as string;
+    assert.equal(sawKind(namedRun).kind, 'cron', 'named cron fire → triggerKind cron (host-written)');
+    assert.equal(sawKind(namedRun).name, 'daily', 'named cron → triggerName is the trigger name');
+
+    const unnamedRun = (await daemonRunOne(db, unnamed, undefined)) as string;
+    assert.equal(sawKind(unnamedRun).kind, 'cron', 'unnamed cron fire → still triggerKind cron');
+    assert.equal(sawKind(unnamedRun).name, 'undefined', 'unnamed cron → triggerName undefined');
+  } finally {
+    db.close();
+  }
+});
+
 // ── R2-F2: daemon fails fast if the lock fingerprint is unresolvable ──────────
 test('daemon refuses to start when lockOwner throws (no silent idle, no db created)', () => {
   const { dbPath } = tmpEnv();
   const r = startDaemon(NONROOT, () => {
     throw new Error('cannot resolve start time');
   });
-  assert.ok(r && r.code === 1 && r.errKind === 'internal', 'daemon fails fast, not into cron loop');
+  assert.ok(!('shutdown' in r), 'unresolvable lock returns a Result, not a started daemon');
+  assert.equal(r.code, 1);
+  assert.equal(r.errKind, 'internal');
   assert.equal(existsSync(dbPath), false, 'pre-check fails before opening/creating the db');
+});
+
+// ── 5.3/5.4 daemon graceful shutdown + manual-run SIGINT (driven, no real signals) ──
+// A far-future cron so the real timer never fires mid-test; runs are driven via h.fire.
+const NEVER = '0 0 1 1 *';
+// Cooperative pilot: parks on the abort signal (with an entry guard for abort-before-park)
+// and winds down when cancelled. HANG ignores the signal and never settles.
+const COOP = `export async function run(ctx){
+  ctx.emit('domain.ready', {});
+  await new Promise((_res, reject) => {
+    if (ctx.signal.aborted) return reject(new Error('cancelled'));
+    ctx.signal.addEventListener('abort', () => reject(new Error('cancelled')), { once: true });
+  });
+}`;
+const HANG = `export async function run(){ await new Promise(() => {}); }`;
+
+const appById = (id: string): LoadedApp => loadApps().apps.find((a) => a.id === id)!;
+function runStateOfId(db: DB, id: string): string {
+  return (db.prepare('SELECT state FROM Run WHERE id=?').get(id) as { state: string }).state;
+}
+function lockOwnerOfId(db: DB, id: string): string | null {
+  return (db.prepare('SELECT lock_owner FROM Run WHERE id=?').get(id) as { lock_owner: string | null })
+    .lock_owner;
+}
+function terminalKindsOf(db: DB, id: string): string[] {
+  return (
+    db
+      .prepare(
+        "SELECT kind FROM RunEvent WHERE run_id=? AND kind IN ('run.completed','run.failed','run.cancelled') ORDER BY seq",
+      )
+      .all(id) as { kind: string }[]
+  ).map((r) => r.kind);
+}
+async function pollRunId(db: DB, appId: string): Promise<string> {
+  for (let i = 0; i < 5000; i++) {
+    const row = db.prepare('SELECT id FROM Run WHERE app_id=? LIMIT 1').get(appId) as
+      | { id: string }
+      | undefined;
+    if (row) return row.id;
+    await new Promise((res) => setImmediate(res));
+  }
+  throw new Error(`no run appeared for ${appId}`);
+}
+async function pollEventKind(db: DB, kind: string): Promise<void> {
+  for (let i = 0; i < 5000; i++) {
+    if (db.prepare('SELECT 1 FROM RunEvent WHERE kind=? LIMIT 1').get(kind)) return;
+    await new Promise((res) => setImmediate(res));
+  }
+  throw new Error(`timeout waiting for ${kind}`);
+}
+/** startDaemon installs SIGINT/SIGTERM handlers, opens a db, and schedules cron. Tests
+ *  drive shutdown directly (never a real signal), so clean up the process-level effects. */
+function stopDaemonEffects(): void {
+  for (const task of cron.getTasks().values()) task.destroy();
+  process.removeAllListeners('SIGINT');
+  process.removeAllListeners('SIGTERM');
+}
+
+test('5.3 daemon shutdown: aborts an in-flight run → run.cancelled within grace (real Map); 2nd shutdown is an idempotent no-op', async (t) => {
+  const { dbPath, appsDir } = tmpEnv();
+  writeApp(appsDir, 'coop', { schedule: NEVER, pipeline: COOP });
+  const h = startDaemon(NONROOT);
+  assert.ok('shutdown' in h, 'non-root start returns a DaemonHandle');
+  t.after(stopDaemonEffects);
+
+  h.fire(appById('coop'), undefined); // real runApp + real onActive → real active Map (no stub)
+  const db = openDb(dbPath);
+  try {
+    const runId = await pollRunId(db, 'coop');
+    const t0 = Date.now();
+    await h.shutdown(2000); // abort-all, then poll Map.size to empty (not a blind sleep)
+    assert.ok(Date.now() - t0 < 2000, 'settled before the deadline → active Map emptied, not a full-grace timeout');
+    assert.equal(runStateOfId(db, runId), 'cancelled');
+    assert.deepEqual(terminalKindsOf(db, runId), ['run.cancelled'], 'exactly one terminal, cancelled');
+    assert.equal(lockOwnerOfId(db, runId), null, 'cancel released the app lock');
+
+    const t1 = Date.now();
+    await h.shutdown(2000); // SIGINT→SIGTERM style 2nd call
+    assert.ok(Date.now() - t1 < 100, '2nd shutdown early-returns (idempotent: no re-abort, no re-wait)');
+    assert.deepEqual(terminalKindsOf(db, runId), ['run.cancelled'], 'no duplicate terminal from the 2nd shutdown');
+  } finally {
+    db.close();
+  }
+});
+
+test('5.3 daemon shutdown: a signal-ignoring run outlives grace → left non-terminal, then reaped to run.failed (cleanup-timeout, not cancelled)', async (t) => {
+  const { dbPath, appsDir } = tmpEnv();
+  writeApp(appsDir, 'hang', { schedule: NEVER, pipeline: HANG });
+  const h = startDaemon(NONROOT);
+  assert.ok('shutdown' in h);
+  t.after(stopDaemonEffects);
+
+  h.fire(appById('hang'), undefined);
+  const db = openDb(dbPath);
+  try {
+    const runId = await pollRunId(db, 'hang');
+    await h.shutdown(100); // abort has no effect (pipeline ignores signal); grace times out
+    assert.ok(
+      !['completed', 'failed', 'cancelled'].includes(runStateOfId(db, runId)),
+      'grace-timeout run is left non-terminal, never force-written at shutdown',
+    );
+    // Its lock_owner is THIS live test process, so a naive reap won't touch it — that's the
+    // point of the cleanup-timeout leg: forge a dead owner to exercise the reaper fallback.
+    assert.ok(lockOwnerOfId(db, runId), 'in-flight run holds a live lock owner');
+    db.prepare('UPDATE Run SET lock_owner=? WHERE id=?').run('999999:1', runId);
+    assert.deepEqual(reap(db), [runId], 'the next daemon start reaps the dead-owner orphan');
+    assert.equal(runStateOfId(db, runId), 'failed', 'reaper records failed, NOT cancelled');
+    const payload = JSON.parse(
+      (db.prepare("SELECT payload_json p FROM RunEvent WHERE run_id=? AND kind='run.failed'").get(runId) as {
+        p: string;
+      }).p,
+    );
+    assert.equal(payload.reason, 'reaped', 'cleanup-timeout → reason=reaped, distinct from a clean cancel');
+  } finally {
+    db.close();
+  }
+});
+
+test('5.3 daemon shutdown: once shuttingDown is latched, a fire (cron tick / drain) creates no new run', async (t) => {
+  const { dbPath, appsDir } = tmpEnv();
+  writeApp(appsDir, 'gate', { schedule: NEVER, pipeline: COOP });
+  const h = startDaemon(NONROOT);
+  assert.ok('shutdown' in h);
+  t.after(stopDaemonEffects);
+
+  const sd = h.shutdown(150); // latches shuttingDown synchronously
+  h.fire(appById('gate'), undefined); // a cron tick landing in the shutdown window → must be gated
+  await sd;
+  const db = openDb(dbPath);
+  try {
+    const count = (db.prepare('SELECT count(*) c FROM Run WHERE app_id=?').get('gate') as { c: number }).c;
+    assert.equal(count, 0, 'shuttingDown gate stops fire from createRun-ing a run that would escape abort-all');
+  } finally {
+    db.close();
+  }
+});
+
+async function waitForExternalRunReady(dbPath: string, appId: string): Promise<string> {
+  const deadline = Date.now() + 10_000;
+  while (Date.now() < deadline) {
+    if (existsSync(dbPath)) {
+      let db: DB | undefined;
+      try {
+        db = openDb(dbPath);
+        const row = db.prepare(
+          "SELECT r.id FROM Run r JOIN RunEvent e ON e.run_id=r.id WHERE r.app_id=? AND e.kind='cleanup.ready' LIMIT 1",
+        ).get(appId) as { id: string } | undefined;
+        if (row) return row.id;
+      } catch {
+        // The daemon may still be creating/migrating the database; retry until ready.
+      } finally {
+        db?.close();
+      }
+    }
+    await new Promise((resolvePromise) => setTimeout(resolvePromise, 25));
+  }
+  throw new Error(`timeout waiting for external daemon run ${appId}`);
+}
+
+test('5.3 daemon SIGINT/SIGTERM, including a second signal, honor 12s grace for real cleanup lasting over 5s', async () => {
+  const cliEntry = resolve(import.meta.dirname, 'cli.ts');
+  const scenarios: Array<{ label: string; signals: NodeJS.Signals[] }> = [
+    { label: 'sigint', signals: ['SIGINT'] },
+    { label: 'sigterm', signals: ['SIGTERM'] },
+    { label: 'sigint-sigterm', signals: ['SIGINT', 'SIGTERM'] },
+  ];
+  for (const { label, signals } of scenarios) {
+    const root = mkdtempSync(join(tmpdir(), `hangar-daemon-${label}-`));
+    const appsDir = join(root, 'apps');
+    const dbPath = join(root, 'hangar.sqlite');
+    mkdirSync(appsDir, { recursive: true });
+    const appId = `slow-${label}`;
+    writeApp(appsDir, appId, {
+      schedule: '* * * * * *',
+      pipeline: `export async function run(ctx) {
+        ctx.emit('cleanup.ready', {});
+        await new Promise((_resolve, reject) => {
+          const cleanup = () => setTimeout(() => reject(new Error('cancelled after cleanup')), 5100);
+          if (ctx.signal.aborted) cleanup();
+          else ctx.signal.addEventListener('abort', cleanup, { once: true });
+        });
+      }`,
+    });
+    let stdout = '';
+    let stderr = '';
+    const child = spawn(process.execPath, ['--import', 'tsx', cliEntry, 'daemon'], {
+      cwd: resolve(import.meta.dirname, '..'),
+      env: {
+        ...process.env,
+        HANGAR_APPS: appsDir,
+        HANGAR_DB: dbPath,
+        HANGAR_SHUTDOWN_GRACE_MS: '12000',
+        LOG_LEVEL: 'silent',
+      },
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+    child.stdout!.on('data', (chunk) => { stdout += chunk.toString(); });
+    child.stderr!.on('data', (chunk) => { stderr += chunk.toString(); });
+    try {
+      const runId = await waitForExternalRunReady(dbPath, appId);
+      const exited = new Promise<{ code: number | null; signal: NodeJS.Signals | null }>((resolveExit, reject) => {
+        const timer = setTimeout(() => reject(new Error(
+          `${label} daemon did not exit within 12s grace; stdout=${stdout}; stderr=${stderr}`,
+        )), 12_500);
+        child.once('close', (code, childSignal) => {
+          clearTimeout(timer);
+          resolveExit({ code, signal: childSignal });
+        });
+      });
+      const started = Date.now();
+      assert.equal(child.kill(signals[0]!), true, `${signals[0]} delivered to daemon`);
+      if (signals[1]) {
+        await new Promise((resolvePromise) => setTimeout(resolvePromise, 100));
+        assert.equal(child.kill(signals[1]), true, `${signals[1]} delivered during shutdown grace`);
+      }
+      const exit = await exited;
+      const elapsed = Date.now() - started;
+      assert.ok(elapsed >= 5_000, `${label} did not exit before >5s cleanup completed (${elapsed}ms)`);
+      assert.ok(elapsed < 12_000, `${label} settled within configured 12s grace (${elapsed}ms)`);
+      assert.deepEqual(exit, { code: 0, signal: null }, `${label} is a graceful daemon exit`);
+
+      const db = openDb(dbPath);
+      try {
+        assert.equal(runStateOfId(db, runId), 'cancelled');
+        assert.deepEqual(terminalKindsOf(db, runId), ['run.cancelled']);
+        assert.equal(lockOwnerOfId(db, runId), null, 'cancelled run releases its lock');
+      } finally {
+        db.close();
+      }
+    } finally {
+      if (child.exitCode === null && child.signalCode === null) child.kill('SIGKILL');
+    }
+  }
+});
+
+test('5.4 hangar run cancelled by SIGINT → exit code 1 + prints run id/state (reject cancelled stays 0, covered above)', async () => {
+  const { dbPath, appsDir } = tmpEnv();
+  writeApp(appsDir, 'sig', { pipeline: COOP });
+  const db = openDb(dbPath);
+  const before = new Set(process.listeners('SIGINT'));
+  try {
+    const runP = dispatch(['run', 'sig'], NONROOT);
+    await pollEventKind(db, 'domain.ready'); // cmdRun's run is parked on the abort listener
+    // cmdRun registered its abort via process.once('SIGINT', abort). Invoke it directly (no real
+    // signal → no process.exit, no test-runner interference) — the "grab abort from onActive" path.
+    const added = process.listeners('SIGINT').filter((l) => !before.has(l));
+    assert.equal(added.length, 1, 'cmdRun installed exactly one SIGINT abort');
+    (added[0] as () => void)();
+    const res = await runP;
+    assert.equal(res.code, 1, 'cancelled → exit code 1 (business-failure band, same as failed)');
+    const out = res.json as { run: string; state: string };
+    assert.equal(out.state, 'cancelled');
+    assert.ok(out.run, 'prints the run id for tracing');
+    assert.ok(res.text?.includes('cancelled'), 'text carries `<runId> -> cancelled`');
+    assert.deepEqual(
+      process.listeners('SIGINT').filter((l) => !before.has(l)),
+      [],
+      'cmdRun removed its SIGINT listener on settle (no leak)',
+    );
+  } finally {
+    db.close();
+    process.removeAllListeners('SIGINT');
+  }
+});
+
+// ── 5.5 doctor --json broadcasts the full capability set (three-state assertCapabilities
+//     is already covered in capabilities.test.ts — reused, not duplicated here). ──
+test('5.5 doctor --json capabilities[] is the canonical HOST_CAPABILITIES set', async () => {
+  tmpEnv();
+  const res = await dispatch(['doctor', '--json']);
+  const caps = (res.json as { capabilities: string[] }).capabilities;
+  assert.strictEqual(caps, HOST_CAPABILITIES, 'doctor returns the canonical set, not a duplicate');
+  assert.deepEqual([...caps].sort(), [...HOST_CAPABILITIES].sort(), 'broadcast set === HOST_CAPABILITIES');
+  for (const c of [
+    'hangar.run.trigger-kind/v1',
+    'hangar.run.abort-signal/v1',
+    'hangar.run.cancelled-terminal/v1',
+    'hangar.run.runtime-capabilities/v1',
+  ]) {
+    assert.ok(caps.includes(c), `capabilities[] contains ${c}`);
+  }
 });

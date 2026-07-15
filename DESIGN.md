@@ -140,7 +140,7 @@ Approval   (id PK, run_id, tool, args_json, status, requested_at, decided_at, de
 **OS 永远不知道「邮件」这个概念存在。** 域细节全在 `RunEvent.payload_json`(如 `{kind:"classified", count:12, flagged:2}`)。
 - App 表是 `apps/*/` 扫描的缓存,registry 每次加载重扫 FS(App 表非权威,避免漂移);`spec_hash` 列 Phase 0 无消费者,有漂移检测需求再加。**「启停」需求(早稿设想的 `enabled` 列)已兑现为 `app.yaml` 声明式字段 `enabled`(见 §3.2 disable 契约),不落 App 表列**——App 表非权威、一次 rescan 即与 FS 漂移;开关属「这个 app 是什么」的声明,归唯一入口 `app.yaml`(#4)+ FS 即权威。
 - `Run.state` 是缓存列,真相源永远是 `RunEvent`:写终态事件、更新 `Run.state`、释放 app 锁**必须同一事务**(锁骑在 state 上,不同步即锁失真)。
-- `Run.trigger` 列**复用**存触发身份(守 #3 不加表):值 = `triggerName ?? req.trigger ?? 'manual'`——具名触发器存其 `name`(供 trace 按触发器归因),缺 name 回退触发类别(`cron`/`manual`)。**该列自此混载 trigger name 与类别**,现无消费者 switch 它(仅 `hangar runs` 透传显示);未来消费者**不得假设**值域仅 `{cron, manual}`。
+- `Run.trigger` 列**复用**存触发身份(守 #3 不加表):值 = `triggerName ?? req.triggerKind`——具名触发器存其 `name`(供 trace 按触发器归因),缺 name 回退触发类别(`cron`/`manual`)。**该列自此混载 trigger name 与类别**;消费者:`hangar runs` 透传显示、hangar-view `deriveLiveness`(`packages/hangar-view/src/derive.js:214`)按 `trigger === 'cron'` switch 它(无名 run 靠此判活);未来消费者**不得假设**值域仅 `{cron, manual}`。
 
 ### 3.4 Run 状态机(从事件推导,不靠 LLM 自称)
 
@@ -157,6 +157,8 @@ queued → running → [waiting_human] → executing → completed
 
 **daemon 多触发序列化(替换旧「`hasActiveRun` → skip」):** 保「每 app 至多一个活跃 run」不变量、不放宽为并发。daemon 进程内维护 per-app `inFlight` set + `pending`(按 `app + trigger name` 去重、每触发器至多 1 pending、封上界、插入序 drain)。**`pending` 是易失调度提示、非 run-state 真相**——RunEvent 仍是审计 SOT(守 #3),`pending` **不进 4 表**、不进 status/trace/doctor、daemon 崩即丢。`fire(app, name)`:本 daemon 正跑该 app(`inFlight.has`)→ 记 pending(去重)、不丢;否则别的进程持锁**或本 daemon 的 run 已 park 成 `waiting_human`(仍持 active-lock)**(`hasActiveRun` 真)→ skip+log(接受降级、同 reap-vs-run);否则跑。**drain 复用 fire 守卫、按 DB 活跃态而非 promise 生命周期判定**:`runApp` settle(`.finally`)清 `inFlight` 后,取一个 pending **走回 `fire`**——若此刻 run 已 resolve 但 park 成非终态、仍持锁,drain 落 skip+log,**不**盲跑撞 `createRun → already_running` 把 pending 丢掉。故多触发同刻 fire(12:30 digest 与 `*/3` poll 的 `:30` 对齐)本进程内**不丢** digest、堆积有界;park/跨进程/崩溃下降级为 skip+log 或靠下一周期/DB 自愈。**liveness 假设**:`inFlight` 只在 `runApp` settle 时清,pilot 的 `run()` **须自限时**(否则挂死的 run 永占 `inFlight`、该 app 再不调度——与现状 `hasActiveRun→skip` 同一 wedge、非本变更新引入;脊柱级 watchdog 属未来)。`daemonTasks` 把数组 schedule 展开成多个 `cron.schedule`、**都带同 name**(同串去重);overdue/blocked 检测对数组取**每条 cron 周期的最小值**(= 最快触发器一周期没跑即 overdue;诊断性告警、非执行门,最激进而非保守的判定)。
 
+**daemon 优雅停机(SIGINT/SIGTERM · 替换旧「收信号即硬杀」):** daemon 收 **SIGINT/SIGTERM** 置 `shuttingDown` 标志——它同时**门住 `fire()`**(停机窗口内新到的 cron/pending tick 不再 `createRun`,否则宽限内诞生的 run 逃过取消扫描、留非终态)与**使 `shutdown()` 主体幂等**(2 次调用早退、不重 abort / 重轮询);信号 handler 另有一次性退出门闩,首个信号独占「宽限 + exit」序列,宽限内后续 SIGINT/SIGTERM 被忽略,不得截断剩余宽限或触发第二次 `process.exit`。随后 **abort 全部 active run**,在**宽限期(`HANGAR_SHUTDOWN_GRACE_MS`,默认 ~5s)**内等它们**真收束**(非盲 sleep)后退出:配合 `signal` 的 pipeline 在宽限内经上文**单一 choke-point** 记 `run.cancelled`(不新增终态转换点,守 #8);**宽限内未收束者**(忽略 signal / cleanup 过久)留非终态、**不在此处强写终态**,由下次启动的 **reaper** 按死 PID 指纹判 `run.failed`(= cleanup-timeout,复用上文既有 reaper、零新机制)。取消全程**进程内**(#6:无 IPC、不引入 DB 轮询取消标志)。手动 `hangar run` 则装 `process.once('SIGINT', abort)` 只取消自身那一个 run(立即 abort + 短等、不套完整宽限;`once` 留第二次 Ctrl-C 回落硬杀)。
+
 ### 3.5 Executor 接口(未来接进程内 executor 的插孔)
 
 ```ts
@@ -169,15 +171,25 @@ interface Executor {
 ```ts
 interface RunContext {
   input: unknown                            // 来自 hangar run --input
-  trigger?: string                          // 可选触发身份(触发器 name,不透明字符串);脊柱零域 #1,app 内 switch 分派;老脊柱不传→undefined→默认路径(向后兼容)
+  triggerKind: 'manual' | 'cron'            // host 在 run 创建入口写死的触发类别;--trigger flag 与 app 均不可伪造(唯一 provenance = host 入口)
+  triggerName?: string                      // 可选触发器 name(= 既有 trigger 同值、语义更清晰的新名);无名触发器 undefined
+  trigger?: string                          // @deprecated 用 triggerName —— 保留为旧 app 只读的向后兼容分支(= triggerName);脊柱零域 #1,app 内 switch 分派;老脊柱不传→undefined→默认路径(向后兼容)
   config: Record<string, unknown>          // 来自 spec.config
   logger: Logger                            // pino
+  readonly signal: AbortSignal              // 只读取消信号(Node 原生);host 恒提供(必填,同 triggerKind),pipeline 读它优雅收尾、忽略仍照跑(向后兼容)
+  readonly capabilities: readonly string[] // host 从 HOST_CAPABILITIES 为本 run 复制并冻结的新鲜快照;input/config/request 不可伪造
   emit(kind: string, payload?: object): void          // 追加 RunEvent
   propose(action: {tool: string; args: object}): Promise<unknown>  // 唯一动作入口(async):低危 await 执行拿结果,高危登记待批 resolve void;不抛错、不中断 run()
 }
 ```
 
 **触发路由(`ctx.trigger`,多触发能力的分派契约):** 脊柱把触发该 run 的触发器 `name`(**不透明字符串**)塞进 `ctx.trigger` 传给 `run(ctx)`;**脊柱零域**(#1)——不认识 `poll`/`digest`,只透传。`run(ctx)` 是**单入口**,app 内 `switch(ctx.trigger)` 自行分派(可写成 `runPoll`/`runDigest` 保可读),并**自守 loud default**(既非 `undefined` 又非已知 name → throw,拼错/漏配触发器时响亮失败,而非静默走默认路径)——名→行为绑定是 app 内约定,脊柱无法内省其 switch。单个无名触发器 → `ctx.trigger === undefined` → 默认路径(heartbeat/现 inbox poll **零回归**)。`ctx.trigger` 是运行时**鸭子契约新增字段**且**可选**:老脊柱不传→pilot 读到 undefined→默认路径(向后兼容);pilot 须防御性读(`ctx.trigger === 'digest'`),fail-loud **不**断言它(可选)。`hangar run <app> [--trigger <name>]` 可手动注入 name,使任一具名触发行为(如 digest)可手动触发/重放(否则 `hangar run inbox` → undefined → 只跑默认路径、digest 无法手动验证或补发)。
+
+**触发类别(`ctx.triggerKind`,不可伪造的 provenance):** `triggerKind: 'manual' | 'cron'` 由 host 在**两个 run 创建入口写死**——`cmdRun` 恒 `'manual'`、daemon 恒 `'cron'`;`--trigger <name>` flag **只**设 `triggerName`、绝不改 kind(manual 用与某 cron 相同 name 时 `triggerKind` 仍 `'manual'`),app/pilot 只收 ctx、不构造 RunRequest 故也无法改它。因此**唯一 provenance 是 host 入口**——这是「flag/app 不可伪造 + host 入口是唯一来源」,**非**对任意程序化调用者做运行时 provenance 校验(单用户 BYO、无对抗 app 作者,同上 carve-out)。`triggerName`(= 触发器 name)是既有 `trigger` 语义更清晰的同值新名;`trigger` **保留但 deprecated**(= `triggerName`),旧 app 只读它照常走、零回归;pipeline 从此读 `triggerKind`/`triggerName` 两独立字段,不再从 §3.3 混载列反推来源。
+
+**取消信号(`ctx.signal`,进程内优雅取消):** 每个 active run 持一个 `AbortController`,其 `signal` 以只读形式经 `ctx.signal` 暴露给 `run()`。取消**只经既有单一 choke-point 记 `run.cancelled`**(守 #8 不新增终态转换点):`runApp` catch 里按 `ctx.signal.aborted` 分流(aborted→`run.cancelled`、否则→`run.failed`),且在调 `evaluateAfterRun`(check-after-return)前先查 `signal.aborted`——已 aborted 直接记 `run.cancelled`、不进 evaluate(免得「aborted 后正常 return」被误记 completed);靠 choke-point 既有幂等收敛为「首个终态胜、锁只释放一次」。**「aborted → cancelled」只对协作路径成立**:pipeline 配合 `signal`、在**宽限期内收束**时才记 `run.cancelled`;忽略 `signal`/超宽限的 run,daemon 停机不为它写终态,由重启期 **reaper** 判 `run.failed`(§3.4 cleanup-timeout,被明确接受的降级)。老 pipeline 不读 `ctx.signal` 仍照跑,取消退化为「abort 后等宽限、超时 reaper 收 failed」(与现状 Ctrl-C 一致、零回归)。
+
+**运行期能力快照(`ctx.capabilities`,#19):** `HOST_CAPABILITIES` 是唯一 canonical set,当前含 `hangar.run.trigger-kind/v1`、`hangar.run.abort-signal/v1`、`hangar.run.cancelled-terminal/v1`、`hangar.run.runtime-capabilities/v1`。`doctor --json` 从它广播真机 offered 集;executor 也为**每个 run**从它复制并冻结一个新数组注入 `ctx.capabilities`。该字段不是 `RunRequest` 的 caller 输入,同名 input/config/trigger 不能替换;修改某次快照不能污染 canonical、doctor 或后续 run。外部 adapter 自带 required 集:部署前跨进程读 doctor 做制品门禁,进入 `run(ctx)` 后在自己的业务副作用前再对快照精确校验(`/v2` 不自动满足 `/v1`)。`assertCapabilities(required, have)` 的 `have` 必填,禁止默认读 module-local 常量以免 bundle 假绿。**边界:** pipeline 模块在 `run(ctx)` 前已被 import,所以运行期门禁不保护模块顶层副作用;模块必须 side-effect-free at import,部署期门禁与运行期门禁互补。
 
 **没有 `ctx.tools` 直执行入口**——那是让 app 绕过 `permissions.approval` 的后门(破 #5)。「要不要审批」是 OS 策略、不是 app 选哪个方法;**可审批/高危动作走单一 `propose`**,gateway 按名单决定 park 还是立即执行。
 
