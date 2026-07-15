@@ -9,7 +9,8 @@
   "scripts": {
     "test": "pnpm -r test",
     "typecheck": "pnpm -r typecheck",
-    "build": "pnpm -r build"
+    "build": "pnpm -r build",
+    "openspec:validate": "node scripts/validate-openspec-cn.mjs"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

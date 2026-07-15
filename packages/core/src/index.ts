@@ -4,6 +4,7 @@ export * from './registry.js';
 export * from './events.js';
 export * from './store.js';
 export * from './reaper.js';
+export { HOST_CAPABILITIES, assertCapabilities } from './capabilities.js';
 export {
   type RunContext,
   type Executor,
