@@ -7,7 +7,7 @@
 - **当** `hangar run heartbeat`
 - **那么** 系统必须调用其 `pipeline.run(ctx)`,该函数 `emit`/`propose` 的产物必须落库
 
-#### 场景:pipeline 抛错即失败(PARK 不抛错;aborted 例外)
+#### 场景:pipeline 抛错即失败(PARK 不抛错)
 - **当** app 的 `pipeline.run` 抛出异常
 - **那么** 系统必须经 choke-point 追加终态:**未 aborted → `run.failed`**;**`ctx.signal.aborted` 为真 → `run.cancelled`**(见下「取消」需求)。二者均 `释放锁` + `作废 pending Approval`;PARK **不通过抛错实现**(见 tool-gateway check-after-return)
 
