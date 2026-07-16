@@ -38,11 +38,11 @@
 
 pipeline **仍在进程内**(§6 不动、无 worker)。hangar 提供 **`ctx.spawn(cmd, opts)`** 作为受闸 pilot **唯一的受容纳 spawn 入口**。**handle = `run_id`**(createRun 起就 durable,GitHub/Buildkite 缺的正是它)--两平台都**零新列**,回收全凭 run_id:
 
-- **Linux:** 子进程进一个 **run_id 命名的 per-run cgroup v2**(路径确定性 = `…/hangar-<run_id>`,reaper 由 run_id **重构**)。**用 `CLONE_INTO_CGROUP`(5.7+;`cgroup.kill` 已需 5.14+ 故必有)让子进程从第一条指令就在 cgroup 内**--无「建组 -> fork -> 写 `cgroup.procs`」的落组窗口(Node 的 `child_process` 不直接暴露 clone3 flag,实现用 native shim 或自落组 exec wrapper--**实现细节,非 ADR 级**;目标「从第一条指令就在 cgroup」不变)。回收 = 重构路径 -> `cgroup.kill`(5.14+,**防 setsid 逃逸、防 fork race**、幂等)-> `rmdir`。**cgroupfs 每次 boot 重建为空,故留存的 `hangar-<run_id>` cgroup 必属本 boot--重启安全由构造保证、无需 boot 门。** 有 cgroup v2 委派时 **provable + 完整**;无委派则回退 env-tag(同 macOS)、best-effort。
-- **macOS:** `ctx.spawn` 给子进程注入 **`HANGAR_RUN_ID=<runId>` env**(跨 fork+setsid+exec 继承)。回收 = **按 `HANGAR_RUN_ID` 全表扫、逐个杀匹配进程**(单一机制、无需记录、无窗口;**抓一切保留 tag 的进程,含 setsid 逃逸者**--正是 launchd 的 job-pgid 抓不到的)。**`run_id` 是唯一 UUID、从不复用,故重启后没有任何进程携带旧 tag**--env 扫返回空、不会误杀->**重启安全由构造保证、无需 boot 门**。**担保残余 = 任何丢掉 `HANGAR_RUN_ID` tag 的子孙**(见 D3/Risks)。**best-effort。**
-- *(评审曾考虑给 macOS 加 `killpg` 补充腿以多抓「组内丢-tag 者」,但判定为过度工程:它唯一多抓的片 = scrub-env 密封沙箱,本就路由 Linux/VM;且引入非幂等 + claim-the-orphan + 存 pgid 的写窗口。砍掉 -> macOS 单一 env-tag 机制,可测可推理。)*
+- **Linux:** 子进程进一个 **run_id 命名的 per-run cgroup v2**(路径确定性 = `<委派根>/hangar-<run_id>`,reaper 由 run_id **重构**;委派根由部署定(systemd user-slice 或 root chown),属实现细节)。**用 `CLONE_INTO_CGROUP`(5.7+;`cgroup.kill` 已需 5.14+ 故必有)让子进程从第一条指令就在 cgroup 内**--无「建组 -> fork -> 写 `cgroup.procs`」的落组窗口(Node 的 `child_process` 不直接暴露 clone3 flag,实现用 native shim 或自落组 exec wrapper--**实现细节,非 ADR 级**;目标「从第一条指令就在 cgroup」不变)。回收 = 重构路径 -> `cgroup.kill`(5.14+,**防 setsid 逃逸、防 fork race**、可安全重复执行)-> `rmdir`。**cgroupfs 每次 boot 重建为空,故留存的 `hangar-<run_id>` cgroup 必属本 boot--重启安全由构造保证、无需 boot 门。** 有 cgroup v2 委派时 **provable + 完整**;无委派则回退 env-tag(同 macOS)、best-effort。
+- **macOS:** `ctx.spawn` 给子进程注入 **`HANGAR_RUN_ID=<runId>` env**(跨 fork+setsid+exec 继承)。回收 = **按 `HANGAR_RUN_ID` 全表扫、逐个杀匹配进程,再重扫直至稳定或超时**(单一机制、无需记录、**无记录窗口**;**抓一切保留 tag 的进程,含 setsid 逃逸者**--正是 launchd 的 job-pgid 抓不到的)。**重启安全无需 boot 门**:重启后 pre-reboot 进程已死,唯一可能携带旧 tag 的是该 run 的孤儿(被扫到即正确清理);`run_id` 是唯一 UUID,故不会误命中其他 run 的进程。**担保残余 = 任何丢掉 `HANGAR_RUN_ID` tag 的子孙**(见 D3/Risks);**另:inspect-to-kill 间有极窄 PID 复用误杀窗口**(macOS 无 pidfd、不能 race-free kill;同 launchd 的 pgid 复用);**scan-kill 间被杀进程 fork 出带 tag 子孙的窗口由重扫循环收窄**(仅末次重扫后 fork 者残留,极窄)。**best-effort。**
+- *(评审曾考虑给 macOS 加 `killpg` 补充腿以多抓「组内丢-tag 者」,但判定为过度工程:它唯一多抓的片 = scrub-env 密封沙箱,本就路由 Linux/VM;且引入非幂等 + 须事务性认领孤儿(claim-the-orphan)+ 存 pgid 的写窗口。砍掉 -> macOS 单一 env-tag 机制,可测可推理。)*
 
-**reaper(写命令启动时,现有入口)** 对每个孤儿 run(`isDead(lock_owner)` = 持有 daemon 死):按 run_id 回收(Linux 重构 cgroup 路径 `cgroup.kill` / macOS env 扫逐杀)-> **无论 OS 回收成败**,再经**现有单一 choke-point** 判 `run.failed` + 释放锁(DB reap 恒发生,见 D3)。
+**reaper(写命令启动时,现有入口)** 对每个孤儿 run(`isDead(lock_owner)` = 持有 daemon 死):按 run_id 回收(Linux 重构 cgroup 路径 `cgroup.kill` / macOS env 扫逐杀,均**有界、超时即放弃**不挂住 DB reap)-> **无论 OS 回收成败**,再经**现有单一 choke-point** 判 `run.failed` + 释放锁(DB reap 恒发生,见 D3)。
 
 - **为何 (d) 够、且比 (a) 轻:** 要回收的是 pipeline 派生的**子孙**(build/git),不是 pipeline 本身(它随 daemon 一起死)。**§6 不碰(进程内)、无跨进程 `ctx.input`/`propose` 通道、`#6` 不碰**(ctx.spawn 本地 API、reaper 读 OS+SQLite、非 IPC)。**schema:两平台均零新列**(handle = `run_id`,Linux 路径由 run_id 派生、macOS tag 即 run_id)--守 #3(不加表、不加列、不加进程)。
 
@@ -78,18 +78,18 @@ macOS 根本只能 best-effort,故真正要拍的不是「worker vs lease」,而
 | 边界 | 处理 |
 |---|---|
 | **孤儿判定** | 沿用现有 `isDead(lock_owner)`(持有 run 的 daemon 死 = 孤儿)--**语义不变、零回归**。`lock_owner` 仍是 daemon 身份;OS 回收 handle = `run_id`(**不另存**,不动 `lock_owner`、不加列)。 |
-| **锁 / Run 终态(DB reap 恒发生)** | `isDead` 即经**现有单一 choke-point** 判 `run.failed` + 释放锁--**无论 OS 回收成败**(守 run-engine spec、与今日 `reaper.ts` 一致)。**强制序:OS 回收(cgroup.kill / env 扫逐杀)在 chokePoint 事务之外先跑、其错误一律 catch 吞掉;chokePoint 无条件执行、释放锁**--OS 回收抛错绝不能挡住 DB reap。跳过/失败的 OS 回收 = OS 子孙残余、但 DB 已干净。 |
-| **重启安全(无需 boot 门)** | **两平台均由构造保证、无需 boot 门**:Linux cgroupfs 每 boot 重建、留存的 `hangar-<run_id>` cgroup 必属本 boot;macOS `run_id` 是唯一 UUID、重启后无进程携带旧 tag、env 扫返回空。 |
-| **防误杀** | **Linux cgroup:内核跟踪成员,无 PID 复用问题**。**macOS:** env 扫按 `HANGAR_RUN_ID` = run_id 精确匹配--**tag 即身份**(唯一 UUID,无假命中可能)。两平台的 OS 回收操作(`cgroup.kill` / 逐个 `kill`)均幂等--重复跑无害。DB-reap 侧的并发抢锁行级仲裁仍是 DESIGN §3.6 延后项(在此不影响 OS 回收的幂等性)。 |
-| **掉 env-tag / setsid** | **Linux:cgroup 无出口,全抓**。**macOS:** env 扫抓一切保留 `HANGAR_RUN_ID` 的进程(**含 setsid 逃逸者**--launchd 抓不到的)。**担保残余 = 任何丢掉 tag 的子孙**:密封沙箱 scrub env(Bazel/Nix、Gradle daemon worker),以及 env 不可读或非 root 无法发信号的 uid-change/SIP 子进程。**auto-developer 跑密封沙箱构建时这道残余真实**--那类 run 应走 Linux/VM(见 D2)。Linux cgroup 无此洞。 |
-| **approve 面** | reaper **扫描统一**(按 run_id 一视同仁扫到 approve 侧进程)。但 `ctx.spawn` 挂在 `RunContext` 上、只在 `runApp` 为 pipeline run 构造;被审批高危动作(`git push`)在独立 `hangar approve` 进程执行(#5),**须自己接上同样的容纳 spawn 接线**(cgroup/env-tag)才被 reaper 看见--这是**后续实现的一份接线,非自动**;fault test 必覆盖 approve 面(见 D5)。 |
+| **锁 / Run 终态(DB reap 恒发生)** | `isDead` 即经**现有单一 choke-point** 判 `run.failed` + 释放锁--**无论 OS 回收成败**(守 run-engine spec、与今日 `reaper.ts` 一致)。**强制序:OS 回收(cgroup.kill / env 扫逐杀)在 chokePoint 事务之外先跑、有界(超时即放弃)、其错误一律 catch 吞掉;chokePoint 无条件执行、释放锁**--OS 回收抛错或超时绝不能挡住 DB reap。跳过/失败的 OS 回收 = OS 子孙残余、但 DB 已干净。 |
+| **重启安全(无需 boot 门)** | **两平台均由构造保证**:Linux cgroupfs 每 boot 重建、留存的 `hangar-<run_id>` cgroup 必属本 boot;macOS `run_id` 唯一 UUID、重启后唯一携带旧 tag 的是该 run 孤儿(无假命中)。 |
+| **防误杀** | **Linux cgroup:内核跟踪成员,无 PID 复用问题**。**macOS:** env 扫按 `HANGAR_RUN_ID` = run_id 精确匹配--**tag 即身份**(唯一 UUID,无假命中)。**残余:macOS inspect-to-kill 间有极窄 PID 复用误杀窗口**(macOS 无 pidfd、不能 race-free kill;同 launchd 的 pgid 复用)。两平台 OS 回收操作均**可安全重复执行**。DB-reap 侧的并发抢锁行级仲裁仍是 DESIGN §3.6 延后项(不影响 OS 回收侧)。 |
+| **掉 env-tag / setsid / 容器逃逸** | **Linux:cgroup 无出口、全抓**(威胁模型之外:delegatee 主动 `write(cgroup.procs)` 自迁移到 sibling cgroup 可逃出 `hangar-<run_id>`--需进程主动迁移,可信 pipeline 不做,**不计残余**)。**macOS:** env 扫抓一切保留 `HANGAR_RUN_ID` 的进程(**含 setsid 逃逸者**--launchd 抓不到的)。**macOS 担保残余 = 任何丢掉 tag 的子孙**:密封沙箱 scrub env(Bazel/Nix、Gradle daemon worker),以及 env 不可读或非 root 无法发信号的 uid-change/SIP 子进程;另加 inspect-to-kill PID 复用窗口(见上行)。**auto-developer 跑密封沙箱构建时这些残余真实**--那类 run 应走 Linux/VM(见 D2)。 |
+| **approve 面** | reaper **扫描统一**(按 run_id 一视同仁扫到 approve 侧进程)。`ctx.spawn` 挂在 `RunContext` 上、只在 `runApp` 为 pipeline run 构造;被审批高危动作(`git push`)在独立 `hangar approve` 进程执行(#5),**须自己接上同样的受闸 containment 接线**(cgroup/env-tag)才被 reaper 看见--**非自动,是后续实现的一份显式接线**。`ctx.spawn` 只管 OS 生命周期待遇(容纳/回收),**不绕过** `ctx.propose`:审批列出的副作用仍须走 `ctx.propose` -> OS 层 approve 执行(守 #5)。 |
 | **app 自身 SQLite resume** | hangar 只回收 OS 进程树 + Run/锁终态;app 域 SQLite(auto-developer 自己的状态)crash-safe / resume 是 app 职责,hangar 不碰(守 #1/#4)。 |
 
 ### D4 - 能力闸 `hangar.run.hard-crash-containment/v1`
 
 - 复用 **#17 (add-run-cancellation) 引入的 `host-capabilities` 机制**(版本化能力集 + `assertCapabilities` fail-closed + doctor 广播;代码已在 #17 实现,规范待 #17 归档)。
 - **广播闸 = release-time 纪律,不是运行时门。** `HOST_CAPABILITIES` 是静态常量、`doctor` 逐字广播;**实现变更只有在 fault test CI 全绿后,才可把能力串加进 `HOST_CAPABILITIES`**。**Hangar DB reaping 单独 MUST NOT 满足它。**
-- **v1 按平台如实广播(fail-closed 消费者须知):** **Linux(有 cgroup 委派)= provable + 完整;Linux(无委派)与 macOS = best-effort**(env-tag 扫),残余见 D3。**广播取向 = macOS 也广播 `/v1`**,语义为「本平台可达的最强容纳」(mac 上即 best-effort、过 best-effort fault test 即广播)。这是被迁移前提逼定的:D2 的立论是 best-effort 对**保留 tag 的工具链**不丢容纳(与 launchd 同档、不同的洞)即可切,故 macOS **必须**广播 `/v1`,否则 adapter 在生产 mac-mini 上永远 fail-closed、**切不过来**(与 D2/Migration 直接矛盾)。**密封沙箱 scrub-env 工具链**的 tag-drop 残余在 mac 上真实 -> 那类 run 应走 Linux/VM(见 D2)。若日后要区分「provable」与「best-effort」两档,**另立**一个更严的能力串(如 `…-provable/v1`),**不**改 `/v1` 语义。**v1 担保覆盖 pipeline 与 approve 两条 spawn 面**(都经 ctx.spawn)--fault test 必双覆盖(见 D5)。
+- **v1 按平台如实广播(fail-closed 消费者须知):** **Linux(有 cgroup 委派)= provable + 完整;Linux(无委派)与 macOS = best-effort**(env-tag 扫),残余见 D3。**广播取向 = macOS 也广播 `/v1`**,语义为「本平台可达的最强容纳」(mac 上即 best-effort、过 best-effort fault test 即广播)--否则 adapter 在生产 mac-mini 上永远 fail-closed、切不过来。**密封沙箱 scrub-env 工具链**的 tag-drop 残余在 mac 上真实 -> 那类 run 应走 Linux/VM(见 D2)。若日后要区分「provable」与「best-effort」两档,**另立**一个更严的能力串(如 `…-provable/v1`),**不**改 `/v1` 语义。**v1 的 fault test 必须覆盖 pipeline 与 approve 两面**(pipeline 经 `ctx.spawn`;approve 侧 containment 接线**非自动、是后续实现的一份显式工作**,见 D3)--fault test 必双覆盖(见 D5)。
 - **消费(部署期,非运行时):** adapter 在**部署期**读真机 `doctor --json` 自比后 fail-closed(#17 C2:模块顶层副作用先于 in-run 断言);能力缺失或仅未知更高版本 -> 精确匹配不命中 -> 关门。
 - **部署:** auto-developer cut-over 前 pin 已测的 hangar commit/version。
 
@@ -98,11 +98,12 @@ macOS 根本只能 best-effort,故真正要拍的不是「worker vs lease」,而
 后续实现变更**必须**带 fault test,证明:
 
 1. **pipeline 面:** `ctx.spawn` 起一棵长生命周期树,含**普通-留 tag / setsid-留 tag / scrub-env-丢 tag** -> **SIGKILL daemon** -> 重启 -> reaper 回收 -> 断言:**Linux `cgroup.kill` 全清(三类)**;**macOS env 扫清一切留 tag 者(含 setsid)、scrub-env-丢 tag 者记残余**(记录而非期望覆盖)。
-2. **approve 面:** 从 `hangar approve` 的 handler 里 `ctx.spawn` 一个 detached 长生命周期子进程 -> SIGKILL approve 进程 / daemon -> 重启 -> 断言 reaper 按 run_id 回收它(两平台)--**与 pipeline 面同等覆盖**(approve 侧接线非自动,故必须显式测)。
+2. **approve 面:** 从 `hangar approve` handler 经受闸 containment 入口起一个 detached 长生命周期子进程 -> SIGKILL approve 进程 / daemon -> 重启 -> 断言 reaper 按 run_id 回收它(两平台)--**与 pipeline 面同等覆盖**(approve 侧接线非自动,故必须显式测)。
 3. **无关进程未被杀**(误杀防护:另起一个复用 PID / 同名的无关进程,断言存活)。
-4. **DB-reaped 与 OS-child-reaped 分开断言**--禁止用「Run 已判 failed」冒充「OS 子孙已回收」;并断言 **OS 回收步抛错时 chokePoint 仍执行、锁仍释放、run 仍判 `failed`**(DB reap 不被 OS 回收失败挡住)。
-5. **幂等:** reaper 重复跑不误杀、不崩(`cgroup.kill` / 逐个 `kill` 均幂等)。
-6. 只有以上按平台全绿,doctor 才广播 `hangar.run.hard-crash-containment/v1`。
+4. **DB-reaped 与 OS-child-reaped 分开断言**--禁止用「Run 已判 failed」冒充「OS 子孙已回收」;并断言 **OS 回收步抛错或超时时 chokePoint 仍执行、锁仍释放、run 仍判 `failed`**(DB reap 不被 OS 回收失败挡住)。
+5. **幂等 + 有界:** reaper 重复跑不误杀、不崩(`cgroup.kill` / 逐个 `kill` 均可安全重复执行);**OS 回收步有界**(超时即放弃、仍跑 chokePoint,不挂住 DB reap)。
+6. **Linux 无委派回退:** 无 cgroup 委派时回退 env-tag(同 macOS)-> 断言 best-effort 回收仍工作(与 macOS 同残余)。
+7. 只有以上按平台全绿,doctor 才广播 `hangar.run.hard-crash-containment/v1`。
 
 ### D6 - #2 论证(inbox 哪一行用它)
 
@@ -118,10 +119,11 @@ macOS 根本只能 best-effort,故真正要拍的不是「worker vs lease」,而
 ## Risks / Trade-offs
 
 - **[macOS 无 cgroup = 根本 best-effort]** 研究双证:macOS 无内核容器,launchd 亦 best-effort。**缓解:** 如实按平台广播;可证明路径 = Linux VM(升级留档,不在 v1 mac 承诺)。**这是平台天花板、非本方案缺陷。**
-- **[macOS 容纳残余(真实)]** 担保残余 = **任何丢掉 `HANGAR_RUN_ID` tag 的子孙**:密封沙箱构建(Bazel/Nix、Gradle daemon worker)**默认 scrub env**--env 扫抓不到;另有 env 不可读或非 root 无法发信号的 uid-change / SIP-hardened 子进程。Linux cgroup 无此洞。**缓解:** 如实记残余;那类工具链的 run 走 Linux(cgroup)或 Linux VM(D2/B)。
-- **[误杀 > 漏杀 的取舍]** 一律「宁漏勿误」:handle 存疑就跳过 OS 回收(DB 仍 reap)。代价 = 偶发残余一轮,doctor 暴露可观测性。
+- **[macOS 容纳残余(真实)]** 担保残余 = **任何丢掉 `HANGAR_RUN_ID` tag 的子孙**:密封沙箱构建(Bazel/Nix、Gradle daemon worker)**默认 scrub env**--env 扫抓不到;另有 env 不可读或非 root 无法发信号的 uid-change / SIP-hardened 子进程;**另:inspect-to-kill 间极窄 PID 复用误杀窗口**(macOS 无 pidfd)。Linux cgroup 无这些洞(delegatee 主动自迁移 sibling 属威胁模型之外,可信 pipeline 不做)。**缓解:** 如实记残余;那类工具链的 run 走 Linux(cgroup)或 Linux VM(D2/B)。
+- **[OS 回收失败不自动重试]** run 经 chokePoint 判终态后,后续 reaper 跳过它 -> OS 回收失败的子孙**残留直到人工兜底**(非「一轮」)。**缓解:** doctor 暴露未清 OS 残余的可观测性;OS 回收步有界(不挂住 DB reap)。
+- **[误杀 > 漏杀 的取舍]** 一律「宁漏勿误」:handle/指纹存疑就跳过 OS 回收(DB 仍 reap)。代价 = 偶发残余,doctor 暴露可观测性。
 - **[cgroup v2 委派前提(Linux)]** 需 unified 层 + 委派子树(systemd user-slice 或一次性 root chown);不可得则回退 env-tag(同 macOS)。
-- **[DB-reap 并发抢锁的行级仲裁]** DESIGN §3.6/ROADMAP Phase 1 延后项--影响 chokePoint 侧(DB reap),与 OS 回收侧(cgroup.kill / env 扫逐杀,均幂等)无关。
+- **[DB-reap 并发抢锁的行级仲裁]** DESIGN §3.6/ROADMAP Phase 1 延后项--影响 chokePoint 侧(DB reap),与 OS 回收侧(cgroup.kill / env 扫逐杀,均可安全重复执行)无关。
 
 ## Migration Plan
 
@@ -135,5 +137,5 @@ macOS 根本只能 best-effort,故真正要拍的不是「worker vs lease」,而
 
 (仅存两条真未决:)
 
-- **OQ1(平台天花板,已定位):** macOS 担保残余 = 任何丢掉 `HANGAR_RUN_ID` tag 的子孙(D3/Risks)。**是否咬**取决于 auto-developer 工具链:密封沙箱构建(Bazel/Nix)scrub env 即落入残余。实测真咬 -> 那类 run 走 Linux(cgroup)/Linux VM(D2/B)。
-- **OQ2:** fault test 在 CI 里 SIGKILL 真 daemon + 起真树的可移植性(macOS vs Linux runner);CLONE_INTO_CGROUP 的 Node shim 在 CI Linux runner 上的稳定性。
+- **OQ1(平台天花板,已定位):** macOS 担保残余 = 任何丢掉 `HANGAR_RUN_ID` tag 的子孙 + inspect-to-kill PID 复用窗口(D3/Risks)。**是否咬**取决于 auto-developer 工具链:密封沙箱构建(Bazel/Nix)scrub env 即落入残余。实测真咬 -> 那类 run 走 Linux(cgroup)/Linux VM(D2/B)。
+- **OQ2:** fault test 在 CI 里 SIGKILL 真 daemon + 起真树的可移植性(macOS vs Linux runner);`CLONE_INTO_CGROUP` 的 Node shim 在 CI Linux runner 上的稳定性。
