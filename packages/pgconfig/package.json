@@ -1,0 +1,29 @@
+{
+  "name": "@hangar/pgconfig",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Spine-external postgres config resolver for hangar pilots: maps app → connection target from databases.yaml, passwords in ${ENV}. No driver, no connection.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "hangar-pgconfig": "./dist/cli.js"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --import tsx --test src/*.test.ts"
+  },
+  "dependencies": {
+    "yaml": "^2.9.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "tsx": "^4.23.1",
+    "typescript": "^6.0.3"
+  }
+}

@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
-import { mkdtempSync, mkdirSync, writeFileSync, existsSync, readFileSync, statSync, chmodSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, existsSync, readFileSync, readdirSync, statSync, chmodSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import cron from 'node-cron';
@@ -334,16 +334,29 @@ test('node major has one source: .nvmrc, engines and the runtime gate agree', ()
   assert.equal(nodeSupported(`${major}.0.0`), true, `MIN_NODE must admit ${major}.0.0`);
   assert.equal(nodeSupported(`${major - 1}.999.0`), false, `MIN_NODE must reject major ${major - 1}`);
 
-  for (const p of ['package.json', 'packages/core/package.json', 'packages/hangar-view/package.json']) {
-    const engines = JSON.parse(readFileSync(join(root, p), 'utf8')).engines?.node;
-    assert.equal(engines, `>=${major}`, `${p} engines.node must be the same open-ended floor as .nvmrc`);
+  // Discovered, not enumerated: a package added later must not be able to escape the
+  // floor by simply not appearing on a hardcoded list.
+  const EXCEPTIONS: Record<string, string> = {
+    // Published to npm. Raising its floor is a breaking change for consumers, not a
+    // version-alignment chore — it has zero native deps and only imports node: builtins.
+    // Pinned here so a future "unify the versions" sweep has to argue with a failing test.
+    '@herbertgao/hangar-notify': '>=22.18.0',
+  };
+  const manifests = [
+    'package.json',
+    ...readdirSync(join(root, 'packages')).map((d) => `packages/${d}/package.json`),
+  ];
+  let checked = 0;
+  for (const p of manifests) {
+    const full = join(root, p);
+    if (!existsSync(full)) continue;
+    const pkg = JSON.parse(readFileSync(full, 'utf8')) as { name: string; engines?: { node?: string } };
+    const want = EXCEPTIONS[pkg.name] ?? `>=${major}`;
+    assert.equal(pkg.engines?.node, want, `${p} (${pkg.name}) engines.node must be ${want}`);
+    checked++;
   }
-
-  // Deliberately NOT aligned: notify is published to npm, so raising its floor is a
-  // breaking change for consumers, not a version-alignment chore. Pinned here so a
-  // future "unify the versions" sweep has to argue with a failing test.
-  const notify = JSON.parse(readFileSync(join(root, 'packages/notify/package.json'), 'utf8'));
-  assert.equal(notify.engines.node, '>=22.18.0');
+  // A glob that silently matched nothing would make every assertion above vacuous.
+  assert.ok(checked >= 4, `expected the root + every packages/* manifest, checked ${checked}`);
 
   // Comment lines are stripped first: a commented-out `# node-version-file: .nvmrc` must
   // not satisfy the positive check. And the negative check must reject ANY active

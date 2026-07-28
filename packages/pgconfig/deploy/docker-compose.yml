@@ -1,0 +1,27 @@
+# 共享 postgres 实例 —— **模板,不是 hangar 的运行时职责**。
+# hangar 不起它、不建号、不备份、不监控;这份文件只是让每个 pilot 不必各自发明一份。
+#
+# 绑 127.0.0.1 是刻意的:不对外、Tailscale/LAN 不可达(沿用 inbox 现有那份的安全姿态)。
+# 改成 "5432:5432" 会把它暴露到 LAN —— 别顺手改。
+services:
+  postgres:
+    image: postgres:16
+    container_name: hangar-pg
+    restart: unless-stopped
+    # host:container。host 侧显式绑 loopback。端口取一个与既有实例不撞的值
+    # (inbox 线上那套用 5433,所以这里默认 5434)。
+    ports:
+      - "127.0.0.1:5434:5432"
+    environment:
+      # 只是 superuser 的初始口令,**不是**任何 app 的口令。app 的 role 见 roles.sql。
+      # 从环境读,不写进这个文件:它进 git。
+      POSTGRES_PASSWORD: ${PG_SUPERUSER_PASSWORD:?set PG_SUPERUSER_PASSWORD in the shell that runs compose}
+      POSTGRES_DB: postgres
+    volumes:
+      # 显式路径,不用匿名卷 —— 匿名卷会在某次 `docker compose down -v` 里静默消失。
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
