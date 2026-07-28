@@ -28,6 +28,6 @@
 ## D. 运维 / 流程
 
 - **openspec 归档的头风格标准化**:本次 `add-view-command-path` 走了**手动归档**——delta 用英文结构标题(为过 openspec-cn **1.5.0** validate),主规范用中文标题,1.5.0 的 `archive` 按头文本匹配 MODIFIED(`Requirement:` ≠ `需求:`)→ 无法 auto-sync。定个标准:① 升 **1.6.0**(用户已在)测其 `archive` 是否 CN/EN-insensitive 到能自动 sync,能则以后不用手动;② 否则固定"手动归档"流程(git mv + 把 delta 需求转中文头合进主规范)。
-- **部署的 fnm PATH**:ts.mac-mini 的**非交互登录 shell 没激活 fnm**,`node`/`pnpm`/`build` 要用绝对路径 `~/.local/share/fnm/node-versions/v22.23.1/installation/bin`。deploy README 已提"plist 加 `NODE` 绝对路径";部署脚本(`hangar-view.sh` / 手动 build 命令)也应固化,免每次踩。
+- **部署的 fnm PATH**:ts.mac-mini 的**非交互登录 shell 没激活 fnm**,`node`/`pnpm`/`build` 要用绝对路径 `~/.local/share/fnm/node-versions/v<major>.<x>.<y>/installation/bin`。**major 见仓内 `.nvmrc`,不要在这里钉一个版本号** —— 钉住的那个会在下次升 Node 后变成旧 ABI,而按它 build 出来的原生模块与 daemon 不匹配,正是升级要防的那件事。deploy README 已提"plist 加 `NODE` 绝对路径";`hangar-view.sh` 已按 `.nvmrc` 的 major 自己 glob 并断言选中的 node 确实是那个 major。
 - **overlay ↔ rules.yaml 关系**:`noise_senders.overlay`(机器文件,apply 原子写)与 `rules.yaml`(人工维护)是并集加载。将来若 overlay 长期积累,可加"overlay→rules.yaml 固化 / overlay 清理"路径(现**无工具**,只增不减)。
 - **prod 测试 run 记录**:上线验证时做的几次 interpret dry-run 在 prod `hangar.sqlite` 留了 run 记录(干跑无副作用,虚拟办公室墙会短暂显示 inbox 干过活)。可忽略、随新 run 自然衰减;**别手改 sqlite**(CLAUDE.md 禁,经 CLI)。

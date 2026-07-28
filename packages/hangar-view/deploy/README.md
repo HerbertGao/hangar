@@ -1,10 +1,10 @@
 # hangar-view 部署(Phase 4 · ts.mac-mini)
 
-只读监控前端。与脊柱 daemon 并列(view 挂不影响 daemon)。绑 `127.0.0.1`,
+监控前端:呈现面只读,另有一条白名单命令写路径(经既有 `hangar run` CLI)。与脊柱 daemon 并列(view 挂不影响 daemon)。绑 `127.0.0.1`,
 经 Cloudflare Tunnel + Access 远程,边缘鉴权、不裸露公网。**命令在 ts.mac-mini 上跑。**
 
 前提:`~/hangar`(脊柱 git main)已在跑 `com.herbertgao.hangar-inbox` daemon;
-node v22 经 fnm 已装;你控制一个域名 + Cloudflare Zero Trust 已开通。
+node(版本见仓内 `.nvmrc`,当前 24)经 fnm 已装;你控制一个域名 + Cloudflare Zero Trust 已开通。
 
 ---
 
@@ -46,8 +46,12 @@ tail -f ~/hangar-view.err.log              # 看启动日志(端口 / 路径回�
 ```
 
 > plist 里路径按 `home=/Users/herbertgao` 写死;若用户名/路径不同,改 plist 的绝对路径。
-> `hangar-view.sh` 默认 node 走 `fnm exec --using 22`;若 launchd 下 fnm 不可用,
-> 在 plist 的 `EnvironmentVariables` 加 `<key>NODE</key><string>daemon 所用的绝对 node v22 路径</string>`。
+> `hangar-view.sh` 的 node 取自 `$HANGAR/.nvmrc` 的 major(glob fnm 装的该 major 最新版);若 launchd 下取不到,
+> 在 plist 的 `EnvironmentVariables` 加 `<key>NODE</key><string>daemon 所用的绝对 node 路径</string>`(**必须与 daemon 同 major**
+> —— 共享 `node_modules` 里只有一个编译好的 `better-sqlite3` `.node`,它只注册一个 ABI,off-major 的那一侧一开库就
+> `ERR_DLOPEN_FAILED`。`hangar.sqlite` 本身无关:SQLite 的文件格式跨运行时兼容)。
+> 脚本会**自己断言**选中的 node 确实是 `.nvmrc` 那个 major 并在不符时拒绝启动,所以设错 `NODE` 是响亮失败、不是静默跑错 ABI;
+> `.nvmrc` 若是 `lts/*` 这类 glob 不出 major 的别名,同样响亮退出(此时必须显式设 `NODE`)。
 
 ## 4. Cloudflare Tunnel(agent-hangar,仓内 config)
 
@@ -115,6 +119,8 @@ cloudflared tunnel delete -f agent-hangar     # 删 tunnel + 凭据
 view 与 daemon 完全解耦:停 view 不影响 `com.herbertgao.hangar-inbox` 与脊柱状态。
 
 ## 已披露约束(spec 里已锁,部署时留意)
+
+- **跨仓部署序:inbox 先、view 后。** view 硬要求 pilot emit 全部声明字段;反序时 interpret 阶段即 `contract_mismatch`(此时无写),但直接调 `apply-feedback` 会让旧 pilot 写下 `add` 半边而 view 仍报失败(「报失败但写已发生」)。放 view 前先确认 pilot 侧已上线。
 
 - **命令写路径(`add-view-command-path`)**:页面有一条**受白名单约束**的写路径 `POST /api/command`——仅 `(inbox, interpret-feedback|apply-feedback)`、confirm-before-apply,用于向 inbox 下达降噪命令;**从页面 approve/reject 审批**仍无(接第一个带审批 pilot 时才做,届时引 app 级身份)。
 - **⚠️ `HANGAR_VIEW_HOST` 必须保持 `127.0.0.1`(有了写端点后尤其关键)**:鉴权在 Cloudflare Access 边缘终结、tunnel 只连 loopback;**误绑 `0.0.0.0` 会让 LAN/公网直连绕过 Access**,后果从「泄露只读监控」升级为「**无鉴权任意人可写 inbox 降噪名单**」。`deploy/hangar-view.sh`/plist 里不要改绑。

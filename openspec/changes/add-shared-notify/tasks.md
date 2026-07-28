@@ -17,8 +17,8 @@
 
 ## 3. 不变量守门(机械可查)
 
-- [ ] 3.1 `packages/core/src` 全文搜索 `notify` / `lane` / `channels` **零命中**(不变量 #1;当前已零命中,回归守卫)
-- [ ] 3.2 `packages/notify` 对 `@hangar/core` 无 import 依赖、不 import 任何传输/HTTP 库;不读写 `hangar.sqlite`、不新增表(#3);无常驻进程/容器
+- [x] 3.1 `packages/core/src` 全文搜索 `notify` / `lane` / `channels` **零命中**(不变量 #1;当前已零命中,回归守卫)
+- [x] 3.2 `packages/notify` 对 `@hangar/core` 无 import 依赖、不 import 任何传输/HTTP 库;不读写 `hangar.sqlite`、不新增表(#3);无常驻进程/容器(实测:运行时依赖只有 `yaml` + `zod`;import 只有 `node:fs`/`node:os`/`node:path` + CLI 的 `node:child_process`(读 plist))
 
 ## 4. 分发:npm 发布(@herbertgao/hangar-notify)
 

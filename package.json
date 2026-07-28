@@ -4,18 +4,12 @@
   "private": true,
   "packageManager": "pnpm@10.28.2",
   "engines": {
-    "node": ">=22.18.0"
+    "node": ">=24"
   },
   "scripts": {
-    "test": "pnpm -r test",
+    "test": "node --test scripts/check-delta-headings.test.mjs && node scripts/check-delta-headings.mjs && pnpm -r test",
     "typecheck": "pnpm -r typecheck",
     "build": "pnpm -r build",
     "openspec:validate": "node scripts/validate-openspec-cn.mjs"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "better-sqlite3",
-      "esbuild"
-    ]
   }
 }

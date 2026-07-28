@@ -1,4 +1,4 @@
-// hangar-view HTTP 服务(Node 标准库 http,不引 Express)。脊柱外、只读:每 poll
+// hangar-view HTTP 服务(Node 标准库 http,不引 Express)。脊柱外;呈现面只读、另有一条白名单命令写路径:每 poll
 // subprocess 调 `hangar … --json` + 只读 app.yaml,派生办公室模型上屏。ZERO import
 // @hangar/core;HTTP 只存在于 view↔浏览器(守不变量 #6/#7)。不直读 hangar.sqlite。
 import { createServer } from 'node:http';
@@ -228,8 +228,30 @@ function sendJson(res, code, body) {
 // trigger),非白名单直接拒绝、不发起 run(不做「任意 app + 任意 input」firehose)。
 const COMMAND_WHITELIST = {
   inbox: {
-    'interpret-feedback': { eventKind: 'interpretation.proposed', field: 'interpretation', fields: ['add'] },
-    'apply-feedback': { eventKind: 'feedback.applied', field: 'applied', fields: ['added', 'already_present'] },
+    // add/remove 共用这一对 trigger(撤销是同一意图的反向,不是第 2 个 intent → 不新增白名单条目)。
+    //
+    // 两个字段刻意分开,别再合成一个:
+    //   inputKeys —— 形状门要校验的 input key,**两条 trigger 都有**。
+    //   partition —— 回执分桶映射,**只有写腿有**(干跑腿的 emit 是 canonical 化的请求,与 input 原串
+    //                合法地不同,配分校验会误拒)。
+    // 曾经用 `partition` 兼当形状门的开关,于是干跑腿(无 partition)静默失去校验,而测试还把这个洞
+    // 断言成了预期。一个数据干两件事,就会在只需要其中一件的那一侧留洞。
+    'interpret-feedback': {
+      eventKind: 'interpretation.proposed',
+      field: 'interpretation',
+      fields: ['add', 'remove'],
+      inputKeys: ['add', 'remove'],
+    },
+    'apply-feedback': {
+      eventKind: 'feedback.applied',
+      field: 'applied',
+      fields: ['added', 'already_present', 'removed', 'not_present'],
+      inputKeys: ['add', 'remove'],
+      partition: [
+        ['add', ['added', 'already_present']],
+        ['remove', ['removed', 'not_present']],
+      ],
+    },
   },
 };
 
@@ -294,11 +316,17 @@ export function classifyRunExit(run) {
 /**
  * 从 trace(全 payload)取指定 kind 事件的 payload——**受控数据最小化放宽仅限本命令路径**:
  * 不经 sanitizeTrace 的 default-drop(default-drop 仍 governs /api/state 与 /api/trace,一行不改)。
- * 数据是用户自己刚输入指令的解析回显、单用户、Access 门后。找不到该事件→undefined(契约漂移)。
+ * 数据是用户自己刚输入指令的解析回显、单用户、Access 门后。
+ *
+ * **要求恰好一个同 kind 事件**:契约是「每 run 恰好 emit 一次、一次带全字段」。取第一个会把
+ * 「分两次 emit(add 一个、remove 一个)」呈现为成功,而确认页/回执只显示了一半。
+ *
+ * 返回 `{ payload }` / `{ count }`:0 与 ≥2 是**相反的诊断**(什么都没发生 vs 发生了两次),
+ * 合成一个 `missing_event` 会把 operator 指向 trace 的错误那一半。
  */
 export function pickEventPayload(traceData, eventKind) {
-  const ev = (Array.isArray(traceData?.events) ? traceData.events : []).find((e) => e.kind === eventKind);
-  return ev ? ev.payload : undefined;
+  const evs = (Array.isArray(traceData?.events) ? traceData.events : []).filter((e) => e.kind === eventKind);
+  return evs.length === 1 ? { payload: evs[0].payload } : { count: evs.length };
 }
 
 /** 白名单投影:只取 spec 声明字段、且每个必须是 string[];缺字段/非 string[] → null(契约不符)。 */
@@ -311,6 +339,53 @@ export function projectPayload(payload, fields) {
     out[f] = v;
   }
   return out;
+}
+
+/**
+ * 回执配分校验(纯函数):对 spec.partition 的每条 `[inputKey, [桶A, 桶B]]`,断言
+ * `桶A ∪ 桶B === 去重后的 input[inputKey]`;并跨全部 partition 断言**四桶全局互不重叠、桶内不重复**(按重数,非纯集合语义)。
+ * 缺 input key 视作空集(部署窗口的旧 view)。不符 → 返回不匹配的 inputKey(调用方映射
+ * `receipt_mismatch`)。
+ *
+ * 为何需要:`projectPayload` 只保证字段是 `string[]`,「四桶全空」「只报一半」「报了没请求过的
+ * 地址」的回执照样过关,前端于是呈「已应用」。
+ *
+ * **全局唯一那半是独立的一条**:只在 partition 行内查重时,`{add:[X],remove:[X]}` 的回执
+ * `{added:[X],removed:[X]}` 逐行都合规 → 放行 → 前端打印「已加入 X · 已移出 X」,而文件里
+ * 只有一种结果。契约已要求 pilot 对该输入响亮失败,这里是纵深。
+ *
+ * **按原串比较,不归一化**:view 不知道域的 canonical 规则(守不变量 #1),故契约要求 apply 的
+ * input 已是 canonical、pilot 对非 canonical 项 throw。它证明的是「回执与请求自洽」,**不是**
+ * 「回执与磁盘一致」——配分正确但什么都没写的 pilot 仍会过关。
+ */
+export function receiptMismatch(input, proj, partition) {
+  if (!Array.isArray(partition)) return null;
+  const seen = new Set();
+  for (const [inputKey, buckets] of partition) {
+    const sent = new Set(Array.isArray(input?.[inputKey]) ? input[inputKey] : []);
+    const got = buckets.flatMap((b) => proj[b]);
+    if (got.length !== sent.size || got.some((s) => !sent.has(s))) return inputKey;
+    for (const s of got) {
+      if (seen.has(s)) return inputKey; // 桶内重复,或与另一 partition 的桶跨桶重叠
+      seen.add(s);
+    }
+  }
+  return null;
+}
+
+/**
+ * input 侧形状门:缺 key 合法(视作空集,部署窗口的旧 view 只发 `{add}`),但 key 存在就必须是 `string[]`。
+ * 畸形 → 返回该 key(调用方映射 400 `usage`,且必须在发起 run 之前)。
+ * 用 `Object.hasOwn` 而非 `in`:与 `commandSpec` 的原型链纪律一致,不让继承属性冒充 own key。
+ */
+export function inputShapeError(input, inputKeys) {
+  if (!Array.isArray(inputKeys)) return null;
+  for (const key of inputKeys) {
+    if (!Object.hasOwn(input, key)) continue; // 缺 key = 合法
+    const v = input[key];
+    if (!Array.isArray(v) || v.some((x) => typeof x !== 'string')) return key;
+  }
+  return null;
 }
 
 /** 读 POST body(JSON,≤64KB);超限/坏 JSON → reject(调用方映射 400 usage)。 */
@@ -343,7 +418,12 @@ export function readJsonBody(req, limit = 64 * 1024) {
  * 白名单外 → 403 not_whitelisted、不发起 run;busy → {ok:false,busy:true};失败 → {ok:false,kind};
  * 成功 → 读该 run trace 取白名单事件 payload → {ok:true,<field>:payload}。view 只透传 input(域无关)。
  */
-async function handleCommand(req, res) {
+/**
+ * `cli` 可注入,只为让 self-check 能端到端跑这条链(桩掉两个 subprocess 调用)。生产路径用默认值。
+ * 没有它,删掉下面任何一处 gate 测试都仍全绿——`receipt_mismatch` 是否真被发出、gate 排在
+ * `projectPayload` 之后、input 形状 gate 是否在发起 run 之前,三件事都只能靠读代码确认。
+ */
+export async function handleCommand(req, res, cli = { run: callCliRun, json: callCliJson }) {
   if (req.method !== 'POST') return sendJson(res, 405, { ok: false, kind: 'method_not_allowed' });
   if (!String(req.headers['content-type'] || '').startsWith('application/json'))
     return sendJson(res, 415, { ok: false, kind: 'bad_content_type' }); // CSRF 纵深:挡跨站 text/plain 表单
@@ -370,18 +450,27 @@ async function handleCommand(req, res) {
   }
   const spec = commandSpec(pilot, trigger);
   if (!spec) return sendJson(res, 403, { ok: false, kind: 'not_whitelisted' }); // 非白名单:不发起 run
+  // 畸形 input(key 存在但非 string[])在发起 run 之前拒:否则「pilot 忽略它并回四个空桶」会走成功路径。
+  // 用 spec.inputKeys(两条 trigger 都声明),不是 spec.partition(只有写腿有 → 干跑腿会失去校验)。
+  if (inputShapeError(input, spec.inputKeys)) return sendJson(res, 400, { ok: false, kind: 'usage' });
 
-  const run = await callCliRun(['run', pilot, '--trigger', trigger, '--input', JSON.stringify(input)]);
+  const run = await cli.run(['run', pilot, '--trigger', trigger, '--input', JSON.stringify(input)]);
   const c = classifyRunExit(run);
   if (c.outcome === 'busy') return sendJson(res, 200, { ok: false, busy: true });
   if (c.outcome === 'failed') return sendJson(res, 200, { ok: false, kind: c.kind });
   // 成功 → 读该 run 的 trace 取白名单事件 payload(受控放宽仅此路径,不经 sanitizeTrace)。
-  const tr = callCliJson(['trace', c.runId]);
+  const tr = cli.json(['trace', c.runId]);
   if (!tr.ok) return sendJson(res, 200, { ok: false, kind: `trace_${tr.kind}` });
-  const payload = pickEventPayload(tr.data, spec.eventKind);
-  if (payload === undefined) return sendJson(res, 200, { ok: false, kind: 'missing_event' });
-  const proj = projectPayload(payload, spec.fields); // 只投影声明字段、校验 string[](契约漂移不当成功)
+  const ev = pickEventPayload(tr.data, spec.eventKind);
+  if (ev.count !== undefined) {
+    // 按 count 判别,不按 payload === undefined:后者会把「恰好一个事件但 payload 键缺失」误报成
+    // duplicate_event(count 为 undefined,`undefined === 0` 为假),把 operator 指向 trace 错误的那一半。
+    // 0 个 = pilot 没 emit(契约漂移或版本过旧);≥2 个 = 违反「恰好一次」,回执只覆盖了一半。
+    return sendJson(res, 200, { ok: false, kind: ev.count === 0 ? 'missing_event' : 'duplicate_event' });
+  }
+  const proj = projectPayload(ev.payload, spec.fields); // 只投影声明字段、校验 string[](契约漂移不当成功)
   if (!proj) return sendJson(res, 200, { ok: false, kind: 'contract_mismatch' });
+  if (receiptMismatch(input, proj, spec.partition)) return sendJson(res, 200, { ok: false, kind: 'receipt_mismatch' });
   return sendJson(res, 200, { ok: true, [spec.field]: proj });
 }
 

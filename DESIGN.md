@@ -258,7 +258,8 @@ hangar daemon                     启动长驻进程(cron 调度)
 - 成本/预算强制 → 某 run 真烧出意外账单再加(v0 只记 `config.budget`,不 enforce)
 - 多用户 / RBAC / 租户 → 永不,直到「给别人用」变真赌注
 - 通用 durable replay / 中途 checkpoint → 永不,直到某 app 需要非 propose/execute 切点
-- MCP / A2A / marketplace / **多用户** web workbench → Claude Code 就是 workbench。**例外:单用户、只读、经 CLI `--json`(+ 只读 `app.yaml`)、零改 core 的私人巡检 view(`hangar-view`「虚拟办公室」)= 显式接受的独立赌注(Phase 1.5,SOT `docs/proposals/hangar-view.md`)——不破 #6(HTTP 在脊柱外、view 只作 CLI 消费者)。给别人用的多租户 workbench 仍永不做。**
+- MCP / A2A / marketplace / **多用户** web workbench → Claude Code 就是 workbench。**例外:单用户、经 CLI `--json`(+ 只读 `app.yaml`)、零改 core 的私人巡检 view(`hangar-view`「虚拟办公室」)= 显式接受的独立赌注(Phase 1.5,SOT `openspec/specs/hangar-view/spec.md`)——不破 #6(HTTP 在脊柱外、view 只作 CLI 消费者)。给别人用的多租户 workbench 仍永不做。**
+  - **该例外的读写边界(措辞校正:曾写作「只读」,而 `add-view-command-path` 起已不准确)。** view 是**呈现为主 + 一条窄写路径**:呈现面(`/api/state`、trace 抽屉)严格只读且 default-drop;写面**仅限**硬编码白名单的 `(pilot, trigger)` 对,经 subprocess 调既有 `hangar run … --json` 下达,**view 不直连 pilot、不直写 sqlite、不新增表/库/进程/队列**。写面受两条纪律约束:①**confirm-before-apply** —— 先一次干跑 run 把将发生的变更回显给人,人确认即授权,未确认零写;②**只下达命令,不做审批处置** —— 从页面 approve/reject 仍不做(留待第一个带高危动作的 pilot,届时须走 `hangar approve` + app 级身份)。故 #5(审批只在 OS 层)未破:白名单 trigger 应用的是「本质无害、可逆的域副作用」(§3.5 carve-out),命中 `permissions.approval` 的高危动作仍只能经 `ctx.propose → PARK → hangar approve`。
 - 多根 / 多 repo 的**外部 pilot loader 子系统**(config 列 N 个外部路径、pilot index)→ **pilot #2 逼出「停一队 fleet」时再加**;单 pilot 用 `HANGAR_APPS` 覆盖 + 独立 checkout 即可,不建 loader 子系统。
 - 外部 pilot **marketplace / plugin store / publish-discover-install** → 永不,直到「给别人用」成真赌注(同 §6)。
 
