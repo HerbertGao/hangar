@@ -29,6 +29,7 @@
 - [x] 4.3 **每个探测命令加 `|| true`**(`.nvmrc` 缺失时的 `sed`、无匹配时的 `ls` glob)—— 不加,它们下面的响亮退出与 PATH 兜底全是死代码。机制见 `hangar-view.sh` 头部注释(唯一副本)
 - [x] 4.4 **断言选中的 node 真是那个 major**:`NODE=` 覆盖(README 就教运维设它)与 `command -v node` 兜底都不受 `.nvmrc` 约束,`-x` 连 `/usr/bin/true` 都放行 —— 而选错 major 正是这个脚本唯一要防的事
 - [x] 4.5 新增 `deploy/hangar-view.test.sh` 并接进 `packages/hangar-view` 的 `test`(靠 `HANGAR_VIEW_DRY_RUN` 在 `exec` 前停下)。**失败用例断言「非零退出 *且* stderr 非空」** —— 只断言非零的话,静默死亡与响亮退出无法区分,而那正是 4.3 修的 bug。成功用例断言**选中的可执行文件路径**、不只是 major,否则把 glob 写死回 `v24*` 时全部用例照样绿。变异验证覆盖:撤掉 `sed` / `ls glob` / `node -p` 三处 `|| true`、删 major 断言、退回 `tr -dc '0-9'` 全文过滤、把 glob 写死、`$HANGAR` 退回 `$(dirname "$0")`、`process.versions.node` 写成 `process.version`。**唯一测不确定的是 `command -v node` 那处 `|| true`**(理由见测试文件头部注释)。不在此写用例个数——加一个就过期
+- [x] 4.6 `docs/proposals/followups-command-write-path.md` 解钉:它原本硬钉 `v22.23.1` 的 fnm 绝对路径并让人把它固化进构建命令 —— 照它做会为**旧 ABI** 编译原生模块,正是本变更要防的那件事。改成指向 `.nvmrc` 的 major。**此前这条只写在 proposal 的 Impact 里、没进清单**,而切换时照着走的是清单
 
 ## 5. 生产切换 runbook(ts.mac-mini;**含一步在仓外**)
 

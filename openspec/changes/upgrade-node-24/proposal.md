@@ -42,3 +42,4 @@ inbox-pilot 已要求 Node `^24`,而本仓声明 `>=22.18.0`。因为 `apps/inbo
 
 - **`doctor` 查不出 ABI 不匹配。** `checks.sqlite_writable` 只做 `accessSync(W_OK)`,从不开库(刻意:doctor 必须非破坏、且首次运行前 DB 尚不存在),所以在 straddle 状态下它照样报 `ok`、view 页面照样正常。故 `tasks.md` §5.7 的核验**不能**只看 `doctor`,必须跑一条真开库的只读命令。**检测钩子其实已经在那儿了**:`doctor` 为算 `blocked` 已经 `openDbReadonly` 开过库,`ERR_DLOPEN_FAILED` 被它自己的 try/catch 吞掉、报 `blocked: []`(那个 try/catch 是刻意的——doctor 必须永远返回一份报告)。所以成本不在「加检测」,而在**报告形状**:多一个 check 键要同时改 `SKILL.md` 与 `hangar-view` 两处 normative 的 doctor 契约。仍不塞进一次版本抬升;而 straddle 在它发生的地方是响亮的(off-major 那侧直接起不来),不是静默损坏。
 - **「代码在 24.0.0 上真能跑」无人验证**(理由与取舍见上文 CI 那条)。
+- **`@types/node` 是 `^26`,高于运行时下限 `>=24`,故 typecheck 不是兼容性门。** 一个只在 Node 26 才有的 API 能通过类型检查、却在生产的 24 上炸。这是全仓既有状态(`core`/`notify`/`pgconfig` 一致)且上面的非目标明确不动它——记在这里只为一件事:**别把「typecheck 绿」当成「在下限上能跑」**。
