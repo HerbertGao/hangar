@@ -58,7 +58,9 @@ Phase 0 是单用户单进程玩具;下列问题只在「每天 cron + 可能多
 
 **出口闸:** 你外出时**真的靠它**看 hangar,而不是 SSH。
 
-**显式不做(留 Phase C,各自过闸):** 从页面 approve/reject(写路径——接第一个带审批 pilot 时才做,届时引 app 级身份 + 防误触)· 多用户 / app 级登录 · 原始进程日志聚合 · WebSocket 实时推送 · 3D/精灵图美术升级。**⚠️ 警惕:别让做办公室抢了真正用 inbox 的注意力(那才是出口闸)。**
+**显式不做(留 Phase C,各自过闸):** 从页面 approve/reject(**审批处置**写路径——接第一个带高危动作的 pilot 时才做,届时引 app 级身份 + 防误触)· 多用户 / app 级登录 · 原始进程日志聚合 · WebSocket 实时推送 · 3D/精灵图美术升级。**⚠️ 警惕:别让做办公室抢了真正用 inbox 的注意力(那才是出口闸)。**
+
+**⚠️ 上面「目标」段的「只读」已不准确(记账,非遗漏):** `add-view-command-path` 起 view 多了一条**窄命令写路径**(白名单 `(pilot,trigger)` + confirm-before-apply + 经既有 `hangar run` CLI),`add-view-feedback-remove` 把它扩成 add/remove 对称。呈现面仍严格只读。**「命令下达」与「审批处置」是两回事** —— 前者已落地,后者仍在上面的「显式不做」里。读写边界的权威表述见 `DESIGN.md` §「非目标」的 hangar-view 例外条。
 
 ---
 
@@ -88,4 +90,4 @@ Phase 0 是单用户单进程玩具;下列问题只在「每天 cron + 可能多
 
 ## 明确不在路线图上
 
-除非**「给别人用」升级成一个明确的、独立立项的赌注**,否则以下永不做:多租户 · RBAC · 计费 · marketplace · A2A · 外部 pilot marketplace / plugin store · **多用户** web workbench(单用户只读私人 view = Phase 1.5 `hangar-view`,已立项例外)· MCP 控制面 · 通用 durable replay。届时它是**新项目 / 新阶段**,重新评估,不是 hangar 的自然延伸。
+除非**「给别人用」升级成一个明确的、独立立项的赌注**,否则以下永不做:多租户 · RBAC · 计费 · marketplace · A2A · 外部 pilot marketplace / plugin store · **多用户** web workbench(单用户私人 view = Phase 1.5 `hangar-view`,已立项例外;呈现面只读 + 一条白名单命令写路径)· MCP 控制面 · 通用 durable replay。届时它是**新项目 / 新阶段**,重新评估,不是 hangar 的自然延伸。

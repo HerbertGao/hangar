@@ -7,7 +7,7 @@ import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { EventEmitter } from 'node:events';
-import { loadAppSpecs, appPeriod, mostFreqTrigger, commandSpec, classifyRunExit, pickEventPayload, projectPayload, readJsonBody } from './server.js';
+import { loadAppSpecs, appPeriod, mostFreqTrigger, commandSpec, classifyRunExit, pickEventPayload, projectPayload, receiptMismatch, inputShapeError, handleCommand, readJsonBody } from './server.js';
 import { deriveLiveness } from './derive.js';
 
 // A8:app.yaml 的 triggers 写成含 null/非对象元素 → loadAppSpecs MUST 过滤掉,
@@ -114,13 +114,28 @@ test('7.1:白名单 gate —— 白名单内放行、白名单外被拒', () => 
   assert.deepEqual(commandSpec('inbox', 'interpret-feedback'), {
     eventKind: 'interpretation.proposed',
     field: 'interpretation',
-    fields: ['add'],
+    fields: ['add', 'remove'],
+    inputKeys: ['add', 'remove'],
   });
   assert.deepEqual(commandSpec('inbox', 'apply-feedback'), {
     eventKind: 'feedback.applied',
     field: 'applied',
-    fields: ['added', 'already_present'],
+    fields: ['added', 'already_present', 'removed', 'not_present'],
+    inputKeys: ['add', 'remove'],
+    partition: [
+      ['add', ['added', 'already_present']],
+      ['remove', ['removed', 'not_present']],
+    ],
   });
+  // 形状门必须覆盖两条 trigger:干跑腿也声明 inputKeys。曾经用 partition 兼当开关,于是干跑腿静默无门。
+  for (const t of ['interpret-feedback', 'apply-feedback']) {
+    assert.deepEqual(commandSpec('inbox', t).inputKeys, ['add', 'remove'], `${t} 必须声明 inputKeys`);
+  }
+  // partition 的桶名必须都在 fields 里,否则 proj[桶] 恒 undefined → 每条命令永久 receipt_mismatch。
+  const aSpec = commandSpec('inbox', 'apply-feedback');
+  for (const [, buckets] of aSpec.partition) {
+    for (const b of buckets) assert.ok(aSpec.fields.includes(b), `partition 桶 ${b} 必须在 fields 里`);
+  }
   assert.equal(commandSpec('inbox', 'digest'), null, '白名单外 trigger 被拒');
   assert.equal(commandSpec('inbox', 'poll'), null, '白名单外 trigger 被拒');
   assert.equal(commandSpec('mailbox', 'interpret-feedback'), null, '白名单外 pilot 被拒(不做任意 app firehose)');
@@ -170,22 +185,42 @@ test('7.1:classifyRunExit —— busy / 失败 / 成功 三路映射', () => {
 });
 
 // 7.1 成功后从 trace 取白名单事件 payload(受控放宽仅此路径);找不到该 kind → undefined(契约漂移)。
-test('7.1:pickEventPayload —— 成功取事件 payload,缺事件→undefined', () => {
+test('7.1:pickEventPayload —— 恰好一个才给 payload;0 与 ≥2 分开报数', () => {
   const interpretTrace = {
     events: [
       { seq: 1, kind: 'run.started', payload: {} },
-      { seq: 2, kind: 'interpretation.proposed', payload: { add: ['ci@github.com'] } },
+      { seq: 2, kind: 'interpretation.proposed', payload: { add: ['ci@github.com'], remove: [] } },
     ],
   };
-  assert.deepEqual(pickEventPayload(interpretTrace, 'interpretation.proposed'), { add: ['ci@github.com'] });
+  assert.deepEqual(pickEventPayload(interpretTrace, 'interpretation.proposed'), {
+    payload: { add: ['ci@github.com'], remove: [] },
+  });
 
   const applyTrace = {
-    events: [{ seq: 2, kind: 'feedback.applied', payload: { added: ['x@y.com'], already_present: [] } }],
+    events: [
+      {
+        seq: 2,
+        kind: 'feedback.applied',
+        payload: { added: ['x@y.com'], already_present: [], removed: [], not_present: [] },
+      },
+    ],
   };
-  assert.deepEqual(pickEventPayload(applyTrace, 'feedback.applied'), { added: ['x@y.com'], already_present: [] });
+  assert.deepEqual(pickEventPayload(applyTrace, 'feedback.applied'), {
+    payload: { added: ['x@y.com'], already_present: [], removed: [], not_present: [] },
+  });
 
-  assert.equal(pickEventPayload({ events: [] }, 'interpretation.proposed'), undefined, '缺事件→undefined');
-  assert.equal(pickEventPayload({}, 'feedback.applied'), undefined, '无 events 字段→undefined,不抛');
+  // 0 与 ≥2 是相反的诊断,故分开报数(调用方映射成 missing_event / duplicate_event)
+  assert.deepEqual(pickEventPayload({ events: [] }, 'interpretation.proposed'), { count: 0 }, '缺事件→count 0');
+  assert.deepEqual(pickEventPayload({}, 'feedback.applied'), { count: 0 }, '无 events 字段→count 0,不抛');
+  // 契约:每 run 恰好 emit 一次、一次带全字段。分两次 emit(add 一个、remove 一个)取第一个 =
+  // 确认页只显示一半却判成功。故 ≥2 个同 kind 事件 MUST 也不给 payload(回 {count}),不静默挑一个。
+  const splitTrace = {
+    events: [
+      { seq: 1, kind: 'interpretation.proposed', payload: { add: ['a@x'], remove: [] } },
+      { seq: 2, kind: 'interpretation.proposed', payload: { add: [], remove: ['b@y'] } },
+    ],
+  };
+  assert.deepEqual(pickEventPayload(splitTrace, 'interpretation.proposed'), { count: 2 }, '2 个同 kind 事件→count 2,不取第一个');
 });
 
 // 7.1 事件 payload 白名单投影:只取 spec.fields、且每个校验为 string[];非数组/缺字段 → null(契约不符)。
@@ -199,6 +234,189 @@ test('7.1:projectPayload —— 只投影声明字段并校验 string[]', () => 
     { added: ['a'], already_present: [] },
   );
   assert.equal(projectPayload({ added: ['a'] }, ['added', 'already_present']), null, '缺字段 → null');
+  // add/remove 契约。字段字面量由 :114-123 的断言钉住(那里才是锁跨仓契约的地方);本块从 commandSpec()
+  // 取真实 fields,钉的是「投影语义与白名单同源」——两块合起来才既防写错契约、又防两处漂移。
+  // 只 emit 旧字段的 pilot(未上线 remove)MUST 落 contract_mismatch,不静默成功 —— 这条锁「inbox 先、view 后」的部署序。
+  const iFields = commandSpec('inbox', 'interpret-feedback').fields;
+  const aFields = commandSpec('inbox', 'apply-feedback').fields;
+  assert.deepEqual(projectPayload({ add: ['a@b'], remove: [] }, iFields), { add: ['a@b'], remove: [] });
+  assert.equal(projectPayload({ add: ['a@b'] }, iFields), null, '旧 pilot 只 emit add 一字段 → null');
+  assert.equal(projectPayload({ add: [], remove: [1] }, iFields), null, 'remove 非 string[] → null');
+  assert.deepEqual(
+    projectPayload({ added: [], already_present: [], removed: ['a@b'], not_present: [] }, aFields),
+    { added: [], already_present: [], removed: ['a@b'], not_present: [] },
+  );
+  assert.equal(
+    projectPayload({ added: ['a'], already_present: [] }, aFields),
+    null,
+    '旧 pilot 只 emit added/already_present 两字段(缺 removed/not_present)→ null',
+  );
+});
+
+// 7.1 回执配分:形状合法但与请求不符的回执 MUST NOT 当成功(静默说谎的主要形态)。
+test('7.1:receiptMismatch —— 回执必须与本次请求配分', () => {
+  const part = commandSpec('inbox', 'apply-feedback').partition;
+  const ok = { added: ['a@x'], already_present: [], removed: ['b@y'], not_present: [] };
+  assert.equal(receiptMismatch({ add: ['a@x'], remove: ['b@y'] }, ok, part), null, '配分一致 → 通过');
+  // 四桶全空:形状全合法、projectPayload 放行,但 pilot 什么都没报 → 前端会显示「无变更」
+  assert.equal(
+    receiptMismatch({ add: ['a@x'], remove: [] }, { added: [], already_present: [], removed: [], not_present: [] }, part),
+    'add',
+  );
+  // 旧 pilot 忽略 remove 半边(只处理 add)
+  assert.equal(
+    receiptMismatch({ add: ['a@x'], remove: ['b@y'] }, { added: ['a@x'], already_present: [], removed: [], not_present: [] }, part),
+    'remove',
+  );
+  // 报了请求里没有的地址。**基数必须相等**:若回执比请求多一个,长度检查会先拒,membership 那半
+  // 就永远不是任何测试失败的唯一原因 —— 删掉它套件仍全绿。这里 1 换 1,只有 membership 能抓。
+  assert.equal(
+    receiptMismatch({ add: ['a@x'], remove: [] }, { added: ['z@z'], already_present: [], removed: [], not_present: [] }, part),
+    'add',
+  );
+  // 基数不等的那种也留一条(长度检查负责)
+  assert.equal(
+    receiptMismatch({ add: ['a@x'], remove: [] }, { added: ['a@x'], already_present: ['z@z'], removed: [], not_present: [] }, part),
+    'add',
+  );
+  // 桶内重复:a 被报了两次、b 一次没报 —— 长度检查过不了这条,只有查重能抓
+  assert.equal(
+    receiptMismatch({ add: ['a@x', 'b@y'], remove: [] }, { added: ['a@x', 'a@x'], already_present: [], removed: [], not_present: [] }, part),
+    'add',
+  );
+  // 同一 partition 行内两桶重复
+  assert.equal(
+    receiptMismatch({ add: ['a@x'], remove: [] }, { added: ['a@x'], already_present: ['a@x'], removed: [], not_present: [] }, part),
+    'add',
+  );
+  // **跨桶重叠**:{add:[X],remove:[X]} 的回执逐行都合规,只有全局唯一能抓。放行的后果是前端打印
+  // 「已加入 X · 已移出 X」而文件里只有一种结果。契约已要求 pilot 对该输入 throw,这里是纵深。
+  assert.equal(
+    receiptMismatch(
+      { add: ['a@x'], remove: ['a@x'] },
+      { added: ['a@x'], already_present: [], removed: ['a@x'], not_present: [] },
+      part,
+    ),
+    'remove',
+  );
+  // 缺 input key 视作空集(旧 view 只发 add / 手工 POST)
+  assert.equal(
+    receiptMismatch({ add: ['a@x'] }, { added: ['a@x'], already_present: [], removed: [], not_present: [] }, part),
+    null,
+  );
+  // interpret-feedback 无 partition 声明 → 不校验(input 是 NL 文本,无可配分对象)
+  assert.equal(receiptMismatch({ text: 'x' }, { add: [], remove: [] }, commandSpec('inbox', 'interpret-feedback').partition), null);
+});
+
+// 7.1 input 形状:缺 key 合法(部署窗口的旧 view 只发 add),key 存在就必须是 string[]。
+test('7.1:inputShapeError —— 缺 key 合法、畸形 key 响亮、两条腿同等', () => {
+  const keys = commandSpec('inbox', 'apply-feedback').inputKeys;
+  assert.equal(inputShapeError({ add: ['a@x'], remove: [] }, keys), null);
+  assert.equal(inputShapeError({ add: ['a@x'] }, keys), null, '缺 remove key → 合法(视作空集)');
+  assert.equal(inputShapeError({}, keys), null, '两个 key 都缺 → 合法');
+  assert.equal(inputShapeError({ add: 'x' }, keys), 'add', 'key 存在但非数组 → 畸形');
+  assert.equal(inputShapeError({ add: [1] }, keys), 'add', '元素非 string → 畸形');
+  assert.equal(inputShapeError({ add: [], remove: null }, keys), 'remove', 'null 不当空集');
+  // 干跑腿同等受门。此前这里断言的是「无 partition → 不校验」,把缺口写成了预期——现在反过来。
+  const iKeys = commandSpec('inbox', 'interpret-feedback').inputKeys;
+  assert.equal(inputShapeError({ text: 'x' }, iKeys), null, '纯 {text} → 无 add/remove key → 合法');
+  assert.equal(inputShapeError({ add: 'x' }, iKeys), 'add', '干跑腿的结构化 input 也必须被校验');
+  // 原型链纪律:继承来的 add 不算 own key(与 commandSpec 的 Object.hasOwn 一致)
+  assert.equal(inputShapeError(Object.create({ add: 'x' }), iKeys), null, '继承属性不冒充 own key');
+});
+
+// 7.1 端到端(桩 CLI):证明三处 gate 真的接在链上、且顺序对。
+// 没有这一条,删掉 handleCommand 里的 receipt_mismatch 那行、或把 input 形状 gate 挪到 run 之后,
+// 测试仍全绿(实测过)。这里桩掉两个 subprocess 调用,其余走真实代码路径。
+test('7.1:handleCommand 端到端 —— receipt_mismatch 真会发出、gate 顺序正确', async () => {
+  const fakeReq = (body) => {
+    const r = new EventEmitter();
+    r.method = 'POST';
+    r.headers = { 'content-type': 'application/json' };
+    setImmediate(() => { r.emit('data', JSON.stringify(body)); r.emit('end'); });
+    return r;
+  };
+  const fakeRes = () => {
+    const out = {};
+    return { out, writeHead(c) { out.code = c; }, end(s) { out.body = JSON.parse(s); } };
+  };
+  // 桩:run 恒成功,trace 回给定 payload;记录 run 被调用几次(用于断言 gate 在 run 之前)
+  const stub = (payload) => {
+    const calls = { run: 0 };
+    return {
+      calls,
+      run: async () => { calls.run += 1; return { exit: 0, out: '{"run":"r1","state":"completed"}' }; },
+      json: () => ({ ok: true, data: { events: [{ seq: 1, kind: 'feedback.applied', payload }] } }),
+    };
+  };
+
+  // ① 配分不符(pilot 忽略了 remove 半边)→ receipt_mismatch,HTTP 200,不是 ok:true
+  let res = fakeRes();
+  let cli = stub({ added: ['a@x'], already_present: [], removed: [], not_present: [] });
+  await handleCommand(fakeReq({ pilot: 'inbox', trigger: 'apply-feedback', input: { add: ['a@x'], remove: ['b@y'] } }), res, cli);
+  assert.deepEqual(res.out, { code: 200, body: { ok: false, kind: 'receipt_mismatch' } });
+
+  // ② 顺序:payload 缺字段时必须先落 contract_mismatch(不是 receipt_mismatch)
+  res = fakeRes();
+  cli = stub({ added: ['a@x'], already_present: [] });
+  await handleCommand(fakeReq({ pilot: 'inbox', trigger: 'apply-feedback', input: { add: ['a@x'], remove: [] } }), res, cli);
+  assert.deepEqual(res.out, { code: 200, body: { ok: false, kind: 'contract_mismatch' } });
+
+  // ③ 配分一致 → ok:true,payload 只含声明字段
+  res = fakeRes();
+  cli = stub({ added: ['a@x'], already_present: [], removed: [], not_present: [] });
+  await handleCommand(fakeReq({ pilot: 'inbox', trigger: 'apply-feedback', input: { add: ['a@x'] } }), res, cli);
+  assert.deepEqual(res.out, {
+    code: 200,
+    body: { ok: true, applied: { added: ['a@x'], already_present: [], removed: [], not_present: [] } },
+  });
+
+  // ④ input 畸形 → 400 usage,且 **run 一次都没发起**(gate 必须在 run 之前,否则畸形输入已经写过了)
+  res = fakeRes();
+  cli = stub({ added: [], already_present: [], removed: [], not_present: [] });
+  await handleCommand(fakeReq({ pilot: 'inbox', trigger: 'apply-feedback', input: { add: 'x' } }), res, cli);
+  assert.deepEqual(res.out, { code: 400, body: { ok: false, kind: 'usage' } });
+  assert.equal(cli.calls.run, 0, '畸形 input MUST NOT 发起 run');
+
+  // ④b 干跑腿的畸形 input 同样在 run 之前被拦。此前形状门挂在 partition 上(只有写腿有),实测
+  //     `interpret-feedback` + `{add:"x"}` 会起一个 run 并返回 200 ok:true —— 结构化入口正是 Pi 要用的那个。
+  res = fakeRes();
+  cli = stub({ added: [], already_present: [], removed: [], not_present: [] });
+  await handleCommand(fakeReq({ pilot: 'inbox', trigger: 'interpret-feedback', input: { add: 'x' } }), res, cli);
+  assert.deepEqual(res.out, { code: 400, body: { ok: false, kind: 'usage' } });
+  assert.equal(cli.calls.run, 0, '干跑腿的畸形 input 也 MUST NOT 发起 run');
+
+  // ④c 纯 {text} 不受形状门影响(既有 NL→add 路径必须零回退)
+  res = fakeRes();
+  cli = {
+    calls: { run: 0 },
+    run: async function () { this.calls.run += 1; return { exit: 0, out: '{"run":"r1","state":"completed"}' }; },
+    json: () => ({ ok: true, data: { events: [{ seq: 1, kind: 'interpretation.proposed', payload: { add: ['a@x'], remove: [] } }] } }),
+  };
+  await handleCommand(fakeReq({ pilot: 'inbox', trigger: 'interpret-feedback', input: { text: '把 a@x 降噪' } }), res, cli);
+  assert.deepEqual(res.out, { code: 200, body: { ok: true, interpretation: { add: ['a@x'], remove: [] } } });
+  assert.equal(cli.calls.run, 1, '{text} 路径照常发起 run');
+
+  // ⑤ 同 kind 事件出现两次 → duplicate_event(不静默取第一个;0 个才是 missing_event,见 ⑥)
+  res = fakeRes();
+  cli = {
+    run: async () => ({ exit: 0, out: '{"run":"r1","state":"completed"}' }),
+    json: () => ({ ok: true, data: { events: [
+      { seq: 1, kind: 'feedback.applied', payload: { added: ['a@x'], already_present: [], removed: [], not_present: [] } },
+      { seq: 2, kind: 'feedback.applied', payload: { added: [], already_present: [], removed: [], not_present: [] } },
+    ] } }),
+  };
+  await handleCommand(fakeReq({ pilot: 'inbox', trigger: 'apply-feedback', input: { add: ['a@x'] } }), res, cli);
+  assert.deepEqual(res.out, { code: 200, body: { ok: false, kind: 'duplicate_event' } }, '≥2 事件 → duplicate,不是 missing');
+
+  // ⑥ 一个事件都没 emit → missing_event(与 ⑤ 相反的诊断,kind 必须分开)
+  res = fakeRes();
+  cli = {
+    run: async () => ({ exit: 0, out: '{"run":"r1","state":"completed"}' }),
+    json: () => ({ ok: true, data: { events: [{ seq: 1, kind: 'run.started', payload: {} }] } }),
+  };
+  await handleCommand(fakeReq({ pilot: 'inbox', trigger: 'apply-feedback', input: { add: ['a@x'] } }), res, cli);
+  assert.deepEqual(res.out, { code: 200, body: { ok: false, kind: 'missing_event' } });
 });
 
 // 7.1 body 超限:MUST 立即 reject(不 hang)、且不在 readJsonBody 内 destroy——413 由 handleCommand

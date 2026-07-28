@@ -193,6 +193,8 @@
   .confirm h2 { margin: 0 0 4px; font-size: 18px; }
   .confirm .sub { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
   .confirm-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  /* 两段(将加入/将移出)之间要有间距:无间距时第二段标题紧贴上一段末项,会被读成属于上面那张表。 */
+  .confirm-list + .sub { margin-top: 16px; }
   .confirm-list li { padding: 8px 12px; border-radius: 8px; background: #1c2338; border: 1px solid var(--line);
     font-size: 13.5px; word-break: break-all; }
   .confirm-msg { margin-top: 12px; padding: 9px 12px; border-radius: 8px; font-size: 12.5px;
@@ -440,19 +442,40 @@ function cmdMsg(text, kind) {
 function cmdErrText(res) {
   if (res && res.busy) return { text: "inbox 忙,稍后重发。", kind: "warn" };
   if (res && res.kind === "not_whitelisted") return { text: "该命令被拒(不在白名单)。", kind: "err" };
+  // contract_mismatch 是部署序错/pilot 未上线的头号失败态;此时 trace 里躺着一个成功的 run,兜底文案会把人指错方向。
+  if (res && res.kind === "contract_mismatch") return { text: "inbox 的事件字段与 view 期望不符(pilot 版本过旧?)· 先上线 inbox 侧。", kind: "err" };
+  if (res && res.kind === "receipt_mismatch") return { text: "inbox 的回执与本次请求不匹配。", kind: "err" };
+  if (res && res.kind === "missing_event") return { text: "inbox 没有发出该命令事件(pilot 版本过旧?)。", kind: "err" };
+  if (res && res.kind === "duplicate_event") return { text: "inbox 把该命令事件发了多次,回执只覆盖了一半。", kind: "err" };
   return { text: "命令失败" + (res && res.kind ? "(" + esc(res.kind) + ")" : "") +
     " · 回 CLI `hangar trace` 看原因。", kind: "err" };
 }
+// apply 腿的失败一律 phase-aware:run 已跑完,写可能已发生,不能让任何 kind 读成「没生效」。
+// (interpret 腿是干跑,复用同一函数但不加这个尾巴。)
+const AMBIGUOUS_TAIL = " · 命令可能已生效,回 CLI `hangar trace` 核对。";
+// run 之前就返回的 kind:这些证明**一次 run 都没起**,给它们贴「可能已生效」是过度警告、会误导人去查 trace。
+const PRE_RUN_KINDS = new Set(["not_whitelisted", "usage", "payload_too_large", "method_not_allowed", "bad_content_type"]);
+// 命令代次:apply 期间弹层可被 Esc/取消/点遮罩关掉,用户随即可以下一条命令。若不绑代次,
+// 旧请求的响应回来会关掉**新**弹层、清空它的输入、盖掉它的状态提示。响应只许改动它自己那一代的 UI。
+let cmdGen = 0;
 
-// 阶段①:提交原始 NL → interpret 干跑 → 弹确认层
+// 前端也要 fail closed:后端**当前版本**保证声明字段齐全,但 view 服务端回滚后(旧 server + 已开着的新页面)
+// 会回来一份只有旧字段的回执。那时把缺字段当 [] 就会在 pilot 真删了地址的情况下显示「无变更」= 假绿。
+const hasAll = (o, keys) => !!o && keys.every((k) => Array.isArray(o[k]));
+const SKEW_MSG = "回执字段不全(view 版本过旧?)" + AMBIGUOUS_TAIL;
+
+// 阶段①:提交原始 NL → interpret 干跑 → 弹确认层(加入/移出共用这一条流)
 async function submitCommand(text) {
+  const gen = ++cmdGen;
+  const mine = () => gen === cmdGen;
   const send = $("cmdSend"); send.disabled = true; cmdMsg("解析中…", "");
   try {
     const res = await postCommand("interpret-feedback", { text });
+    if (!mine()) return;                      // 期间已有新命令 —— 别用旧解析结果弹确认层
     if (!res || !res.ok) { const e = cmdErrText(res); cmdMsg(e.text, e.kind); return; }
-    const add = Array.isArray(res.interpretation && res.interpretation.add) ? res.interpretation.add : [];
-    openConfirm(add);
-  } catch { cmdMsg("连接失败 · 稍后重试。", "err"); }
+    if (!hasAll(res.interpretation, ["add", "remove"])) { cmdMsg("解析结果字段不全(view 版本过旧?)· 未下达任何写。", "err"); return; }
+    openConfirm(res.interpretation.add, res.interpretation.remove);
+  } catch { if (mine()) cmdMsg("连接失败 · 稍后重试。", "err"); }
   finally { send.disabled = false; }
 }
 $("cmdForm").addEventListener("submit", (e) => {
@@ -462,27 +485,35 @@ $("cmdForm").addEventListener("submit", (e) => {
 });
 
 // 阶段②:确认层渲染解析结果(候选发件人)供人核对——仅此路径 MAY 显示域数据
-function openConfirm(add) {
+// 两段(将加入 / 将移出)= pilot 即将写入的 canonical diff,不是复述原话;皆空则不给确认。
+function openConfirm(add, remove) {
   closeConfirm();
   const overlay = document.createElement("div"); overlay.className = "overlay"; overlay.id = "cmdOverlay";
   overlay.addEventListener("click", closeConfirm);
   const box = document.createElement("div"); box.className = "confirm"; box.id = "cmdConfirm";
   box.setAttribute("role", "dialog"); box.setAttribute("aria-modal", "true"); box.setAttribute("aria-label", "确认下达命令");
   box.addEventListener("click", (ev) => ev.stopPropagation());
-  const list = add.length
-    ? '<ul class="confirm-list">' + add.map((s) => "<li>" + esc(s) + "</li>").join("") + "</ul>"
-    : '<div class="note">解析结果为空——inbox 没从这句话解析出要加入降噪的发件人。取消后可改一句再试。</div>';
+  const section = (title, items) => items.length
+    ? '<div class="sub">' + title + "</div><ul class=\"confirm-list\">" +
+      items.map((s) => "<li>" + esc(s) + "</li>").join("") + "</ul>"
+    : "";
+  const any = add.length + remove.length > 0;
+  const body = any
+    // 「机器 overlay」不是啰嗦:生效降噪集是 rules.yaml ∪ overlay,本路径只动 overlay,
+    // 同时被人工 rules.yaml 命中的地址移出后仍会被降噪 —— 不写明就是回执说谎。
+    ? section("以下发件人将加入降噪名单:", add) + section("以下发件人将移出降噪名单(机器 overlay,人工 rules.yaml 不动):", remove)
+    : '<div class="note">解析结果为空——inbox 没从这句话解析出要加入或移出降噪的发件人。取消后可改一句再试。</div>';
   box.innerHTML =
-    "<h2>确认下达</h2>" +
-    '<div class="sub">inbox 解析出以下发件人将加入降噪名单:</div>' + list +
+    "<h2>确认下达</h2>" + body +
     '<div class="confirm-msg" id="cmdConfirmMsg" hidden></div>' +
     '<div class="confirm-btns"><button class="btn-cancel" id="cmdCancel" type="button">取消</button>' +
-    '<button class="btn-ok" id="cmdOk" type="button"' + (add.length ? "" : " disabled") + ">确认</button></div>";
+    '<button class="btn-ok" id="cmdOk" type="button"' + (any ? "" : " disabled") + ">确认</button></div>";
   document.body.append(overlay, box);
   document.addEventListener("keydown", confirmEsc);
   $("cmdCancel").addEventListener("click", closeConfirm);
-  if (add.length) $("cmdOk").addEventListener("click", () => applyCommand(add));
-  $("cmdOk").focus();
+  if (any) $("cmdOk").addEventListener("click", () => applyCommand(add, remove));
+  // 默认焦点落取消:确认键是本特性唯一的授权点,焦点落它会让「打字→Enter→Enter」在没看过列表时完成写。
+  $("cmdCancel").focus();
 }
 function closeConfirm() {
   const o = $("cmdOverlay"), b = $("cmdConfirm"); if (o) o.remove(); if (b) b.remove();
@@ -490,24 +521,44 @@ function closeConfirm() {
 }
 function confirmEsc(e) { if (e.key === "Escape") closeConfirm(); } // 取消 = 什么都不写
 
-// 阶段③:确认后用结构化 {add}(非原始 NL)发 apply
-async function applyCommand(add) {
+// 阶段③:确认后用结构化 {add, remove}(非原始 NL)发 apply
+async function applyCommand(add, remove) {
+  const gen = ++cmdGen;                       // 本次命令的代次
+  const mine = () => gen === cmdGen;          // 仍是最新一代?否则本响应无权改 UI
   const ok = $("cmdOk"); ok.disabled = true; ok.textContent = "应用中…";
   try {
-    const res = await postCommand("apply-feedback", { add });
+    const res = await postCommand("apply-feedback", { add, remove });
+    if (!mine()) return;                      // 期间已有新命令接手 —— 静默退场,别盖它的状态
     if (!res || !res.ok) {
       if (res && res.busy) { // 忙:留弹层,点确认即重试(幂等,安全重发)
-        const im = $("cmdConfirmMsg"); im.hidden = false; im.textContent = "inbox 忙,点确认重试。";
+        // 弹层可能已被 Esc / 点遮罩 / 取消关掉(那三条路径在 apply 期间仍活着)。此时 DOM 节点没了,
+        // 直接解引用会抛进 catch,报出「连接失败 · 命令可能已生效」—— 而 busy 恰恰保证一次 run 都没起。
+        const im = $("cmdConfirmMsg");
+        if (!im) { cmdMsg("inbox 忙,稍后重发。", "warn"); return; } // 弹层已关:忙提示落到页面级,不谎报
+        im.hidden = false; im.textContent = "inbox 忙,点确认重试。";
         ok.disabled = false; ok.textContent = "确认"; return;
       }
-      closeConfirm(); const e = cmdErrText(res); cmdMsg(e.text, e.kind); return;
+      // apply 已发起,非 busy 失败**大多**可能是「写已落地但回执/trace 出了问题」;但 run 之前
+      // 就返回的 kind 证明没起过 run,不该贴这条尾巴(过度警告会让人白查一遍 trace)。
+      closeConfirm();
+      const e = cmdErrText(res);
+      cmdMsg(e.text + (PRE_RUN_KINDS.has(res && res.kind) ? "" : AMBIGUOUS_TAIL), e.kind);
+      return;
     }
-    const a = res.applied || {}, added = a.added || [], present = a.already_present || [];
+    const a = res.applied || {};
+    if (!hasAll(a, ["added", "already_present", "removed", "not_present"])) {
+      closeConfirm(); cmdMsg(SKEW_MSG, "err"); return; // 不清输入框:这条路径下命令去向未知,用户可能要重发
+    }
     closeConfirm(); $("cmdInput").value = "";
-    let msg = added.length ? "已应用:" + added.join("、") : "已应用:无新增";
-    if (present.length) msg += "(已存在:" + present.join("、") + ")";
-    cmdMsg(msg, "ok");
-  } catch { closeConfirm(); cmdMsg("连接失败 · 稍后重试。", "err"); }
+    // 四个桶一致限定到「机器 overlay」:生效降噪集是 rules.yaml ∪ overlay,只限定一半就还是在说谎。
+    const parts = [];
+    if (a.added.length) parts.push("已加入 overlay:" + a.added.join("、"));
+    if (a.removed.length) parts.push("已移出 overlay:" + a.removed.join("、"));
+    if (a.already_present.length) parts.push("overlay 已有:" + a.already_present.join("、"));
+    if (a.not_present.length) parts.push("overlay 本无:" + a.not_present.join("、"));
+    // parts 恒非空:any 门保证请求非空,receiptMismatch 又拒绝了非空请求的全空回执。
+    cmdMsg("已应用 · " + parts.join(" · ") + " · 人工 rules.yaml 未改", "ok");
+  } catch { if (mine()) { closeConfirm(); cmdMsg("连接失败" + AMBIGUOUS_TAIL, "err"); } }
 }
 </script>
 </body>

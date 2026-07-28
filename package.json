@@ -7,7 +7,7 @@
     "node": ">=22.18.0"
   },
   "scripts": {
-    "test": "pnpm -r test",
+    "test": "node --test scripts/check-delta-headings.test.mjs && node scripts/check-delta-headings.mjs && pnpm -r test",
     "typecheck": "pnpm -r typecheck",
     "build": "pnpm -r build",
     "openspec:validate": "node scripts/validate-openspec-cn.mjs"
