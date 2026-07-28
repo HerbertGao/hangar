@@ -90,6 +90,21 @@ test('抓(曾静默):RENAMED 的 FROM 在主规范里不存在', () => {
     const r = run(d);
     assert.equal(r.status, 1, 'RENAMED 的 FROM 同样会让 archive 中止,不能对门不可见');
     assert.match(r.stderr, /RENAMED 的 FROM/);
+    // 这条 assert 是必需的:上面两句在**任何**失败下都成立,包括「零解析到需求」那条
+    // 误报——它曾在这里搭车通过而无人发现(RENAMED 用 FROM/TO 列表项,`### 需求:`
+    // 解析器抓不到,零需求计数又漏了 renamedFrom)。
+    assert.doesNotMatch(r.stderr, /没解析到任何/, 'RENAMED 区不得触发「零解析」误报');
+  } finally { rmSync(d, { recursive: true, force: true }); }
+});
+
+test('不误报:合法的 RENAMED-only delta(FROM 真存在)→ 退 0', () => {
+  const d = fixture({
+    base: ['原名'],
+    deltaBody: '## 重命名需求\n\n- FROM: `### 需求:原名`\n- TO: `### 需求:新名`\n',
+  });
+  try {
+    const r = run(d);
+    assert.equal(r.status, 0, `合法的重命名不得被拦:${r.stderr}`);
   } finally { rmSync(d, { recursive: true, force: true }); }
 });
 

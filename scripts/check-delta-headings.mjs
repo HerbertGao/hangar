@@ -68,7 +68,16 @@ for (const change of existsSync(CHANGES) ? readdirSync(CHANGES) : []) {
     const delta = parseDelta(readFileSync(file, 'utf8'));
     const base = baseRequirements(capability);
     const where = `${change}/specs/${capability}`;
-    const n = delta.modified.length + delta.added.length + delta.removed.length + delta.renamed.length + delta.orphan.length;
+    // renamedFrom 必须计入:RENAMED 写成 `- FROM:`/`- TO:` 列表项时(见下方 renamedFrom 那段),
+    // `### 需求:` 解析器一条都抓不到,于是一份**合法的** RENAMED-only delta 会 n===0 被误判成
+    // 「解析器脱节」。漏掉它,这个门就会拦住正确的变更。
+    const n =
+      delta.modified.length +
+      delta.added.length +
+      delta.removed.length +
+      delta.renamed.length +
+      delta.renamedFrom.length +
+      delta.orphan.length;
     if (n === 0) {
       // 一份 delta spec 零需求 = 解析器与文档格式脱节(实测:`### 需求:` 换成 `### 需求 - ` 后本门曾报「通过」)。
       // 必须 per-file 判:用全局总数会被同仓其它变更的需求掩盖,那正是这个门第一版栽的地方。

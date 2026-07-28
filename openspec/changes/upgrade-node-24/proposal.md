@@ -34,7 +34,7 @@ inbox-pilot 已要求 Node `^24`,而本仓声明 `>=22.18.0`。因为 `apps/inbo
 - 受影响代码:`packages/core/src/cli.ts`(`MIN_NODE` + 其上的说明注释)、`packages/core/src/cli.test.ts`(版本断言 + 新增 pin 一致性断言)。
 - 新增文件:`packages/hangar-view/deploy/hangar-view.test.sh`(启动脚本自检,接进该包的 `test`)。
 - 受影响配置:`.nvmrc`、根 `package.json`(`engines` + 删除死的 `pnpm` 字段)、`pnpm-workspace.yaml`(接收 `onlyBuiltDependencies`)、`packages/core` 与 `packages/hangar-view` 的 `engines`、`.github/workflows/ci.yml`。
-- 受影响部署物:`packages/hangar-view/deploy/hangar-view.sh`、`deploy/README.md`、`SKILL.md`(doctor 契约里的 `node`≥22.18)、`docs/proposals/followups-command-write-path.md`(它硬钉了一个 `v22.23.1` 的 fnm 绝对路径并让人把它固化进构建命令——照它做会造出本变更要防的那个 ABI 不匹配)。
+- 受影响部署物:`packages/hangar-view/deploy/hangar-view.sh`、`deploy/README.md`、`SKILL.md`(doctor 契约里的 node 下限,由 ≥22.18 改成 ≥24)、`docs/proposals/followups-command-write-path.md`(它硬钉了一个 `v22.23.1` 的 fnm 绝对路径并让人把它固化进构建命令——照它做会造出本变更要防的那个 ABI 不匹配)。
 - **不受影响**:`packages/notify`(engines 与 README 都不动)、`apps/inbox`(外部 checkout)、`tsconfig.base.json`、SQLite schema、Run 状态机。**脊柱零新增能力**——不变量 #2 在此已被满足而非绕过:本变更的全部理由都是那个外部 pilot 的运行时承诺,没给脊柱加任何东西。
 - **需要协调的生产步骤(不是仓内编辑能完成的)**:切换序列见 `tasks.md` §5(唯一副本,别在这里复述——一个有序过程两份权威副本必然漂移)。唯一要在此强调的机制:跨 major 坏在**共享的那一个 `.node`** 上,**不是 `hangar.sqlite`**(SQLite 文件格式与运行时无关,DB 文件跨 major 兼容);详见 `cli.ts` 头部注释。
 
