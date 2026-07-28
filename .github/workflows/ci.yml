@@ -20,7 +20,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
           # 单一版本来源:.nvmrc。别在这里另写一个版本号——两个 pin 会漂移,而漂移方向
           # 恰好是「CI 绿而本机坏」或反之。setup-node 在两个键都在时优先 node-version,
