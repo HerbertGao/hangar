@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-// Requires Node >=22.18 (see package.json engines): apps ship pipeline.ts/tools.ts
-// as .ts and are imported directly, so the runtime needs flag-free native TS type-
-// stripping — backported to 22.18 (default in 23.6). On 22.0–22.17 an app's .ts
-// import throws ERR_UNKNOWN_FILE_EXTENSION unless --experimental-strip-types is set.
+// Node floor: `.nvmrc` + `engines` (one source; a self-check asserts they and MIN_NODE agree).
+// It is a host-alignment floor, not a language-feature one: every process on the host shares
+// one compiled better-sqlite3 `.node`, so a split major makes that binding unloadable
+// (`ERR_DLOPEN_FAILED`) for whichever side is off-major. See MIN_NODE below.
 import { randomUUID } from 'node:crypto';
 import { accessSync, constants, existsSync } from 'node:fs';
 import { dirname } from 'node:path';
@@ -27,13 +27,20 @@ import { HOST_CAPABILITIES } from './capabilities.js';
 // Logs → stderr, data → stdout (CLI contract).
 const log = pino({ level: process.env.LOG_LEVEL ?? 'info' }, pino.destination(2));
 
-/** Flag-free native .ts type-stripping is the binding constraint: backported to
- *  Node 22.18 (default in 23.6). 22.0–22.17 would false-green here but crash on the
- *  first app .ts import, so the floor is major.minor, not just major. */
-const MIN_NODE = { major: 22, minor: 18 };
+/** A floor, not a range: there is no upper bound, and `engines` says `>=24` to match —
+ *  a newer major must not make `doctor` report the runtime unsupported (that blanks the
+ *  whole view page). Kept as major.minor so a minor-level floor stays a one-line change;
+ *  at minor 0 the minor half is inert. Prereleases are rejected so this agrees with
+ *  `engines: ">=24"` — semver excludes `24.0.0-rc.1` from that range, and `doctor` must
+ *  not call a runtime ok that `pnpm install` calls unsupported. Asserted in the tests. */
+const MIN_NODE = { major: 24, minor: 0 };
 
-/** True iff `version` (default: this runtime) can flag-free import an app's .ts. */
+/** True iff `version` (default: this runtime) is at or above the host floor (MIN_NODE).
+ *  NOT a type-stripping check: 23.x imports an app's .ts flag-free and is still rejected,
+ *  because the floor is host alignment. Widening it to match type-stripping reintroduces
+ *  the split-major native-binding failure. */
 export function nodeSupported(version: string = process.versions.node): boolean {
+  if (version.includes('-')) return false; // prerelease — see MIN_NODE
   const [major, minor] = version.split('.').map(Number);
   if (!Number.isFinite(major) || !Number.isFinite(minor)) return false;
   return major > MIN_NODE.major || (major === MIN_NODE.major && minor >= MIN_NODE.minor);

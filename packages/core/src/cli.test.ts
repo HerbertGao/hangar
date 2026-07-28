@@ -300,14 +300,62 @@ test('deriveBlocked: waiting_human past one cron period is blocked; else not', (
   assert.equal(cronPeriodMs('*/5 * * * *'), 300000);
 });
 
-// ── R2-F5: node floor is 22.18 (flag-free .ts strip backport), not just 22 ────
-test('nodeSupported: 22.17 unsupported (would crash on app .ts import), 22.18+ ok', () => {
-  assert.equal(nodeSupported('22.17.0'), false); // pre-backport → ERR_UNKNOWN_FILE_EXTENSION
-  assert.equal(nodeSupported('22.18.0'), true); // backport landed
-  assert.equal(nodeSupported('22.20.5'), true);
-  assert.equal(nodeSupported('23.6.0'), true); // default from here
-  assert.equal(nodeSupported('20.11.0'), false); // too old entirely
-  assert.equal(nodeSupported('24.0.0'), true);
+// ── node floor is 24 (host alignment; see the cli.ts header) ──────────────────
+// Scope: the comparator only. This does NOT prove the code runs on 24.0.0 — `.nvmrc`
+// holds a bare major, so CI and the host both resolve to the latest 24.x and nothing
+// exercises the exact floor. That coverage does not exist; the pin test below checks
+// that the declarations agree, which is a different guarantee.
+test('nodeSupported: <24 unsupported, 24+ ok', () => {
+  assert.equal(nodeSupported('22.18.0'), false); // was the old floor; now below it
+  assert.equal(nodeSupported('22.23.1'), false);
+  assert.equal(nodeSupported('23.6.0'), false); // type-stripping fine, but off-major
+  assert.equal(nodeSupported('24.0.0'), true); // floor exactly
+  assert.equal(nodeSupported('24.18.0'), true);
+  assert.equal(nodeSupported('25.0.0'), true); // a floor has no upper bound — see MIN_NODE
+  assert.equal(nodeSupported('20.11.0'), false);
+  assert.equal(nodeSupported('garbage'), false); // unparseable → false, never true
+  // Prereleases are rejected, matching semver `>=24` (which excludes them). Without this
+  // the declared set and the effective set disagree again — doctor green, engines WARN.
+  assert.equal(nodeSupported('24.0.0-rc.1'), false);
+  assert.equal(nodeSupported('25.0.0-nightly20250101'), false);
+});
+
+// The single-source claim needs a gate, not prose: a coherent downgrade of `.nvmrc`,
+// MIN_NODE and all three `engines` at once leaves every other test green, and `engines`
+// itself is advisory (a mismatch is a pnpm WARN, exit 0). This is the only thing that
+// fails when the declarations drift apart.
+test('node major has one source: .nvmrc, engines and the runtime gate agree', () => {
+  const root = resolve(import.meta.dirname, '../../..');
+  const declared = /^\s*v?(\d+)/m.exec(readFileSync(join(root, '.nvmrc'), 'utf8'))?.[1];
+  assert.ok(declared, '.nvmrc must start with a numeric major — an alias like lts/* cannot be globbed by hangar-view.sh');
+  const major = Number(declared);
+
+  // The gate probed through behaviour, not by re-reading the literal it is made of.
+  assert.equal(nodeSupported(`${major}.0.0`), true, `MIN_NODE must admit ${major}.0.0`);
+  assert.equal(nodeSupported(`${major - 1}.999.0`), false, `MIN_NODE must reject major ${major - 1}`);
+
+  for (const p of ['package.json', 'packages/core/package.json', 'packages/hangar-view/package.json']) {
+    const engines = JSON.parse(readFileSync(join(root, p), 'utf8')).engines?.node;
+    assert.equal(engines, `>=${major}`, `${p} engines.node must be the same open-ended floor as .nvmrc`);
+  }
+
+  // Deliberately NOT aligned: notify is published to npm, so raising its floor is a
+  // breaking change for consumers, not a version-alignment chore. Pinned here so a
+  // future "unify the versions" sweep has to argue with a failing test.
+  const notify = JSON.parse(readFileSync(join(root, 'packages/notify/package.json'), 'utf8'));
+  assert.equal(notify.engines.node, '>=22.18.0');
+
+  // Comment lines are stripped first: a commented-out `# node-version-file: .nvmrc` must
+  // not satisfy the positive check. And the negative check must reject ANY active
+  // `node-version:` key, not just a numeric one — `lts/*` and '>=24' are the idiomatic
+  // forms, and setup-node prefers `node-version` over `node-version-file` when both exist,
+  // so either one silently detaches CI from .nvmrc.
+  const ci = readFileSync(join(root, '.github/workflows/ci.yml'), 'utf8')
+    .split('\n')
+    .filter((l) => !/^\s*#/.test(l))
+    .join('\n');
+  assert.match(ci, /^\s*node-version-file:\s*\.nvmrc\b/m);
+  assert.equal(/^\s*node-version:\s*\S/m.test(ci), false, 'ci.yml must not carry a second node version pin beside .nvmrc');
 });
 
 test('shutdownGraceMs: env coercion — 0 kept (not snapped to default), invalid/negative → 5000', () => {

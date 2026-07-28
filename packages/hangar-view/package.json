@@ -5,11 +5,11 @@
   "type": "module",
   "description": "hangar-view — 脊柱外、单用户的运行呈现层:呈现面只读 + 一条白名单命令写路径(零 import @hangar/core;只经 hangar CLI --json + 只读 app.yaml)",
   "engines": {
-    "node": ">=22.18.0"
+    "node": ">=24"
   },
   "scripts": {
     "start": "node src/server.js",
-    "test": "node --test"
+    "test": "node --test && bash deploy/hangar-view.test.sh"
   },
   "dependencies": {
     "node-cron": "^4.6.0",

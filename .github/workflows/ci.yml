@@ -22,7 +22,12 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v6
         with:
-          node-version: 22.18.0
+          # 单一版本来源:.nvmrc。别在这里另写一个版本号——两个 pin 会漂移,而漂移方向
+          # 恰好是「CI 绿而本机坏」或反之。setup-node 在两个键都在时优先 node-version,
+          # 所以多写一个(哪怕是 lts/* 这种非数字形式)就会悄悄脱开 .nvmrc;cli.test.ts 会挡。
+          # 注意:`.nvmrc` 是裸 major,故这里跑的是该 major 最新版,**不是下限**——
+          # 「代码在确切下限上能跑」这项覆盖本仓已刻意放弃,MIN_NODE 的断言不是它的替代。
+          node-version-file: .nvmrc
       - run: corepack enable
       - run: pnpm install --frozen-lockfile
       - run: pnpm typecheck
