@@ -44,8 +44,13 @@
 
 - [x] 4.0 交付说明落进仓内 `design.md`,不留在临时文件里——那半份跨仓契约必须活得比一次会话久
 - [x] 4.1 **定型:remove 方向不在 pilot 里建意图解析器**(`design.md` §0)。方向与地址由调用方给结构化 JSON(Pi / Claude Code / CLI);既有 `{text}`→add 的 TOP-N 子串匹配一行不改。手写中文分词器实测产出三条「少一个字符」级缺陷,且无仓内机制会重跑 markdown 里的正则
-- [ ] 4.2 inbox 侧按 delta 的契约 + `design.md` 的域细节实现(inbox 自己出 OpenSpec delta)
-- [ ] 4.3 **部署序:inbox 先、view 后**(pilot 多 emit 字段对旧 view 无害;反序 → interpret 阶段即 `contract_mismatch`)
+- [x] 4.2 inbox 侧实现 —— **早已完成,本任务此前一直是陈旧状态**。inbox-pilot 出了自己的 OpenSpec 变更 `add-feedback-remove`(63/65),已合并(`fabf924` feat(noise-feedback): 反馈闭环补 remove 路径)
+  - 2026-07-29 逐条核对契约,**与 `design.md` §1 逐字一致**:`interpretation.proposed { add, remove }` 两字段恒在、空即 `[]`;`feedback.applied { added, already_present, removed, not_present }` 恰好这四个字段名;缺 key → `[]` 不 throw(留给部署序窗口);key 存在但非 `string[]` → throw;非 canonical → throw;每 run 恰好 emit 一次
+  - inbox 侧还多加了一条本设计未要求的守卫:**`add ∩ remove ≠ ∅` → throw**。理由充分——`(existing ∪ add) \ remove` 会让 remove 悄悄胜出,而回执 `{added:[X], removed:[X]}` 在读者眼里是「加了又移了」、文件里却没有 X,**回执会说谎**
+- [x] 4.3 **部署序:inbox 先、view 后** —— 两侧均已在生产就位(2026-07-29 核实)
+  - inbox:`fabf924` 是生产 HEAD 的祖先,`dist/pipeline.js` 已构建
+  - view:源码最后一次变更是 `0e1e409`(本变更的 view 侧),而它**早于**生产当时的 HEAD `904739b`;今晚那次 pull 的 15 个提交里 `packages/hangar-view/src/` **零改动**,故 view 进程(今日 10:06 启动)跑的就是当前代码,**无需重启**
+  - 注:反序的危害窗口已经过去,两侧现在都是最新;但这不等于端到端验过 —— 那是 4.4
 - [ ] 4.4 生产验一遍:加一个地址 → 移出同一地址 → overlay 回到加之前的内容;重发 apply 幂等
 - [ ] 4.5 归档时更新 `docs/proposals/followups-command-write-path.md` D 节的「overlay 只增不减、现无工具」;同批修 `docs/proposals/control-plane-channels.md` 的**两处** set-union(`:100` 写侧契约段、`:166` busy 重发段,现均含 set-difference)
 - [ ] 4.6 **canonical 闸(view 侧无法机械校验,只能人工过一次)**:手工核对确认页显示的字符串与 overlay 实际增删的 bytes 逐字相同。在 §5 出口闸开始计时前完成
