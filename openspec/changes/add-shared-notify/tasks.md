@@ -49,11 +49,17 @@
 
 - [x] 6.7 **生产 env 形态归一:plist 只声明非密钥变量,wrapper 脚本退出链路** —— **2026-07-29 12:00 UTC 已切换**,切换后两轮 poll 均 `completed`,`tasks 4 / apps 2` 与切换前一致,日志无新错误
   - 实操中发现三件 runbook 原文没写对的(已回填 `deploy/README.md`):
-    - ① **生产装的 `@herbertgao/hangar-notify` 是 npm 上的 0.1.0,不支持 `DOTENV_CONFIG_PATH`** —— 拿它跑 `--from-plist` 会报 `TG_BOT_INBOX` 缺失,那是**假红**。新 preflight 要等下次发版才到生产;本次用等价检查(`node --import dotenv/config` + pilot 自己的 dotenv + 新 plist 的 env 跑真正的 `check`)→ `ok inbox/private` 退 0
+    - ① **切换当时生产装的是 npm 上的 0.1.0,不支持 `DOTENV_CONFIG_PATH`** —— 拿它跑 `--from-plist` 会报 `TG_BOT_INBOX` 缺失,那是**假红**。切换当时用等价检查(`node --import dotenv/config` + pilot 自己的 dotenv + 新 plist 的 env 跑真正的 `check`)→ `ok inbox/private` 退 0。**已于同日发 0.2.0 并升到生产,`--from-plist` 现可直接用**(见 6.8)
     - ② **wrapper 脚本不该 `mv`** —— 换完 plist 它自然就不在链路里了,留着能让回滚只需换回一个文件;`mv` 反而在「plist 已改、launchd 还持旧 job」的窗口里制造崩溃拉起失败
     - ③ **不该顺手 `git pull`** —— 生产落后 5 个提交(含 better-sqlite3 12→13 的 lockfile),一起拉进来就无法确定问题出自哪一步。只 scp 那一个 plist,把改动隔离成单一变量
   - `TZ` 进 plist 的依据(生产实测):迟设会生效,但设之前那段用的是**系统时区**;现在看不出问题只因系统时区碰巧也是 `Asia/Shanghai`
   - `.env` 已从 0644 收到 0600(此前只有 `channels.yaml` 是 0600,而真 token 在那个 0644 的文件里)
+
+- [x] 6.8 **`@herbertgao/hangar-notify` 0.2.0 已发布并升到生产**(2026-07-29)。生产 `check --from-plist` 现在直接可用,输出确认读了两个来源:`validating against plist EnvironmentVariables + …/.env` → `ok inbox/private` 退 0
+  - **`pnpm update` 拿不到它**:`^0.1.0` 对 0.x 是 `>=0.1.0 <0.2.0`,匹配不到 0.2.0。得改 inbox-pilot `package.json` 的范围(已改,inbox-pilot `80222f6`),不是 update
+  - inbox-pilot 侧验证:build 干净、**482/482 测试全过**;提交只带 `package.json` + `pnpm-lock.yaml`(该 repo 有 `reconcile-spec-drift` 的暂存 WIP,不能 `git add -A`)
+  - 生产 install 打了 `Ignored build scripts: esbuild, prisma` —— **这正是「install 退 0 但产物没出来」的形态**,单看退出码会误判。逐条查实:prisma 生成的 client 与 `libquery_engine-*.node` 都在 pnpm 隔离布局下(`node_modules/.pnpm/@prisma+client@…/node_modules/.prisma/client/`,不是顶层 `node_modules/.prisma`);`new PrismaClient()` 真实例化成功。判据是**产物真在 + 真能实例化**,不是 install 退 0
+  - daemon 未重启(它跑的是已加载进内存的模块,不受 node_modules 变动影响),poll 持续 `completed`
   - 目标形态:`plist(PATH / HANGAR_APPS / DOTENV_CONFIG_PATH / HANGAR_NOTIFY_CONFIG)` + `.env`(全部密钥,唯一落点) + `channels.yaml`。文件 4→3,少掉的是手写 shell —— runbook 里最容易与实际漂移的那类
   - 依据:pilot 自己 `import 'dotenv/config'`,而 dotenv 认 `DOTENV_CONFIG_PATH`(2026-07-29 在生产上 `env -i` 实测认)。wrapper 唯一职责(补 daemon cwd≠pilot 目录导致 dotenv 找不到 `.env`)因此被消掉
   - **不要把密钥搬进 plist**:`.env` 还服务 pilot 自己的入口(`prisma migrate deploy` / `account` / `eval:*`),搬进去 = 两个落点要人工同步

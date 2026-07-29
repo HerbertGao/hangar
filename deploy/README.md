@@ -104,10 +104,17 @@ chmod 600 ~/inbox-pilot-hangar/.env    # 原来是 0644,里面全是密码
 
 期望 `ok inbox/private` + 退 0。非零就停在这,别重启 daemon。
 
-> ⚠️ **上面这条要 `@herbertgao/hangar-notify` ≥ 支持 `DOTENV_CONFIG_PATH` 的版本。**
-> 生产机装的是 npm 上的版本,不是仓里的 —— 若它还是旧版,`--from-plist` 只看 plist、
-> 看不到 `.env` 里的密钥,会报 `TG_BOT_INBOX` 缺失。**那是假红,不是真出问题。**
-> 旧版下改用这条等价检查(用 pilot 自己的 dotenv,按 plist 的 env 跑真正的 check):
+期望输出里能看到它读了**两个**来源:
+
+```
+validating against plist EnvironmentVariables + /Users/herbertgao/inbox-pilot-hangar/.env; ...
+  ok    inbox/private
+```
+
+> ⚠️ **要 `@herbertgao/hangar-notify` ≥ 0.2.0。** 生产机装的是 npm 上的版本,不是仓里的。
+> 0.1.0 只看 plist、看不到 `.env` 里的密钥,会报 `TG_BOT_INBOX` 缺失 —— **那是假红,
+> daemon 其实是好的**。判断方法就看上面那行提示里有没有出现 `+ <路径>/.env`。
+> (2026-07-29 生产已升到 0.2.0。)旧版下的等价检查:
 >
 > ```bash
 > cd ~/inbox-pilot-hangar && env -i HOME=$HOME \
