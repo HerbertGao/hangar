@@ -66,14 +66,21 @@
 - [ ] 6.5 放 `databases.yaml` + 把 `PG_PW_INBOX` 与 `HANGAR_PG_CONFIG` 加进 **`~/inbox-pilot-hangar/.env`**(**不是 plist**);**在 daemon 的 env 里**跑 `check --from-plist`,通过才继续
   - 改自原文「加进 daemon plist 的 `EnvironmentVariables`」:生产实测该 plist **根本没有 `EnvironmentVariables`**,密钥一直住在 `.env` 里,且那份 `.env` 还服务 pilot 自己的入口 —— 搬进 plist 会制造第二个密钥落点
   - `check --from-plist` 已改为**跟读 plist 声明的 `DOTENV_CONFIG_PATH`** 并按 plist 覆盖文件的次序合并,故密钥住 `.env` 也校验得到。前置:`add-shared-notify` 的 6.7(plist 里声明 `DOTENV_CONFIG_PATH`)先落
-- [ ] 6.6 切 inbox 到 resolver,重启 daemon,**观察一个完整 digest 周期**(P0 即时通知 + 每日摘要各真发过一轮)
-  - ⚠️ **切换前必须先停 daemon、再重做一次 dump/restore。原 runbook 漏了这条。** 6.2 那份 dump 是从**活库**取的,daemon 每 3 分钟还在往里写;不重取就直接切,dump 之后到切换之间收到的邮件**会静默丢失**——库里没有、而 Gmail 那边已标记处理过,不会再被拉一次。
-  - 正确次序:`launchctl bootout` 停 daemon → 确认无活跃 run → `pg_dump` 重取 → `DROP DATABASE inbox` + 按 `roles.sql` 重建 + restore(或 `pg_restore --clean`)→ 逐表核行数 → 切连接串 → `bootstrap` 起 daemon。库只有 3.1M,整段停机约 1 分钟
-  - **前置:§5.1**(inbox 侧改用 `resolve('inbox')`)必须先落,否则没有「切」这个动作可做
-- [ ] 6.7 **旧容器与 `./data/postgres` 在 6.6 通过之前不得删除** —— 那是唯一副本。确认后再退役,且退役前再留一份 dump
-- [ ] 6.8 回滚路径:切回 `DATABASE_URL` → 重启 daemon → 旧容器仍在原状。**这条要在 6.6 之前先演练一遍**,别等真出事才第一次走
+> **2026-07-29 夜:三个实例已合并到一个 `127.0.0.1:5432`。** 停机窗口约 12 分钟(21:42–21:54 本地),
+> 两个租户的数据都已迁入并逐表核过。**但这次走的是「先把连接串指过去」,不是 6.6 说的「切到 resolver」**
+> —— §5.1 还没做,resolver 那条路还没接。合并与 resolver 是两件事,别把 6.6 当作已完成。
+
+- [ ] 6.6 切 inbox 到 **resolver**,重启 daemon,**观察一个完整 digest 周期**(P0 即时通知 + 每日摘要各真发过一轮)
+  - **合并已完成的部分**:inbox 的 `DATABASE_URL` 现在指向共享实例的 `inbox` 库(`postgresql://inbox:…@localhost:5432/inbox`),daemon 重启后 12:48 那轮 poll `completed`,并确认 `pg_stat_activity` 里有 `inbox` role 的连接。**仍是 `.env` 里的 `DATABASE_URL`,不是 `resolve('inbox')`**
+  - **还剩的部分**:§5.1 落地后,再把来源换成 resolver,那次才是本条真正要观察的切换
+  - ⚠️ **切换前必须先停 daemon、再重做一次 dump/restore。原 runbook 漏了这条。** 从**活库**取的 dump 到切换之间收到的邮件**会静默丢失**——库里没有、而 Gmail 那边已标记处理过,不会再被拉一次。本次合并已按此执行:停 daemon → 停 ai-radar 应用服务 → 取最终 dump → 再动
+  - 正确次序:停 daemon → 确认无活跃 run → `pg_dump` 重取 → 重建 + restore → 逐表核行数 → 切连接串 → 起 daemon
+- [ ] 6.7 **旧容器与其数据卷不得删除** —— 现状:`inbox-pilot-postgres-1` 与 `ai-radar-postgres-1` 均为 `Exited (0)`,**容器与卷都在原地**(ai-radar 的 `postgres_data` 卷未删,其 compose 里那段服务定义改成了注释、恢复只需还原)。观察期通过后再退役,且退役前再留一份 dump
+- [ ] 6.8 回滚路径:切回 `DATABASE_URL` → 重启 daemon → 旧容器 `docker start` 即恢复。**这条仍未演练** —— 本次合并把回滚**准备**做齐了(两份 dump、两份 compose `.bak-precutover`、两份 `.env` 备份、旧容器与卷原地保留),但**没有真跑一遍回滚**。上一个变更里同类任务最后记成了「决定不做」;这条要么真演练,要么同样明写「决定不做 + 代价」,别悬着
 
 ## 7. 出口闸
 
-- [ ] 7.1 **第二个真实需要关系库的 pilot 接进来,且没有重复任何运维面**(不新起容器、不新加端口、不新加备份路径)。在那之前本变更只服务 inbox 一家,共享层的价值**尚未兑现**
+- [x] 7.1 **第二个租户已接入:`ai-radar`**(2026-07-29)。运维面**净减少**而非重复:容器 3→1(退役 `inbox-pilot-postgres-1` 与 `ai-radar-postgres-1`)、主机端口 3→1(5433/5434/5432 → 只剩 5432)、备份路径归一到 `~/hangar-pg/backups/`
+  - ⚠️ **它不是 hangar pilot,是一个独立的 docker-compose 应用。** 本条原文写的是「第二个真实需要关系库的 **pilot**」;ai-radar 是 ROADMAP Phase 2 的 pilot 候选,但今天它只是共享实例的第二个**租户**。共享层被第二个真实负载压过了、且运维面真的收敛了 —— 这是本闸要问的东西;但「第二个 pilot 逼出通用脊柱」那件事**没有**因此发生,别把两者当成一回事
+  - 共享实例的镜像因此从 `postgres:16` 换成 **`pgvector/pgvector:pg16`**:ai-radar 用到 `vector` 扩展(已确认装着、2 个 `vector` 列在用)。**共享实例的镜像由所有租户需求的并集决定**,pgvector 是官方镜像的超集,inbox 那种普通用法照跑。这条要写进模板,否则下一个带扩展的租户会重新发现一遍
 - [ ] 7.2 连续 7 天共享实例无事故:无连接耗尽、无跨库越权、备份真的在跑
