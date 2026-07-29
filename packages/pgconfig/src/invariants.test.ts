@@ -34,14 +34,13 @@ function readAll(dir: string, skipTests: boolean): { file: string; text: string 
 
 test('runtime deps are exactly dotenv + yaml + zod — no driver, no ORM, in ANY dep section', () => {
   const pkg = JSON.parse(readFileSync(join(PKG_ROOT, 'package.json'), 'utf8'));
-  // `dotenv` added 2026-07-29 for `check --from-plist` following DOTENV_CONFIG_PATH.
-  // It is neither a driver nor an ORM, so it does not move this package toward "hangar
-  // manages databases" — the drift this guard exists to catch. It is here because the
-  // preflight MUST read that env file byte-for-byte the way the pilot's own
-  // `import 'dotenv/config'` reads it: a hand-rolled splitter disagrees on quoting,
-  // `export ` prefixes and multi-line values, and would validate a value the daemon
-  // never sees — the very false-green `--from-plist` exists to prevent.
-  // Widen this list only with the same kind of argument, never to make a build pass.
+  // Why `dotenv` is allowed here (added 2026-07-29):
+  // This guard exists to stop this package from growing into "hangar manages databases".
+  // dotenv is not a driver or an ORM, so it does not do that. It is needed because
+  // `check --from-plist` has to read the .env file exactly the way the pilot's own
+  // `import 'dotenv/config'` reads it — splitting on '=' ourselves would disagree about
+  // quotes and end up checking a value the daemon never has.
+  // Only widen this list with an argument like that. Never widen it to make a build pass.
   assert.deepEqual(Object.keys(pkg.dependencies ?? {}).sort(), ['dotenv', 'yaml', 'zod']);
   // `optionalDependencies` and `peerDependencies` are installed/resolved too, so checking
   // only `dependencies` + `devDependencies` leaves a section a driver could hide in.

@@ -9,26 +9,37 @@
 
 | 文件 | 放什么 | 为什么在这 |
 |---|---|---|
-| `~/Library/LaunchAgents/com.herbertgao.hangar-inbox.plist` | 非密钥变量(`PATH` / `HANGAR_APPS` / `DOTENV_CONFIG_PATH` / `HANGAR_NOTIFY_CONFIG`) | launchd 唯一读的地方;声明式,preflight 能直接读它 |
+| `~/Library/LaunchAgents/com.herbertgao.hangar-inbox.plist` | 非密钥变量(`PATH` / `HANGAR_APPS` / `DOTENV_CONFIG_PATH` / `HANGAR_NOTIFY_CONFIG` / **`TZ`**) | launchd 唯一读的地方;声明式,preflight 能直接读它 |
 | `~/inbox-pilot-hangar/.env` | **全部密钥**(`DATABASE_URL` / `GMAIL_*` / `OPENROUTER_*` / `TG_BOT_INBOX` …) | 密钥的**唯一落点**。它同时服务 pilot 自己的入口(`prisma migrate deploy` / `account` / `eval:*`),复制进 plist 会变成两处要人工同步 |
 | `~/.config/hangar/channels.yaml` | 通知渠道(`bot` 只写 `${TG_BOT_INBOX}` 引用) | `@hangar/notify` resolver 读 |
 
 pilot 自己 `import 'dotenv/config'`;plist 的 `DOTENV_CONFIG_PATH` 告诉它 `.env` 在哪
 (daemon 的 cwd 是 `~/hangar`,dotenv 默认只看 cwd,否则找不到)。
 
-**优先级:plist 覆盖 `.env`。** launchd 先把 plist 的变量灌进进程,dotenv 随后加载且
-默认不覆盖已存在的键。`hangar-notify check --from-plist` 复刻的正是这个次序。
+**两处都有同名变量时,plist 赢。** launchd 先设 plist 里的,dotenv 之后加载、遇到已经
+存在的变量就不动它。`hangar-notify check --from-plist` 就是照这个顺序合并的。
+
+**`TZ` 是个特例,必须放 plist。** node 只在启动时读一次时区。只写在 `.env` 里的话,
+它要等代码跑起来才生效,在那之前算的日期用的是机器的系统时区 —— 每日摘要的「今天」
+从几点算起就可能不对,而且不报错,只是算错。`.env` 里那份 `TZ` 可以留着(pilot 自己
+的命令从 pilot 目录跑时用得上),但 plist 里必须也有一份。
+
+> **新变量该放哪?** 问一句:它得在程序启动前就生效,还是代码要用时才去读?
+> 启动前就得生效的(`TZ`、`PATH`)放 plist;代码用时才读的(密码、配置文件路径)放 `.env`。
 
 ## 从 wrapper 脚本切到本 plist
 
 原先 plist 跑 `/bin/bash ~/hangar-inbox-daemon.sh`,由该脚本 source `.env`。本 plist
 取消了那一层。**逐步做,每步可单独回滚。**
 
-### 0. 先过这道闸(不做这步别往下走)
+### 0. 先做这两个检查(不做别往下走)
 
-切换把 env 的注入时机从「进程启动前」挪到「pilot 模块求值时」。若 pilot 的模块图里
-有谁在 `config.ts` 之前于顶层读 `process.env`,它会拿到空值 —— 而且是**静默半坏**。
-先只做模块求值(不跑 run、无外部副作用)证伪它:
+**这次改动改变了环境变量生效的时机**:以前是进程启动前就全部灌好,以后是 pilot 代码
+加载时才由 dotenv 读进来。万一 pilot 里有哪个模块在 dotenv 之前就去读环境变量,它会
+读到空值 —— 而且多半不会报错,只是行为悄悄变了。下面两步就是来排除这件事的。
+
+**检查一:代码能不能正常加载。** 只加载模块,不真跑一次 run(所以不会发通知、不会动
+邮件):
 
 ```bash
 env -i HOME=/Users/herbertgao \
@@ -42,8 +53,31 @@ env -i HOME=/Users/herbertgao \
   "'
 ```
 
-全部 `SET` 且无异常才继续。任一 `<MISSING>` 或抛错 = 存在顺序依赖,**放弃本次切换**、
-继续用 wrapper(它在进程启动前就把 env 灌好了,对顺序免疫)。
+要全是 `SET` 且不报错才能继续。只要有一个 `<MISSING>` 或者抛了错,就**别切**,继续用
+原来的 shell 脚本(它在进程启动前就把变量灌好,不存在时机问题)。
+
+**检查二:切换前后读出来的配置是不是一模一样。** 检查一只能发现「报错」那种情况;
+如果某个模块读到空值却不报错,只有对比才看得出来。下面按两种方式各加载一次配置,
+算个指纹来比 —— 只打指纹,不打密码:
+
+```bash
+cat > /tmp/probe.mjs <<'PROBE'
+import { createHash } from 'node:crypto';
+await import('/Users/herbertgao/inbox-pilot-hangar/dist/pipeline.js');
+const { loadConfig } = await import('/Users/herbertgao/inbox-pilot-hangar/dist/config/config.js');
+const c = loadConfig(); const keys = Object.keys(c).sort();
+console.log('KEYS=' + keys.join(','));
+console.log('FINGERPRINT=' + createHash('sha256').update(JSON.stringify(c, keys)).digest('hex').slice(0, 16));
+PROBE
+# A(wrapper 形态): set -a; . <pilot>/.env; set +a  然后 node /tmp/probe.mjs
+# B(新形态):       DOTENV_CONFIG_PATH=<pilot>/.env  然后 node /tmp/probe.mjs
+```
+
+两次的 `FINGERPRINT` 必须完全一样。(2026-07-29 在生产机上跑过,两次都是
+`78ee173e24f37d2e`,10 个键一致。)
+
+⚠️ **这个对比只覆盖配置 schema 里的那 10 个变量。** schema 之外的(`TZ`、`TG_BOT_INBOX`)
+不在指纹里,要单独想一遍。上面 `TZ` 必须放 plist 那条,就是这么发现的。
 
 ### 1. 装 plist(保留旧 wrapper 以便回滚)
 

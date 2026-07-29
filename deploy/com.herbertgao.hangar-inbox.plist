@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <!--
-  hangar 脊柱 daemon 的 launchd agent(ts.mac-mini)。装到 ~/Library/LaunchAgents/。
-  路径按 home=/Users/herbertgao、repo=~/hangar、pilot=~/inbox-pilot-hangar 写死。
+  hangar daemon 的 launchd 配置(生产机 ts.mac-mini)。放到 ~/Library/LaunchAgents/。
+  路径是按这台机器写死的;换机器/换用户名要改这些绝对路径。
 
-  这份取代了原先的 `~/hangar-inbox-daemon.sh` wrapper。wrapper 的唯一职责是
-  `set -a; . <pilot>/.env; set +a` —— 因为 daemon 的 cwd 是 ~/hangar 而 pilot 在别处,
-  pilot 自己的 `import 'dotenv/config'` 默认只看 cwd,找不到那份 .env。改由下面的
-  DOTENV_CONFIG_PATH 显式指路,该职责消失,shell 那一层就不必存在了。
+  规矩只有一条:
+    · 这个文件放「不是密码」的变量
+    · 密码之类的全放 .env(下面 DOTENV_CONFIG_PATH 指向它)
 
-  **密钥不进这个文件。** EnvironmentVariables 里只有非密钥变量;所有密钥留在
-  DOTENV_CONFIG_PATH 指向的那一份 .env 里(它同时还服务 pilot 自己的入口:
-  prisma migrate deploy / account / eval:*)。同一个密钥值出现在两个文件 = 迟早漂移。
+  为什么密码不也放这里?因为那份 .env 还被 pilot 自己的命令用(prisma migrate、
+  account 等)。同一个密码写在两个文件里,迟早有一份忘了改。
 
-  node 路径钉死到具体版本:launchd 不经 shell,拿不到 fnm 的 PATH 注入。
-  换 node major 后这一行要跟着改(且原生模块要 `pnpm rebuild -r`)。
+  以前这里跑的是一个 shell 脚本(hangar-inbox-daemon.sh),它只干一件事:把 .env
+  读进环境变量。需要它是因为 daemon 的工作目录是 ~/hangar,而 .env 在 pilot 目录
+  里,pilot 代码用的 dotenv 只会在工作目录找,找不到。现在用 DOTENV_CONFIG_PATH
+  直接把路径告诉它,这个脚本就不需要了。
+
+  node 写的是绝对路径:launchd 不经过 shell,拿不到 fnm 设的 PATH。
+  升级 node 版本后记得改这一行。
 -->
 <plist version="1.0">
 <dict>
@@ -35,6 +38,16 @@
 
     <key>HANGAR_APPS</key>
     <string>/Users/herbertgao/hangar/apps</string>
+
+    <!--
+      TZ 要放这里,不能只放 .env。
+      node 只在**启动时**读一次时区。若 TZ 是靠 .env 在代码跑起来之后才设的,那之前
+      算出的日期用的是这台机器的系统时区 —— 每日摘要的「今天」从几点算起就可能不对,
+      而且不会报错,只是算错。
+      (现在系统时区碰巧也是 Asia/Shanghai,所以看不出问题。那是巧合,不是对。)
+    -->
+    <key>TZ</key>
+    <string>Asia/Shanghai</string>
 
     <!-- pilot 的 `import 'dotenv/config'` 据此找到 .env(密钥的唯一落点)。 -->
     <key>DOTENV_CONFIG_PATH</key>

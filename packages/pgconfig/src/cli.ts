@@ -50,19 +50,21 @@ function loadPlistEnv(plistPath: string): Record<string, string> {
   ) as Record<string, string>;
 }
 
-// The daemon's environment is not always all in the plist. launchd may declare only
-// non-secret vars (PATH / HANGAR_APPS / DOTENV_CONFIG_PATH) and leave the secrets —
-// PG_PW_<APP> among them — in the env file DOTENV_CONFIG_PATH points at, which the
-// pilot loads itself via `import 'dotenv/config'`. Reproduce both layers in the
-// daemon's own order so this preflight validates what the daemon will really see.
+// Rebuild the same environment the daemon will actually run with.
 //
-// Precedence is plist-over-file, NOT the reverse: launchd populates the process env
-// first, and dotenv does not overwrite an already-set key by default.
+// The daemon reads its env from two places:
+//   1. the plist — the non-secret vars (PATH, HANGAR_APPS, DOTENV_CONFIG_PATH)
+//   2. the .env file that DOTENV_CONFIG_PATH points at — the secrets, PG_PW_<APP>
+//      among them, loaded by the pilot's own `import 'dotenv/config'`
+// Reading only the plist would report every password as missing, so read both.
 //
-// Parsing uses dotenv's own `parse`, never a hand-rolled splitter: quoting, `export `
-// prefixes and multi-line values must be read exactly as the pilot reads them, or the
-// check goes green on an env that differs from the daemon's — the same false-green
-// `--from-plist` exists to prevent, just relocated.
+// The plist wins on conflicts. launchd sets its vars first, and dotenv leaves a var
+// alone if it already exists. Merging the other way would check a value the daemon
+// never actually has.
+//
+// We parse with dotenv itself rather than splitting on '=', so quotes and `export `
+// prefixes are read the same way the pilot reads them. A parser that disagreed would
+// let this check pass on a password that differs from the real one.
 function loadDaemonEnv(plistPath: string): Record<string, string> {
   const plistEnv = loadPlistEnv(plistPath);
   const dotenvPath = plistEnv.DOTENV_CONFIG_PATH?.trim();
@@ -72,10 +74,11 @@ function loadDaemonEnv(plistPath: string): Record<string, string> {
   try {
     text = readFileSync(dotenvPath, 'utf8');
   } catch (e) {
-    // Loud, not silent: dotenv itself ignores a missing file, so the daemon would come
-    // up without those vars and the failure would surface later as a confusing
-    // "PG_PW_INBOX missing", pointing at the wrong file. Only the fs error message is
-    // echoed (path + errno) — never the file's contents, which are the passwords.
+    // Fail here, loudly. dotenv itself ignores a file it cannot read, so the daemon
+    // would start up quietly without those vars and you would later see a confusing
+    // "PG_PW_INBOX missing" that sends you looking in the wrong file.
+    // Only the filesystem error (path + errno) is echoed, never the file's contents —
+    // those are the passwords.
     throw new Error(
       `plist declares DOTENV_CONFIG_PATH=${dotenvPath} but it cannot be read: ${(e as Error).message}`,
     );
