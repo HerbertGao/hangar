@@ -3,6 +3,13 @@
 `com.herbertgao.hangar-inbox` —— 跑 `hangar daemon`,按 `app.yaml` 的 triggers 调度。
 **命令在 ts.mac-mini 上跑。** (hangar-view 的部署另见 `packages/hangar-view/deploy/`。)
 
+本目录还有 `hangar-pg.docker-compose.yml` —— **生产上共享 postgres 实例的真实副本**,
+部署在 `~/hangar-pg/`。它与 `packages/pgconfig/deploy/docker-compose.yml` 不是一回事:
+那份是给任何人起步用的**通用模板**(`postgres:16` / 5434);这份是**这台机器上实际跑着的东西**
+(`pgvector/pgvector:pg16` / 5432 / 带 `pgnet` 外部网),因为租户 ai-radar 用到 `vector` 扩展。
+放这里的理由与那份 plist 相同:一份只活在一台机器上的配置,等于没有备份也无人评审。
+改生产时**两边一起改**。
+
 ## env 的形状
 
 三个文件,各有各的理由:

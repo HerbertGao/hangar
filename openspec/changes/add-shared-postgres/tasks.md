@@ -53,6 +53,13 @@
   - 注:5.2 的 `file:../hangar/packages/pgconfig` **不受影响** —— `file:` 按路径解析,本就不需要 workspace
 - [ ] 5.3 inbox 侧 `docker-compose.yml` / `data/postgres` 是否退役,由 inbox 决定;hangar 不代为删除
 
+- [ ] 5.4 **⚠️ ai-radar 仓库与生产已不一致 —— 本次合并造成的,必须由 ai-radar 自己收口**
+  - 现状:生产 `~/ai-radar/docker-compose.yml` 已移除 postgres 服务、接入 `pgnet` 外部网;**但 ai-radar 仓库那份仍定义着 postgres 服务**。任何人从仓库全新部署都会起一个 postgres 去抢 5432 —— 抢不到则起不来,抢到则两份数据分裂
+  - 好消息:ai-radar 的 CI 只 build 镜像(`docker-image.yml`),没有会覆盖 compose 的部署流水线,故生产不会被自动打回
+  - **不能顺手提交**:改动撞到 ai-radar 自己的规范正文 —— `openspec/specs/platform-foundation/spec.md:13` 有一条场景「**当** 检视 `docker-compose.yml` 的 postgres 服务镜像 …**那么** 镜像为 `pgvector/pgvector`」。移除该服务后这条场景无法被检视,规范与实现即刻矛盾。按 ai-radar 自己的流程要走变更提案(改规范再改代码),不是一次 drive-by commit
+  - 补丁脚本已留存(带断言:仓库比生产多一个 `mr-browser-worker`,depends_on 是 3 处不是 2 处 —— 直接套用生产那份会漏改它)
+  - 另注:生产那份 compose 本就比仓库旧(缺 `mr-browser-worker`、cloudflared digest 未钉)。收口时**只搬「移除 postgres」这一条**,别顺势把生产拉齐到仓库版——那会引入没打算做的变更
+
 ## 6. 生产迁移 runbook(ts.mac-mini)
 
 > **§6.1–6.4 于 2026-07-29 完成,全程零中断** —— 新实例与现役 5433 并存,inbox 仍在用旧库。
@@ -76,7 +83,11 @@
   - ⚠️ **切换前必须先停 daemon、再重做一次 dump/restore。原 runbook 漏了这条。** 从**活库**取的 dump 到切换之间收到的邮件**会静默丢失**——库里没有、而 Gmail 那边已标记处理过,不会再被拉一次。本次合并已按此执行:停 daemon → 停 ai-radar 应用服务 → 取最终 dump → 再动
   - 正确次序:停 daemon → 确认无活跃 run → `pg_dump` 重取 → 重建 + restore → 逐表核行数 → 切连接串 → 起 daemon
 - [ ] 6.7 **旧容器与其数据卷不得删除** —— 现状:`inbox-pilot-postgres-1` 与 `ai-radar-postgres-1` 均为 `Exited (0)`,**容器与卷都在原地**(ai-radar 的 `postgres_data` 卷未删,其 compose 里那段服务定义改成了注释、恢复只需还原)。观察期通过后再退役,且退役前再留一份 dump
-- [ ] 6.8 回滚路径:切回 `DATABASE_URL` → 重启 daemon → 旧容器 `docker start` 即恢复。**这条仍未演练** —— 本次合并把回滚**准备**做齐了(两份 dump、两份 compose `.bak-precutover`、两份 `.env` 备份、旧容器与卷原地保留),但**没有真跑一遍回滚**。上一个变更里同类任务最后记成了「决定不做」;这条要么真演练,要么同样明写「决定不做 + 代价」,别悬着
+- [x] 6.8 回滚演练 —— **决定不做**(2026-07-29,owner 拍板)。准备是齐的:两份 dump、两份 compose `.bak-precutover`、两份 `.env` 备份、旧容器与卷全部原地保留。跳过的是「真跑一遍」。
+  - **代价(要认)**:真需要回滚时是第一次走这条路,而且多半是在出事的当口。未经证实的环节有三个——① `docker start` 一个被中途停掉的旧 postgres 是否真能起回 healthy;② 还原 compose 备份后 `up -d` 是否真能重建出原样(ai-radar 那份里 postgres 服务被改成了注释,靠人还原);③ inbox 的 `.env` 换回旧 URL + 重启 daemon 是否一次成
+  - **但这条的价值窗口本来就在快速缩小,这是决定不做的实际理由**:旧库的数据冻结在切换那一刻。切换一天后回滚 = 丢一天的邮件与 ai-radar 抓取;一周后就是丢一周。**「回滚到旧容器」在头几个小时之后就不再是回滚,而是一次有数据损失的事故处置**
+  - **真正该保证的那条路已经被证实过**:出事时的实际恢复动作是「从 dump 恢复进共享实例」,而今晚的迁移本身就是这条路走了两遍(两个库各一次 restore + 逐表核行数)。所以**被跳过的是短保质期的那条,被验证的是长期有效的那条** —— 记在这里,免得日后把「没演练回滚」读成「恢复能力未经验证」
+  - 后续:§6.7 清理旧容器时,本条的准备物随之失效;届时唯一的恢复依据就是 `~/hangar-pg/backups/` 里的 dump 与**尚不存在的**定期备份(见 §4.4 备份归属:起容器的人负责)。**清理前先把定期备份真跑起来**
 
 ## 7. 出口闸
 

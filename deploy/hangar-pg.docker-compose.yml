@@ -1,0 +1,39 @@
+# 共享 postgres 实例 —— 部署产物,不是 hangar 的运行时职责。
+# hangar 不起它、不建号、不备份、不监控。
+#
+# 镜像是 pgvector 而非 postgres:16:租户 ai-radar 用到 vector 扩展。
+# 共享实例的镜像由**所有租户需求的并集**决定;pgvector 是官方 postgres 的超集,
+# inbox 那种不用向量的普通用法在上面照跑。
+#
+# 绑 127.0.0.1 是刻意的:不对外、Tailscale/LAN 不可达。改成 "5432:5432" 会把它
+# 暴露到整个 tailnet —— 2026-07-29 ai-radar 就是这么暴露了三天。别顺手改。
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: hangar-pg
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:5432:5432"
+    environment:
+      POSTGRES_PASSWORD: ${PG_SUPERUSER_PASSWORD:?set PG_SUPERUSER_PASSWORD}
+      POSTGRES_DB: postgres
+    volumes:
+      # 显式路径,不用匿名卷 —— 匿名卷会在某次 down -v 里静默消失。
+      - ./data/postgres:/var/lib/postgresql/data
+    networks:
+      default:
+      # 容器化的租户(ai-radar 的 web/worker/migrate)经这张外部网按名字 `postgres`
+      # 连过来,所以它们的 DATABASE_URL 一个字都不用改。
+      pgnet:
+        aliases: [postgres]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  default:
+  pgnet:
+    external: true
+    name: hangar-pgnet
