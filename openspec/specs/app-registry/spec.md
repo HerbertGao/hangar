@@ -1,7 +1,8 @@
 # app-registry 规范
 
 ## 目的
-待定 - 由归档变更 phase-0-skeleton 创建。归档后请更新目的。
+「一个 app 是什么、从哪来、怎么被脊柱认出来」的唯一定义:扫 apps 根下的 `app.yaml`,zod 校验后以目录名为 `id` 注册,由 `executor` 字段决定加载方向,`enabled` 决定是否排期。守不变量 #4——`app.yaml` 是 app 定义的唯一入口,不引入第二种。
+
 ## 需求
 
 ### 需求:从 apps 目录发现并注册 app

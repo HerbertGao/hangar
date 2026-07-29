@@ -1,7 +1,8 @@
 # cli 规范
 
 ## 目的
-待定 - 由归档变更 phase-0-skeleton 创建。归档后请更新目的。
+人与 Claude Code 驱动 hangar 的控制面契约:I/O 分流(数据 stdout / 日志 stderr / `--json`)、退出码语义、写操作拒 root、`doctor` 把环境前置检查显式化、只读命令如何把事件映射成状态,以及 `daemon` 的调度与信号行为。CLI 与 daemon 是同一份 core 的两个入口、共享 SQLite 而互不通信(守不变量 #6)。
+
 ## 需求
 ### 需求:CLI 遵循 I/O 与退出码约定
 所有命令必须:数据写 stdout、日志写 stderr、`--json` 给结构化输出;退出码 `0` 成功 / `1` 业务失败 / `2` 参数错误;无参运行必须打印帮助且不执行任何写操作。**`hangar run` 的 run 若被取消(SIGINT/abort)进入 `state=cancelled`,必须以退出码 `1` 退出**(取消是一种非成功终态,归 `1` 业务失败档;与 `failed` 同码、靠输出的 `state` 区分),并输出可追踪的 `run id/state`(复用 `${runId} -> ${state}` 形状 / `--json` 下 `{run,state}`)。(注:`hangar reject` 产出的 `cancelled` 是**用户主动驳回**、语义上成功操作,退出码仍 `0`,不变。)

@@ -1,7 +1,8 @@
 # tool-gateway 规范
 
 ## 目的
-待定 - 由归档变更 phase-0-skeleton 创建。归档后请更新目的。
+高危动作的唯一出口:app 经 `await ctx.propose({tool,args})` 提交动作,低危立即调 handler 执行,高危只登记 `Approval(pending)`,run 结束后统一收束到 `waiting_human` 等人拍板;approve 取锁后按 `{tool,args}` 重新加载 app 的 tool handler 执行。审批只住在 OS 层,app 与 executor 不得自行处理(守不变量 #5)。
+
 ## 需求
 ### 需求:app 必须提供按名索引的工具处理器(tool handler)
 「按名字执行一个动作」需要一个 app 提供、可**独立于 `run()` 加载**的处理器注册表(对称于 `Executor`)。app 必须导出 `apps/<id>/tools.ts`:`{ [tool]: (args, ctx) => Promise<Result> }`;gateway 按 `tool` 名加载调用。**没有它,「gateway 执行动作」是未定义操作**(approve 后进程可能重启,执行体只能按 `{tool,args}` 重解析,不能靠 `run()` 闭包)。审批后的域回写(如 inbox 把「已发送」写回自己域库)只能住在 handler 里。

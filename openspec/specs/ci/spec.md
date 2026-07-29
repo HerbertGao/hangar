@@ -1,7 +1,8 @@
 # ci 规范
 
 ## 目的
-待定 - 由归档变更 add-ci 创建。归档后请更新目的。
+进 `main` 的每次改动都过同一道自动化闸:冻结 lockfile 安装 + `typecheck` / `test` / `build` 全绿,且闸门的强制力落在 branch protection 的 required status check 上(只有 workflow 挡不住合并)。依赖跟版同属这条线。
+
 ## 需求
 ### 需求:每个 PR 与 main push 必须过 typecheck + test + build 合并门
 CI 必须在 `pull_request` 与 `push` 到 `main` 时,以冻结的 lockfile 安装依赖并依次跑 `typecheck` / `test` / `build`;任一步失败必须使该次 run 变红。lockfile 与 `package.json` 不一致时安装必须直接失败(禁止 CI 悄悄改写 lockfile 后放行)。**「合并门」的强制力必须由 `main` 的 required status check(branch protection / ruleset)提供**——仅有 workflow 不阻止合并,红 run 在未设 required check 时仍可被合入,故该设置是本需求的一部分。

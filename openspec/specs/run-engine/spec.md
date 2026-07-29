@@ -1,7 +1,8 @@
 # run-engine 规范
 
 ## 目的
-待定 - 由归档变更 phase-0-skeleton 创建。归档后请更新目的。
+脊柱的执行核心:单个 SQLite 的四张表承载运行状态,`Run` 状态由 append-only 的 `RunEvent` 全映射推导、终态只经单一同事务 choke-point 落地,并规定 run 锁、崩溃孤儿回收与取消路径。它只认 `Run`/`RunEvent`,不认任何域概念(守不变量 #1/#3)。
+
 ## 需求
 ### 需求:运行状态持久化于 SQLite 四表
 系统必须用单个 SQLite 文件的四张表 `App` / `Run` / `RunEvent` / `Approval` 承载运行状态;`RunEvent` 必须为 append-only 且带 `UNIQUE(run_id, seq)`(`seq` per-run 从 1 递增)。禁止新增第五张表或第二个库。创建 `Run` 行与其首个 `run.started`(seq=1)事件必须在**同一事务**(否则崩在两者之间会留一个 0 事件、`classify=queued` 却已带锁的孤儿)。
