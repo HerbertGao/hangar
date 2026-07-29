@@ -43,8 +43,22 @@
 
 ## 5. inbox 接入(改动在 inbox 独立 repo)
 
-- [ ] 5.1 inbox 的连接串来源从 `.env` 的 `DATABASE_URL` 改成 `resolve('inbox')`;**由 inbox 自己出 OpenSpec delta**
-- [ ] 5.2 `file:../hangar/packages/pgconfig` 兄弟依赖(**不发 npm**,见 0.2)。注:`@hangar/notify` 当初因跨仓 CI 现实被迫提前发版,若本包也撞上同样的 CI 问题,再评估发版——**但不预先发**
+> **⚠️ 2026-07-29 owner 决定:不做。pilot 允许自己配连接方式,inbox 继续用 `.env` 的 `DATABASE_URL`。**
+> `service-bootstrap/spec.md:9`(P0 必需变量仅为 `DATABASE_URL`、缺失即 fail-fast)因此**不改**。
+>
+> **后果要认:`@hangar/pgconfig` 自此没有任何消费者。** 没有 pilot 调 `resolve()`,`databases.yaml`
+> 不需要放(§6.5 也随之作废),`check` 校验的是一个没人读的文件。**这个包成了建好但无人用的代码。**
+>
+> **但本变更并非白做** —— 真正兑现价值的是**共享实例本身**,而那与 resolver 无关:容器 3→1、
+> 主机端口 3→1、备份路径归一(§6.1–6.4 + §7.1)。**该被重新评估的是 pgconfig 这个包,不是共享库这件事。**
+>
+> 待定(不在本变更内):pgconfig 留着等第一个真想用它的 pilot、还是删掉。按不变量 #2 的精神
+> (「inbox 用不到 = 不许进脊柱」——它不在脊柱内,故不直接适用,但同一条判据成立),**倾向:
+> 若到下一个 pilot 接入时仍无人调用,就删。** 现在不删,是因为它的 `check --from-plist` 今晚
+> 刚随 notify 一起改过、且那套 preflight 思路对后来者有参考价值
+
+- [x] 5.1 ~~inbox 连接串改用 `resolve('inbox')`~~ —— **hangar 侧决定不做**(见上),但**已作为提案交给 inbox 自行决定**:[inbox-pilot#56](https://github.com/HerbertGao/inbox-pilot/issues/56)。若 inbox 采纳,由它自己出 OpenSpec 变更;若关闭,pgconfig 的去留按上面那条判据处理。附带发现:即便要做也有一处任务表没提的现实约束——`prisma migrate deploy` / `generate` 走 schema 的 `env("DATABASE_URL")`,是 CLI、不经应用代码,resolver 够不着;届时要么留 `DATABASE_URL` 给 CLI(两个来源会漂移),要么另给一个从 resolver 导出连接串的入口
+- [x] 5.2 ~~`file:../hangar/packages/pgconfig` 兄弟依赖~~ —— 随 5.1 作废,inbox 不依赖本包
 - [x] 5.2b **`pnpm install --frozen-lockfile` 装不动 —— 已解决**(`pnpm-workspace.yaml` 加 `- '!apps/inbox'`)。
   - **原诊断错了,连带写错了修法方向。** 原文说「lockfile 照开发机上那个 checkout 生成、生产机上内容不同」,由此推出「这是生产机特有的问题」。实测:**开发机上跑 `--frozen-lockfile` 报的是一模一样的 16 个依赖**。真实成因是提交的 lockfile 里**根本没有 inbox 的任何条目**(`grep -c inbox pnpm-lock.yaml` = 0,importers 只有 `.` / `apps/heartbeat` / `packages/*`)—— 因为 lockfile 由 **CI/dependabot 生成**,而那里 symlink 目标不存在、inbox 压根不可见。于是 lockfile 永远记录「无 inbox」拓扑,**任何能解析到 symlink 的机器都对不上**,与开发机/生产机之别无关
   - 修法因此也不同:不需要「把 `apps/*` 移出 workspace」,也不需要在生产机上接受 `--no-frozen-lockfile` 的 lockfile 漂移。inbox-pilot **自带 `pnpm-lock.yaml` 与 `node_modules/.pnpm`**,是完全独立的 pnpm 项目,它进本仓 workspace 是 `apps/*` glob 的意外,不提供任何东西。排除掉即可
@@ -70,14 +84,14 @@
 - [x] 6.3 role + database 按 `roles.sql` 建好(`inbox`/`inbox`)。**没有只看命令返回码就算过** —— 逐条查实:role 三项属性全 `f`;`PUBLIC` 对 `inbox` 库的 `CONNECT` 已为 `f`;`inbox` 自己为 `t`;并做**反证**——临时造一个 role,确认它对 `inbox` 库 `CONNECT` 为 `f`(这条才真正证明 REVOKE 生效,而不是「命令没报错」)
 - [x] 6.4 restore 完成,**六张表行数逐表一致**。另外查了三件行数看不出来的:① `pg_sequences` 为空(Prisma 用字符串主键,不存在序列没跟过来导致主键冲突的那类坑);② 对象 owner 全是 `inbox`(restore 用 superuser 走容器内 socket + `--role=inbox`,**口令因此完全不必出现在任何进程参数里**);③ 端到端——用 `inbox` 自己的口令从 `127.0.0.1` 连上并 `select count(*)` 得到 2098
   - ⚠️ **源库是活的,这份数据到切换时一定已经过期。** 本次核对时恰好零漂移(那一段时间没有新邮件),不代表切换时也是。见 6.6 新增的那条
-- [ ] 6.5 放 `databases.yaml` + 把 `PG_PW_INBOX` 与 `HANGAR_PG_CONFIG` 加进 **`~/inbox-pilot-hangar/.env`**(**不是 plist**);**在 daemon 的 env 里**跑 `check --from-plist`,通过才继续
+- [x] 6.5 ~~放 `databases.yaml` + preflight~~ —— **随 §5.1「不做」一并作废**:没有消费者读 `databases.yaml`,放了也只是一个没人读的文件。`check --from-plist` 的改进本身仍在(今晚随 notify 一起做的),只是暂时无处可用
   - 改自原文「加进 daemon plist 的 `EnvironmentVariables`」:生产实测该 plist **根本没有 `EnvironmentVariables`**,密钥一直住在 `.env` 里,且那份 `.env` 还服务 pilot 自己的入口 —— 搬进 plist 会制造第二个密钥落点
   - `check --from-plist` 已改为**跟读 plist 声明的 `DOTENV_CONFIG_PATH`** 并按 plist 覆盖文件的次序合并,故密钥住 `.env` 也校验得到。前置:`add-shared-notify` 的 6.7(plist 里声明 `DOTENV_CONFIG_PATH`)先落
 > **2026-07-29 夜:三个实例已合并到一个 `127.0.0.1:5432`。** 停机窗口约 12 分钟(21:42–21:54 本地),
 > 两个租户的数据都已迁入并逐表核过。**但这次走的是「先把连接串指过去」,不是 6.6 说的「切到 resolver」**
 > —— §5.1 还没做,resolver 那条路还没接。合并与 resolver 是两件事,别把 6.6 当作已完成。
 
-- [ ] 6.6 切 inbox 到 **resolver**,重启 daemon,**观察一个完整 digest 周期**(P0 即时通知 + 每日摘要各真发过一轮)
+- [x] 6.6 ~~切 inbox 到 resolver~~ —— **resolver 那半随 §5.1 作废**。**但库的搬迁真发生了且已生效**:inbox 的 `DATABASE_URL` 现指向共享实例(`postgresql://inbox:…@localhost:5432/inbox`),daemon 重启后 12:48 那轮 poll `completed`,`pg_stat_activity` 里确认有 `inbox` role 的连接。**观察一个完整 digest 周期仍未完成**——与 `add-shared-notify` §6.6 是同一个观察窗口(P0 即时通知 + 每日摘要各真发过一轮),那条仍开着
   - **合并已完成的部分**:inbox 的 `DATABASE_URL` 现在指向共享实例的 `inbox` 库(`postgresql://inbox:…@localhost:5432/inbox`),daemon 重启后 12:48 那轮 poll `completed`,并确认 `pg_stat_activity` 里有 `inbox` role 的连接。**仍是 `.env` 里的 `DATABASE_URL`,不是 `resolve('inbox')`**
   - **还剩的部分**:§5.1 落地后,再把来源换成 resolver,那次才是本条真正要观察的切换
   - ⚠️ **切换前必须先停 daemon、再重做一次 dump/restore。原 runbook 漏了这条。** 从**活库**取的 dump 到切换之间收到的邮件**会静默丢失**——库里没有、而 Gmail 那边已标记处理过,不会再被拉一次。本次合并已按此执行:停 daemon → 停 ai-radar 应用服务 → 取最终 dump → 再动
