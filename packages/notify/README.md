@@ -37,8 +37,24 @@ Located via the `HANGAR_NOTIFY_CONFIG` env var (default `~/.config/hangar/channe
 
 ```sh
 hangar-notify check                       # validate against the current environment
-hangar-notify check --from-plist <path>   # validate against a launchd plist's EnvironmentVariables
+hangar-notify check --from-plist <path>   # validate against the daemon's environment
 ```
+
+`--from-plist` exists because checking your own shell proves nothing: the shell may have
+the token while the daemon's environment does not. It reads the plist's
+`EnvironmentVariables` instead of `process.env`.
+
+If the plist declares `DOTENV_CONFIG_PATH`, the `.env` file it points at is read too, and
+merged underneath — **the plist wins on conflicts**, matching what actually happens at
+runtime (launchd sets its variables first; `dotenv` leaves an already-set variable alone).
+This is for deployments that keep secrets out of the plist: launchd declares only the
+non-secret variables, and the app loads the rest through its own `import 'dotenv/config'`.
+Parsing uses `dotenv` itself, so quotes and `export ` prefixes are read the same way the
+app reads them.
+
+`HANGAR_NOTIFY_CONFIG` must be declared somewhere in that environment — the plist or the
+`.env` file. Declared nowhere, the check would silently fall back to the default path and
+validate a different file than the daemon reads.
 
 Offline shape + presence check only; it does not verify a token is live.
 

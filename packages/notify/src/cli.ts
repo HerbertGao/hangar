@@ -122,7 +122,12 @@ function main(argv: string[]): number {
     // file it reads IS the plist's declared HANGAR_NOTIFY_CONFIG. If that file is
     // missing/malformed, check() reports loadFailure below → exit 1 (assertion has teeth).
     env = plistEnv;
-    process.stderr.write(`validating against plist EnvironmentVariables; HANGAR_NOTIFY_CONFIG=${declared}\n`);
+    // Say which sources were actually read. Naming only the plist when an env file was
+    // also merged would misdirect whoever debugs the next failure.
+    const sources = plistEnv.DOTENV_CONFIG_PATH?.trim()
+      ? `plist EnvironmentVariables + ${plistEnv.DOTENV_CONFIG_PATH.trim()}`
+      : 'plist EnvironmentVariables';
+    process.stderr.write(`validating against ${sources}; HANGAR_NOTIFY_CONFIG=${declared}\n`);
   }
 
   const result = check(env);
