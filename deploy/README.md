@@ -79,17 +79,23 @@ PROBE
 ⚠️ **这个对比只覆盖配置 schema 里的那 10 个变量。** schema 之外的(`TZ`、`TG_BOT_INBOX`)
 不在指纹里,要单独想一遍。上面 `TZ` 必须放 plist 那条,就是这么发现的。
 
-### 1. 装 plist(保留旧 wrapper 以便回滚)
+### 1. 装 plist
 
 ```bash
-cd ~/hangar && git pull
 cp ~/Library/LaunchAgents/com.herbertgao.hangar-inbox.plist ~/hangar-inbox.plist.bak
-cp deploy/com.herbertgao.hangar-inbox.plist ~/Library/LaunchAgents/
-mv ~/hangar-inbox-daemon.sh ~/hangar-inbox-daemon.sh.retired   # 先留着,别删
-chmod 600 ~/inbox-pilot-hangar/.env                            # 现为 0644
+# 从开发机传过去,或在生产机上 git pull 后从 deploy/ 复制
+scp deploy/com.herbertgao.hangar-inbox.plist ts.mac-mini:/tmp/new.plist
+ssh ts.mac-mini 'plutil -lint /tmp/new.plist && cp /tmp/new.plist ~/Library/LaunchAgents/com.herbertgao.hangar-inbox.plist'
+chmod 600 ~/inbox-pilot-hangar/.env    # 原来是 0644,里面全是密码
 ```
 
-### 2. preflight(改完 plist 才跑得通;它现在会跟读 DOTENV_CONFIG_PATH)
+**旧的 `hangar-inbox-daemon.sh` 不要删也不要改名。** 换完 plist 它就不在链路里了,
+留着的话回滚只需要换回一个文件。等跑稳几天再清理。
+
+> 只需要 plist 这一个文件的话,**别顺手 `git pull`**。生产机可能落后好几个提交,
+> 一起拉进来就没法确定出问题是哪一步造成的,回滚也失去意义。
+
+### 2. preflight
 
 ```bash
 ~/inbox-pilot-hangar/node_modules/.bin/hangar-notify \
@@ -98,23 +104,57 @@ chmod 600 ~/inbox-pilot-hangar/.env                            # 现为 0644
 
 期望 `ok inbox/private` + 退 0。非零就停在这,别重启 daemon。
 
+> ⚠️ **上面这条要 `@herbertgao/hangar-notify` ≥ 支持 `DOTENV_CONFIG_PATH` 的版本。**
+> 生产机装的是 npm 上的版本,不是仓里的 —— 若它还是旧版,`--from-plist` 只看 plist、
+> 看不到 `.env` 里的密钥,会报 `TG_BOT_INBOX` 缺失。**那是假红,不是真出问题。**
+> 旧版下改用这条等价检查(用 pilot 自己的 dotenv,按 plist 的 env 跑真正的 check):
+>
+> ```bash
+> cd ~/inbox-pilot-hangar && env -i HOME=$HOME \
+>   PATH=<fnm node bin>:/opt/homebrew/bin:/usr/bin:/bin \
+>   HANGAR_APPS=$HOME/hangar/apps \
+>   DOTENV_CONFIG_PATH=$HOME/inbox-pilot-hangar/.env \
+>   HANGAR_NOTIFY_CONFIG=$HOME/.config/hangar/channels.yaml \
+>   TZ=Asia/Shanghai \
+>   node --import dotenv/config node_modules/@herbertgao/hangar-notify/dist/cli.js check
+> ```
+
 ### 3. 重启并观察
 
 ```bash
 launchctl bootout gui/$(id -u)/com.herbertgao.hangar-inbox
+sleep 2
 launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.herbertgao.hangar-inbox.plist
-sleep 20 && tail -5 ~/hangar-inbox.err.log        # 应见 "daemon started"
-node ~/hangar/packages/core/dist/cli.js runs --limit 3 --json   # 下一次 poll 后应有新 completed
+sleep 8
+launchctl list | grep hangar-inbox                # 第 2 列是上次退出码,要 0
+tail -3 ~/hangar-inbox.err.log                    # 应见 "daemon started",tasks/apps 数与切换前一致
+ps -o pid,command -p $(launchctl list | awk '/hangar-inbox/{print $1}')   # 应是 node 直接跑,没有 bash
+
+# 等下一次 poll(每 3 分钟),确认真跑完一轮:
+cd ~/hangar && node packages/core/dist/cli.js runs --limit 3 --json
 ```
+
+> ⚠️ **查 run 一定要先 `cd ~/hangar`。** `HANGAR_DB` 默认是相对当前目录找的,在别的目录跑
+> 会指向一个不存在的库,然后**退 0、输出 `[]`** —— 和「一次都没跑过」长得一模一样。
 
 ### 回滚
 
+wrapper 脚本一直没动过,所以换回 plist 就行:
+
 ```bash
-mv ~/hangar-inbox-daemon.sh.retired ~/hangar-inbox-daemon.sh
 cp ~/hangar-inbox.plist.bak ~/Library/LaunchAgents/com.herbertgao.hangar-inbox.plist
 launchctl bootout gui/$(id -u)/com.herbertgao.hangar-inbox
+sleep 2
 launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.herbertgao.hangar-inbox.plist
 ```
+
+---
+
+## 已切换记录
+
+**2026-07-29 12:00 UTC 完成。** 切换后两轮 poll(11:57、12:00)均 `completed`,
+`tasks 4 / apps 2` 与切换前一致,日志无新错误。`.env` 与 `channels.yaml` 均已 0600。
+旧 wrapper `~/hangar-inbox-daemon.sh` 保留未动。
 
 ## 注意
 

@@ -47,7 +47,13 @@
   - **现有证据只到「没坏」,不到「发过」**:notifier 的成功路径(`outcome: 'sent'`)**不打日志**,只有 skipped/failed 打(`src/notify/notifier.ts:119/136/151/163`)。生产日志里 `telegram|notify|digest` 命中 **0 行** —— 这证明**没有降级也没有失败**(真无凭据会打 `notify-digest-skipped-no-channel`),但**不证明真发出去过**
   - 正面证据得从别处取:Telegram 那头真收到,或查 RunEvent 里的 notify 动作。run 本身健康(poll 每 3 分钟、近 5 次全 `completed`)
 
-- [ ] 6.7 **生产 env 形态归一:删 wrapper 脚本,plist 只声明非密钥变量**(由用户在自己终端执行;下面每步可单独回滚)
+- [x] 6.7 **生产 env 形态归一:plist 只声明非密钥变量,wrapper 脚本退出链路** —— **2026-07-29 12:00 UTC 已切换**,切换后两轮 poll 均 `completed`,`tasks 4 / apps 2` 与切换前一致,日志无新错误
+  - 实操中发现三件 runbook 原文没写对的(已回填 `deploy/README.md`):
+    - ① **生产装的 `@herbertgao/hangar-notify` 是 npm 上的 0.1.0,不支持 `DOTENV_CONFIG_PATH`** —— 拿它跑 `--from-plist` 会报 `TG_BOT_INBOX` 缺失,那是**假红**。新 preflight 要等下次发版才到生产;本次用等价检查(`node --import dotenv/config` + pilot 自己的 dotenv + 新 plist 的 env 跑真正的 `check`)→ `ok inbox/private` 退 0
+    - ② **wrapper 脚本不该 `mv`** —— 换完 plist 它自然就不在链路里了,留着能让回滚只需换回一个文件;`mv` 反而在「plist 已改、launchd 还持旧 job」的窗口里制造崩溃拉起失败
+    - ③ **不该顺手 `git pull`** —— 生产落后 5 个提交(含 better-sqlite3 12→13 的 lockfile),一起拉进来就无法确定问题出自哪一步。只 scp 那一个 plist,把改动隔离成单一变量
+  - `TZ` 进 plist 的依据(生产实测):迟设会生效,但设之前那段用的是**系统时区**;现在看不出问题只因系统时区碰巧也是 `Asia/Shanghai`
+  - `.env` 已从 0644 收到 0600(此前只有 `channels.yaml` 是 0600,而真 token 在那个 0644 的文件里)
   - 目标形态:`plist(PATH / HANGAR_APPS / DOTENV_CONFIG_PATH / HANGAR_NOTIFY_CONFIG)` + `.env`(全部密钥,唯一落点) + `channels.yaml`。文件 4→3,少掉的是手写 shell —— runbook 里最容易与实际漂移的那类
   - 依据:pilot 自己 `import 'dotenv/config'`,而 dotenv 认 `DOTENV_CONFIG_PATH`(2026-07-29 在生产上 `env -i` 实测认)。wrapper 唯一职责(补 daemon cwd≠pilot 目录导致 dotenv 找不到 `.env`)因此被消掉
   - **不要把密钥搬进 plist**:`.env` 还服务 pilot 自己的入口(`prisma migrate deploy` / `account` / `eval:*`),搬进去 = 两个落点要人工同步
