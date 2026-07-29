@@ -1,6 +1,14 @@
 packages:
   - packages/*
   - apps/*
+  # 外部 pilot checkout(symlink 进来的,见 .gitignore 的 /apps/inbox)**必须**排除在 workspace 之外。
+  # 它自带 package.json + pnpm-lock.yaml + node_modules,依赖由它自己的 repo 管;被 `apps/*` 收进来
+  # 只有害处:pnpm 会把它的依赖算进本仓的 lockfile 校验,而本仓的 lockfile 是在 CI/dependabot 上
+  # (那里 symlink 目标不存在、inbox 压根不可见)生成的 —— 于是**任何**能解析到该 symlink 的机器
+  # (开发机与生产机都算)跑 `--frozen-lockfile` 都会失败,报 inbox 的十几个依赖「lockfile 不匹配」。
+  # 这条在 CI 上永远不会暴露,正因为 CI 是那个看不见它的地方。
+  # 判据:`pnpm ls -r --depth -1` 里**不该**出现 `inbox-pilot`。
+  - '!apps/inbox'
 
 # build 脚本批准名单。**住这里是因为 pnpm 10 与 11 都读这个位置** —— 旧位置(根 package.json 的
 # "pnpm" 字段)自 pnpm 11 起才不再被读取,10 仍然读它。

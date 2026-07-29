@@ -45,9 +45,12 @@
 
 - [ ] 5.1 inbox 的连接串来源从 `.env` 的 `DATABASE_URL` 改成 `resolve('inbox')`;**由 inbox 自己出 OpenSpec delta**
 - [ ] 5.2 `file:../hangar/packages/pgconfig` 兄弟依赖(**不发 npm**,见 0.2)。注:`@hangar/notify` 当初因跨仓 CI 现实被迫提前发版,若本包也撞上同样的 CI 问题,再评估发版——**但不预先发**
-- [ ] 5.2b **⚠️ 先解决这个,否则 5.1/5.2 在生产机上落不了地:`pnpm install` 在 ts.mac-mini 上装不动。** `upgrade-node-24` 的切换实测:`--frozen-lockfile` 报「specifiers in the lockfile don't match」,缺的十几个依赖全是 inbox-pilot 的。原因是 `apps/inbox` 是 symlink 出去的**外部 checkout** 而 `apps/*` 在 workspace 里 —— 提交的 lockfile 照开发机上那个 checkout 生成,生产机上内容不同,**永远对不上**;CI 反而能过,因为 runner 上 symlink 目标不存在。
-  - 那次靠**跳过 install** 绕过去了(daemon/view 的依赖早已装好、没人用新包)。但 inbox 一旦以 `file:` 依赖 pgconfig,生产机就**必须**成功 install 一次,绕不过去
-  - 可能的出路(未定,需要先想清楚):把 `apps/*` 移出 workspace、生产机改用 `--no-frozen-lockfile` 并接受 lockfile 漂移、或让 inbox 不经 workspace 而直接 `file:` 引用。**这是本变更上线的前置,不是收尾**
+- [x] 5.2b **`pnpm install --frozen-lockfile` 装不动 —— 已解决**(`pnpm-workspace.yaml` 加 `- '!apps/inbox'`)。
+  - **原诊断错了,连带写错了修法方向。** 原文说「lockfile 照开发机上那个 checkout 生成、生产机上内容不同」,由此推出「这是生产机特有的问题」。实测:**开发机上跑 `--frozen-lockfile` 报的是一模一样的 16 个依赖**。真实成因是提交的 lockfile 里**根本没有 inbox 的任何条目**(`grep -c inbox pnpm-lock.yaml` = 0,importers 只有 `.` / `apps/heartbeat` / `packages/*`)—— 因为 lockfile 由 **CI/dependabot 生成**,而那里 symlink 目标不存在、inbox 压根不可见。于是 lockfile 永远记录「无 inbox」拓扑,**任何能解析到 symlink 的机器都对不上**,与开发机/生产机之别无关
+  - 修法因此也不同:不需要「把 `apps/*` 移出 workspace」,也不需要在生产机上接受 `--no-frozen-lockfile` 的 lockfile 漂移。inbox-pilot **自带 `pnpm-lock.yaml` 与 `node_modules/.pnpm`**,是完全独立的 pnpm 项目,它进本仓 workspace 是 `apps/*` glob 的意外,不提供任何东西。排除掉即可
+  - 验证:开发机 `--frozen-lockfile` 通过且 lockfile 零改动;`typecheck`/`test`/`build` 全绿;`hangar doctor` 仍报 `inbox: spec ok / pipeline ok / enabled true`(app 加载走 `HANGAR_APPS` + `app.yaml` + `dist/pipeline.js`,与 workspace 成员身份无关);inbox checkout 的 `node_modules` 与 `dist` 未被触碰
+  - 防回归:`scripts/check-workspace-members.mjs`(接进 `pnpm test`)钉住「被 git 忽略的目录不得是 workspace 成员」。**这条在 CI 上恒过**(那里没有 symlink)——它保护的是本地与生产机,这是不变量的形状不是缺陷。Phase 2 接第二个 pilot 时会原样再踩一次,故钉成可跑的检查而不是注释
+  - 注:5.2 的 `file:../hangar/packages/pgconfig` **不受影响** —— `file:` 按路径解析,本就不需要 workspace
 - [ ] 5.3 inbox 侧 `docker-compose.yml` / `data/postgres` 是否退役,由 inbox 决定;hangar 不代为删除
 
 ## 6. 生产迁移 runbook(ts.mac-mini)
