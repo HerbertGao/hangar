@@ -33,13 +33,17 @@
 
 ## 5. 生产切换 runbook(ts.mac-mini;**含一步在仓外**)
 
-- [ ] 5.0 **先 `launchctl bootout` 两个 job**(`com.herbertgao.hangar-inbox` 与 `com.herbertgao.hangar-view`),再动任何别的。5.3 的重编会把共享 `node_modules` 里那个 `.node` 换成 ABI 137,而**仍在跑的 node-22 daemon 与 view 会立刻坏**(daemon 在下一次 `*/3` poll、view 在下一次 spawn CLI)。不先停就把一次计划内停机变成「装完是绿的、服务已经死了」
-- [ ] 5.1 装 Node 24(fnm)**并在当前 shell 激活** —— `prebuild-install` 按**正在跑的** node 选 ABI,shell 还留在 22 上就会编出错的那个
-- [ ] 5.2 `git pull` —— `hangar-view.sh` 现在从 `$HANGAR/.nvmrc` 读 major,不 pull 它读到的还是 22
-- [ ] 5.3 **`pnpm rebuild -r better-sqlite3`** —— 换 major 后重编原生模块的命令只有这一条。实测(node 22 ↔ 24 双向)另外两条都**不做事**:`pnpm install` 看到树已装齐,报 "Already up to date" 后 ~300ms 退 0,ABI 不变;`pnpm rebuild better-sqlite3`(**不带 `-r`**)在 workspace 根下是**静默** no-op(连输出都没有,只有一条无关的 engine WARN)。也别用 `pnpm install --force`:它可能从 store 里取到一个**上一个 major 的**已缓存产物,反映的是缓存不是当前运行时。做完按 1.3 的判据核验(**必须开库,`require` 是假绿**)
-- [ ] 5.4 `pnpm --filter @hangar/core build`
-- [ ] 5.5 改**仓外**的 `~/hangar-inbox-daemon.sh` 里的 node 绝对路径(它不在 `git ls-files` 里,只在 `hangar-view.sh` 与 deploy README 被引用)
-- [ ] 5.6 `launchctl bootstrap` 两个 job
-- [ ] 5.7 切换后核验,**第一条不能省**:`hangar runs --limit 1 --json` 退 0 —— 它走 `openDbReadonly` → `new Database`,是唯一能证明 ABI 对上的检查。**前置条件必须先确认:`HANGAR_DB` 指向的文件真的存在。** 该命令对「库不存在」的处理是先 `existsSync` 再开,文件缺失时它退 0、输出 `[]`、stderr 空 —— 原生绑定压根没加载,**看起来和成功一模一样**。而 5.5 恰好是手改仓外脚本里的绝对路径,正是错 `HANGAR_DB` 的来源。`hangar doctor --json` 的 `checks.node === 'ok'` 与「view 页面不是降级页框」**在 ABI 不匹配状态下都是绿的**,只能证明版本号对。最后确认 inbox 的下一次 `*/3` poll 真跑过一轮
-- [ ] 5.8 **切完补装 npm 全局 CLI**(仓外、只影响你的交互 shell,不影响服务——daemon 与 view 都用绝对 node 路径)。fnm 的 global `node_modules` 是**按 major 分开**的:切到 24 后,装在 node 22 下的全局 CLI 会从 PATH 消失。切换前实测 node 22 下有 `@studyzy/openspec-cn`(**归档本变更就要用它**)、`@earendil-works`、`@fission-ai`,而 node 24 下是空的。切完先 `npm ls -g --depth 0` 对一遍再补装
+- [x] 5.0 **先 `launchctl bootout` 两个 job**(`com.herbertgao.hangar-inbox` 与 `com.herbertgao.hangar-view`),再动任何别的。5.3 的重编会把共享 `node_modules` 里那个 `.node` 换成 ABI 137,而**仍在跑的 node-22 daemon 与 view 会立刻坏**(daemon 在下一次 `*/3` poll、view 在下一次 spawn CLI)。不先停就把一次计划内停机变成「装完是绿的、服务已经死了」
+- [x] 5.1 装 Node 24(fnm)**并在当前 shell 激活** —— `prebuild-install` 按**正在跑的** node 选 ABI,shell 还留在 22 上就会编出错的那个
+- [x] 5.2 `git pull` —— `hangar-view.sh` 现在从 `$HANGAR/.nvmrc` 读 major,不 pull 它读到的还是 22
+- [x] 5.2b **⚠️ 真跑时发现:`pnpm install --frozen-lockfile` 在生产机上跑不通,而本清单原本没提这一步会失败。** 报错是「specifiers in the lockfile don't match specifiers in package.json」,缺的 16 个依赖全是 **inbox-pilot 的**(`prisma`/`googleapis`/`imapflow`/`openai`…)。原因:`apps/inbox` 是 symlink 出去的**外部 checkout**,而 `apps/*` 在 workspace 里 —— 提交的 lockfile 是照**开发机上那个 checkout 的状态**生成的,生产机上那个 checkout 内容不同,于是永远对不上。**CI 反而能过**,因为 runner 上 symlink 目标不存在、`apps/inbox` 压根不进 workspace。
+  - 本次的处理:**跳过 install**。daemon 跑的是 `packages/core/dist/`,view 跑 `src/server.js`,两者的依赖早已装好;新包 `pgconfig` 谁也没用到。只做重编 + build 即可恢复服务
+  - **但这条会在 `add-shared-postgres` 上线时变成真障碍** —— 那时 inbox 要以 `file:` 依赖 pgconfig,生产机必须成功 install 一次。已记到那个变更的 §5
+  - 教训与 RC 那条 blocker 同形:**清单里写着的命令,在真机上会失败,而运维是在两个服务已经停机之后才发现的**
+- [x] 5.3 **`pnpm rebuild -r better-sqlite3`** —— 换 major 后重编原生模块的命令只有这一条。实测(node 22 ↔ 24 双向)另外两条都**不做事**:`pnpm install` 看到树已装齐,报 "Already up to date" 后 ~300ms 退 0,ABI 不变;`pnpm rebuild better-sqlite3`(**不带 `-r`**)在 workspace 根下是**静默** no-op(连输出都没有,只有一条无关的 engine WARN)。也别用 `pnpm install --force`:它可能从 store 里取到一个**上一个 major 的**已缓存产物,反映的是缓存不是当前运行时。做完按 1.3 的判据核验(**必须开库,`require` 是假绿**)
+- [x] 5.4 `pnpm --filter @hangar/core build`
+- [x] 5.5 改**仓外**的 `~/hangar-inbox-daemon.sh` 里的 node 绝对路径(它不在 `git ls-files` 里,只在 `hangar-view.sh` 与 deploy README 被引用)
+- [x] 5.6 `launchctl bootstrap` 两个 job
+- [x] 5.7 切换后核验,**第一条不能省**:`hangar runs --limit 1 --json` 退 0 —— 它走 `openDbReadonly` → `new Database`,是唯一能证明 ABI 对上的检查。**前置条件必须先确认:`HANGAR_DB` 指向的文件真的存在。** 该命令对「库不存在」的处理是先 `existsSync` 再开,文件缺失时它退 0、输出 `[]`、stderr 空 —— 原生绑定压根没加载,**看起来和成功一模一样**。而 5.5 恰好是手改仓外脚本里的绝对路径,正是错 `HANGAR_DB` 的来源。`hangar doctor --json` 的 `checks.node === 'ok'` 与「view 页面不是降级页框」**在 ABI 不匹配状态下都是绿的**,只能证明版本号对。最后确认 inbox 的下一次 `*/3` poll 真跑过一轮
+- [x] 5.8 **切完补装 npm 全局 CLI**(仓外、只影响你的交互 shell,不影响服务——daemon 与 view 都用绝对 node 路径)。fnm 的 global `node_modules` 是**按 major 分开**的:切到 24 后,装在 node 22 下的全局 CLI 会从 PATH 消失。**开发机与生产机的清单不同,别照抄** —— 开发机 node 22 下装着 `@studyzy/openspec-cn`(归档变更要用它)、`@earendil-works`、`@fission-ai`;**生产机(ts.mac-mini)实测只有 `freshquota` 一个**,与 hangar 无关,切到 24 后为空。所以切完必须**在那台机器上**跑 `npm ls -g --depth 0` 对一遍再决定补装什么
 - [ ] 5.9 回滚路径写清并演练过一次:`bootout` 两个 job → 装回 22 并激活 → **`git revert` 整条变更**(不要按清单逐项手回:除了 `.nvmrc` / 三处 `engines` / `MIN_NODE` / 启动脚本,还有 `SKILL.md` 的 doctor 契约与部署文档,手回必漏;2.7 的 pin 断言只覆盖前四类)→ **`pnpm rebuild -r better-sqlite3`**(理由见 5.3,`pnpm install` 在此无效)→ 改回 `~/hangar-inbox-daemon.sh` → `bootstrap`。**回滚也要重编原生模块**,这是最容易漏的一步(开发机上踩过:切回 22 而 `.node` 仍是 137 → `packages/core` 大部分测试挂、一部分照样过。**部分绿比全挂更危险** —— 容易被当成几个无关的失败。这里不写确切数字:每加一个测试它就过期,本变更前后已经过期两次)
