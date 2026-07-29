@@ -50,7 +50,7 @@
 - [ ] 4.5 归档时更新 `docs/proposals/followups-command-write-path.md` D 节的「overlay 只增不减、现无工具」;同批修 `docs/proposals/control-plane-channels.md` 的**两处** set-union(`:100` 写侧契约段、`:166` busy 重发段,现均含 set-difference)
 - [ ] 4.6 **canonical 闸(view 侧无法机械校验,只能人工过一次)**:手工核对确认页显示的字符串与 overlay 实际增删的 bytes 逐字相同。在 §5 出口闸开始计时前完成
 - [x] 4.7 `openspec-cn`(`@studyzy/openspec-cn`)**≥1.6.0** 下 `validate add-view-feedback-remove --strict` 通过。注:**解析到哪个版本取决于当前 node major,不是"全局装了哪个"** —— 1.5.0 装在 fnm 的 **v22 globals** 下并遮蔽 `~/Library/pnpm/bin` 的 1.6.0;`fnm use 24`(仓的 Node 下限,本就该在此干活)后 v24 globals 无此包、PATH 落穿即得 1.6.0,`pnpm openspec:validate`(钉 1.6.0)随之正常。在 v22 下会看到**全仓中文规范/delta 全红**,那是工具版本状况,**不是标题风格问题,勿据此改标题**
-- [ ] 4.8 三处对路线 A 的偏离已登记(见 proposal「登记三处对路线 A 的偏离」),并**就地在 roadmap A2/A3 逐条标注「v1 偏离,见 add-view-feedback-remove」**——只「另立待办」不够:归档后 roadmap 的原文会成为幸存陈述,与实际上线的东西矛盾
+- [x] 4.8 三处对路线 A 的偏离已登记(见 proposal「登记三处对路线 A 的偏离」),并**就地在 roadmap A2/A3 逐条标注「v1 偏离,见 add-view-feedback-remove」**——只「另立待办」不够:归档后 roadmap 的原文会成为幸存陈述,与实际上线的东西矛盾。已标进 `docs/proposals/pi-agent-roadmap.md`:A2 节首加偏离横幅 + 三条逐条挂在对应 DoD 条目下;A3 的 `Unicode/IDN` 与裸 `domain` 两项标明 v1 检查的是「被拒绝」而非「被接受」(承 ①③)。三条均已对 `design.md` §2(IDN 裁决)/§4(失败语义)/§0(domain 入口)核对
 
 ## 5. 出口闸(路线 A / A4)
 

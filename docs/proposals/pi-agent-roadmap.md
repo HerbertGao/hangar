@@ -44,7 +44,12 @@ interpret-feedback → view 显示 canonical diff → 人确认 → apply-feedba
 
 ## A2. DoD
 
+> **v1 实际落地与本节有三处偏离,见 `add-view-feedback-remove`(逐条标在下面)。** 本节写于动工前;真正上线的是带偏离的版本,读本节时以标注为准。
+
 - `interpret-feedback` 接受显式 mailbox 或 domain,做 trim/lowercase/IDN 归一化与格式校验;空值、控制字符、非法 mailbox/domain fail loud。
+  - **⚠️ v1 偏离①(IDN):不做 IDN 归一化,改为拒绝非 ASCII 域名。** 只归一写入侧(overlay 存 punycode)而匹配侧仍比原始 `fromEmail`,会让用户以为加了降噪而实际永不命中(false-green)。两侧同时改另开一条。
+  - **⚠️ v1 偏离②(fail loud):`interpret` 腿降级为静默丢弃**(非法项不出现在结果里),`fail loud` 由 `apply` 腿承担。理由:一次打错字的 `run.failed` 会把健康的 inbox 画成监控墙上的「翻车 ⚠️」,而抽屉里看不到原因。
+  - **⚠️ v1 偏离③(domain 入口):不新增裸域名显式入口。** 裸域名扫描是那批「少一个字符」级缺陷的来源之一;overlay 允许域名条目本就是 `rules-config` 的既有行为,能力未丢。
 - 确认页展示**将实际写入的 canonical add/remove diff**,不是复述原话。
 - `apply-feedback` 保持原子写;重复 add/remove 幂等。
 - 增加 `uncool`/remove 路径,使用 set-difference,与 add 共用同一 allowlisted 两阶段确认流。
@@ -54,6 +59,7 @@ interpret-feedback → view 显示 canonical diff → 人确认 → apply-feedba
 ## A3. 可跑检查
 
 - mailbox/domain:正例、空白、Unicode/IDN、控制字符、非法 domain。
+  - **⚠️ v1 偏离(承 A2 的①③):`Unicode/IDN` 与裸 `domain` 两项在 v1 检查的是「被拒绝」而非「被归一化/被接受」** —— 因为那两个入口 v1 不提供。见 `add-view-feedback-remove`。
 - interpret 输出 canonical diff;apply 收到的 bytes 与确认页展示一致。
 - add/add、remove/remove 幂等;add→remove 可逆。
 - 合成一封非敏感邮件证明 add 后落 P3;敏感邮件不被降温。
