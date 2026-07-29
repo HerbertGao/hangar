@@ -83,15 +83,21 @@ SHALL 提供 `hangar-pgconfig check`:读 `databases.yaml` → 插值 → 校验�
 
 **CLI 契约 SHALL 与本仓其余命令一致**(`CLAUDE.md` 的 CLI 规范):日志 → stderr,报告 → stdout,`--json` 给结构化输出;退出码 `0` 成功 / `1` 配置有问题 / `2` 参数错误。无参或未知子命令 SHALL 打印帮助并退 `2`,不默默成功。`databases.yaml` 存在但 `apps` 为空 SHALL 判为**失败**而非通过——文件在、却什么都没配,在部署期与「文件被截断/指错了」不可区分。
 
-SHALL 提供 `check --from-plist <path>`:解析 launchd plist 的 `EnvironmentVariables` 并**只**用它校验。**这是本需求的要点** —— 在运维的交互 shell 里校验会绿,而 daemon 的 env 里可能根本没有那些变量;「shell 里绿、daemon 里缺变量」是这类配置最常见的假绿(`add-shared-notify` 的同一条经验)。
+SHALL 提供 `check --from-plist <path>`:解析 launchd plist 的 `EnvironmentVariables` 并**只**用它校验。**要点是那个性质——校验 daemon 将要看到的那份环境,而不是运维交互 shell 的**;「shell 里绿、daemon 里缺变量」是这类配置最常见的假绿(`add-shared-notify` 的同一条经验)。`--from-plist` 是「env 住在 plist 里」时的实现,不是要求本身。
 
-该模式下 plist MUST **显式声明** `HANGAR_PG_CONFIG`,缺失即非零退出。注意这是一条**存在性要求,不是一致性比对**:配置路径本就是从 plist 的这个值推出来的,再拿读到的路径与它比较是**自证同一性、恒真**。真正要防的是「plist 没声明 → 退回约定默认路径 → 校验的不是 daemon 会读的那个文件」。
+**若 plist 声明了 `DOTENV_CONFIG_PATH`,MUST 同时读取它指向的 env 文件,按 plist 覆盖文件的优先级合并**,并用 **pilot 实际使用的同一个 dotenv 实现**(`dotenv.parse`)解析、MUST NOT 手写。理由与合并次序同 `add-shared-notify` 的 preflight 需求(launchd 先灌 plist,dotenv 随后加载且默认不覆盖已有 `process.env`)——那条是本条的权威表述,两处 MUST 保持一致。**生产实测(2026-07-29):`com.herbertgao.hangar-inbox.plist` 根本没有 `EnvironmentVariables`,密钥住在 `.env` 里** ——「密钥必须在 plist」从来不成立,故本条 MUST NOT 要求 `PG_PW_INBOX` 落在 plist。
+
+合并后的环境 MUST **显式含** `HANGAR_PG_CONFIG`(来自 plist 或那个 env 文件皆可),缺失即非零退出。注意这是一条**存在性要求,不是一致性比对**:配置路径本就是从这个值推出来的,再拿读到的路径与它比较是**自证同一性、恒真**。真正要防的是「哪儿都没声明 → 退回约定默认路径 → 校验的不是 daemon 会读的那个文件」。
 
 `check` 的输出 MUST NOT 声称验过连通性 —— 它只做离线的存在性与形状校验。**要证明能连,得真连一次,那不在本包职责内。**
 
 #### 场景:daemon env 缺变量被 preflight 抓到
-- **当** 运维 shell 里有 `PG_PW_INBOX`、但 daemon plist 的 `EnvironmentVariables` 里没有
+- **当** 运维 shell 里有 `PG_PW_INBOX`、但 daemon 将要看到的环境(plist + 其声明的 env 文件合并后)里没有
 - **那么** `check --from-plist` 非零退出并指名该变量;直接跑 `check`(用当前 shell)则会绿——**故部署步骤 MUST 用 `--from-plist` 那条**
+
+#### 场景:密钥住在 plist 指向的 env 文件里
+- **当** plist 只声明 `DOTENV_CONFIG_PATH` 等非密钥变量,`PG_PW_INBOX` 住在它指向的 env 文件里
+- **那么** `check --from-plist` 读到该变量并通过,而不是因「plist 里没有」误报缺失
 
 #### 场景:不谎称验过连通性
 - **当** `check` 全绿

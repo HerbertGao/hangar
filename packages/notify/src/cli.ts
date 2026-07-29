@@ -2,6 +2,8 @@
 // hangar-notify check — deploy-time preflight. Loud where resolve() is silent.
 // Logs → stderr, report → stdout. Exit: 0 ok / 1 config problem / 2 usage error.
 import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
+import { parse as parseDotenv } from 'dotenv';
 import { check, type CheckResult } from './index.js';
 
 function usage(): void {
@@ -10,7 +12,8 @@ function usage(): void {
 Usage:
   hangar-notify check                       validate against this shell's environment
   hangar-notify check --from-plist <path>   validate against a launchd plist's
-                                            EnvironmentVariables (the daemon's env)
+                                            EnvironmentVariables (the daemon's env);
+                                            follows DOTENV_CONFIG_PATH if declared
 
 Exit codes: 0 ok · 1 config problem · 2 usage error
 Note: offline shape + presence check only; it does NOT verify a token is live/valid.
@@ -29,6 +32,39 @@ function loadPlistEnv(plistPath: string): Record<string, string> {
     throw new Error(`plist has no EnvironmentVariables dict: ${plistPath}`);
   }
   return env as Record<string, string>;
+}
+
+// The daemon's environment is not always all in the plist. launchd may declare only
+// non-secret vars (PATH / HANGAR_APPS / DOTENV_CONFIG_PATH) and leave the secrets in
+// the env file that DOTENV_CONFIG_PATH points at, which the pilot loads itself via
+// `import 'dotenv/config'`. To validate what the daemon will really see, reproduce
+// both layers in the daemon's own order.
+//
+// Precedence is plist-over-file, NOT the other way round: launchd populates the
+// process env first, and dotenv does not overwrite an already-set key by default.
+// Reversing it would validate an environment the daemon never has.
+//
+// Parsing uses dotenv's own `parse` rather than a hand-rolled splitter on purpose —
+// quoting, `export ` prefixes and multi-line values must be read exactly as the pilot
+// reads them, or this preflight goes green on an env that differs from the daemon's.
+// That is the same false-green this flag exists to prevent, just relocated.
+function loadDaemonEnv(plistPath: string): Record<string, string> {
+  const plistEnv = loadPlistEnv(plistPath);
+  const dotenvPath = plistEnv.DOTENV_CONFIG_PATH?.trim();
+  if (!dotenvPath) return plistEnv;
+
+  let text: string;
+  try {
+    text = readFileSync(dotenvPath, 'utf8');
+  } catch (e) {
+    // Loud, not silent. dotenv itself ignores a missing file, so the daemon would
+    // just come up without those vars — and the failure would surface later as a
+    // confusing "TG_BOT_INBOX missing", pointing at the wrong file.
+    throw new Error(
+      `plist declares DOTENV_CONFIG_PATH=${dotenvPath} but it cannot be read: ${(e as Error).message}`,
+    );
+  }
+  return { ...parseDotenv(text), ...plistEnv };
 }
 
 function printReport(result: CheckResult): void {
@@ -65,17 +101,19 @@ function main(argv: string[]): number {
     }
     let plistEnv: Record<string, string>;
     try {
-      plistEnv = loadPlistEnv(plistPath);
+      plistEnv = loadDaemonEnv(plistPath);
     } catch (e) {
-      process.stderr.write(`error: cannot read plist EnvironmentVariables: ${(e as Error).message}\n`);
+      process.stderr.write(`error: cannot read the daemon's environment: ${(e as Error).message}\n`);
       return 1;
     }
-    // HANGAR_NOTIFY_CONFIG MUST be explicit in the plist. Relying on the convention
-    // default here would let a "shell-green, daemon-blind" preflight pass (design D6).
+    // HANGAR_NOTIFY_CONFIG MUST be declared somewhere in the daemon's env — the plist
+    // or the env file it points at. Relying on the convention default would let a
+    // "shell-green, daemon-blind" preflight pass (design D6). What is forbidden is
+    // "declared nowhere", not "not in the plist".
     const declared = plistEnv.HANGAR_NOTIFY_CONFIG?.trim();
     if (!declared) {
       process.stderr.write(
-        'error: plist EnvironmentVariables is missing HANGAR_NOTIFY_CONFIG — set it explicitly so this check reads the same file the daemon will.\n',
+        "error: the daemon's environment is missing HANGAR_NOTIFY_CONFIG — declare it in the plist or in the env file it points at, so this check reads the same file the daemon will.\n",
       );
       return 1;
     }

@@ -56,16 +56,22 @@ inbox 的 pino `redact` 名单 SHALL 在退役 `TELEGRAM_*` 的**同一次提交
 - **当** 检查退役 `TELEGRAM_*` 的那次提交
 - **那么** `logger.ts` 里 telegram 旧条目被删**且** `TG_BOT_INBOX` 条目被加,在同一提交内
 
-### 需求:部署经 launchd plist，且覆盖所有入口
-`TG_BOT_INBOX` 与 `HANGAR_NOTIFY_CONFIG` SHALL 由 daemon 的 **launchd plist `EnvironmentVariables`** 提供;`hangar run <app>` 这个入口 SHALL 在同一环境下也能拿到(`HANGAR_NOTIFY_CONFIG` 可用约定默认路径兜底)。
+### 需求:部署由 launchd 托管,env 单一落点,且覆盖所有入口
+`TG_BOT_INBOX` 与 `HANGAR_NOTIFY_CONFIG` SHALL 存在于 daemon **进程**的环境里;`hangar run <app>` 这个入口 SHALL 在同一环境下也能拿到。**「env 住在哪个文件」不由本需求规定** —— 规定的是三条:① daemon 进程真拿得到;② 每个加载 pilot 的入口都拿得到;③ 同一个密钥值 MUST NOT 同时维护在两个文件里(双落点必然漂移)。
 
-**理由**:hangar core/cli **无 dotenv**,「host 的 `.env`」没有读者;daemon 由 launchd 托管。
+**理由(2026-07-29 按生产实际改写)**:原文写「SHALL 由 **plist 的 `EnvironmentVariables`** 提供」,依据是「hangar core/cli 无 dotenv,host 的 `.env` 没有读者」。**依据的两半都不成立**——需要这些变量的是 **pilot** 不是脊柱,而 inbox-pilot 自己 `import 'dotenv/config'`(`src/config/config.ts:1`)。生产实测:plist **根本没有 `EnvironmentVariables` 这个 dict**,env 一直来自 `~/inbox-pilot-hangar/.env`(由 launchd 跑的 wrapper 脚本 source)。且同一份 `.env` 还服务 pilot 自己的入口(`prisma migrate deploy` / `account` / `eval:*`),把它复制进 plist 会制造第二个密钥落点,违反上面第 ③ 条。
 
-部署前 SHALL **在 daemon 的 env 里**(`hangar-notify check --from-plist`)校验,配置错则中止。**且须先确认 `TELEGRAM_*` 今天在生产上的真实来源**(hangar root 无 `.env`,大概率已在 plist)再写 BREAKING 步骤;考虑把 plist 模板 check 进 `deploy/`。
+**launchd 侧 SHALL 只声明非密钥变量**(`PATH` / `HANGAR_APPS` / `DOTENV_CONFIG_PATH`),密钥留在被指向的那一个文件里。
+
+部署前 SHALL 在 **daemon 将要看到的那份环境**里校验,配置错则中止(机制见 `shared-notify` 的 preflight 需求)。
 
 #### 场景:配置未就绪时部署中止
-- **当** plist 漏设 `TG_BOT_INBOX`
-- **那么** `hangar-notify check --from-plist` 非零退出,部署不继续
+- **当** daemon 将要看到的环境里缺 `TG_BOT_INBOX`(无论它本该来自 plist 还是被指向的 env 文件)
+- **那么** preflight 非零退出,部署不继续
+
+#### 场景:密钥不出现在两处
+- **当** 审视 daemon 的 env 来源
+- **那么** 每个密钥变量只在**一个**文件里定义;launchd 侧只有指向该文件的路径与其他非密钥变量
 
 ### 需求:docker-compose 部署路径不得静默无通知
 inbox 有一条 compose 部署(`openspec/specs/deployment/`)。本变更 SHALL 给它出 delta:要么挂载 `channels.yaml` + 注入 `TG_BOT_INBOX` + `HANGAR_NOTIFY_CONFIG`,要么显式声明该路径退役。MUST NOT 留一条已规范却静默降级为 `skipped(no-channel)` 的部署。

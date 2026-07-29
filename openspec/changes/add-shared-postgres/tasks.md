@@ -59,7 +59,9 @@
 - [ ] 6.2 `pg_dump` inbox 现有库,校验 dump 大小与表数
 - [ ] 6.3 在共享实例里按 4.2 建 role + database
 - [ ] 6.4 restore 进新库,**逐表核对行数**与 dump 一致
-- [ ] 6.5 放 `databases.yaml` + 把 `PG_PW_INBOX` 加进 daemon plist 的 `EnvironmentVariables`;**在 daemon 的 env 里**跑 `check --from-plist`,通过才继续
+- [ ] 6.5 放 `databases.yaml` + 把 `PG_PW_INBOX` 与 `HANGAR_PG_CONFIG` 加进 **`~/inbox-pilot-hangar/.env`**(**不是 plist**);**在 daemon 的 env 里**跑 `check --from-plist`,通过才继续
+  - 改自原文「加进 daemon plist 的 `EnvironmentVariables`」:生产实测该 plist **根本没有 `EnvironmentVariables`**,密钥一直住在 `.env` 里,且那份 `.env` 还服务 pilot 自己的入口 —— 搬进 plist 会制造第二个密钥落点
+  - `check --from-plist` 已改为**跟读 plist 声明的 `DOTENV_CONFIG_PATH`** 并按 plist 覆盖文件的次序合并,故密钥住 `.env` 也校验得到。前置:`add-shared-notify` 的 6.7(plist 里声明 `DOTENV_CONFIG_PATH`)先落
 - [ ] 6.6 切 inbox 到 resolver,重启 daemon,**观察一个完整 digest 周期**(P0 即时通知 + 每日摘要各真发过一轮)
 - [ ] 6.7 **旧容器与 `./data/postgres` 在 6.6 通过之前不得删除** —— 那是唯一副本。确认后再退役,且退役前再留一份 dump
 - [ ] 6.8 回滚路径:切回 `DATABASE_URL` → 重启 daemon → 旧容器仍在原状。**这条要在 6.6 之前先演练一遍**,别等真出事才第一次走

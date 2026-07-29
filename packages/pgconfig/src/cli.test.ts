@@ -207,3 +207,80 @@ test('--from-plist survives non-string plist values and a plist with no Environm
   rmSync(d, { recursive: true, force: true });
   rmSync(d2, { recursive: true, force: true });
 });
+
+// --- DOTENV_CONFIG_PATH layer -------------------------------------------------
+// The deployed shape (ts.mac-mini, 2026-07-29) keeps secrets OUT of the plist: launchd
+// declares only non-secret vars plus DOTENV_CONFIG_PATH, and the pilot's own
+// `import 'dotenv/config'` loads the rest. A preflight that reads only the plist would
+// report every secret as missing — red where the daemon is actually fine, which trains
+// the operator to ignore it.
+
+test('--from-plist follows DOTENV_CONFIG_PATH: a secret in that file counts as present', () => {
+  const d = sandbox();
+  writeFileSync(join(d, '.env'), `PG_PW_INBOX=${SECRET}\n`);
+  const bin = fakePlutil(
+    d,
+    JSON.stringify({
+      EnvironmentVariables: {
+        HANGAR_PG_CONFIG: join(d, 'databases.yaml'),
+        DOTENV_CONFIG_PATH: join(d, '.env'),
+      },
+    }),
+  );
+  const r = run(['check', '--from-plist', join(d, 'x.plist')], { PG_PW_INBOX: undefined }, bin);
+  assert.equal(r.code, 0, r.out + r.err);
+  assert.equal(r.out.includes(SECRET), false, 'the password must still never be printed');
+  rmSync(d, { recursive: true, force: true });
+});
+
+test('HANGAR_PG_CONFIG may be declared in the env file rather than the plist', () => {
+  const d = sandbox();
+  writeFileSync(join(d, '.env'), `HANGAR_PG_CONFIG=${join(d, 'databases.yaml')}\nPG_PW_INBOX=${SECRET}\n`);
+  const bin = fakePlutil(d, JSON.stringify({ EnvironmentVariables: { DOTENV_CONFIG_PATH: join(d, '.env') } }));
+  // What must be forbidden is "declared nowhere" (→ silent fallback to the convention
+  // path), not "declared outside the plist".
+  const r = run(['check', '--from-plist', join(d, 'x.plist')], {}, bin);
+  assert.equal(r.code, 0, r.out + r.err);
+  rmSync(d, { recursive: true, force: true });
+});
+
+test('on conflict the plist wins, matching launchd-then-dotenv order', () => {
+  const d = sandbox();
+  // dotenv does not overwrite an already-set process.env key, so in the daemon the
+  // launchd value survives. If this merge were reversed, the check would validate a
+  // value the daemon never sees.
+  writeFileSync(join(d, '.env'), `HANGAR_PG_CONFIG=/nonexistent/databases.yaml\nPG_PW_INBOX=${SECRET}\n`);
+  const bin = fakePlutil(
+    d,
+    JSON.stringify({
+      EnvironmentVariables: {
+        HANGAR_PG_CONFIG: join(d, 'databases.yaml'),
+        DOTENV_CONFIG_PATH: join(d, '.env'),
+      },
+    }),
+  );
+  const r = run(['check', '--from-plist', join(d, 'x.plist')], {}, bin);
+  assert.equal(r.code, 0, `plist value must win; got:\n${r.out}${r.err}`);
+  assert.match(r.out, new RegExp(join(d, 'databases.yaml').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+  rmSync(d, { recursive: true, force: true });
+});
+
+test('a declared but unreadable DOTENV_CONFIG_PATH fails loudly, naming that file', () => {
+  const d = sandbox();
+  const bin = fakePlutil(
+    d,
+    JSON.stringify({
+      EnvironmentVariables: {
+        HANGAR_PG_CONFIG: join(d, 'databases.yaml'),
+        DOTENV_CONFIG_PATH: join(d, 'missing.env'),
+      },
+    }),
+  );
+  // dotenv itself ignores a missing file. Inheriting that silence would surface later as
+  // "PG_PW_INBOX missing" and send the operator to the wrong file.
+  const r = run(['check', '--from-plist', join(d, 'x.plist')], {}, bin);
+  assert.equal(r.code, 1);
+  assert.match(r.err, /DOTENV_CONFIG_PATH/);
+  assert.match(r.err, /missing\.env/);
+  rmSync(d, { recursive: true, force: true });
+});

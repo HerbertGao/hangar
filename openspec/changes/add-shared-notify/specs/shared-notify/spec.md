@@ -55,13 +55,24 @@
 ### 需求:部署期 preflight 必须在 daemon 的环境里校验
 `@hangar/notify` SHALL 提供 `hangar-notify check`:读 `channels.yaml`、插值 `${ENV}`、校验 `bot` 是 `${ENV}` 且已解析、校验 `chat` 非空。配置有问题 MUST 以非零退出码失败,指明 app/lane/变量名(**不带值**)。
 
-- 它 MUST 能校验 **daemon 将要看到的那份环境**,而非运维 shell 的:接受 `--from-plist <path>`,解析 plist 的 `EnvironmentVariables` 并**只**用它,同时断言 plist 里的 `HANGAR_NOTIFY_CONFIG` 与自己读的文件一致。一个在 shell 里跑绿、daemon 里缺变量的 preflight 是假绿。
+- 它 MUST 能校验 **daemon 将要看到的那份环境**,而非运维 shell 的。一个在 shell 里跑绿、daemon 里缺变量的 preflight 是假绿。**这条要求的是那个「性质」,不是某一种机制** —— `--from-plist` 是「env 住在 plist 里」时的实现,不是要求本身。
+- 具体机制:`--from-plist <path>` 解析 plist 的 `EnvironmentVariables` 并**只**用它;**若该 plist 声明了 `DOTENV_CONFIG_PATH`,MUST 同时读取它指向的 env 文件**,并按 **plist 覆盖文件**的优先级合并 —— 因为 daemon 里正是这个次序(launchd 先把 plist 的变量灌进进程,pilot 的 `import 'dotenv/config'` 随后加载,而 dotenv 默认**不覆盖**已存在的 `process.env`)。合并次序错了,preflight 校验的就是另一份环境。
+- 解析那个 env 文件 MUST 用 **pilot 实际使用的同一个 dotenv 实现**(`dotenv.parse`),MUST NOT 手写解析。引号、`export ` 前缀、多行值上的任何差异都会让 preflight 校验的内容与 daemon 拿到的不同——那正是本需求要防的假绿,只是换了个地方发生。
+- 合并后的环境 MUST 含显式的 `HANGAR_NOTIFY_CONFIG`(来自 plist 或那个 env 文件皆可),缺失即非零退出。**要防的是「哪儿都没声明 → 退回约定默认路径 → 校验的不是 daemon 会读的那个文件」**,不是强制它必须住在 plist 里。
 - 部署流程 MUST 调用它,配置错则中止部署。
 - **诚实边界**:它做离线校验(形状 + 存在性),**不验 token 有效性**——合法形状但已吊销/属于别的 bot 的 token 会通过。文案 MUST NOT 声称 token 被验过。
 
-#### 场景:plist 漏配即中止
-- **当** plist 的 `EnvironmentVariables` 漏设 `TG_BOT_INBOX` 或 `HANGAR_NOTIFY_CONFIG`
+#### 场景:漏配即中止
+- **当** daemon 将要看到的环境(plist + 其声明的 env 文件合并后)缺 `TG_BOT_INBOX` 或 `HANGAR_NOTIFY_CONFIG`
 - **那么** `hangar-notify check --from-plist` 非零退出,部署不继续
+
+#### 场景:密钥住在 env 文件里也校验得到
+- **当** plist 只声明 `DOTENV_CONFIG_PATH` 等非密钥变量,`TG_BOT_INBOX` 住在它指向的 env 文件里
+- **那么** `check --from-plist` 读到该变量并通过——而不是因「plist 里没有」误报缺失
+
+#### 场景:两处同名时 plist 赢
+- **当** 同一变量在 plist 与 env 文件里都有、取值不同
+- **那么** preflight 采用 **plist** 的值(与 launchd + dotenv 默认不覆盖的真实次序一致)
 
 ### 需求:所有加载 pilot 的入口都能解析到同一配置
 系统 SHALL 保证加载 pilot 的**每一个**入口都能拿到 notify 配置:launchd daemon,以及运维 shell 的 `hangar run <app>`。

@@ -32,12 +32,30 @@
 
 ## 6. 部署与切换(ts.mac-mini)
 
-- [ ] 6.1 **先确认 `TELEGRAM_*` 当前在生产上的真实来源**(hangar root 无 `.env` → 大概率已在 daemon plist;查清楚再写 BREAKING 步骤)
-- [ ] 6.2 daemon plist `EnvironmentVariables` 加 `TG_BOT_INBOX` + `HANGAR_NOTIFY_CONFIG`(plist 须**显式**设后者——`hangar-notify check --from-plist` 强制它存在;约定默认路径仅兜底 `hangar run` shell 入口,不覆盖 plist);保证 `hangar run inbox` 手动入口在同环境下也拿得到
-- [ ] 6.3 放置 `channels.yaml`(inbox 的 `private` = `{ bot: "${TG_BOT_INBOX}", chat: "886699001" }`);考虑把 plist 模板 check 进 `deploy/`(仿 `packages/hangar-view/deploy/`)
-- [ ] 6.4 **在 daemon 的 env 里**跑 `hangar-notify check --from-plist`,通过才继续
-- [ ] 6.5 切 inbox 到新来源,发布
-- [ ] 6.6 生产观察一个发布周期:P0 即时通知 + 每日 digest **各真发过一轮**,wire-level 对拍确认与旧版逐字节一致
+> **⚠️ 本节原先整体假设「daemon 的 env 在 plist 的 `EnvironmentVariables` 里」—— 生产上不是这样。**
+> 2026-07-29 实测 ts.mac-mini:`com.herbertgao.hangar-inbox.plist` **根本没有 `EnvironmentVariables` 这个 dict**;
+> 它 `ProgramArguments` 跑的是 `~/hangar-inbox-daemon.sh`,env 由该脚本 `set -a; . ~/inbox-pilot-hangar/.env; set +a`
+> 灌进来。下面各条已按真实形态改写。
+
+- [x] 6.1 **`TELEGRAM_*` 在生产上的真实来源** = `~/inbox-pilot-hangar/.env`(被 `~/hangar-inbox-daemon.sh` source),**不是 plist**。且实测该 `.env` 里 `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID` **已不存在**、`TG_BOT_INBOX` **已在** —— 切换事实上已经发生(见 6.5)
+- [x] 6.2 env 落点是那份 `.env` 而非 plist。`TG_BOT_INBOX` 已在其中。**`HANGAR_NOTIFY_CONFIG` 目前未显式设置**,靠 `configPath()` 的约定默认 `$HOME/.config/hangar/channels.yaml`(`packages/notify/src/index.ts:81`)解析 —— 当前 daemon 与手动入口都落在同一文件上,故可用;但「显式声明」那层保险没有(见 6.4 的残留)
+- [x] 6.3 `channels.yaml` 已在 `~/.config/hangar/channels.yaml`(**0600**),`check` 报 `ok inbox/private`。**未做**:把部署模板 check 进 `deploy/`(仿 `packages/hangar-view/deploy/`)—— 且模板该照 wrapper-script 形态写,不是 plist 形态
+- [x] 6.4 **`--from-plist` 原先在本部署形态下用不了**:实测退 1、`plist has no EnvironmentVariables dict`。**它是响亮失败、不是假绿**(D6 守卫成立),但 preflight 得能用。**已改代码而非改写 runbook**:`--from-plist` 现在**跟读 plist 声明的 `DOTENV_CONFIG_PATH`**,按 plist 覆盖文件的次序合并(见 `shared-notify` spec 的 preflight 需求)。于是 6.7 切完 plist 后,preflight 就是一条命令、无需手抄 wrapper。
+  - 临时替代(6.7 之前可用):`env -i HOME=... bash -c '…source .env…; hangar-notify check'` 复刻 wrapper。实测 `ok inbox/private` 退 0。**不要在交互 shell 里直接 source** —— 会混进 shell profile 的 env,正是 D6 要防的 shell-green/daemon-blind
+- [x] 6.5 已切:`.env` 只剩 `TG_BOT_INBOX`,inbox-pilot `src/logger.ts:43` 注明「`TG_BOT_INBOX` 是当前生效的 bot token 来源(resolver 从 env 读取)」。生产 inbox-pilot HEAD `6ceea50`
+- [ ] 6.6 生产观察一个发布周期:P0 即时通知 + 每日 digest **各真发过一轮**,wire-level 对拍确认与旧版逐字节一致。
+  - **现有证据只到「没坏」,不到「发过」**:notifier 的成功路径(`outcome: 'sent'`)**不打日志**,只有 skipped/failed 打(`src/notify/notifier.ts:119/136/151/163`)。生产日志里 `telegram|notify|digest` 命中 **0 行** —— 这证明**没有降级也没有失败**(真无凭据会打 `notify-digest-skipped-no-channel`),但**不证明真发出去过**
+  - 正面证据得从别处取:Telegram 那头真收到,或查 RunEvent 里的 notify 动作。run 本身健康(poll 每 3 分钟、近 5 次全 `completed`)
+
+- [ ] 6.7 **生产 env 形态归一:删 wrapper 脚本,plist 只声明非密钥变量**(由用户在自己终端执行;下面每步可单独回滚)
+  - 目标形态:`plist(PATH / HANGAR_APPS / DOTENV_CONFIG_PATH / HANGAR_NOTIFY_CONFIG)` + `.env`(全部密钥,唯一落点) + `channels.yaml`。文件 4→3,少掉的是手写 shell —— runbook 里最容易与实际漂移的那类
+  - 依据:pilot 自己 `import 'dotenv/config'`,而 dotenv 认 `DOTENV_CONFIG_PATH`(2026-07-29 在生产上 `env -i` 实测认)。wrapper 唯一职责(补 daemon cwd≠pilot 目录导致 dotenv 找不到 `.env`)因此被消掉
+  - **不要把密钥搬进 plist**:`.env` 还服务 pilot 自己的入口(`prisma migrate deploy` / `account` / `eval:*`),搬进去 = 两个落点要人工同步
+  - 顺手 `chmod 600 ~/inbox-pilot-hangar/.env`(现为 0644,而只含引用的 `channels.yaml` 反倒是 0600)
+  - 验收:`hangar-notify check --from-plist <plist>` 直接退 0(不再需要 `env -i` 手抄);重启后 daemon 正常起、poll 照跑
+  - 回滚:plist 换回 `ProgramArguments = [bash, hangar-inbox-daemon.sh]`(脚本先 `mv` 保留、别删)
+  - **模板与 runbook 已 check 进 `deploy/`**(兑现 6.3 的未做项):`deploy/com.herbertgao.hangar-inbox.plist` + `deploy/README.md`。此前这份 plist 在仓里**一份副本都没有**,只活在那台机器上
+  - ⚠️ **runbook 的第 0 步是一道必须先过的闸**:本次切换把 env 的注入时机从「进程启动前」挪到「pilot 模块求值时」,若 pilot 模块图里有谁在 `config.ts` 之前于顶层读 `process.env`,会拿到空值且**静默半坏**。第 0 步只做模块求值(无外部副作用)去证伪它;任一变量 `<MISSING>` 或抛错就**放弃切换**、继续用 wrapper(它在进程启动前灌 env,对顺序免疫)。**该探针尚未在生产上跑过**(1Password agent 掉线,SSH 与 git 签名同时不可用)
 
 ## 7. 收尾:删旧路径 + 清文档债(观察期通过后才做)
 
