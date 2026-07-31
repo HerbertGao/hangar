@@ -67,12 +67,15 @@
   - 注:5.2 的 `file:../hangar/packages/pgconfig` **不受影响** —— `file:` 按路径解析,本就不需要 workspace
 - [ ] 5.3 inbox 侧 `docker-compose.yml` / `data/postgres` 是否退役,由 inbox 决定;hangar 不代为删除
 
-- [ ] 5.4 **⚠️ ai-radar 仓库与生产已不一致 —— 本次合并造成的,必须由 ai-radar 自己收口**
+- [x] 5.4 ~~**⚠️ ai-radar 仓库与生产已不一致 —— 本次合并造成的,必须由 ai-radar 自己收口**~~ —— **已收口**(ai-radar#104,merge `d4a9e62`,2026-07-31)
   - 现状:生产 `~/ai-radar/docker-compose.yml` 已移除 postgres 服务、接入 `pgnet` 外部网;**但 ai-radar 仓库那份仍定义着 postgres 服务**。任何人从仓库全新部署都会起一个 postgres 去抢 5432 —— 抢不到则起不来,抢到则两份数据分裂
   - 好消息:ai-radar 的 CI 只 build 镜像(`docker-image.yml`),没有会覆盖 compose 的部署流水线,故生产不会被自动打回
   - **不能顺手提交**:改动撞到 ai-radar 自己的规范正文 —— `openspec/specs/platform-foundation/spec.md:13` 有一条场景「**当** 检视 `docker-compose.yml` 的 postgres 服务镜像 …**那么** 镜像为 `pgvector/pgvector`」。移除该服务后这条场景无法被检视,规范与实现即刻矛盾。按 ai-radar 自己的流程要走变更提案(改规范再改代码),不是一次 drive-by commit
   - 补丁脚本已留存(带断言:仓库比生产多一个 `mr-browser-worker`,depends_on 是 3 处不是 2 处 —— 直接套用生产那份会漏改它)
   - 另注:生产那份 compose 本就比仓库旧(缺 `mr-browser-worker`、cloudflared digest 未钉)。收口时**只搬「移除 postgres」这一条**,别顺势把生产拉齐到仓库版——那会引入没打算做的变更
+  - **ai-radar 侧已收口(ai-radar#104,merge `d4a9e62`,2026-07-31)**:变更 `allow-shared-postgres-instance` 把规范从「compose 必须自带 postgres」改成「两种 DB 拓扑,默认不起 postgres」,compose 拆成拓扑中立基座 + `localdb`/`shared-db` 两个 overlay(在 `.env` 用 `COMPOSE_FILE` 选)。**本条关心的那个风险已消失**:核过合并后的基座里无 postgres 服务、无 `postgres_data` 卷,不设 `COMPOSE_FILE` 时不起 DB、应用连不上响亮失败 —— 从仓库全新部署不再会去抢 5432
+  - **剩下的是 ai-radar 自己的生产收口**(其 tasks §4.2–4.6:推三份 compose 到 `~/ai-radar/`、`.env` 追加 `COMPOSE_FILE=…shared-db`、`--profile app up -d`、旧容器暂不删)。**归属在 ai-radar,不挡本变更归档** —— 生产现跑的手改版已在共享实例上,拓扑正确,只是尚未换成仓库那份表达。注:owner 拍板生产收口时**一并上 `mr-browser-worker`**(生产 `MR_SCRAPE_ENABLED=true` 却没有该服务),故上面「别拉齐」那句在该服务上被有意豁免,cloudflared digest 仍不动
+  - 顺带印证了 7.2 的承重:ai-radar `DEPLOY.md` 现明写「接入拓扑下本仓不起、不建号、**不备份**、不监控外部实例,备份归起该容器的人」
 
 ## 6. 生产迁移 runbook(ts.mac-mini)
 
@@ -109,3 +112,5 @@
   - ⚠️ **它不是 hangar pilot,是一个独立的 docker-compose 应用。** 本条原文写的是「第二个真实需要关系库的 **pilot**」;ai-radar 是 ROADMAP Phase 2 的 pilot 候选,但今天它只是共享实例的第二个**租户**。共享层被第二个真实负载压过了、且运维面真的收敛了 —— 这是本闸要问的东西;但「第二个 pilot 逼出通用脊柱」那件事**没有**因此发生,别把两者当成一回事
   - 共享实例的镜像因此从 `postgres:16` 换成 **`pgvector/pgvector:pg16`**:ai-radar 用到 `vector` 扩展(已确认装着、2 个 `vector` 列在用)。**共享实例的镜像由所有租户需求的并集决定**,pgvector 是官方镜像的超集,inbox 那种普通用法照跑。这条要写进模板,否则下一个带扩展的租户会重新发现一遍
 - [ ] 7.2 连续 7 天共享实例无事故:无连接耗尽、无跨库越权、备份真的在跑
+  - ⚠️ **「备份真的在跑」实测为否(2026-07-31)**:`~/hangar-pg/backups/` 里只有 07-29 切换时的一次性 dump,`crontab` 与 `~/Library/LaunchAgents/` 里**没有任何备份任务**。切换后写入的数据目前**没有任何备份覆盖**
+  - 这条现在比切换前更承重:ai-radar 侧已走完自己的变更(`allow-shared-postgres-instance`),其仓库 compose 不再自带 postgres、规范里明写「本编排不备份外部实例、归起该容器的人」⇒ **两边都不再有第二个人在看它**。owner 已拍板它不阻塞 ai-radar 的生产收口,但归属留在本条
