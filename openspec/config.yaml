@@ -1,0 +1,94 @@
+schema: spec-driven
+
+# Hangar v2 OpenSpec context. Canonical architecture lives in DESIGN.md.
+# 本分支说明：v2 从空树重建，不含 v0 实现与 openspec/specs/（v0 oracle）；
+# 该目录及 SKILL.md 仍在仓库 main（及其他既有分支），仅作参考。详见根 README.md。
+context: |
+  项目：Hangar v2
+
+  定位：
+  - 开发者可完全掌控的个人 Agent 构筑与运行平台；
+  - 用 TypeScript 快速定义流程式 Agent；
+  - 通过 Web、小程序、Telegram Bot 或 CLI 控制同一个透明 runtime；
+  - 先服务单个开发者，团队/公司能力以后另立赌注。
+
+  当前决定：
+  - 立即从 v2 开始；
+  - v0 只作为行为 oracle、legacy adapter 输入和回滚参照；
+  - 新能力不得继续堆入 v0 四表、PipelineExecutor 或 CLI subprocess 控制面；
+  - 外部平台仍可作为 benchmark、runtime adapter 或某个能力 owner。
+
+  权威文档：
+  - DESIGN.md：v2 架构 SOT 与不变量；
+  - ROADMAP.md：M0-M6 次序、预算、出口闸与止损；
+  - CLAUDE.md：仓库工作护栏；
+  - docs/proposals/control-core-v2-migration.md：完整迁移论证；
+  - docs/proposals/personal-agent-builder.md：产品选择、竞品和验证硬门。
+  - SKILL.md：仅为当前 v0 CLI 的迁移期运行契约，不是 v2 总架构 SOT。
+  - openspec/specs/：已交付 v0 行为的兼容 oracle；v2 counterpart 落地后逐项归档，不能反向覆盖 DESIGN.md。
+
+  技术方向：
+  - Node.js + TypeScript + pnpm；
+  - TypeScript/Zod contract 同时生成 SDK 与 OpenAPI；
+  - v2 为模块化单体 hangar-server；
+  - v2 使用独立 SQLite，逻辑实体包括 AgentRelease、Activation、Run、NodeAttempt、RunEvent、Approval、Effect；
+  - Pi 为首个 reference RuntimeAdapter，进程/legacy/Python runtime 均经 adapter；
+  - typed HTTP/SSE Control API 是所有 client 的唯一入口；
+  - Agent 领域库与 knowledge provider 由 Agent/provider 自己拥有。
+
+  核心不变量：
+  1. control-core 零领域概念；
+  2. AgentSpec 先编译为不可变 AgentRelease，之后才能 activation；
+  3. admission、Run、retry、terminal、effect 和进程回收各自单一 owner；
+  4. Run/Node 状态由 append-only event 推导，终态走唯一 choke point；
+  5. durable wait 只在 human/effect/subflow 显式边界；
+  6. RuntimeAdapter 不创建第二个 Run、不静默 retry、不持高风险业务凭据；
+  7. 受控 mutation 只经 Effect Gateway，unknown 不自动重提；
+  8. client 只经 typed Control API，不直写 SQLite/Agent 文件；
+  9. 迁移允许双读、禁止双写；
+  10. knowledge provider 拥有索引/ACL/更新，runtime 只拿最小 ToolDescriptor；
+  11. 模块化单体优先，不为包边界自动拆服务；
+  12. 架构变更先更新 DESIGN/ROADMAP/OpenSpec。
+
+  当前阶段：
+  - M0：SOT、contracts、状态转移表、DDL、oracle 与成本测量；
+  - M1：Heartbeat v2 最小纵向切片；
+  - M0+M1 主动开发预算上限 15 个工作日；
+  - M1 未通过前不开始 Pi、Control API 客户端、Knowledge 或 Auto Developer 改造。
+
+  关键验证：
+  - no v0/v2 shared Run identity；
+  - no production dual-write or double admission owner；
+  - no gateway bypass, stale epoch mutation, unknown-effect replay；
+  - projection rebuild、backup restore 与 activation rollback 可演练；
+  - Inbox clean build T_attempt <= 120 分钟，原子/加权功能 >=98%，category >=95%，安全门 100%；
+  - T_ready、C_platform、C_enable、glue LOC 与 12 个月 TCO 单独记录。
+
+  非目标：
+  多租户、团队 RBAC、计费、SSO、marketplace、工作流画布、统一向量库、任意 durable workflow、
+  Temporal 仿制品、完整不可信代码 sandbox。
+
+  约定：
+  - 中文为主要书写语言；
+  - GitHub CLI 使用反斜杠前缀；
+  - 非平凡状态/并发/审批/钱路必须有可运行测试；
+  - 保留工作树中与当前任务无关的未提交修改。
+
+rules:
+  proposal:
+    - '必须说明本变更服务 ROADMAP 的哪个阶段，以及不做什么。'
+    - '必须逐条检查 DESIGN.md 的单一 owner、event truth、effect gateway、typed API 与 no-dual-write 不变量。'
+    - '新增核心能力必须给出至少两个 Agent 或一个真实 Agent 加一个中立 fixture 的使用证据。'
+    - '涉及外部平台时，必须计算 glue、部署、退出和 12 个月 TCO，不能只比较 SDK 功能。'
+    - '始终包含非目标、回滚和止损条件。'
+  specs:
+    - '状态型需求必须提供穷尽 state × event 表、非法转换和 crash-point 行为。'
+    - 'effect 需求必须覆盖 intent、policy/approval、claim、receipt、unknown 和 reconciliation。'
+    - 'runtime 需求必须明确 Run/retry/terminal/credential 的 owner。'
+    - '存储需求必须说明唯一约束、事务边界、projection rebuild、backup restore 和 epoch fencing。'
+    - '迁移需求必须证明一个 Agent 只有一个 admission 与可写运行 owner。'
+  tasks:
+    - '按 ROADMAP 阶段和依赖顺序拆分，每项可独立验证。'
+    - '先写 contract/fault fixture，再写非平凡实现。'
+    - '任务必须列验证命令、预期输出和失败时的 stop-loss。'
+    - '不得借当前 change 顺手重构 v0 或覆盖无关未提交修改。'
