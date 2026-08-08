@@ -25,6 +25,7 @@ Hangar 是开发者可完全掌控的个人 Agent 构筑与运行平台。当前
 4. **单一 owner。** admission、Run、retry、terminal、effect commit、进程回收各自只有一个 owner。
 5. **事件是真相。** Run/Node 状态由 append-only events 推导；终态只走唯一 choke point。
 6. **显式 durable 边界。** 只在 human/effect/subflow 边界 wait/resume；不做任意 continuation replay。
+   （`subflow` 当前无具名消费者，M0/M1 复查点见 DESIGN §5.1；若届时删除，本条同步改。）
 7. **Runtime 不拥有控制状态。** Adapter 不建第二个 Run，不静默 retry，不持高风险业务提交凭据。
 8. **Effect Gateway 唯一提交。** 受控 mutation 必须有 intent、policy/approval、claim、receipt、reconciliation；
    unknown 不自动重提。
@@ -33,6 +34,13 @@ Hangar 是开发者可完全掌控的个人 Agent 构筑与运行平台。当前
 11. **Knowledge provider 自治。** provider 拥有索引、ACL、更新和删除；runtime 只拿最小 ToolDescriptor。
 12. **模块化单体优先。** 包边界不等于服务边界；没有真实隔离/伸缩需求不拆进程。
 13. **架构变更先改 SOT。** 代码与 DESIGN/ROADMAP 冲突时先更新文档和 OpenSpec，不得静默绕过。
+14. **受限子进程有内容。** `agent` 与 `code` 节点都在受限子进程内执行，不在 `hangar-server` 进程内：凭据剥离
+    启动、出站与 secret 默认拒绝、能力经 `capabilities` 显式授予（DESIGN §6.1）。未完成正向勘验的条目标
+    `unverified-claim`，不计入结构性保证——不许把「受限」当形容词用。
+15. **租户不与核心共改。** 租户按 hangar 契约重构，不与 control-core 出现在同一次变更里；被契约缺口挡住时
+    阻塞并另开 change，不得用 `trusted-direct-effects` 绕过（DESIGN §12.4）。该白名单条目数须单调不增。
+16. **准入要有具名消费者。** 新节点种类、workflow 原语或 knowledge provider 协议进 SOT 的条件是「具名租户 +
+    排定阶段 + 该阶段出口闸依赖它」；「先预留」不算（DESIGN §5.1）。
 
 ## 当前阶段
 
@@ -47,7 +55,8 @@ contracts
   -> heartbeat release/run/effect/terminal
 ```
 
-Pi、Web、Knowledge 和 Auto Developer 都不能先于该闭环。
+Pi、Web、Knowledge、Auto Developer 与 AI Radar 都不能先于该闭环。租户接入排在 M7（AI Radar，M2 之后）
+与 M8（Auto Developer supervisor 接管，M5 之后）。
 
 ## v0 迁移纪律
 
@@ -78,10 +87,16 @@ Pi、Web、Knowledge 和 Auto Developer 都不能先于该闭环。
 - `T_ready`：干净主机到平台可用；
 - `C_platform`：平台预投入；
 - `C_enable`：每 Agent 专属适配；
-- glue LOC、冷启动、idle/peak RSS、磁盘、进程数和 12 个月 TCO。
+- glue LOC、冷启动、idle/peak RSS、磁盘、进程数和 12 个月 TCO；
+- 租户接入期间「提给 control-core 的核心变更建议条数」——按不变量 15 租户不与核心共改，凡接入被挡就必须
+  提 change，因此该条数就是可数的抽象边界误判次数。
 
 Inbox 的 `T_attempt ≤120min` 只是 authoring 硬门，不代表平台总成本合格。M0 + M1 超过 15 个主动开发日仍
 不能闭合 heartbeat 时，停止 M2 并删减抽象。
+
+上述都是「造得对不对」的触发器。唯一回答「该不该继续造」的是需求侧触发器：任一租户接入期间 `C_enable`
+或核心变更建议条数超过其阶段出口闸阈值、或接入必须向 control-core 新增领域概念，同样阻断下一阶段
+（DESIGN §14、ROADMAP M7/M8）。
 
 ## CLI 与 Git
 

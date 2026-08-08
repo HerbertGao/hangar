@@ -81,8 +81,8 @@ Web / Mini Program / Telegram / CLI
 ```
 
 首个可用版本由一个 `hangar-server` 进程承载 compiler、Control API、scheduler、workflow、store 和 effect
-gateway。Runtime 按 Run 启动受限子进程。Telegram 等 channel adapter 可以是边缘进程，但不能拥有 Agent
-领域状态或第二份控制状态机。
+gateway。Runtime 按 Run 启动受限子进程——「受限」是四条可检查的默认拒绝，定义与勘验条件见 §6.1，不是
+修辞。Telegram 等 channel adapter 可以是边缘进程，但不能拥有 Agent 领域状态或第二份控制状态机。
 
 ## 4. 核心对象
 
@@ -106,7 +106,7 @@ resources/
 - prompt、policy、fixture 和资源 hash；
 - runtime adapter id/version、模型与 entitlement 约束；
 - effect schema、最低风险和审批策略；
-- health/eval 契约；
+- health/eval 契约（§4.5）；
 - knowledge provider/ref/version 与 ToolDescriptor。
 
 ### 4.2 Activation
@@ -127,11 +127,32 @@ resources/
 Approval 记录 subject、decision、actor 与 expiry。Effect 记录 intent、claim、external identity、receipt 和
 reconciliation 状态。Effect dispatch 必须受 claim token 与 activation epoch fencing 保护。
 
+### 4.5 健康契约
+
+`run completed` 只证明函数返回，不证明 Agent 履行了职责；节点长期零产出也可能是正确行为（没有高优先级
+邮件时通知节点本就不该产出）。因此每个节点至少区分五种事实：
+
+- `invoked`：被调用；
+- `produced(count)`：产生结果；
+- `skipped(reason)`：因空输入、dedup、policy 等跳过；
+- `degraded(reason)`：依赖缺失或走了降级路径；
+- `failed(error)`：执行失败。
+
+AgentRelease 再声明哪些事实应在多长时间内发生。三类断言各自独立，**不得互相替代**：
+
+- **liveness**：数据源与触发器是否按预期被调用；
+- **readiness**：连接器凭据与配置是否可用；
+- **outcome**：业务结果多久出现一次。
+
+这样才能区分「今天没有重要邮件」与「邮件源三周没工作」，也能在通知通道从未可用时直接报 readiness 失败，
+而不是等 outcome 长期为零才发现。`GET /v1/health`（§8）是这三类事实的聚合投影，不是它们的定义。
+
 ## 5. Workflow v1
 
 Workflow v1 只支持：
 
-- `code`：确定性 TypeScript 函数；
+- `code`：确定性 TypeScript 函数，与 `agent` 节点一样在受限子进程内执行（§6.1），不在 `hangar-server`
+  进程内运行；
 - `agent`：调用 RuntimeAdapter；
 - `effect`：提交 EffectIntent；
 - `human`：提问或审批并进入显式等待；
@@ -140,6 +161,22 @@ Workflow v1 只支持：
 
 不支持任意动态图、无限循环、任意中段 checkpoint 或通用 durable replay。若需求开始接近 Temporal，应优先把
 Temporal/Argo 等作为外部 owner，而不是在 Hangar 内复制它们。
+
+### 5.1 节点种类与 provider 的准入规则
+
+新的节点种类、workflow 原语或 knowledge provider 协议要进入本文件，唯一条件是：**存在一个具名租户、
+有排定阶段、且该阶段出口闸依赖它**。「以后可能会用」「先预留着」不构成消费者——预留地基的正当性来自
+租户不与 control-core 同时修改（§12.4），而不是来自可能性本身。
+
+本规则**对新增生效**。现有枚举全部保留，作为 §12 三个具名租户的接入地基；其中尚无具名消费者的条目
+必须在此登记并带复查点：
+
+- `subflow`：Inbox、AI Radar 与 Auto Developer 的实际形状都是单 run 内的线性序列或流水线，均未要求可复用
+  的有版本子图。复查点——M0 契约落地时清点 node-kind 枚举；若到 M1 出口闸仍无具名接入承诺指向它，按本
+  规则删除。
+
+M0 出口闸须包含一条只读断言：contracts 中的 node-kind 枚举不得超出本文件允许的集合。没有这条断言，
+「orchestrator 尚未交付」与「分类已在 M0 固化并向下约束状态机与存储形状」可以同时为真。
 
 ## 6. Runtime Adapter
 
@@ -156,6 +193,27 @@ Adapter 不得：
 
 Pi 是首个 reference adapter，不是固定“大脑”。LangGraph 可以作为受边界约束的 adapter 或外部完整方案，但不
 同时拥有同一次 activation 的状态机。
+
+### 6.1 「受限子进程」的定义与勘验
+
+「受限」指四条**默认拒绝**，缺任何一条都不得称为受限：
+
+1. **凭据剥离启动**：子进程不继承宿主的 secret 环境变量、凭据文件路径与 keychain 句柄；所需凭据只能以
+   secret ref 在 release 中声明，由 control-core 注入最小集合。
+2. **出站默认拒绝**：网络目的地按 release 内的 sink 白名单放行，未列出者不可达。
+3. **secret 访问默认拒绝**：只能读取 release 中显式授予的 secret ref。
+4. **能力显式授予**：能力经 RuntimeRequest 的 `capabilities` 授予，未授予即不可用。
+
+适用范围是**全部**在子进程内执行的代码：`agent` 节点、`code` 节点，以及迁移期的 legacy pipeline
+adapter——后者尤其不能豁免，它是真正吞入不可信外部文本的路径。
+
+**勘验条件（与定义同等重要）**：每条默认拒绝必须同时声明它在目标宿主上如何被**正向勘验**，首选形态是
+启动自检 fail-closed（自检不过则拒绝启动）。在某个宿主上完成正向勘验之前，该条在 release 与 trace 中标注
+`unverified-claim`，**不计入 §7 的结构性治理保证**——与「直接持有宿主凭据的受信代码不计入结构性保证」同档。
+写下要求却不写勘验方式，只会产出一条看起来完备、从不被读取的治理声明。
+
+这四条不是非受信代码的完整 OS/网络/文件 sandbox（§13 明列为非目标）。它们约束的是**受信但可能被外部内容
+劫持**的代码：威胁模型的对象不是外部攻击者，而是被 prompt injection 劫持后仍以合法身份调用工具的自身 Agent。
 
 ## 7. Effect Gateway
 
@@ -178,7 +236,9 @@ EffectIntent
 - `effectId` 是全链路 idempotency key；
 - `unknown` 必须 reconcile，不能自动重提；
 - effect committed 后领域写失败不能靠重跑整个 Run 解决；
-- 本地可信 code node 的直接 mutation 必须标记 `trusted-direct-effects`，且不计入结构性治理保证。
+- 本地可信 code node 的直接 mutation 必须在 release hash 内**逐项枚举**为 `trusted-direct-effects` 白名单，
+  未枚举者运行期不可达外部 sink；该白名单不计入结构性治理保证，其条目数是治理覆盖率的反向指标，
+  在租户接入过程中必须单调不增（§12.4）。
 
 ## 8. Typed Control API
 
@@ -212,6 +272,7 @@ v1 只定义注册和检索协议，不建设统一向量库：
 - 无法 pin 的远端来源标记 `non-reproducible`。
 
 首个实现是 versioned files provider。第二个 Agent 必须能换 provider 而无需修改 control-core。
+新增 provider 协议同样受 §5.1 的准入规则约束：没有具名租户与排定阶段就不进本文件。
 
 ## 10. 持久化
 
@@ -275,6 +336,27 @@ cancel、结构化观察和最终 gate 映射。
 只有中立 process fixture 证明新 runtime 在父死、late child、partial JSONL、spawn 中取消、TERM→KILL、
 ambiguous effect、resume 和双 scheduler 场景都更可靠，才讨论 supervisor atomic cutover。
 
+### 12.3 AI Radar
+
+AI Radar 是第二个真实租户，也是 `C_enable` 是否随租户数下降的第一个证据来源。它按 hangar 契约重构，
+但只交出控制语义：
+
+- **交给 control-core**：trigger 与 admission、不可变 release identity、按节点展开的 RunEvent、
+  通知类外部提交的 `EffectIntent → approval → claim → receipt → reconciliation`、typed Control API 入口、
+  节点级健康事实。
+- **仍属于 AI Radar**：跨来源去重与唯一索引、采集游标与高水位、领域数据库、知识检索、以及比价/推荐一类
+  业务裁决。control-core 不得出现 news、source、dedup、price 等概念——这是不变量 1 的直接应用。
+
+两条附加约束：通知凭据必须迁入 Effect Gateway，租户进程不再持有；AI Radar 已有的 egress fail-closed 自检与
+来源域白名单，映射为 release 内的 `capabilities` 与 sink 白名单，不另建第二套权限模型。
+
+### 12.4 租户接入纪律
+
+对本节所有租户一律适用：**租户按 hangar 的契约重构，不与 control-core 在同一次变更中同时修改。**
+接入被契约缺口挡住时，允许的动作是阻塞并另开 change，不是绕过——`trusted-direct-effects` 不得被用作
+接入期的逃生门。每个租户接入期间「提给 hangar 的核心变更建议条数」是可数的抽象边界误判次数，
+进入该租户阶段的出口闸（见 `ROADMAP.md` M7/M8）。
+
 ## 13. 非目标
 
 当前不做：
@@ -301,7 +383,12 @@ Web、小程序、Telegram Bot 和 CLI 是同一控制核心的 client，不属�
 - unknown effect 自动重提或 committed effect 重复提交；
 - projection 无法重建、数据库无法恢复、activation 无法回滚；
 - Inbox clean build 超过 120 分钟或依赖预置 Inbox 专属 glue；
-- M0 + M1 超过 15 个主动开发日仍无法闭合 heartbeat。
+- M0 + M1 超过 15 个主动开发日仍无法闭合 heartbeat；
+- 任一租户接入期间，`C_enable` 或「提给 control-core 的核心变更建议条数」超过该阶段出口闸声明的阈值，
+  或接入必须向 control-core 新增领域概念。
+
+前六项是内部正确性与进度触发器，它们回答「造得对不对」。最后一项是唯一的**需求侧**触发器，它回答
+「这个平台该不该继续造」——没有它，即便「不会再有新租户」这一摊销前提被现实证伪，止损机制也不会响。
 
 ## 15. SOT 关系
 

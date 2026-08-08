@@ -10,11 +10,16 @@
 M0 SOT / contracts / oracle
   -> M1 Heartbeat v2 vertical slice
   -> M2 Pi + Control API + Web + second client
+       └-> M7 AI Radar 租户化接入
   -> M3 Inbox Builder Challenge + cutover
        ├-> M4 Knowledge provider v1
-       ├-> M5 Auto Developer process baseline
+       ├-> M5 Auto Developer process baseline -> M8 Auto Developer supervisor 接管
        └-> M6 retire v0
 ```
+
+M7 与 M8 是第二、第三个真实租户，也是 `C_platform` 摊销的唯一证据来源。两者共用一条纪律：
+**租户按 hangar 的契约重构，不与 control-core 同时修改**；接入被契约缺口挡住时只能阻塞并另开 change，
+不得绕过。每个租户接入期间「提给 hangar 的核心变更建议条数」是可数的边界误判次数，进入其出口闸。
 
 | 阶段 | 主动开发预算上限 | 可演示结果 | 出口 |
 |---|---:|---|---|
@@ -25,6 +30,8 @@ M0 SOT / contracts / oracle
 | M4 | 5 个工作日 | 每 Agent 注册 versioned knowledge provider | 第二 Agent 可换 provider，权限与 revision 可追踪 |
 | M5 | 5 个工作日，仅 baseline | Auto Developer 作为受控顶层进程运行 | 不复制其 supervisor/session owner |
 | M6 | 迁移完成后 | 删除 v0 写路径、daemon、旧 gateway/fallback | 零使用、恢复演练、回滚窗口结束 |
+| M7 | 10 个工作日 + 30 天 soak | AI Radar 以 hangar 为编排与副作用 owner 运行 | 领域状态仍归 AI Radar；不共改；回滚演练通过 |
+| M8 | 10 个工作日 | control-core 拥有 Auto Developer 受管进程树的生命周期 | 中立 fixture 先过；P5 凭据入 gateway；epoch 回滚完整 |
 
 时间是范围预算，不是承诺。超过预算先删范围、查边界，不自动延长。
 
@@ -52,6 +59,10 @@ M0 SOT / contracts / oracle
 - oracle 不 import 被测实现的内部常量；
 - 每个终态、unknown effect、cutover crash point 都有唯一预期；
 - v0 与 v2 可运行同一组适用 fixture；
+- **contracts 中的 node-kind 枚举不超出 `DESIGN.md` §5 的允许集合**——以一条只读断言检查，防止
+  「orchestrator 尚未交付」与「分类已在 M0 固化并向下约束状态机与存储形状」同时为真；
+- 每条 §6.1 默认拒绝都已声明其在目标宿主上的正向勘验方式；未完成勘验者在 release 与 trace 中标注
+  `unverified-claim`；
 - DESIGN、ROADMAP、CLAUDE、OpenSpec config 相互无冲突。
 
 ### 止损
@@ -180,7 +191,8 @@ runtime 掩盖核心未闭合。
 - 失败终态与 cancel 可观察；
 - 不合格时明确记录 `ManagedResult=retain-agent`。
 
-接管 Auto Developer supervisor 不属于 M5；必须另开 Managed Runtime change，并以中立 fixture 证明新 owner 更可靠。
+接管 Auto Developer supervisor 不属于 M5，属于 **M8**；进入 M8 的前提是 M5 出口闸通过，且中立 process
+fixture 已证明新 owner 比现有 supervisor 更可靠。M5 不通过时停在 `ManagedResult=retain-agent`，不进 M8。
 
 ## M6 — v0 退役
 
@@ -195,6 +207,80 @@ runtime 掩盖核心未闭合。
 - [ ] rollback 窗口结束，backup/restore 演练通过。
 
 删除旧四表写路径、旧 daemon、旧 gateway、view CLI subprocess 与 hard-coded command whitelist。
+
+## M7 — AI Radar 租户化接入
+
+前置：M2 出口闸通过（typed Control API 已是唯一写入口）。不依赖 M3。
+
+### 目标
+
+让 AI Radar 成为控制面的第二个真实租户：**编排、发布身份、运行事件与高风险副作用交给 hangar，领域仍归
+AI Radar**。它是第一个证明 `C_enable` 会随租户数下降的对象。
+
+### 边界（必须写死，否则等于把领域概念吸进核心）
+
+- **交给 hangar**：trigger 与 admission、不可变 release 身份、按节点展开的 RunEvent、飞书/Telegram 推送的
+  `EffectIntent → approval → claim → receipt → reconciliation`、单一 typed 控制入口、健康事实上报。
+- **仍归 AI Radar**：跨来源去重与唯一索引、采集游标与高水位、Postgres 领域状态、RAG/知识检索、
+  比价与推荐的业务裁决。control-core 不得出现 news/source/dedup/price 一类概念。
+
+### 任务
+
+- [ ] 把 AI Radar 的流水线重构为 v2 workflow（采集与逐条判断走有界顺序 `foreach`，推送走 `effect` 节点）；
+- [ ] BullMQ 的定时链改为 hangar trigger + activation；AI Radar 侧只保留领域任务队列（若仍需要）；
+- [ ] 推送凭据迁入 effect gateway，AI Radar 进程不再持有飞书/Telegram 提交凭据；
+- [ ] 现有 egress fail-closed 自检与来源域白名单映射为 release 内的 `capabilities` 与 sink 白名单；
+- [ ] shadow 运行：处理同一受控输入但禁止提交 effect，比对分类、去重、推送基数与 trace；
+- [ ] 记录 `T_ready`、`C_enable`、glue LOC 与「提给 hangar 的核心变更建议条数」。
+
+### 出口闸
+
+- 领域状态与业务裁决仍在 AI Radar，control-core 零领域概念；
+- 每次运行可定位不可变 release 身份与实际 runtime/model/tool 身份，并可按节点展开；
+- 所有推送经 gateway 提交，`effectId` 全链路幂等，`unknown` 进 reconcile 不自动重提；
+- **不共改**：接入期间 AI Radar 与 control-core 没有出现在同一个变更里；被契约缺口挡住时的动作是阻塞并
+  另开 change，不是绕过；`trusted-direct-effects` 标注点数量未增加；
+- 「提给 hangar 的核心变更建议条数」≤ 3（超出即说明抽象边界画错，见止损）；
+- 完成 30 天 soak：零未解释 effect，`source → domain commit → 允许的 effect receipt` 基数 1:1 或 0:1；
+- 回滚演练通过：关闭 hangar admission 后，AI Radar 能以自有调度恢复运行且不重复提交已 committed 的推送。
+
+### 止损
+
+`C_enable` > 5 个主动开发日，或「提给 hangar 的核心变更建议条数」> 3，或接入必须向 control-core 新增领域
+概念——任一成立即暂停 M7，先复审抽象边界，不得靠扩建核心让接入通过。
+
+## M8 — Auto Developer supervisor 接管
+
+前置：M5 出口闸通过，且中立 process fixture 已证明新 owner 比现有 supervisor 更可靠。前置不成立就停在
+`ManagedResult=retain-agent`。
+
+### 目标
+
+把 Auto Developer 的受管进程树生命周期从其内部 supervisor 迁到 control-core，同时不降级任何已冻结的行为与
+故障语义。这是「通用 managed runtime」这一主张的唯一验收场。
+
+### 任务
+
+- [ ] 中立 process-fixture Agent 先跑通完整 lifecycle，再 shadow Auto Developer；
+- [ ] 迁移 phase/session/watchdog/retry/resume 与后代进程 signal/reap 的 ownership；
+- [ ] P5 publish 凭据迁入 effect gateway（保留内部 publish 的形态不得宣称治理高风险动作）；
+- [ ] 按 DeploymentActivation 提升 epoch 原子切换，删除或禁用旧路径；
+- [ ] 跑冻结故障集：silent/late child、wall-clock、partial JSONL、父死、spawn 中取消、TERM→KILL、
+  ambiguous effect、resume、双 scheduler。
+
+### 出口闸
+
+- 冻结故障注入无 orphan、无重复 publish、无 false PASS；取消、父死与 late child 收敛；
+- 第二个进程型 Agent 证明 supervisor 契约可复用——只有一个消费者时不得宣称通用 managed runtime；
+- P5 经 gateway 的 intent/receipt 提交，凭据不在受管进程内；
+- 每次 handoff 有 admission barrier、drain 与 epoch 证据；canary 与新 epoch 回滚完整；
+- **不共改**：Auto Developer 与 control-core 未在同一变更中同时修改；
+- 「提给 hangar 的核心变更建议条数」≤ 3。
+
+### 止损
+
+任一冻结故障场景劣于 M5 baseline，或第二个进程型 Agent 无法复用同一 supervisor 契约——立即回到
+`ManagedResult=retain-agent`，保留 Auto Developer 自有 supervisor，并停止宣传通用托管能力。
 
 ## 全程硬门
 
