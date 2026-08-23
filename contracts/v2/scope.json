@@ -1,0 +1,35 @@
+{
+  "schemaVersion": "m0-scope-v1",
+  "allowedOutputRoots": [
+    "contracts/v2/",
+    "oracles/m0/",
+    "measurements/",
+    "scripts/validate-m0.mjs",
+    "tests/m0/"
+  ],
+  "forbiddenProductRoots": ["packages/", "src/", "apps/"],
+  "forbiddenSchemaIdentifiers": [
+    "workflow",
+    "node-kind",
+    "NodeAttempt",
+    "ProcessSpec",
+    "Suggestion",
+    "AgentIntent",
+    "Workspace",
+    "capability-directory",
+    "capability-registration",
+    "capability-visibility"
+  ],
+  "negativeEvidenceContainers": [
+    "knownDomainTerms",
+    "rejectedIdentifiers",
+    "negativeVectors",
+    "forbiddenSchemaIdentifiers"
+  ],
+  "requirements": {
+    "productPackages": false,
+    "externalWrites": false,
+    "dependencies": false,
+    "runtimeDaemons": false
+  }
+}

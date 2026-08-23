@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "m0-host-mapping-v1",
+  "requirementId": "m0o.host-mapping",
+  "controls": [
+    "credential-stripping",
+    "outbound-default-deny",
+    "secret-default-deny",
+    "explicit-capability-grants",
+    "execution-closure",
+    "whole-tree-containment"
+  ],
+  "modes": [
+    "production-control",
+    "production-child",
+    "effect-dispatch",
+    "recovery-control",
+    "mutation-disabled-evaluator"
+  ],
+  "hosts": [
+    {
+      "hostId": "local-darwin-arm64",
+      "platform": "darwin",
+      "architecture": "arm64",
+      "profileId": "darwin-local-v1",
+      "productionEligible": false,
+      "modeEvidence": [
+        { "mode": "production-control", "status": "unsupported", "controls": [], "reason": "positive controls not yet proven" },
+        { "mode": "production-child", "status": "unsupported", "controls": [], "reason": "descendant escape prevention not proven" },
+        { "mode": "effect-dispatch", "status": "unsupported", "controls": [], "reason": "mutation boundary not yet proven" },
+        { "mode": "recovery-control", "status": "unsupported", "controls": [], "reason": "independent recovery boundary not yet proven" },
+        { "mode": "mutation-disabled-evaluator", "status": "unverified-claim", "controls": [], "reason": "allowed only with all mutation authority absent" }
+      ]
+    },
+    {
+      "hostId": "named-process-host-fixture",
+      "platform": "fixture",
+      "architecture": "fixture",
+      "profileId": "enforced-containment-fixture",
+      "productionEligible": false,
+      "fixtureOnly": true,
+      "modeEvidence": [
+        { "mode": "production-control", "status": "verified", "controls": ["credential-stripping", "outbound-default-deny", "secret-default-deny", "explicit-capability-grants", "execution-closure", "whole-tree-containment"] },
+        { "mode": "production-child", "status": "verified", "controls": ["credential-stripping", "outbound-default-deny", "secret-default-deny", "explicit-capability-grants", "execution-closure", "whole-tree-containment"] },
+        { "mode": "effect-dispatch", "status": "verified", "controls": ["credential-stripping", "outbound-default-deny", "secret-default-deny", "explicit-capability-grants", "execution-closure", "whole-tree-containment"] },
+        { "mode": "recovery-control", "status": "verified", "controls": ["credential-stripping", "outbound-default-deny", "secret-default-deny", "explicit-capability-grants", "execution-closure", "whole-tree-containment"] },
+        { "mode": "mutation-disabled-evaluator", "status": "verified", "controls": ["credential-stripping", "outbound-default-deny", "secret-default-deny", "explicit-capability-grants", "execution-closure", "whole-tree-containment"] }
+      ]
+    }
+  ],
+  "unverifiedStructuralGuaranteeCount": 0,
+  "localProductionQualification": "blocked"
+}

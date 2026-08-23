@@ -1,0 +1,843 @@
+{
+  "schemaVersion": "m0-output-manifest-v1",
+  "requirementId": "m0o.reproducibility",
+  "sourceManifestPath": "oracles/m0/sources.json",
+  "sourceManifestDigest": "e36488312a1c86ebea8a44f829025274d7b75443a389a88e56cd0e8d9bd911d9",
+  "outputs": [
+    {
+      "path": "contracts/v2/control/admission.json",
+      "category": "contract",
+      "sha256": "757ad1d569457658e0191f5d2312515709564f899945df3e66982764bceaf6d1"
+    },
+    {
+      "path": "contracts/v2/control/approval.json",
+      "category": "contract",
+      "sha256": "e1768ba19765a282840ea198eb798a7e43b8f309a5a749e5029691c0402a3bef"
+    },
+    {
+      "path": "contracts/v2/control/authority-policy.json",
+      "category": "contract",
+      "sha256": "4034546997c902477de13f067c0bd3345d40b692c4140144dd941b4213539b59"
+    },
+    {
+      "path": "contracts/v2/control/commands.json",
+      "category": "contract",
+      "sha256": "749f9b56213c1fec7adf97d4950e7038f5d9f0bb624c98f3710ca06c9ea96e5b"
+    },
+    {
+      "path": "contracts/v2/control/core-objects.json",
+      "category": "contract",
+      "sha256": "c1ad2353d2ab21a3fd129a8432095f6c4dca13357ef0a589be6efef3f0e92f2d"
+    },
+    {
+      "path": "contracts/v2/control/direct-effects.json",
+      "category": "contract",
+      "sha256": "95246ca8ded9c370a0520ec512b05578363e9d54fef538bc1d62d5ba6fec246d"
+    },
+    {
+      "path": "contracts/v2/control/durable-data.json",
+      "category": "contract",
+      "sha256": "610a28ea43daa70e2a9b9a9b3308af5a12b8405b4936d2e35b61e0cba17f58ce"
+    },
+    {
+      "path": "contracts/v2/control/effect-state-machines.json",
+      "category": "contract",
+      "sha256": "8eac6db2645cf300a85b9a9372bfdefd7e74f5f664136d81615214af898c2b79"
+    },
+    {
+      "path": "contracts/v2/control/effect.json",
+      "category": "contract",
+      "sha256": "983f3bbaa3de9ea88ce42e2c198f2cbe4160505f4172026e53cd0d95887d8a03"
+    },
+    {
+      "path": "contracts/v2/control/errors.json",
+      "category": "contract",
+      "sha256": "31cc062ca10a8e7fda13cc91a22036f62d0ec823dbee13d734ed430fef915edd"
+    },
+    {
+      "path": "contracts/v2/control/harness.json",
+      "category": "contract",
+      "sha256": "4909b43bc1d40dd0f31dcfd8b70f63e5788f8609483a60eda76ab6fc3a6354a1"
+    },
+    {
+      "path": "contracts/v2/control/health.json",
+      "category": "contract",
+      "sha256": "275ca14ed4742ee489cfcea9dab949319bccf7950574f889e4058ae9bae04912"
+    },
+    {
+      "path": "contracts/v2/control/projections.json",
+      "category": "contract",
+      "sha256": "9fdaf158f35249710fd0cae60a81504caef87f5f59abc1a780d72289a19e74ed"
+    },
+    {
+      "path": "contracts/v2/control/state-machines.json",
+      "category": "contract",
+      "sha256": "f5178fe5cb2c2adc4f971a33baeae1ed25e8d3a57621332e2632b2f229ee991c"
+    },
+    {
+      "path": "contracts/v2/control/taxonomy.json",
+      "category": "contract",
+      "sha256": "4cd5be609e52292ed66ae7fdc02036dd40ab870e0be34323b01e832a8c4dd0c2"
+    },
+    {
+      "path": "contracts/v2/control/time.json",
+      "category": "contract",
+      "sha256": "202fd776bdcb2a4717bce7fb660202760eb117bf53b450577eb71c03b3a223dd"
+    },
+    {
+      "path": "contracts/v2/prerequisites.json",
+      "category": "contract",
+      "sha256": "4bf8eb245a9006f9733424aea75cadeb2a8050bcd5a41d5e78855d5cb9c61879"
+    },
+    {
+      "path": "contracts/v2/release/canonical-vectors.json",
+      "category": "contract",
+      "sha256": "84a40cffa4a0942e4432ffc06d8c3339f54ff1acd0ede818019e6a4521f2ba57"
+    },
+    {
+      "path": "contracts/v2/release/compatibility.json",
+      "category": "contract",
+      "sha256": "2471c7d1f0c4e891ebcc7243d3666447358dd79819779e532f0e7b34a2c9bed9"
+    },
+    {
+      "path": "contracts/v2/release/execution-closure.json",
+      "category": "contract",
+      "sha256": "9ed1634cb56edb2fe4ba258ad6d68dfdac8a1043e17f7d883ab006dbcf3ab6f0"
+    },
+    {
+      "path": "contracts/v2/release/identity.json",
+      "category": "contract",
+      "sha256": "147709365ded61d5a4806657c29d7d343614c33494d1613ba0de5d36b56acd0a"
+    },
+    {
+      "path": "contracts/v2/runtime/boundary.json",
+      "category": "contract",
+      "sha256": "ad55bfb4d70b9e91561b31e3850c43150623b4dcf3a10b44722f129fdc20f46d"
+    },
+    {
+      "path": "contracts/v2/runtime/evidence-profiles.json",
+      "category": "contract",
+      "sha256": "86f9ea2ac92790c24417e28e9109a563a6fb7a7abdfc2a49cd5a7b9175800737"
+    },
+    {
+      "path": "contracts/v2/runtime/host-attestation.json",
+      "category": "contract",
+      "sha256": "8bc32cf69341196afaba6b982b90b8674ef4c222cc4075117431526ecbd90ec5"
+    },
+    {
+      "path": "contracts/v2/runtime/process-lifecycle.json",
+      "category": "contract",
+      "sha256": "cc59f48494c33f88ceafe4c9d6a67ba4b4a442b11e1feb41e8f63778f468f019"
+    },
+    {
+      "path": "contracts/v2/scope.json",
+      "category": "contract",
+      "sha256": "b32f4c93d95844e5ec671bec98f21f1f836d12bd32027d34b9c594ef4333188f"
+    },
+    {
+      "path": "contracts/v2/storage/command-results.json",
+      "category": "contract",
+      "sha256": "514198225e2523e4625bdc23951d6628a3ac2997d98b59d366df984e518c3aa1"
+    },
+    {
+      "path": "contracts/v2/storage/contract.json",
+      "category": "contract",
+      "sha256": "131aa71ff1ceb484f45d737c108abb022032ccf71366dac7b4f6660bd0bd8f3f"
+    },
+    {
+      "path": "contracts/v2/storage/handoff.json",
+      "category": "contract",
+      "sha256": "79059d621691f721395c79c9e452fa8aceab4ceed306c3b58eabe804161f1696"
+    },
+    {
+      "path": "contracts/v2/storage/projection-rebuild.json",
+      "category": "contract",
+      "sha256": "b3ab3edd456136f0c1e5ebb99f38c78ef08b2c2ce5a475ebb9059a15eb019f51"
+    },
+    {
+      "path": "contracts/v2/storage/read-only.json",
+      "category": "contract",
+      "sha256": "9d0b01c79e42929598fdb0dd598d72afa798153ae5f61638b38b10f47318e181"
+    },
+    {
+      "path": "contracts/v2/storage/restore.json",
+      "category": "contract",
+      "sha256": "64681afed7293554f045f0adcca68773252c7766b001dd73d7a094bb6bc50e48"
+    },
+    {
+      "path": "contracts/v2/storage/schema.sql",
+      "category": "contract",
+      "sha256": "1ae7b068cba908c2bfc6a33de6452781c6e189eb70adf9137a6315445bb18234"
+    },
+    {
+      "path": "contracts/v2/storage/source-facts.json",
+      "category": "contract",
+      "sha256": "4b206c144d6beb8f00d9e010ac78b5575ee3df460384c69d6c2b8fe51d340e21"
+    },
+    {
+      "path": "contracts/v2/storage/transactions.json",
+      "category": "contract",
+      "sha256": "0b54597843e349546af3d4f341ced8bb38e0469654fb09f9c8b9b1526f576b5d"
+    },
+    {
+      "path": "measurements/evidence.json",
+      "category": "measurement",
+      "sha256": "616c7f21bc6ce8f8e455eb81f6ce2358f3a10943f9672c48945a1d1b86ad74ca"
+    },
+    {
+      "path": "measurements/ledger.json",
+      "category": "measurement",
+      "sha256": "f7088c62cfe995975c4b9a7ebacd35d6b16d3d0db53841f1888e2078b3aaaaa1"
+    },
+    {
+      "path": "measurements/manifest.json",
+      "category": "measurement",
+      "sha256": "5c303dd0fe91485463d6cbc73e7b9bbbe324272bd40101126527d72c28adc2c1"
+    },
+    {
+      "path": "measurements/scenario-assertion-authority-summary.json",
+      "category": "measurement",
+      "sha256": "39ae1d0d107130a23e467bee4584c24dade8f7fa5d92d60bbb0bffc39734b78a"
+    },
+    {
+      "path": "oracles/m0/aggregate-gates.json",
+      "category": "oracle",
+      "sha256": "5618987fe185106c3bc8b7692d5261d7489ed847b145028414d9a387c621553a"
+    },
+    {
+      "path": "oracles/m0/applicability.json",
+      "category": "oracle",
+      "sha256": "5ebc69a24373be2b5a60a925ebddda22205a620b261e87a47697aa77de615c46"
+    },
+    {
+      "path": "oracles/m0/attribution.json",
+      "category": "oracle",
+      "sha256": "39743ec1d302486d3f9f4ef0c920c22315d3573224603ce1ed092a0511bd99c8"
+    },
+    {
+      "path": "oracles/m0/authority-map.json",
+      "category": "oracle",
+      "sha256": "8c00b4186a3da1f60390b7026c669587524784a4fa42c5777400a1dbbaaae347"
+    },
+    {
+      "path": "oracles/m0/cases.json",
+      "category": "oracle",
+      "sha256": "0ab33326e426d1628666ba2f6592e31b190e9c6f94c750882b356c1b86f12460"
+    },
+    {
+      "path": "oracles/m0/cutover.json",
+      "category": "oracle",
+      "sha256": "9e75fbbb4a489bf685def267a4fc44260245fc98a52e34c7567ee343aeaff3ce"
+    },
+    {
+      "path": "oracles/m0/effect-inventory.json",
+      "category": "oracle",
+      "sha256": "a37bf4257217d8609705f63f7cb37f09c831b25ab6a5fa7be7fda4429bcdf03e"
+    },
+    {
+      "path": "oracles/m0/evaluator-registry.json",
+      "category": "oracle",
+      "sha256": "cd0aa0fc4820fdf766b92fa07c92768f5eacbec7dcf988ea12806c915c37e1c5"
+    },
+    {
+      "path": "oracles/m0/external-harness-owner.json",
+      "category": "oracle",
+      "sha256": "5874875e7c9b2ee4e2f11b1d28252bbc0ffd306a75c7abdf167df922dd7b0f37"
+    },
+    {
+      "path": "oracles/m0/external-validators.json",
+      "category": "oracle",
+      "sha256": "fd6b8d2e2b256df90b91db93ac7bee5637d69f8eaa0171c504eab703981a9236"
+    },
+    {
+      "path": "oracles/m0/fault-matrix.json",
+      "category": "oracle",
+      "sha256": "c42510b756b484c31511dbbb5cf49d3214c87aa1c67fb8518053bdc800270c9b"
+    },
+    {
+      "path": "oracles/m0/host-mapping.json",
+      "category": "oracle",
+      "sha256": "859953e87abf241c755e43d4aeba6b75670dcc5d3d1ec1d1b8462c6457e6bfa8"
+    },
+    {
+      "path": "oracles/m0/inbox-parity.json",
+      "category": "oracle",
+      "sha256": "e1a81536fb88907244b89bd4e5cda35866bd056878c62c115d6d217ca98a24d2"
+    },
+    {
+      "path": "oracles/m0/output-manifest.json",
+      "category": "oracle",
+      "digestPolicy": "self-schema-only"
+    },
+    {
+      "path": "oracles/m0/process-fixtures.json",
+      "category": "oracle",
+      "sha256": "bd8a65643ae68ca0893d15ed1a01e9304d1e605830e50f1c7f3a262dc2a907c1"
+    },
+    {
+      "path": "oracles/m0/recovery-race-contracts.json",
+      "category": "oracle",
+      "sha256": "002f087d19c9efcb2a4f5c58d85d2cb82878bf5abcacae09ac147f8be3c84e82"
+    },
+    {
+      "path": "oracles/m0/result-schema.json",
+      "category": "oracle",
+      "sha256": "32e84b19013e565f82a0b07ab2285fe7216371c501fcd37494fb8efbda67315e"
+    },
+    {
+      "path": "oracles/m0/scenario-expectations.json",
+      "category": "oracle",
+      "sha256": "99631ee5021c233cb38308332c985b3fd6e29523870d7073ab4ae8574b665bbb"
+    },
+    {
+      "path": "oracles/m0/schema.json",
+      "category": "oracle",
+      "sha256": "b76e405eeb079bb3469fc31a9d0df1785167aafd4fc99f5fd5ddee0aaa1adfd6"
+    },
+    {
+      "path": "oracles/m0/sources.json",
+      "category": "oracle",
+      "sha256": "e36488312a1c86ebea8a44f829025274d7b75443a389a88e56cd0e8d9bd911d9"
+    },
+    {
+      "path": "oracles/m0/v0-ledger.json",
+      "category": "oracle",
+      "sha256": "0ecd5722b0881db07e63cd4112017f1bceaaacf4faa5a49942177bc8e046deab"
+    },
+    {
+      "path": "oracles/m0/v0-oracle.json",
+      "category": "oracle",
+      "sha256": "23a5135ac8107fe94ecf9aa59199f51577040da3a707cc5f23d2cbd2ae64d6ef"
+    },
+    {
+      "path": "oracles/m0/v0-reaper.json",
+      "category": "oracle",
+      "sha256": "dacbe86ce853032cf247f66e17a6d091c3392369f2594fc9432c667d1490b4f5"
+    },
+    {
+      "path": "scripts/validate-m0.mjs",
+      "category": "validator",
+      "sha256": "e6a79dd68a232e1fc13f003f17a899444ea404ac2338aecbc4210dee949b57b4"
+    },
+    {
+      "path": "tests/m0/action-checkpoint-identity.test.mjs",
+      "category": "test",
+      "sha256": "63d96dd6c9ee9cc199e54c11913f7d02c0d22f67154a9a3ecbe2f5e249566306"
+    },
+    {
+      "path": "tests/m0/action-events.test.mjs",
+      "category": "test",
+      "sha256": "38fbd9c688e164e32ed95e690016a16db9554e51d5df36e8c5bd54f4f5e118e1"
+    },
+    {
+      "path": "tests/m0/action-graph-rebuild.test.mjs",
+      "category": "test",
+      "sha256": "7d61f26a0262e17a6034f9e67bb7234eeb54ec283e6136820ec357eba941f540"
+    },
+    {
+      "path": "tests/m0/action-registration-crash.test.mjs",
+      "category": "test",
+      "sha256": "419e1c600c5e5b95d934fd53ae8ac9a2f39a76d3fa4f3ce48fa13723e00cdbfc"
+    },
+    {
+      "path": "tests/m0/activation-profile.test.mjs",
+      "category": "test",
+      "sha256": "03e813adccc871775652a098b5bf0a94005da87df5fda7a2f6a2f7a603246f27"
+    },
+    {
+      "path": "tests/m0/admission-host.test.mjs",
+      "category": "test",
+      "sha256": "9810326de326ee49cf86266365442754f19fc0d5729042a8bf63e208a94801f6"
+    },
+    {
+      "path": "tests/m0/aggregate-gates.test.mjs",
+      "category": "test",
+      "sha256": "f67b66614e2fb4b74427b93a5b164d3caa2acec9241262e763db8409c17be058"
+    },
+    {
+      "path": "tests/m0/approval-contract.test.mjs",
+      "category": "test",
+      "sha256": "4ac86716ab20c04766944ba236d22fd52c0e2b913a14e109cd09649b6ee23d72"
+    },
+    {
+      "path": "tests/m0/attempt-allocation-race.test.mjs",
+      "category": "test",
+      "sha256": "c9e28ea899a367a42e272e2e763692b84664e545ce22cc779920c96ef2261495"
+    },
+    {
+      "path": "tests/m0/attempt-quiescence.test.mjs",
+      "category": "test",
+      "sha256": "54b75ddde9b6212bdcbaab61f2bd5e1d97affcb553907af7c5247181da0fddb7"
+    },
+    {
+      "path": "tests/m0/authority-contract.test.mjs",
+      "category": "test",
+      "sha256": "67dbca33a9b0045a81ff73877a7136a4dee0cd8aff2e4fa7aa60e77b50bbb268"
+    },
+    {
+      "path": "tests/m0/authority-owner.test.mjs",
+      "category": "test",
+      "sha256": "4c25392f47737ee2002e2910382efdd53dd9703062f309b27232a17dc3697e7b"
+    },
+    {
+      "path": "tests/m0/backup-restore.test.mjs",
+      "category": "test",
+      "sha256": "e54b903ecb6d820ca39fa8cbb505bc72ea279099cbd398de13cf8eee39f4e707"
+    },
+    {
+      "path": "tests/m0/checkpoint-allocation-crash.test.mjs",
+      "category": "test",
+      "sha256": "6b78483c2a3571914fed7b7cd89108865d557140d1867c89aca51dbf2acc9ad0"
+    },
+    {
+      "path": "tests/m0/checkpoint-handoff.test.mjs",
+      "category": "test",
+      "sha256": "4b1e39202f1b24d8e681dffc1fcc45cec0fa0ba885b73ac84f5e3c78a45c3992"
+    },
+    {
+      "path": "tests/m0/checkpoint-obligations.test.mjs",
+      "category": "test",
+      "sha256": "d05f692f0dd96ceaffd6187a65bd163ba0db4c5f49607af7d60cc27a8f119b0a"
+    },
+    {
+      "path": "tests/m0/checkpoint.test.mjs",
+      "category": "test",
+      "sha256": "2bd68b64d7cf05c216174fb37f18f27d6d7bbbd3488505e138055c5df84d4e4f"
+    },
+    {
+      "path": "tests/m0/command-storage.test.mjs",
+      "category": "test",
+      "sha256": "9758ca1f2ddd76bbc2389d0529ba658bfe19cd08c77a662626bb97aafaa9ec4a"
+    },
+    {
+      "path": "tests/m0/control-contracts.test.mjs",
+      "category": "test",
+      "sha256": "78165b999a595bb71b1199da9f91ee527c1cdf6c3108b7de1780b6b56d54e22c"
+    },
+    {
+      "path": "tests/m0/cutover.test.mjs",
+      "category": "test",
+      "sha256": "6f29aa1ddc666b76c83c6c8c7b60fa1a5d407987d5818c8301f438353dddd4f6"
+    },
+    {
+      "path": "tests/m0/ddl.test.mjs",
+      "category": "test",
+      "sha256": "10cd438f08cc61b1c6d1613d2e56b979b78df7adf1be89025e574e0ee39cc0e1"
+    },
+    {
+      "path": "tests/m0/direct-effects.test.mjs",
+      "category": "test",
+      "sha256": "884ae3feda424adf88bafa10eadcfeae651a38235ee095861835e3cec219549b"
+    },
+    {
+      "path": "tests/m0/durable-data.test.mjs",
+      "category": "test",
+      "sha256": "dda9f1b9d453e3d2093022b2d571b1a830a691a476734058411735de361677dc"
+    },
+    {
+      "path": "tests/m0/effect-contract.test.mjs",
+      "category": "test",
+      "sha256": "efbeb171a7c3133d7c63fd73b809525a089936b9dcb8f1f22d37d7f2741d4c75"
+    },
+    {
+      "path": "tests/m0/effect-inventory.test.mjs",
+      "category": "test",
+      "sha256": "817ddeec271771efeac61a31946036b6585206e7f44766171a9dde91c86094c9"
+    },
+    {
+      "path": "tests/m0/effect-replay-across-attempts.test.mjs",
+      "category": "test",
+      "sha256": "137c657b94818e50d0602f00d7accf2f3bb38297fb310ed1b8fd4e56af086fb5"
+    },
+    {
+      "path": "tests/m0/error-algebra.test.mjs",
+      "category": "test",
+      "sha256": "5d643bbfb772bc129a36c72537740ef58ee7ce0ea01caf811bd3a447c45dbca9"
+    },
+    {
+      "path": "tests/m0/error-gate.test.mjs",
+      "category": "test",
+      "sha256": "6bc279bd7c2dd62e8dab197288a7e0185e982f801022c551457bcfd0b0164705"
+    },
+    {
+      "path": "tests/m0/evidence-verifier.mjs",
+      "category": "test",
+      "sha256": "44cc734715c8c3b7e44f3283a53cdc88a5099b0fec24133213a0038a37cc6ce0"
+    },
+    {
+      "path": "tests/m0/execution-closure.test.mjs",
+      "category": "test",
+      "sha256": "09e0eb85a8b18ea1079476b2af90ac387c68b16f02e06d016bc53eea30280d7a"
+    },
+    {
+      "path": "tests/m0/external-harness-owner.test.mjs",
+      "category": "test",
+      "sha256": "c7005c98b99233f969d86c541ac678d740199626c38bb729af83f971daf9db8e"
+    },
+    {
+      "path": "tests/m0/external-validator.test.mjs",
+      "category": "test",
+      "sha256": "82a4258a94fa3ebfb6543d4c6c43b131161e79d5ee99277fe48dd07b46d1b57b"
+    },
+    {
+      "path": "tests/m0/handoff.test.mjs",
+      "category": "test",
+      "sha256": "bb7efb34563442dd3dde4638336dd5fc1501b389c7199cc710da9730b3230196"
+    },
+    {
+      "path": "tests/m0/harness-attribution.test.mjs",
+      "category": "test",
+      "sha256": "fca499f043263a0c7467f338b97aa7e34e79454c28206ac427413b01ffa0c065"
+    },
+    {
+      "path": "tests/m0/harness-boundary.test.mjs",
+      "category": "test",
+      "sha256": "d2f1d5be66ee1940025e2c22a3c0ef8d5134681e3bf0204c35aa951d7be41e4c"
+    },
+    {
+      "path": "tests/m0/harness-session.test.mjs",
+      "category": "test",
+      "sha256": "4debcec92ad38c17b517089a6545c40cbda2323a572f0a44e172c85ae4276a50"
+    },
+    {
+      "path": "tests/m0/health-facts.test.mjs",
+      "category": "test",
+      "sha256": "a51f04cf2ad7bc2b7aa4631a948042c21dc5580d53257c17552113714260844e"
+    },
+    {
+      "path": "tests/m0/helpers.mjs",
+      "category": "test",
+      "sha256": "19634a27b1016800e5dfa5fbf76cd830b3b8e34bc280d29db389468e586a207b"
+    },
+    {
+      "path": "tests/m0/host-attestation.test.mjs",
+      "category": "test",
+      "sha256": "c508a8906018309e3b60cff77e0d7000b3b0c7ad9e782f7eea48c76953e4dc87"
+    },
+    {
+      "path": "tests/m0/host-mapping.test.mjs",
+      "category": "test",
+      "sha256": "1edc3affe44f5fadd26732eb2e29aa30f344d15c3e77d7bb68f2a5f65064e08c"
+    },
+    {
+      "path": "tests/m0/idempotency-contract.test.mjs",
+      "category": "test",
+      "sha256": "beea7bcf90a6ffbe2592cc20ef5b232c06d4a8ff7471f88d02f0b1ce58199c20"
+    },
+    {
+      "path": "tests/m0/inbox-parity.test.mjs",
+      "category": "test",
+      "sha256": "98ec258e57a835c88dc6c07d57f29e7a161af397968f9f2b986f872e484cca19"
+    },
+    {
+      "path": "tests/m0/measurements.test.mjs",
+      "category": "test",
+      "sha256": "363bb3568a72d8d862c96fb4473eaa994774a11ea96dc73c10c42e70cabcf8af"
+    },
+    {
+      "path": "tests/m0/obligation-owner-chain.test.mjs",
+      "category": "test",
+      "sha256": "b4d767bb11a63fb7d467035345eb1c3f4122f0138caf01ac93915691230912df"
+    },
+    {
+      "path": "tests/m0/oracle-applicability.test.mjs",
+      "category": "test",
+      "sha256": "f12390c3cb9d70406b1682f44321e48bc56d7d46d6c822e8d16e032c54a20631"
+    },
+    {
+      "path": "tests/m0/oracle-coverage.test.mjs",
+      "category": "test",
+      "sha256": "5393a03bc6c7c134dc6dbb032b41be17de8c31a630528d02a6be04932d065d2f"
+    },
+    {
+      "path": "tests/m0/oracle-meta.test.mjs",
+      "category": "test",
+      "sha256": "e58788fa8ee88b12b79f5f5207eb51786a992e57d0f1b741d89e23def4d8194f"
+    },
+    {
+      "path": "tests/m0/oracle-schema.test.mjs",
+      "category": "test",
+      "sha256": "c24ceca2f2a15fca95c26ec795aa55e25ef8c60b4088dad74a9d9e50e4f463b9"
+    },
+    {
+      "path": "tests/m0/output-manifest.test.mjs",
+      "category": "test",
+      "sha256": "9c513dffa85a0e96a3371d11197fef8d303e38daf6b5d36841aeffeea7ba4f7e"
+    },
+    {
+      "path": "tests/m0/process-fixture.test.mjs",
+      "category": "test",
+      "sha256": "acff62e25112a1d2b408263ec6e4db13e2441e6e35aebc47f68866589b80c7e5"
+    },
+    {
+      "path": "tests/m0/process-lifecycle.test.mjs",
+      "category": "test",
+      "sha256": "1385f5bfb0a98299a51d37705e81fc77c2f5ed09d71a1a5c4d2e1a41dd108e65"
+    },
+    {
+      "path": "tests/m0/projection-rebuild.test.mjs",
+      "category": "test",
+      "sha256": "621f5745bd4322cce3a6291cf95ce2c22a8d13be2b5c0e3ef424a694691b0359"
+    },
+    {
+      "path": "tests/m0/read-only.test.mjs",
+      "category": "test",
+      "sha256": "2d0e80789d7790c9b052859510b3cfd81fa4e8f9b70e32ced7e6d89d3842187c"
+    },
+    {
+      "path": "tests/m0/read-projection.test.mjs",
+      "category": "test",
+      "sha256": "fcdb48d9e295cffc418cee0bc06385021d14c006fcfc7ead12d313a259404c9f"
+    },
+    {
+      "path": "tests/m0/receipt-admission.test.mjs",
+      "category": "test",
+      "sha256": "c3eccea652def3bc14782cce3a74da7c53dca23c7b4680f57bf185ccca28db81"
+    },
+    {
+      "path": "tests/m0/recovery-abort.test.mjs",
+      "category": "test",
+      "sha256": "cd6e4c12b9a58c8a79c4449d82871f1bd743dac4d7b958b38d5a93a9203bcfe0"
+    },
+    {
+      "path": "tests/m0/recovery-activation.test.mjs",
+      "category": "test",
+      "sha256": "4747e281eabc39aec3a01eda0fcd924bbf963b3a99e7038996bed5108bd25381"
+    },
+    {
+      "path": "tests/m0/recovery-agent-abort-bind-race.test.mjs",
+      "category": "test",
+      "sha256": "35e30759858d625e2f5f9a543a356e899a507013d746a182d90aa94ba5834848"
+    },
+    {
+      "path": "tests/m0/recovery-agent-binding-conflict.test.mjs",
+      "category": "test",
+      "sha256": "4f48072feb58098ab3b0cdbe2406d3a4ff7dda6d8d99b4239ecf9c8bc21d7ff2"
+    },
+    {
+      "path": "tests/m0/recovery-authority.test.mjs",
+      "category": "test",
+      "sha256": "c72e8d1a03855745b052e62f76a9529e59d8f88434ef5fcfcf9a8dd2942b9158"
+    },
+    {
+      "path": "tests/m0/recovery-binding-invalidation.test.mjs",
+      "category": "test",
+      "sha256": "2317f5ed88638b3ec9ea4c4bea7f086de4e3f3fec997e424d134f379d0384bbb"
+    },
+    {
+      "path": "tests/m0/recovery-bound-conflict.test.mjs",
+      "category": "test",
+      "sha256": "dee595cd55d46b7afd218e89494d7617ac415062499a2b6a1fb6462973c9b7fc"
+    },
+    {
+      "path": "tests/m0/recovery-bound-permit.test.mjs",
+      "category": "test",
+      "sha256": "7d70ea26fda10084110d200e67464d9779c499c6bc64e9f32e70e621a6fad04a"
+    },
+    {
+      "path": "tests/m0/recovery-coordination-command-finalization.test.mjs",
+      "category": "test",
+      "sha256": "05bec7806b9f2a8350cdc164d36a0b2450440a277e65e105b0e17ad0081df23f"
+    },
+    {
+      "path": "tests/m0/recovery-discovered-operation.test.mjs",
+      "category": "test",
+      "sha256": "afdb8db060be7f4ed248519869b3e1a76062defda0ea1f9669c6ed39126b9bfb"
+    },
+    {
+      "path": "tests/m0/recovery-discovery-conflict.test.mjs",
+      "category": "test",
+      "sha256": "f49e675bc71a1af9e7bf28b964c0b4647188ec538919192aea858353cc9f531c"
+    },
+    {
+      "path": "tests/m0/recovery-discovery.test.mjs",
+      "category": "test",
+      "sha256": "ef93202cab53a817466c223a087d95eddfd9abf06546118fd755669924e21f90"
+    },
+    {
+      "path": "tests/m0/recovery-evidence-helper.mjs",
+      "category": "test",
+      "sha256": "6dc1728be84222f297990b76dc49dd424f238edfc8c192166cdbd8e81c3bf7de"
+    },
+    {
+      "path": "tests/m0/recovery-helper.mjs",
+      "category": "test",
+      "sha256": "54b87daf73c9fb968415ed5acd437972514085479bc3e64383335f98b9ec8957"
+    },
+    {
+      "path": "tests/m0/recovery-multi-agent-identity.test.mjs",
+      "category": "test",
+      "sha256": "28b9f60ec7ede5fc6656a7007db4fcf45d3a2c5ecbaee97bf1bb1236a67008d7"
+    },
+    {
+      "path": "tests/m0/recovery-multi-agent-session.test.mjs",
+      "category": "test",
+      "sha256": "316511b3ab41b326307e4bf3cd6d3023a97badd8d229dbd78fa33b69ab549844"
+    },
+    {
+      "path": "tests/m0/recovery-operation-identity.test.mjs",
+      "category": "test",
+      "sha256": "3cc2d756b7373817557e1b3518afa6baf280bf967051460c6ef576d785bf1723"
+    },
+    {
+      "path": "tests/m0/recovery-operation-lifecycle.test.mjs",
+      "category": "test",
+      "sha256": "843062fe528d106f763ca3dee70202bb558a33c08ac4800a7b8259ad3ddacb60"
+    },
+    {
+      "path": "tests/m0/recovery-operation-membership-registry.test.mjs",
+      "category": "test",
+      "sha256": "1ef13d37fe52611d1e7f256ff1f9c2f2a935c089ecbef6db115898c7125bdf39"
+    },
+    {
+      "path": "tests/m0/recovery-post-final-conflict.test.mjs",
+      "category": "test",
+      "sha256": "c36f1fc9a3b7d5f4bf52d854762c54b8f3a384668d5bf652c72b635cc9b1dd40"
+    },
+    {
+      "path": "tests/m0/recovery-prebind-finalization.test.mjs",
+      "category": "test",
+      "sha256": "96d8795074b0bd5fc8519be0c7672e2caf9a0a3cd96a344f64e3ee92ffb01bf9"
+    },
+    {
+      "path": "tests/m0/recovery-race-matrix.test.mjs",
+      "category": "test",
+      "sha256": "8b0f44b15f3595b20b33a65dda86959bbb769a9860abdcd292bc86c9fc6a9faf"
+    },
+    {
+      "path": "tests/m0/recovery-registry-closure.test.mjs",
+      "category": "test",
+      "sha256": "9f5a768af7c2c5692de568df5012e5608d5bdab06f08b33f4dea7ce64d2ff503"
+    },
+    {
+      "path": "tests/m0/recovery-session-abort.test.mjs",
+      "category": "test",
+      "sha256": "a4d18eea090cf75327e68fc12b6e8b307fab12ab159661ad642d9628ef3d6b40"
+    },
+    {
+      "path": "tests/m0/recovery-session-init-abort-race.test.mjs",
+      "category": "test",
+      "sha256": "a77e44e4e16536d6a384788701602e60152394b1b79d2cf8875c583ed4abc4f5"
+    },
+    {
+      "path": "tests/m0/recovery-target-authority-close.test.mjs",
+      "category": "test",
+      "sha256": "5b212a7c2cc3d2059ea24e4cb9162ad8fd86fdc90e282cd22345ad28b9f87712"
+    },
+    {
+      "path": "tests/m0/recovery-target-binding.test.mjs",
+      "category": "test",
+      "sha256": "2970214be9dbf69142fac6cbc450545798bacd466a9aedbc305e64816c2974a0"
+    },
+    {
+      "path": "tests/m0/recovery-target-identity.test.mjs",
+      "category": "test",
+      "sha256": "b74831c51ce7dc2044a96d8964875e4f8713ba195929e675ea0e6a71f8d1b70e"
+    },
+    {
+      "path": "tests/m0/recovery-target-retirement-proof.test.mjs",
+      "category": "test",
+      "sha256": "f52757a1c6aa064d3d9ee462204fdc614bfe5c29e66f5eaf4ce05aeb6adb2713"
+    },
+    {
+      "path": "tests/m0/release-canonicalization.test.mjs",
+      "category": "test",
+      "sha256": "fbeccca84b9a9c28719b2ac3356c3860468e88661db09a45e87ebd6091b026c7"
+    },
+    {
+      "path": "tests/m0/release-compatibility.test.mjs",
+      "category": "test",
+      "sha256": "db2ea7a208ee0ba19f5ca13a6a487db82cc93784a6ebeda95f00da975623c078"
+    },
+    {
+      "path": "tests/m0/reproducibility.test.mjs",
+      "category": "test",
+      "sha256": "09a04efd4c815851d0c828fbbd3aeed82de6cd232852862791f8f2887f283423"
+    },
+    {
+      "path": "tests/m0/run-attempt-identity.test.mjs",
+      "category": "test",
+      "sha256": "f8f8953e17443bdc4cc7e7c2e115a5cca91e7a504c8e6af0cbcb548a11ceafed"
+    },
+    {
+      "path": "tests/m0/run-attempt.test.mjs",
+      "category": "test",
+      "sha256": "4f3d7a9d56c1c411a90a5a80ea5ed08c7f0bad08ea65f3322cfc035b2e3114d6"
+    },
+    {
+      "path": "tests/m0/scenario-owner.mjs",
+      "category": "test",
+      "sha256": "7b249914f4e11eb3810f69466200e165db6cdb6f6bea4080df0f81c4cb2cacca"
+    },
+    {
+      "path": "tests/m0/schedule-identity.test.mjs",
+      "category": "test",
+      "sha256": "e77eb9d8574a4e2ed16203fc34728b8ea64ae7324da5838af02cec52f4f94936"
+    },
+    {
+      "path": "tests/m0/scope.test.mjs",
+      "category": "test",
+      "sha256": "6ab93b95435bb576b92baa8c4a91106ddc32d6f2b8aa73c58dc77290bae7782d"
+    },
+    {
+      "path": "tests/m0/source-facts.test.mjs",
+      "category": "test",
+      "sha256": "838323c9d13f9b4a3347f36b3f66518066c13ce9b1e07e9013ebc2e35fe05bac"
+    },
+    {
+      "path": "tests/m0/source-pins.test.mjs",
+      "category": "test",
+      "sha256": "66f9163dbf48ade8e9364f7f3bbc56ce194ca1142a7f8a538441cf8b37cbf313"
+    },
+    {
+      "path": "tests/m0/sqlite-helper.mjs",
+      "category": "test",
+      "sha256": "14c3a452d308a683310a011e97f0f8db6562148a5867a8dbf352e1249117d9a9"
+    },
+    {
+      "path": "tests/m0/storage-identity.test.mjs",
+      "category": "test",
+      "sha256": "668bb0bca1f0e92da5f82ff1ea2868f55f889c3580a8a2ef3df173f3dbb837d3"
+    },
+    {
+      "path": "tests/m0/time-contract.test.mjs",
+      "category": "test",
+      "sha256": "90958b1530b788ffd30aad546df63b45c90f285dd36506196bcb42c992957ad4"
+    },
+    {
+      "path": "tests/m0/transaction-crash.test.mjs",
+      "category": "test",
+      "sha256": "ffad4ae2d30db348cfed6a084e957a29241c6fe9572482e8c3769345cfb1fc2c"
+    },
+    {
+      "path": "tests/m0/v0-ledger.test.mjs",
+      "category": "test",
+      "sha256": "246ab3cd7a8e0818bf005fc3e37c7edd38adf694a51cd3a010ef993e69af8f93"
+    },
+    {
+      "path": "tests/m0/v0-oracle.test.mjs",
+      "category": "test",
+      "sha256": "8a3c60bcb792f9c3a8a7729c2e5df127560a35c9eca5f897a2d5a396f2c23e1a"
+    },
+    {
+      "path": "tests/m0/v0-reaper.test.mjs",
+      "category": "test",
+      "sha256": "4493415de645ada89347d460fa54cc8efe2cbb0e95e11509ede4592ffaa465c2"
+    },
+    {
+      "path": "tests/m0/validator-results.test.mjs",
+      "category": "test",
+      "sha256": "182f596b6ce08972fde4d7295ecc7552da155315e49387354178b66c47e49ae9"
+    },
+    {
+      "path": "tests/m0/whole-tree-containment.test.mjs",
+      "category": "test",
+      "sha256": "949a0e60d2e1049fe1c54c73bb99b906b5c325635a454ab84546cfb3d3fe27f5"
+    },
+    {
+      "path": "tests/m0/zero-row-cas.test.mjs",
+      "category": "test",
+      "sha256": "4c203c99271418bf718f7f0f01b65e6ed73125395457a57ecd2127bd5bd5f62e"
+    }
+  ]
+}

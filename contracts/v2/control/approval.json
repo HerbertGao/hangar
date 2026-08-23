@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "v2-approval-v1",
+  "requirementId": "v2c.approval",
+  "subjectBinding": [
+    "approvalId",
+    "effectId",
+    "intentDigest",
+    "operation",
+    "audience",
+    "policyVersion",
+    "releaseId",
+    "activationEpoch",
+    "expiresAtUtcMs"
+  ],
+  "decisionEvidence": [
+    "actorSubjectId",
+    "authorityContextDigest",
+    "delegationChainDigest",
+    "policyVersion",
+    "decisionUtcMs"
+  ],
+  "decisions": ["approve", "reject"],
+  "authorizationChecks": ["at-decision", "immediately-before-dispatch"],
+  "defaultDecision": "deny",
+  "decisionCas": {
+    "singleWinner": true,
+    "exactReplay": "stored-decision",
+    "competingDecision": "stored-decided-state"
+  },
+  "invalidation": {
+    "policyChange": "new-decision-path",
+    "authorityRevocation": "new-decision-path",
+    "releaseChange": "new-subject",
+    "activationEpochChange": "new-subject",
+    "subjectExpansion": false
+  },
+  "expiryComparison": "now-greater-than-or-equal",
+  "stateMachineRef": "contracts/v2/control/effect-state-machines.json#Approval"
+}

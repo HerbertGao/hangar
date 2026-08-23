@@ -1,0 +1,249 @@
+{
+  "schemaVersion": "v2-authority-policy-v1",
+  "requirementId": "v2c.authority-policy",
+  "authorityContext": {
+    "closed": true,
+    "fields": [
+      "issuerNamespaceId",
+      "principalId",
+      "representedSubjectId",
+      "audience",
+      "issuerVersion",
+      "authenticatedMethod",
+      "delegationChainDigest",
+      "effectiveScope",
+      "effectiveOperation",
+      "issuedAtUtcMs",
+      "expiresAtUtcMs",
+      "revocationVersion"
+    ],
+    "stableActorSubjectTuple": [
+      "actor-subject-v1",
+      "issuerNamespaceId",
+      "principalId",
+      "representedSubjectId",
+      "audience"
+    ],
+    "excludedFromStableSubject": [
+      "issuerVersion",
+      "authenticatedMethod",
+      "delegationChainDigest",
+      "effectiveScope",
+      "effectiveOperation",
+      "issuedAtUtcMs",
+      "expiresAtUtcMs",
+      "revocationVersion"
+    ]
+  },
+  "riskRanks": [
+    "low",
+    "moderate",
+    "high",
+    "critical"
+  ],
+  "composition": {
+    "deny": "or",
+    "risk": "max-rank",
+    "allowedAudiences": "intersection",
+    "allowedOperations": "intersection",
+    "requiredApprovals": "union",
+    "expiresAtUtcMs": "minimum",
+    "unknownConstraint": "reject"
+  },
+  "sampleAuthorityContext": {
+    "issuerNamespaceId": "issuer-primary",
+    "principalId": "principal-1",
+    "representedSubjectId": "subject-1",
+    "audience": "hangar-control",
+    "issuerVersion": "issuer-v3",
+    "authenticatedMethod": "device-key",
+    "delegationChainDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "effectiveScope": [
+      "run:write"
+    ],
+    "effectiveOperation": "admit-run",
+    "issuedAtUtcMs": 1000,
+    "expiresAtUtcMs": 5000,
+    "revocationVersion": "rev-7"
+  },
+  "sampleActorSubjectId": "035365d65e2053080b89b7d63f3257ae796de4a611895085982f1561b25f5d3c",
+  "vectors": [
+    {
+      "id": "intersection-and-max-risk",
+      "registry": {
+        "deny": false,
+        "risk": "moderate",
+        "allowedAudiences": [
+          "effect-gateway",
+          "hangar-control"
+        ],
+        "allowedOperations": [
+          "read",
+          "write"
+        ],
+        "requiredApprovals": [
+          "owner"
+        ],
+        "expiresAtUtcMs": 5000
+      },
+      "release": {
+        "deny": false,
+        "risk": "low",
+        "allowedAudiences": [
+          "hangar-control"
+        ],
+        "allowedOperations": [
+          "read"
+        ],
+        "requiredApprovals": [
+          "policy-review"
+        ],
+        "expiresAtUtcMs": 4000
+      },
+      "expected": {
+        "deny": false,
+        "risk": "moderate",
+        "allowedAudiences": [
+          "hangar-control"
+        ],
+        "allowedOperations": [
+          "read"
+        ],
+        "requiredApprovals": [
+          "owner",
+          "policy-review"
+        ],
+        "expiresAtUtcMs": 4000
+      }
+    },
+    {
+      "id": "deny-dominates",
+      "registry": {
+        "deny": false,
+        "risk": "moderate",
+        "allowedAudiences": [
+          "effect-gateway",
+          "hangar-control"
+        ],
+        "allowedOperations": [
+          "read",
+          "write"
+        ],
+        "requiredApprovals": [
+          "owner"
+        ],
+        "expiresAtUtcMs": 5000
+      },
+      "release": {
+        "deny": true,
+        "risk": "low",
+        "allowedAudiences": [
+          "hangar-control"
+        ],
+        "allowedOperations": [
+          "read"
+        ],
+        "requiredApprovals": [
+          "policy-review"
+        ],
+        "expiresAtUtcMs": 4000
+      },
+      "expected": {
+        "deny": true,
+        "risk": "moderate",
+        "allowedAudiences": [
+          "hangar-control"
+        ],
+        "allowedOperations": [
+          "read"
+        ],
+        "requiredApprovals": [
+          "owner",
+          "policy-review"
+        ],
+        "expiresAtUtcMs": 4000
+      }
+    },
+    {
+      "id": "empty-operation-intersection",
+      "registry": {
+        "deny": false,
+        "risk": "moderate",
+        "allowedAudiences": [
+          "effect-gateway",
+          "hangar-control"
+        ],
+        "allowedOperations": [
+          "read",
+          "write"
+        ],
+        "requiredApprovals": [
+          "owner"
+        ],
+        "expiresAtUtcMs": 5000
+      },
+      "release": {
+        "deny": false,
+        "risk": "low",
+        "allowedAudiences": [
+          "hangar-control"
+        ],
+        "allowedOperations": [
+          "notify"
+        ],
+        "requiredApprovals": [
+          "policy-review"
+        ],
+        "expiresAtUtcMs": 4000
+      },
+      "expected": {
+        "deny": true,
+        "risk": "moderate",
+        "allowedAudiences": [
+          "hangar-control"
+        ],
+        "allowedOperations": [],
+        "requiredApprovals": [
+          "owner",
+          "policy-review"
+        ],
+        "expiresAtUtcMs": 4000
+      }
+    },
+    {
+      "id": "unknown-constraint",
+      "registry": {
+        "deny": false,
+        "risk": "moderate",
+        "allowedAudiences": [
+          "effect-gateway",
+          "hangar-control"
+        ],
+        "allowedOperations": [
+          "read",
+          "write"
+        ],
+        "requiredApprovals": [
+          "owner"
+        ],
+        "expiresAtUtcMs": 5000
+      },
+      "release": {
+        "deny": false,
+        "risk": "low",
+        "allowedAudiences": [
+          "hangar-control"
+        ],
+        "allowedOperations": [
+          "read"
+        ],
+        "requiredApprovals": [
+          "policy-review"
+        ],
+        "expiresAtUtcMs": 4000,
+        "futureConstraint": true
+      },
+      "expectedError": "incomparable_policy"
+    }
+  ]
+}

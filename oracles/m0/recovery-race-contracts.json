@@ -1,0 +1,1914 @@
+{
+  "schemaVersion": "m0-recovery-race-contracts-v1",
+  "requirementId": "m0o.fault-matrix",
+  "pointContracts": [
+    {
+      "id": "session-recorded",
+      "sourceFactKind": "recovery-session",
+      "commandAfterState": "session-recorded",
+      "externalAfterState": "session-recorded",
+      "mutationAuthorityCallAfter": false,
+      "mutationAuthorityAfterState": "unchanged"
+    },
+    {
+      "id": "session-init-cas",
+      "sourceFactKind": "recovery-session",
+      "commandAfterState": "pending-coordination",
+      "externalAfterState": "initializing-awaiting-local",
+      "mutationAuthorityCallAfter": true,
+      "mutationAuthorityAfterState": "linearized"
+    },
+    {
+      "id": "session-abort-cas",
+      "sourceFactKind": "recovery-session",
+      "commandAfterState": "pending-coordination",
+      "externalAfterState": "retiring-awaiting-local",
+      "mutationAuthorityCallAfter": true,
+      "mutationAuthorityAfterState": "linearized"
+    },
+    {
+      "id": "session-local-init",
+      "sourceFactKind": "recovery-session",
+      "commandAfterState": "completed",
+      "externalAfterState": "initialized",
+      "mutationAuthorityCallAfter": false,
+      "mutationAuthorityAfterState": "unchanged"
+    },
+    {
+      "id": "session-local-retire",
+      "sourceFactKind": "recovery-session",
+      "commandAfterState": "completed",
+      "externalAfterState": "retired",
+      "mutationAuthorityCallAfter": false,
+      "mutationAuthorityAfterState": "fenced"
+    },
+    {
+      "id": "agent-abort-cas",
+      "sourceFactKind": "recovery-qualification",
+      "commandAfterState": "pending-coordination",
+      "externalAfterState": "aborted-awaiting-local",
+      "mutationAuthorityCallAfter": true,
+      "mutationAuthorityAfterState": "linearized"
+    },
+    {
+      "id": "agent-local-abort",
+      "sourceFactKind": "recovery-qualification",
+      "commandAfterState": "completed",
+      "externalAfterState": "aborted",
+      "mutationAuthorityCallAfter": false,
+      "mutationAuthorityAfterState": "fenced"
+    },
+    {
+      "id": "prebind-finalization",
+      "sourceFactKind": "command-result",
+      "commandAfterState": "completed",
+      "externalAfterState": "prebind-finalized",
+      "mutationAuthorityCallAfter": false,
+      "mutationAuthorityAfterState": "unchanged"
+    },
+    {
+      "id": "binding-cas",
+      "sourceFactKind": "binding-certificate",
+      "commandAfterState": "pending-coordination",
+      "externalAfterState": "bound",
+      "mutationAuthorityCallAfter": true,
+      "mutationAuthorityAfterState": "linearized"
+    },
+    {
+      "id": "recovery-conflict-fact",
+      "sourceFactKind": "recovery-post-final-conflict",
+      "commandAfterState": "pending-coordination",
+      "externalAfterState": "conflicted",
+      "mutationAuthorityCallAfter": false,
+      "mutationAuthorityAfterState": "fenced"
+    },
+    {
+      "id": "binding-invalidation-cas",
+      "sourceFactKind": "recovery-binding-invalidated",
+      "commandAfterState": "pending-coordination",
+      "externalAfterState": "binding-invalidated-awaiting-local",
+      "mutationAuthorityCallAfter": true,
+      "mutationAuthorityAfterState": "revoked"
+    },
+    {
+      "id": "binding-invalidation-local",
+      "sourceFactKind": "recovery-binding-invalidated",
+      "commandAfterState": "completed",
+      "externalAfterState": "invalidated",
+      "mutationAuthorityCallAfter": false,
+      "mutationAuthorityAfterState": "revoked"
+    },
+    {
+      "id": "activation-success-cas",
+      "sourceFactKind": "activation-permit-evidence",
+      "commandAfterState": "completed",
+      "externalAfterState": "active",
+      "mutationAuthorityCallAfter": true,
+      "mutationAuthorityAfterState": "linearized"
+    },
+    {
+      "id": "session-init-local-ack",
+      "sourceFactKind": "command-result",
+      "commandAfterState": "completed",
+      "externalAfterState": "initialized-acked",
+      "mutationAuthorityCallAfter": true,
+      "mutationAuthorityAfterState": "linearized"
+    },
+    {
+      "id": "session-retire-local-ack",
+      "sourceFactKind": "command-result",
+      "commandAfterState": "completed",
+      "externalAfterState": "retired-acked",
+      "mutationAuthorityCallAfter": true,
+      "mutationAuthorityAfterState": "fenced"
+    },
+    {
+      "id": "agent-abort-local-ack",
+      "sourceFactKind": "command-result",
+      "commandAfterState": "completed",
+      "externalAfterState": "aborted-acked",
+      "mutationAuthorityCallAfter": true,
+      "mutationAuthorityAfterState": "fenced"
+    },
+    {
+      "id": "activation-success-local-ack",
+      "sourceFactKind": "command-result",
+      "commandAfterState": "completed",
+      "externalAfterState": "active-acked",
+      "mutationAuthorityCallAfter": true,
+      "mutationAuthorityAfterState": "linearized"
+    },
+    {
+      "id": "binding-invalidation-local-ack",
+      "sourceFactKind": "command-result",
+      "commandAfterState": "completed",
+      "externalAfterState": "invalidated-acked",
+      "mutationAuthorityCallAfter": true,
+      "mutationAuthorityAfterState": "revoked"
+    },
+    {
+      "id": "agent-binding-conflict-target-ack",
+      "sourceFactKind": "recovery-agent-binding-conflict",
+      "commandAfterState": "pending-coordination",
+      "externalAfterState": "target-acked",
+      "mutationAuthorityCallAfter": true,
+      "mutationAuthorityAfterState": "fenced"
+    },
+    {
+      "id": "target-authority-close-cas",
+      "sourceFactKind": "target-authority-closed",
+      "commandAfterState": "pending-coordination",
+      "externalAfterState": "authority-closed",
+      "mutationAuthorityCallAfter": true,
+      "mutationAuthorityAfterState": "fenced"
+    },
+    {
+      "id": "target-authority-closed-proof",
+      "sourceFactKind": "target-authority-closed",
+      "commandAfterState": "completed",
+      "externalAfterState": "proof-admitted",
+      "mutationAuthorityCallAfter": false,
+      "mutationAuthorityAfterState": "fenced"
+    },
+    {
+      "id": "agent-binding-conflict",
+      "sourceFactKind": "recovery-agent-binding-conflict",
+      "commandAfterState": "pending-coordination",
+      "externalAfterState": "conflicted",
+      "mutationAuthorityCallAfter": true,
+      "mutationAuthorityAfterState": "fenced"
+    }
+  ],
+  "observationSchema": {
+    "kind": "recovery-race-observation-v1",
+    "requiredFields": [
+      "kind",
+      "sourceFacts",
+      "commandState",
+      "externalState",
+      "mutationAuthorityState",
+      "mutationAuthorityCallCount",
+      "replayState"
+    ],
+    "commandStates": [
+      "unchanged",
+      "single-winner-loser-finalized",
+      "session-recorded",
+      "pending-coordination",
+      "completed"
+    ],
+    "externalStates": [
+      "not-called",
+      "single-cas-winner",
+      "session-recorded",
+      "initializing-awaiting-local",
+      "retiring-awaiting-local",
+      "initialized",
+      "retired",
+      "aborted-awaiting-local",
+      "aborted",
+      "prebind-finalized",
+      "bound",
+      "conflicted",
+      "binding-invalidated-awaiting-local",
+      "invalidated",
+      "active",
+      "initialized-acked",
+      "retired-acked",
+      "aborted-acked",
+      "active-acked",
+      "invalidated-acked",
+      "target-acked",
+      "authority-closed",
+      "proof-admitted"
+    ],
+    "mutationAuthorityStates": [
+      "unchanged",
+      "single-generation-winner",
+      "linearized",
+      "fenced",
+      "revoked"
+    ],
+    "replayStates": [
+      "not-applicable",
+      "resume-local-completion",
+      "same-command-replay",
+      "loser-observes-winner"
+    ]
+  },
+  "results": [
+    {
+      "caseId": "recovery-race.session-recorded.crash-before",
+      "recoveryRacePoint": "session-recorded",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "recovery-session"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-recorded.crash-after",
+      "recoveryRacePoint": "session-recorded",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-session"
+          ],
+          "forbidden": []
+        },
+        "commandState": "session-recorded",
+        "externalState": "session-recorded",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-recorded.response-loss",
+      "recoveryRacePoint": "session-recorded",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-session"
+          ],
+          "forbidden": []
+        },
+        "commandState": "session-recorded",
+        "externalState": "session-recorded",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-recorded.competing-command",
+      "recoveryRacePoint": "session-recorded",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-session"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-init-cas.crash-before",
+      "recoveryRacePoint": "session-init-cas",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "recovery-session"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-init-cas.crash-after",
+      "recoveryRacePoint": "session-init-cas",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-session"
+          ],
+          "forbidden": []
+        },
+        "commandState": "pending-coordination",
+        "externalState": "initializing-awaiting-local",
+        "mutationAuthorityState": "linearized",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-init-cas.response-loss",
+      "recoveryRacePoint": "session-init-cas",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-session"
+          ],
+          "forbidden": []
+        },
+        "commandState": "pending-coordination",
+        "externalState": "initializing-awaiting-local",
+        "mutationAuthorityState": "linearized",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-init-cas.competing-command",
+      "recoveryRacePoint": "session-init-cas",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-session"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-abort-cas.crash-before",
+      "recoveryRacePoint": "session-abort-cas",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "recovery-session"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-abort-cas.crash-after",
+      "recoveryRacePoint": "session-abort-cas",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-session"
+          ],
+          "forbidden": []
+        },
+        "commandState": "pending-coordination",
+        "externalState": "retiring-awaiting-local",
+        "mutationAuthorityState": "linearized",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-abort-cas.response-loss",
+      "recoveryRacePoint": "session-abort-cas",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-session"
+          ],
+          "forbidden": []
+        },
+        "commandState": "pending-coordination",
+        "externalState": "retiring-awaiting-local",
+        "mutationAuthorityState": "linearized",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-abort-cas.competing-command",
+      "recoveryRacePoint": "session-abort-cas",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-session"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-local-init.crash-before",
+      "recoveryRacePoint": "session-local-init",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "recovery-session"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-local-init.crash-after",
+      "recoveryRacePoint": "session-local-init",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-session"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "initialized",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-local-init.response-loss",
+      "recoveryRacePoint": "session-local-init",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-session"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "initialized",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-local-init.competing-command",
+      "recoveryRacePoint": "session-local-init",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-session"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-local-retire.crash-before",
+      "recoveryRacePoint": "session-local-retire",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "recovery-session"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-local-retire.crash-after",
+      "recoveryRacePoint": "session-local-retire",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-session"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "retired",
+        "mutationAuthorityState": "fenced",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-local-retire.response-loss",
+      "recoveryRacePoint": "session-local-retire",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-session"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "retired",
+        "mutationAuthorityState": "fenced",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-local-retire.competing-command",
+      "recoveryRacePoint": "session-local-retire",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-session"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-abort-cas.crash-before",
+      "recoveryRacePoint": "agent-abort-cas",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "recovery-qualification"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-abort-cas.crash-after",
+      "recoveryRacePoint": "agent-abort-cas",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-qualification"
+          ],
+          "forbidden": []
+        },
+        "commandState": "pending-coordination",
+        "externalState": "aborted-awaiting-local",
+        "mutationAuthorityState": "linearized",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-abort-cas.response-loss",
+      "recoveryRacePoint": "agent-abort-cas",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-qualification"
+          ],
+          "forbidden": []
+        },
+        "commandState": "pending-coordination",
+        "externalState": "aborted-awaiting-local",
+        "mutationAuthorityState": "linearized",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-abort-cas.competing-command",
+      "recoveryRacePoint": "agent-abort-cas",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-qualification"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-local-abort.crash-before",
+      "recoveryRacePoint": "agent-local-abort",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "recovery-qualification"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-local-abort.crash-after",
+      "recoveryRacePoint": "agent-local-abort",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-qualification"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "aborted",
+        "mutationAuthorityState": "fenced",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-local-abort.response-loss",
+      "recoveryRacePoint": "agent-local-abort",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-qualification"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "aborted",
+        "mutationAuthorityState": "fenced",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-local-abort.competing-command",
+      "recoveryRacePoint": "agent-local-abort",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-qualification"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.prebind-finalization.crash-before",
+      "recoveryRacePoint": "prebind-finalization",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "command-result"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.prebind-finalization.crash-after",
+      "recoveryRacePoint": "prebind-finalization",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "command-result"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "prebind-finalized",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.prebind-finalization.response-loss",
+      "recoveryRacePoint": "prebind-finalization",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "command-result"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "prebind-finalized",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.prebind-finalization.competing-command",
+      "recoveryRacePoint": "prebind-finalization",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "command-result"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.binding-cas.crash-before",
+      "recoveryRacePoint": "binding-cas",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "binding-certificate"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.binding-cas.crash-after",
+      "recoveryRacePoint": "binding-cas",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "binding-certificate"
+          ],
+          "forbidden": []
+        },
+        "commandState": "pending-coordination",
+        "externalState": "bound",
+        "mutationAuthorityState": "linearized",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.binding-cas.response-loss",
+      "recoveryRacePoint": "binding-cas",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "binding-certificate"
+          ],
+          "forbidden": []
+        },
+        "commandState": "pending-coordination",
+        "externalState": "bound",
+        "mutationAuthorityState": "linearized",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.binding-cas.competing-command",
+      "recoveryRacePoint": "binding-cas",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "binding-certificate"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.recovery-conflict-fact.crash-before",
+      "recoveryRacePoint": "recovery-conflict-fact",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "recovery-post-final-conflict"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.recovery-conflict-fact.crash-after",
+      "recoveryRacePoint": "recovery-conflict-fact",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-post-final-conflict"
+          ],
+          "forbidden": []
+        },
+        "commandState": "pending-coordination",
+        "externalState": "conflicted",
+        "mutationAuthorityState": "fenced",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.recovery-conflict-fact.response-loss",
+      "recoveryRacePoint": "recovery-conflict-fact",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-post-final-conflict"
+          ],
+          "forbidden": []
+        },
+        "commandState": "pending-coordination",
+        "externalState": "conflicted",
+        "mutationAuthorityState": "fenced",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.recovery-conflict-fact.competing-command",
+      "recoveryRacePoint": "recovery-conflict-fact",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-post-final-conflict"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-cas.crash-before",
+      "recoveryRacePoint": "binding-invalidation-cas",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "recovery-binding-invalidated"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-cas.crash-after",
+      "recoveryRacePoint": "binding-invalidation-cas",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-binding-invalidated"
+          ],
+          "forbidden": []
+        },
+        "commandState": "pending-coordination",
+        "externalState": "binding-invalidated-awaiting-local",
+        "mutationAuthorityState": "revoked",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-cas.response-loss",
+      "recoveryRacePoint": "binding-invalidation-cas",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-binding-invalidated"
+          ],
+          "forbidden": []
+        },
+        "commandState": "pending-coordination",
+        "externalState": "binding-invalidated-awaiting-local",
+        "mutationAuthorityState": "revoked",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-cas.competing-command",
+      "recoveryRacePoint": "binding-invalidation-cas",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-binding-invalidated"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-local.crash-before",
+      "recoveryRacePoint": "binding-invalidation-local",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "recovery-binding-invalidated"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-local.crash-after",
+      "recoveryRacePoint": "binding-invalidation-local",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-binding-invalidated"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "invalidated",
+        "mutationAuthorityState": "revoked",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-local.response-loss",
+      "recoveryRacePoint": "binding-invalidation-local",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-binding-invalidated"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "invalidated",
+        "mutationAuthorityState": "revoked",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-local.competing-command",
+      "recoveryRacePoint": "binding-invalidation-local",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-binding-invalidated"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.activation-success-cas.crash-before",
+      "recoveryRacePoint": "activation-success-cas",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "activation-permit-evidence"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.activation-success-cas.crash-after",
+      "recoveryRacePoint": "activation-success-cas",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "activation-permit-evidence"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "active",
+        "mutationAuthorityState": "linearized",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.activation-success-cas.response-loss",
+      "recoveryRacePoint": "activation-success-cas",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "activation-permit-evidence"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "active",
+        "mutationAuthorityState": "linearized",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.activation-success-cas.competing-command",
+      "recoveryRacePoint": "activation-success-cas",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "activation-permit-evidence"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-init-local-ack.crash-before",
+      "recoveryRacePoint": "session-init-local-ack",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "command-result"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-init-local-ack.crash-after",
+      "recoveryRacePoint": "session-init-local-ack",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "command-result"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "initialized-acked",
+        "mutationAuthorityState": "linearized",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-init-local-ack.response-loss",
+      "recoveryRacePoint": "session-init-local-ack",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "command-result"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "initialized-acked",
+        "mutationAuthorityState": "linearized",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-init-local-ack.competing-command",
+      "recoveryRacePoint": "session-init-local-ack",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "command-result"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-retire-local-ack.crash-before",
+      "recoveryRacePoint": "session-retire-local-ack",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "command-result"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-retire-local-ack.crash-after",
+      "recoveryRacePoint": "session-retire-local-ack",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "command-result"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "retired-acked",
+        "mutationAuthorityState": "fenced",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-retire-local-ack.response-loss",
+      "recoveryRacePoint": "session-retire-local-ack",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "command-result"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "retired-acked",
+        "mutationAuthorityState": "fenced",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.session-retire-local-ack.competing-command",
+      "recoveryRacePoint": "session-retire-local-ack",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "command-result"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-abort-local-ack.crash-before",
+      "recoveryRacePoint": "agent-abort-local-ack",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "command-result"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-abort-local-ack.crash-after",
+      "recoveryRacePoint": "agent-abort-local-ack",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "command-result"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "aborted-acked",
+        "mutationAuthorityState": "fenced",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-abort-local-ack.response-loss",
+      "recoveryRacePoint": "agent-abort-local-ack",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "command-result"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "aborted-acked",
+        "mutationAuthorityState": "fenced",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-abort-local-ack.competing-command",
+      "recoveryRacePoint": "agent-abort-local-ack",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "command-result"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.activation-success-local-ack.crash-before",
+      "recoveryRacePoint": "activation-success-local-ack",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "command-result"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.activation-success-local-ack.crash-after",
+      "recoveryRacePoint": "activation-success-local-ack",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "command-result"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "active-acked",
+        "mutationAuthorityState": "linearized",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.activation-success-local-ack.response-loss",
+      "recoveryRacePoint": "activation-success-local-ack",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "command-result"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "active-acked",
+        "mutationAuthorityState": "linearized",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.activation-success-local-ack.competing-command",
+      "recoveryRacePoint": "activation-success-local-ack",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "command-result"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-local-ack.crash-before",
+      "recoveryRacePoint": "binding-invalidation-local-ack",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "command-result"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-local-ack.crash-after",
+      "recoveryRacePoint": "binding-invalidation-local-ack",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "command-result"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "invalidated-acked",
+        "mutationAuthorityState": "revoked",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-local-ack.response-loss",
+      "recoveryRacePoint": "binding-invalidation-local-ack",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "command-result"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "invalidated-acked",
+        "mutationAuthorityState": "revoked",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-local-ack.competing-command",
+      "recoveryRacePoint": "binding-invalidation-local-ack",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "command-result"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-binding-conflict-target-ack.crash-before",
+      "recoveryRacePoint": "agent-binding-conflict-target-ack",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "recovery-agent-binding-conflict"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-binding-conflict-target-ack.crash-after",
+      "recoveryRacePoint": "agent-binding-conflict-target-ack",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-agent-binding-conflict"
+          ],
+          "forbidden": []
+        },
+        "commandState": "pending-coordination",
+        "externalState": "target-acked",
+        "mutationAuthorityState": "fenced",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-binding-conflict-target-ack.response-loss",
+      "recoveryRacePoint": "agent-binding-conflict-target-ack",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-agent-binding-conflict"
+          ],
+          "forbidden": []
+        },
+        "commandState": "pending-coordination",
+        "externalState": "target-acked",
+        "mutationAuthorityState": "fenced",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-binding-conflict-target-ack.competing-command",
+      "recoveryRacePoint": "agent-binding-conflict-target-ack",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-agent-binding-conflict"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.target-authority-close-cas.crash-before",
+      "recoveryRacePoint": "target-authority-close-cas",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "target-authority-closed"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.target-authority-close-cas.crash-after",
+      "recoveryRacePoint": "target-authority-close-cas",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "target-authority-closed"
+          ],
+          "forbidden": []
+        },
+        "commandState": "pending-coordination",
+        "externalState": "authority-closed",
+        "mutationAuthorityState": "fenced",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.target-authority-close-cas.response-loss",
+      "recoveryRacePoint": "target-authority-close-cas",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "target-authority-closed"
+          ],
+          "forbidden": []
+        },
+        "commandState": "pending-coordination",
+        "externalState": "authority-closed",
+        "mutationAuthorityState": "fenced",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.target-authority-close-cas.competing-command",
+      "recoveryRacePoint": "target-authority-close-cas",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "target-authority-closed"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.target-authority-closed-proof.crash-before",
+      "recoveryRacePoint": "target-authority-closed-proof",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "target-authority-closed"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.target-authority-closed-proof.crash-after",
+      "recoveryRacePoint": "target-authority-closed-proof",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "target-authority-closed"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "proof-admitted",
+        "mutationAuthorityState": "fenced",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.target-authority-closed-proof.response-loss",
+      "recoveryRacePoint": "target-authority-closed-proof",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "target-authority-closed"
+          ],
+          "forbidden": []
+        },
+        "commandState": "completed",
+        "externalState": "proof-admitted",
+        "mutationAuthorityState": "fenced",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.target-authority-closed-proof.competing-command",
+      "recoveryRacePoint": "target-authority-closed-proof",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "target-authority-closed"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "loser-observes-winner"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-binding-conflict.crash-before",
+      "recoveryRacePoint": "agent-binding-conflict",
+      "disposition": "crash-before",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [],
+          "forbidden": [
+            "recovery-agent-binding-conflict"
+          ]
+        },
+        "commandState": "unchanged",
+        "externalState": "not-called",
+        "mutationAuthorityState": "unchanged",
+        "mutationAuthorityCallCount": 0,
+        "replayState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-binding-conflict.crash-after",
+      "recoveryRacePoint": "agent-binding-conflict",
+      "disposition": "crash-after",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-agent-binding-conflict"
+          ],
+          "forbidden": []
+        },
+        "commandState": "pending-coordination",
+        "externalState": "conflicted",
+        "mutationAuthorityState": "fenced",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "resume-local-completion"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-binding-conflict.response-loss",
+      "recoveryRacePoint": "agent-binding-conflict",
+      "disposition": "response-loss",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-agent-binding-conflict"
+          ],
+          "forbidden": []
+        },
+        "commandState": "pending-coordination",
+        "externalState": "conflicted",
+        "mutationAuthorityState": "fenced",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "same-command-replay"
+      }
+    },
+    {
+      "caseId": "recovery-race.agent-binding-conflict.competing-command",
+      "recoveryRacePoint": "agent-binding-conflict",
+      "disposition": "competing-command",
+      "observation": {
+        "kind": "recovery-race-observation-v1",
+        "sourceFacts": {
+          "required": [
+            "recovery-agent-binding-conflict"
+          ],
+          "forbidden": []
+        },
+        "commandState": "single-winner-loser-finalized",
+        "externalState": "single-cas-winner",
+        "mutationAuthorityState": "single-generation-winner",
+        "mutationAuthorityCallCount": 1,
+        "replayState": "loser-observes-winner"
+      }
+    }
+  ],
+  "resultSetDigest": "b20895d4c9a7ee1a23d105f798cd006ada82d34b1d0266a08759d3bc378cf746"
+}

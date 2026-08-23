@@ -1,0 +1,4046 @@
+{
+  "schemaVersion": "m0-scenario-expectations-v1",
+  "requirementId": "m0o.format",
+  "executorId": "normative-scenario-compiler-v1",
+  "expectations": [
+    {
+      "caseId": "oracle-case-5be25c06932ee3c1",
+      "scenarioId": "m0o.format.case-5be25c06932ee3c1",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.format.case-5be25c06932ee3c1",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-c0e7bd6c39f2fd47",
+      "scenarioId": "m0o.format.case-c0e7bd6c39f2fd47",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.format.case-c0e7bd6c39f2fd47",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-ee5bd570739cae05",
+      "scenarioId": "m0o.format.case-ee5bd570739cae05",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.format.case-ee5bd570739cae05",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-0d5b80f3325f6dcd",
+      "scenarioId": "m0o.format.case-0d5b80f3325f6dcd",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.format.case-0d5b80f3325f6dcd",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-9fc8a1d4167a0b31",
+      "scenarioId": "m0o.v0-reaper.case-9fc8a1d4167a0b31",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.v0-reaper.case-9fc8a1d4167a0b31",
+        "outcomeClass": "terminalized",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "process-observation"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-a62d31eb26def809",
+      "scenarioId": "m0o.v0-reaper.case-a62d31eb26def809",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.v0-reaper.case-a62d31eb26def809",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "process-observation"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-7de98c1b85dc6e91",
+      "scenarioId": "m0o.v0-reaper.case-7de98c1b85dc6e91",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.v0-reaper.case-7de98c1b85dc6e91",
+        "outcomeClass": "terminalized",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-ea8aa672669d0564",
+      "scenarioId": "m0o.v0-reaper.case-ea8aa672669d0564",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.v0-reaper.case-ea8aa672669d0564",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-7493c1b668b29ffc",
+      "scenarioId": "m0o.fault-matrix.case-7493c1b668b29ffc",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.fault-matrix.case-7493c1b668b29ffc",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-1c1a29207a85d888",
+      "scenarioId": "m0o.fault-matrix.case-1c1a29207a85d888",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.fault-matrix.case-1c1a29207a85d888",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "process-observation"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-b9d6b63610c48b96",
+      "scenarioId": "m0o.fault-matrix.case-b9d6b63610c48b96",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.fault-matrix.case-b9d6b63610c48b96",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-be01590a4db2a18e",
+      "scenarioId": "m0o.fault-matrix.case-be01590a4db2a18e",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.fault-matrix.case-be01590a4db2a18e",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-37053fffaf6f642b",
+      "scenarioId": "m0o.inbox.case-37053fffaf6f642b",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.inbox.case-37053fffaf6f642b",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-b167e32ec41cdea6",
+      "scenarioId": "m0o.inbox.case-b167e32ec41cdea6",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.inbox.case-b167e32ec41cdea6",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-7d62d5d7f62e5761",
+      "scenarioId": "m0o.inbox.case-7d62d5d7f62e5761",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.inbox.case-7d62d5d7f62e5761",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-a87a23aa283ded9d",
+      "scenarioId": "m0o.process-fixture.case-a87a23aa283ded9d",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.process-fixture.case-a87a23aa283ded9d",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-7d7457d8ec7f4690",
+      "scenarioId": "m0o.process-fixture.case-7d7457d8ec7f4690",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.process-fixture.case-7d7457d8ec7f4690",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "process-observation"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-ac1ff343c450afd0",
+      "scenarioId": "m0o.process-fixture.case-ac1ff343c450afd0",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.process-fixture.case-ac1ff343c450afd0",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "process-observation"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-3d55277177b31053",
+      "scenarioId": "m0o.harness-attribution.case-3d55277177b31053",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.harness-attribution.case-3d55277177b31053",
+        "outcomeClass": "terminalized",
+        "requiredEvidenceKinds": [
+          "effect-outcome",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-f8f2fc1cf9d58a01",
+      "scenarioId": "m0o.harness-attribution.case-f8f2fc1cf9d58a01",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.harness-attribution.case-f8f2fc1cf9d58a01",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-0cc33223b9c43411",
+      "scenarioId": "m0o.harness-attribution.case-0cc33223b9c43411",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.harness-attribution.case-0cc33223b9c43411",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "effect-outcome",
+          "process-observation",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-82707c94512c91b5",
+      "scenarioId": "m0o.harness-attribution.case-82707c94512c91b5",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.harness-attribution.case-82707c94512c91b5",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "source-fact"
+        ],
+        "sourceFactState": "required",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-dda21f95e7a50d7e",
+      "scenarioId": "m0o.harness-attribution.case-dda21f95e7a50d7e",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.harness-attribution.case-dda21f95e7a50d7e",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "process-observation"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-81b89a62ef11202a",
+      "scenarioId": "m0o.harness-attribution.case-81b89a62ef11202a",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.harness-attribution.case-81b89a62ef11202a",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "process-observation"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-9eac66f310b04558",
+      "scenarioId": "m0o.cutover.case-9eac66f310b04558",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.cutover.case-9eac66f310b04558",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-f9f459fef4ce8b63",
+      "scenarioId": "m0o.cutover.case-f9f459fef4ce8b63",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.cutover.case-f9f459fef4ce8b63",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-e51c6241ea07084b",
+      "scenarioId": "m0o.cutover.case-e51c6241ea07084b",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.cutover.case-e51c6241ea07084b",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-410902198ca99c22",
+      "scenarioId": "m0o.effect-inventory.case-410902198ca99c22",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.effect-inventory.case-410902198ca99c22",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-fb3b8bf7a10d892a",
+      "scenarioId": "m0o.effect-inventory.case-fb3b8bf7a10d892a",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.effect-inventory.case-fb3b8bf7a10d892a",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-c28ee66fe30ba8fe",
+      "scenarioId": "m0o.effect-inventory.case-c28ee66fe30ba8fe",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.effect-inventory.case-c28ee66fe30ba8fe",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-2c26189c0114871c",
+      "scenarioId": "m0o.host-mapping.case-2c26189c0114871c",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.host-mapping.case-2c26189c0114871c",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-f671b474c14eb9e3",
+      "scenarioId": "m0o.host-mapping.case-f671b474c14eb9e3",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.host-mapping.case-f671b474c14eb9e3",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-5b501ace1dff7b23",
+      "scenarioId": "m0o.measurements.case-5b501ace1dff7b23",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.measurements.case-5b501ace1dff7b23",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-e33f51b9983a4a44",
+      "scenarioId": "m0o.reproducibility.case-e33f51b9983a4a44",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.reproducibility.case-e33f51b9983a4a44",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-baf58ef8254d52b9",
+      "scenarioId": "m0o.reproducibility.case-baf58ef8254d52b9",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.reproducibility.case-baf58ef8254d52b9",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-3ac58b3cb06fae04",
+      "scenarioId": "m0o.reproducibility.case-3ac58b3cb06fae04",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.reproducibility.case-3ac58b3cb06fae04",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-fc380c34a21ceed1",
+      "scenarioId": "m0o.reproducibility.case-fc380c34a21ceed1",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.reproducibility.case-fc380c34a21ceed1",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-96e26a5ef39b00d7",
+      "scenarioId": "m0o.reproducibility.case-96e26a5ef39b00d7",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.reproducibility.case-96e26a5ef39b00d7",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-021b7a0e4e9e6dc7",
+      "scenarioId": "m0o.reproducibility.case-021b7a0e4e9e6dc7",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.reproducibility.case-021b7a0e4e9e6dc7",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-37a353c8dd03bb26",
+      "scenarioId": "m0o.reproducibility.case-37a353c8dd03bb26",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.reproducibility.case-37a353c8dd03bb26",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-1ec16be1f59ecc47",
+      "scenarioId": "m0o.reproducibility.case-1ec16be1f59ecc47",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.reproducibility.case-1ec16be1f59ecc47",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "state-transition"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-4704830eebf87e0f",
+      "scenarioId": "m0o.reproducibility.case-4704830eebf87e0f",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "m0o.reproducibility.case-4704830eebf87e0f",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-2625bc33f3368451",
+      "scenarioId": "v2c.core-objects.case-2625bc33f3368451",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.core-objects.case-2625bc33f3368451",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "source-fact",
+          "identity-binding"
+        ],
+        "sourceFactState": "forbidden",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-f74dd5de6847249e",
+      "scenarioId": "v2c.core-objects.case-f74dd5de6847249e",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.core-objects.case-f74dd5de6847249e",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "state-transition",
+          "identity-binding",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-4f0c7298f9d90368",
+      "scenarioId": "v2c.core-objects.case-4f0c7298f9d90368",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.core-objects.case-4f0c7298f9d90368",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-b1e6225e0bc92246",
+      "scenarioId": "v2c.core-objects.case-b1e6225e0bc92246",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.core-objects.case-b1e6225e0bc92246",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-99c6189cd103b295",
+      "scenarioId": "v2c.core-objects.case-99c6189cd103b295",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.core-objects.case-99c6189cd103b295",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-ee282e108b929d7a",
+      "scenarioId": "v2c.core-objects.case-ee282e108b929d7a",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.core-objects.case-ee282e108b929d7a",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-059b139162921d92",
+      "scenarioId": "v2c.durable-data.case-059b139162921d92",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.durable-data.case-059b139162921d92",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "source-fact"
+        ],
+        "sourceFactState": "forbidden",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-3bad4dd6e919014e",
+      "scenarioId": "v2c.durable-data.case-3bad4dd6e919014e",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.durable-data.case-3bad4dd6e919014e",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-a58f530be73f5ba8",
+      "scenarioId": "v2c.durable-data.case-a58f530be73f5ba8",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.durable-data.case-a58f530be73f5ba8",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-0d99e7b6fbcd8fc8",
+      "scenarioId": "v2c.durable-data.case-0d99e7b6fbcd8fc8",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.durable-data.case-0d99e7b6fbcd8fc8",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-69a7d96569601720",
+      "scenarioId": "v2c.release-identity.case-69a7d96569601720",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.release-identity.case-69a7d96569601720",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-a4de272b16b48742",
+      "scenarioId": "v2c.release-identity.case-a4de272b16b48742",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.release-identity.case-a4de272b16b48742",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-c92ef8d54b132b4b",
+      "scenarioId": "v2c.release-identity.case-c92ef8d54b132b4b",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.release-identity.case-c92ef8d54b132b4b",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-2e2e1115131297ba",
+      "scenarioId": "v2c.release-identity.case-2e2e1115131297ba",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.release-identity.case-2e2e1115131297ba",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-534d149bf165353d",
+      "scenarioId": "v2c.release-identity.case-534d149bf165353d",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.release-identity.case-534d149bf165353d",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "process-observation"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-e494a1dffa986843",
+      "scenarioId": "v2c.release-identity.case-e494a1dffa986843",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.release-identity.case-e494a1dffa986843",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "process-observation"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-844f43ad17b4d919",
+      "scenarioId": "v2c.release-identity.case-844f43ad17b4d919",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.release-identity.case-844f43ad17b4d919",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "process-observation"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-a2f0f8982e81e26f",
+      "scenarioId": "v2c.release-compatibility.case-a2f0f8982e81e26f",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.release-compatibility.case-a2f0f8982e81e26f",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-75883b57b2954516",
+      "scenarioId": "v2c.release-compatibility.case-75883b57b2954516",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.release-compatibility.case-75883b57b2954516",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-80eec2d75f35676f",
+      "scenarioId": "v2c.harness-session.case-80eec2d75f35676f",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.harness-session.case-80eec2d75f35676f",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "process-observation",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-cb42e12634f953ca",
+      "scenarioId": "v2c.harness-session.case-cb42e12634f953ca",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.harness-session.case-cb42e12634f953ca",
+        "outcomeClass": "conflicted",
+        "requiredEvidenceKinds": [
+          "source-fact"
+        ],
+        "sourceFactState": "required",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-b943ecde74f72559",
+      "scenarioId": "v2c.harness-session.case-b943ecde74f72559",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.harness-session.case-b943ecde74f72559",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-1d41b7cd691717cc",
+      "scenarioId": "v2c.harness-session.case-1d41b7cd691717cc",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.harness-session.case-1d41b7cd691717cc",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-6e9a865e2f8ebcc9",
+      "scenarioId": "v2c.harness-session.case-6e9a865e2f8ebcc9",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.harness-session.case-6e9a865e2f8ebcc9",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-4e97f754f85e6871",
+      "scenarioId": "v2c.harness-session.case-4e97f754f85e6871",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.harness-session.case-4e97f754f85e6871",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-746de4e07d1cb663",
+      "scenarioId": "v2c.harness-session.case-746de4e07d1cb663",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.harness-session.case-746de4e07d1cb663",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-04841c02ff8ac172",
+      "scenarioId": "v2c.harness-session.case-04841c02ff8ac172",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.harness-session.case-04841c02ff8ac172",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-992da280c223705c",
+      "scenarioId": "v2c.control-taxonomy.case-992da280c223705c",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.control-taxonomy.case-992da280c223705c",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "state-transition"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-9b1f2455b9486fb8",
+      "scenarioId": "v2c.control-taxonomy.case-9b1f2455b9486fb8",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.control-taxonomy.case-9b1f2455b9486fb8",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "state-transition"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-ccba4fa4c23ea597",
+      "scenarioId": "v2c.authority-policy.case-ccba4fa4c23ea597",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.authority-policy.case-ccba4fa4c23ea597",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-9b97adc9c88e72db",
+      "scenarioId": "v2c.authority-policy.case-9b97adc9c88e72db",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.authority-policy.case-9b97adc9c88e72db",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-42e4f70f8db79275",
+      "scenarioId": "v2c.authority-policy.case-42e4f70f8db79275",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.authority-policy.case-42e4f70f8db79275",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-bf7b8be3fed43b6b",
+      "scenarioId": "v2c.authority-policy.case-bf7b8be3fed43b6b",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.authority-policy.case-bf7b8be3fed43b6b",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-5c67acc325c0c5cc",
+      "scenarioId": "v2c.authority-policy.case-5c67acc325c0c5cc",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.authority-policy.case-5c67acc325c0c5cc",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-883b1bf6cd8950c3",
+      "scenarioId": "v2c.time.case-883b1bf6cd8950c3",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.time.case-883b1bf6cd8950c3",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-9a9be5874a6bcccc",
+      "scenarioId": "v2c.time.case-9a9be5874a6bcccc",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.time.case-9a9be5874a6bcccc",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "effect-outcome",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-7b31ba4290763ede",
+      "scenarioId": "v2c.time.case-7b31ba4290763ede",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.time.case-7b31ba4290763ede",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-a3e48ad5c4a68065",
+      "scenarioId": "v2c.time.case-a3e48ad5c4a68065",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.time.case-a3e48ad5c4a68065",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "state-transition",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-437c70c5849e6f45",
+      "scenarioId": "v2c.activation.case-437c70c5849e6f45",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.activation.case-437c70c5849e6f45",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "state-transition",
+          "identity-binding",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-9517e01d762d1f29",
+      "scenarioId": "v2c.activation.case-9517e01d762d1f29",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.activation.case-9517e01d762d1f29",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-9437319ace99e1c7",
+      "scenarioId": "v2c.activation.case-9437319ace99e1c7",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.activation.case-9437319ace99e1c7",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-0ca0ce9a7b52c579",
+      "scenarioId": "v2c.activation.case-0ca0ce9a7b52c579",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.activation.case-0ca0ce9a7b52c579",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-b2bbbf398a04a7b4",
+      "scenarioId": "v2c.activation.case-b2bbbf398a04a7b4",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.activation.case-b2bbbf398a04a7b4",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-d29467a38bb37b18",
+      "scenarioId": "v2c.activation.case-d29467a38bb37b18",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.activation.case-d29467a38bb37b18",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "state-transition",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-0884a95354e80e88",
+      "scenarioId": "v2c.command-idempotency.case-0884a95354e80e88",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.command-idempotency.case-0884a95354e80e88",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "state-transition",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-44d0defb2c3ee6e8",
+      "scenarioId": "v2c.command-idempotency.case-44d0defb2c3ee6e8",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.command-idempotency.case-44d0defb2c3ee6e8",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-7e2850f96e70f7f2",
+      "scenarioId": "v2c.command-idempotency.case-7e2850f96e70f7f2",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.command-idempotency.case-7e2850f96e70f7f2",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-06f0de1c613562f0",
+      "scenarioId": "v2c.command-idempotency.case-06f0de1c613562f0",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.command-idempotency.case-06f0de1c613562f0",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-fe14f31f64c6e9c7",
+      "scenarioId": "v2c.command-idempotency.case-fe14f31f64c6e9c7",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.command-idempotency.case-fe14f31f64c6e9c7",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-a20b4cd54b52d782",
+      "scenarioId": "v2c.command-idempotency.case-a20b4cd54b52d782",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.command-idempotency.case-a20b4cd54b52d782",
+        "outcomeClass": "conflicted",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-c040b2b65fbdf156",
+      "scenarioId": "v2c.command-idempotency.case-c040b2b65fbdf156",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.command-idempotency.case-c040b2b65fbdf156",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-8faa0ad96119dcd3",
+      "scenarioId": "v2c.command-idempotency.case-8faa0ad96119dcd3",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.command-idempotency.case-8faa0ad96119dcd3",
+        "outcomeClass": "conflicted",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-2921bf8d39cbedd0",
+      "scenarioId": "v2c.run.case-2921bf8d39cbedd0",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.run.case-2921bf8d39cbedd0",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-3d2ffc3684961b8b",
+      "scenarioId": "v2c.run.case-3d2ffc3684961b8b",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.run.case-3d2ffc3684961b8b",
+        "outcomeClass": "conflicted",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-07b219604f77ec11",
+      "scenarioId": "v2c.run.case-07b219604f77ec11",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.run.case-07b219604f77ec11",
+        "outcomeClass": "terminalized",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-f4f0e256f70be78a",
+      "scenarioId": "v2c.run.case-f4f0e256f70be78a",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.run.case-f4f0e256f70be78a",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "source-fact",
+          "command-result",
+          "effect-outcome"
+        ],
+        "sourceFactState": "forbidden",
+        "commandState": "forbidden",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-ec2c4c60bf3bed92",
+      "scenarioId": "v2c.run.case-ec2c4c60bf3bed92",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.run.case-ec2c4c60bf3bed92",
+        "outcomeClass": "terminalized",
+        "requiredEvidenceKinds": [
+          "source-fact"
+        ],
+        "sourceFactState": "required",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-a5aeebde48e9ef31",
+      "scenarioId": "v2c.run-attempt.case-a5aeebde48e9ef31",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.run-attempt.case-a5aeebde48e9ef31",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-3b06c1e112fc8cba",
+      "scenarioId": "v2c.run-attempt.case-3b06c1e112fc8cba",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.run-attempt.case-3b06c1e112fc8cba",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "process-observation",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-a817b2f69a823972",
+      "scenarioId": "v2c.run-attempt.case-a817b2f69a823972",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.run-attempt.case-a817b2f69a823972",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-79ea5c5af64adc96",
+      "scenarioId": "v2c.run-attempt.case-79ea5c5af64adc96",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.run-attempt.case-79ea5c5af64adc96",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "effect-outcome",
+          "process-observation",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-ae7db6cf250cbc93",
+      "scenarioId": "v2c.run-attempt.case-ae7db6cf250cbc93",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.run-attempt.case-ae7db6cf250cbc93",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-e76d5ba84942b386",
+      "scenarioId": "v2c.run-attempt.case-e76d5ba84942b386",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.run-attempt.case-e76d5ba84942b386",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "state-transition",
+          "identity-binding",
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-ad8e55b719c20ac5",
+      "scenarioId": "v2c.run-attempt.case-ad8e55b719c20ac5",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.run-attempt.case-ad8e55b719c20ac5",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-dc99a9593d204e32",
+      "scenarioId": "v2c.process-lifecycle.case-dc99a9593d204e32",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.process-lifecycle.case-dc99a9593d204e32",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "process-observation"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-41ed09ca1d5e1c11",
+      "scenarioId": "v2c.process-lifecycle.case-41ed09ca1d5e1c11",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.process-lifecycle.case-41ed09ca1d5e1c11",
+        "outcomeClass": "terminalized",
+        "requiredEvidenceKinds": [
+          "effect-outcome",
+          "process-observation"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-3959fd59b64289b9",
+      "scenarioId": "v2c.process-lifecycle.case-3959fd59b64289b9",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.process-lifecycle.case-3959fd59b64289b9",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "source-fact",
+          "identity-binding",
+          "process-observation"
+        ],
+        "sourceFactState": "required",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-470b4e7f410682fc",
+      "scenarioId": "v2c.process-lifecycle.case-470b4e7f410682fc",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.process-lifecycle.case-470b4e7f410682fc",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "process-observation",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-4d527d433a02b22e",
+      "scenarioId": "v2c.process-lifecycle.case-4d527d433a02b22e",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.process-lifecycle.case-4d527d433a02b22e",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "process-observation",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-15d245ccca1f060a",
+      "scenarioId": "v2c.process-lifecycle.case-15d245ccca1f060a",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.process-lifecycle.case-15d245ccca1f060a",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "process-observation",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-dc69d0aceed65d86",
+      "scenarioId": "v2c.approval.case-dc69d0aceed65d86",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.approval.case-dc69d0aceed65d86",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-4b9af75392ae3179",
+      "scenarioId": "v2c.approval.case-4b9af75392ae3179",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.approval.case-4b9af75392ae3179",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "effect-outcome",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-af4c5a4f83eb7110",
+      "scenarioId": "v2c.approval.case-af4c5a4f83eb7110",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.approval.case-af4c5a4f83eb7110",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "state-transition"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-c5b2cb70424e191d",
+      "scenarioId": "v2c.effect.case-c5b2cb70424e191d",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.effect.case-c5b2cb70424e191d",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-c577210f77a8f691",
+      "scenarioId": "v2c.effect.case-c577210f77a8f691",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.effect.case-c577210f77a8f691",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "effect-outcome",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-eb9596718e63e1e7",
+      "scenarioId": "v2c.effect.case-eb9596718e63e1e7",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.effect.case-eb9596718e63e1e7",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-17f8ea1e2fe54f6c",
+      "scenarioId": "v2c.effect.case-17f8ea1e2fe54f6c",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.effect.case-17f8ea1e2fe54f6c",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "effect-outcome",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-0079735399055528",
+      "scenarioId": "v2c.effect.case-0079735399055528",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.effect.case-0079735399055528",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-b451b3bac19d7219",
+      "scenarioId": "v2c.effect.case-b451b3bac19d7219",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.effect.case-b451b3bac19d7219",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-787f5219b6462e71",
+      "scenarioId": "v2c.effect.case-787f5219b6462e71",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.effect.case-787f5219b6462e71",
+        "outcomeClass": "conflicted",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-21e1b4425801e363",
+      "scenarioId": "v2c.effect.case-21e1b4425801e363",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.effect.case-21e1b4425801e363",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "effect-outcome",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-1aa57d13a5b3e2c9",
+      "scenarioId": "v2c.effect.case-1aa57d13a5b3e2c9",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.effect.case-1aa57d13a5b3e2c9",
+        "outcomeClass": "conflicted",
+        "requiredEvidenceKinds": [
+          "state-transition",
+          "effect-outcome",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-5a2152bf98f8ad78",
+      "scenarioId": "v2c.effect.case-5a2152bf98f8ad78",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.effect.case-5a2152bf98f8ad78",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-06f29d5923eb27ff",
+      "scenarioId": "v2c.effect.case-06f29d5923eb27ff",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.effect.case-06f29d5923eb27ff",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "effect-outcome",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-3c81cfa02aa23d2b",
+      "scenarioId": "v2c.effect.case-3c81cfa02aa23d2b",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.effect.case-3c81cfa02aa23d2b",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "effect-outcome",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-68bf1a8ab565a087",
+      "scenarioId": "v2c.direct-effect.case-68bf1a8ab565a087",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.direct-effect.case-68bf1a8ab565a087",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-f3d2fd539d793604",
+      "scenarioId": "v2c.direct-effect.case-f3d2fd539d793604",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.direct-effect.case-f3d2fd539d793604",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-78b3454612fc61ab",
+      "scenarioId": "v2c.direct-effect.case-78b3454612fc61ab",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.direct-effect.case-78b3454612fc61ab",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "effect-outcome",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-31c2ab6bd682eda5",
+      "scenarioId": "v2c.errors.case-31c2ab6bd682eda5",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.errors.case-31c2ab6bd682eda5",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-2b2be212349bab76",
+      "scenarioId": "v2c.errors.case-2b2be212349bab76",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.errors.case-2b2be212349bab76",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-0b1874f01659e11b",
+      "scenarioId": "v2c.runtime-boundary.case-0b1874f01659e11b",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.runtime-boundary.case-0b1874f01659e11b",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "process-observation",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-04ff6b58f2fd0c86",
+      "scenarioId": "v2c.runtime-boundary.case-04ff6b58f2fd0c86",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.runtime-boundary.case-04ff6b58f2fd0c86",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "process-observation"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-fc1ae165227e0aad",
+      "scenarioId": "v2c.runtime-boundary.case-fc1ae165227e0aad",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.runtime-boundary.case-fc1ae165227e0aad",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "effect-outcome",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-84add5e324213bbb",
+      "scenarioId": "v2c.runtime-boundary.case-84add5e324213bbb",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.runtime-boundary.case-84add5e324213bbb",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "process-observation"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-0193a18bfd177d6f",
+      "scenarioId": "v2c.runtime-boundary.case-0193a18bfd177d6f",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.runtime-boundary.case-0193a18bfd177d6f",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-f2679e28b8f6e5ea",
+      "scenarioId": "v2c.runtime-boundary.case-f2679e28b8f6e5ea",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.runtime-boundary.case-f2679e28b8f6e5ea",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "process-observation"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-310c7b0081698071",
+      "scenarioId": "v2c.runtime-boundary.case-310c7b0081698071",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.runtime-boundary.case-310c7b0081698071",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "process-observation",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-50cb629942f03c42",
+      "scenarioId": "v2c.host-attestation.case-50cb629942f03c42",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.host-attestation.case-50cb629942f03c42",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-98272db6decc78fe",
+      "scenarioId": "v2c.host-attestation.case-98272db6decc78fe",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.host-attestation.case-98272db6decc78fe",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-5c3db26dc9e6b746",
+      "scenarioId": "v2c.host-attestation.case-5c3db26dc9e6b746",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.host-attestation.case-5c3db26dc9e6b746",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-da5dd9ee5328835c",
+      "scenarioId": "v2c.host-attestation.case-da5dd9ee5328835c",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.host-attestation.case-da5dd9ee5328835c",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-dcbef2eddf546aa9",
+      "scenarioId": "v2c.host-attestation.case-dcbef2eddf546aa9",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.host-attestation.case-dcbef2eddf546aa9",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-5146596e4f18a1b5",
+      "scenarioId": "v2c.host-attestation.case-5146596e4f18a1b5",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.host-attestation.case-5146596e4f18a1b5",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "effect-outcome",
+          "process-observation",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-a635871d9e818d72",
+      "scenarioId": "v2c.health-facts.case-a635871d9e818d72",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.health-facts.case-a635871d9e818d72",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-2b4ea87746cb91bc",
+      "scenarioId": "v2c.health-facts.case-2b4ea87746cb91bc",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.health-facts.case-2b4ea87746cb91bc",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "process-observation"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-f3612354bebfb68b",
+      "scenarioId": "v2c.health-facts.case-f3612354bebfb68b",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.health-facts.case-f3612354bebfb68b",
+        "outcomeClass": "terminalized",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-0d9643ce87048dd1",
+      "scenarioId": "v2c.health-facts.case-0d9643ce87048dd1",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.health-facts.case-0d9643ce87048dd1",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-486639fde4261c9e",
+      "scenarioId": "v2c.control-boundary.case-486639fde4261c9e",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.control-boundary.case-486639fde4261c9e",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-a580797d2bbf9851",
+      "scenarioId": "v2c.control-boundary.case-a580797d2bbf9851",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2c.control-boundary.case-a580797d2bbf9851",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-172434e8f69c8fde",
+      "scenarioId": "v2s.sqlite.case-172434e8f69c8fde",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.sqlite.case-172434e8f69c8fde",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-e1bb817e54595928",
+      "scenarioId": "v2s.sqlite.case-e1bb817e54595928",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.sqlite.case-e1bb817e54595928",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-6e190cfeca05b49f",
+      "scenarioId": "v2s.sqlite.case-6e190cfeca05b49f",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.sqlite.case-6e190cfeca05b49f",
+        "outcomeClass": "idempotent",
+        "requiredEvidenceKinds": [
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-aaefe760d261e4bf",
+      "scenarioId": "v2s.sqlite.case-aaefe760d261e4bf",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.sqlite.case-aaefe760d261e4bf",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "source-fact",
+          "identity-binding"
+        ],
+        "sourceFactState": "required",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-929cebd105ea0925",
+      "scenarioId": "v2s.sqlite.case-929cebd105ea0925",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.sqlite.case-929cebd105ea0925",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "source-fact",
+          "identity-binding"
+        ],
+        "sourceFactState": "required",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-bb747119f22de9e8",
+      "scenarioId": "v2s.ddl.case-bb747119f22de9e8",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.ddl.case-bb747119f22de9e8",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-633a4e32de7df4be",
+      "scenarioId": "v2s.ddl.case-633a4e32de7df4be",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.ddl.case-633a4e32de7df4be",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-64a293247b9fb32a",
+      "scenarioId": "v2s.ddl.case-64a293247b9fb32a",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.ddl.case-64a293247b9fb32a",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-a96c8105eaddf6f0",
+      "scenarioId": "v2s.ddl.case-a96c8105eaddf6f0",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.ddl.case-a96c8105eaddf6f0",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-16147bca7cebaa21",
+      "scenarioId": "v2s.ddl.case-16147bca7cebaa21",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.ddl.case-16147bca7cebaa21",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-ea22dd0a6e6b281d",
+      "scenarioId": "v2s.ddl.case-ea22dd0a6e6b281d",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.ddl.case-ea22dd0a6e6b281d",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-83427b6d51b66fa6",
+      "scenarioId": "v2s.command-results.case-83427b6d51b66fa6",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.command-results.case-83427b6d51b66fa6",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "state-transition"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-4a248d5e73b2514f",
+      "scenarioId": "v2s.command-results.case-4a248d5e73b2514f",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.command-results.case-4a248d5e73b2514f",
+        "outcomeClass": "conflicted",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-543e5abd1372fe6d",
+      "scenarioId": "v2s.command-results.case-543e5abd1372fe6d",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.command-results.case-543e5abd1372fe6d",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-207bca756be6ac0d",
+      "scenarioId": "v2s.command-results.case-207bca756be6ac0d",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.command-results.case-207bca756be6ac0d",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "state-transition",
+          "effect-outcome",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "required",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-7afc003bcd02ae6c",
+      "scenarioId": "v2s.command-results.case-7afc003bcd02ae6c",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.command-results.case-7afc003bcd02ae6c",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-9a101297cada90be",
+      "scenarioId": "v2s.command-results.case-9a101297cada90be",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.command-results.case-9a101297cada90be",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "state-transition"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-9c51032e4d4038e1",
+      "scenarioId": "v2s.transactions.case-9c51032e4d4038e1",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.transactions.case-9c51032e4d4038e1",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "state-transition",
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-fe75138ace6ae93a",
+      "scenarioId": "v2s.transactions.case-fe75138ace6ae93a",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.transactions.case-fe75138ace6ae93a",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-c0fd0d3206248974",
+      "scenarioId": "v2s.transactions.case-c0fd0d3206248974",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.transactions.case-c0fd0d3206248974",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-9eb297ffe7853458",
+      "scenarioId": "v2s.transactions.case-9eb297ffe7853458",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.transactions.case-9eb297ffe7853458",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "identity-binding",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-63b1c687d34aeee5",
+      "scenarioId": "v2s.transactions.case-63b1c687d34aeee5",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.transactions.case-63b1c687d34aeee5",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-5358dd57d404c41a",
+      "scenarioId": "v2s.transactions.case-5358dd57d404c41a",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.transactions.case-5358dd57d404c41a",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-4863eac769e290dc",
+      "scenarioId": "v2s.transactions.case-4863eac769e290dc",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.transactions.case-4863eac769e290dc",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-e9834734c4ea005b",
+      "scenarioId": "v2s.transactions.case-e9834734c4ea005b",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.transactions.case-e9834734c4ea005b",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-ca300ae5f1073288",
+      "scenarioId": "v2s.transactions.case-ca300ae5f1073288",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.transactions.case-ca300ae5f1073288",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "effect-outcome",
+          "process-observation"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-e5e6bfa6b9efa5e9",
+      "scenarioId": "v2s.transactions.case-e5e6bfa6b9efa5e9",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.transactions.case-e5e6bfa6b9efa5e9",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-1cbd0389b01450b2",
+      "scenarioId": "v2s.transactions.case-1cbd0389b01450b2",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.transactions.case-1cbd0389b01450b2",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-983d8042df39a94b",
+      "scenarioId": "v2s.transactions.case-983d8042df39a94b",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.transactions.case-983d8042df39a94b",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "process-observation"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-551eb32e55c10eb6",
+      "scenarioId": "v2s.transactions.case-551eb32e55c10eb6",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.transactions.case-551eb32e55c10eb6",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-a6e4bd377058f104",
+      "scenarioId": "v2s.transactions.case-a6e4bd377058f104",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.transactions.case-a6e4bd377058f104",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-8c6021fe8d0041a2",
+      "scenarioId": "v2s.transactions.case-8c6021fe8d0041a2",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.transactions.case-8c6021fe8d0041a2",
+        "outcomeClass": "conflicted",
+        "requiredEvidenceKinds": [
+          "state-transition",
+          "identity-binding",
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-e9aa255d0209ead8",
+      "scenarioId": "v2s.source-facts.case-e9aa255d0209ead8",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.source-facts.case-e9aa255d0209ead8",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "source-fact",
+          "state-transition",
+          "identity-binding",
+          "effect-outcome",
+          "authority-evidence"
+        ],
+        "sourceFactState": "forbidden",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-7346d8522d592f0b",
+      "scenarioId": "v2s.source-facts.case-7346d8522d592f0b",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.source-facts.case-7346d8522d592f0b",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-67e77675b7af2265",
+      "scenarioId": "v2s.source-facts.case-67e77675b7af2265",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.source-facts.case-67e77675b7af2265",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "source-fact",
+          "effect-outcome"
+        ],
+        "sourceFactState": "required",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-ff5f30494b34e8fa",
+      "scenarioId": "v2s.source-facts.case-ff5f30494b34e8fa",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.source-facts.case-ff5f30494b34e8fa",
+        "outcomeClass": "conflicted",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "effect-outcome",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-9426ccb80cf037a4",
+      "scenarioId": "v2s.source-facts.case-9426ccb80cf037a4",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.source-facts.case-9426ccb80cf037a4",
+        "outcomeClass": "terminalized",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-6005b5c8c5c674d9",
+      "scenarioId": "v2s.source-facts.case-6005b5c8c5c674d9",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.source-facts.case-6005b5c8c5c674d9",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "source-fact"
+        ],
+        "sourceFactState": "forbidden",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-ce3f2208e42495a3",
+      "scenarioId": "v2s.source-facts.case-ce3f2208e42495a3",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.source-facts.case-ce3f2208e42495a3",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-228708d02b4f7b72",
+      "scenarioId": "v2s.source-facts.case-228708d02b4f7b72",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.source-facts.case-228708d02b4f7b72",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-0d073422ca59c3a0",
+      "scenarioId": "v2s.source-facts.case-0d073422ca59c3a0",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.source-facts.case-0d073422ca59c3a0",
+        "outcomeClass": "idempotent",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-daa1deb9b4d0f663",
+      "scenarioId": "v2s.source-facts.case-daa1deb9b4d0f663",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.source-facts.case-daa1deb9b4d0f663",
+        "outcomeClass": "conflicted",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-9d12d5cab51d80e9",
+      "scenarioId": "v2s.source-facts.case-9d12d5cab51d80e9",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.source-facts.case-9d12d5cab51d80e9",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-cbe14e90f7c830d4",
+      "scenarioId": "v2s.source-facts.case-cbe14e90f7c830d4",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.source-facts.case-cbe14e90f7c830d4",
+        "outcomeClass": "conflicted",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-509c8f8ee66c48fe",
+      "scenarioId": "v2s.source-facts.case-509c8f8ee66c48fe",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.source-facts.case-509c8f8ee66c48fe",
+        "outcomeClass": "conflicted",
+        "requiredEvidenceKinds": [
+          "source-fact",
+          "state-transition"
+        ],
+        "sourceFactState": "required",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-b9798ce8ffef3ce4",
+      "scenarioId": "v2s.source-facts.case-b9798ce8ffef3ce4",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.source-facts.case-b9798ce8ffef3ce4",
+        "outcomeClass": "conflicted",
+        "requiredEvidenceKinds": [
+          "state-transition",
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-6777c69a705f989d",
+      "scenarioId": "v2s.source-facts.case-6777c69a705f989d",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.source-facts.case-6777c69a705f989d",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "source-fact",
+          "identity-binding"
+        ],
+        "sourceFactState": "required",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-c046c9999f5ab2e8",
+      "scenarioId": "v2s.projection-rebuild.case-c046c9999f5ab2e8",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.projection-rebuild.case-c046c9999f5ab2e8",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-b54e26fca3983bd7",
+      "scenarioId": "v2s.projection-rebuild.case-b54e26fca3983bd7",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.projection-rebuild.case-b54e26fca3983bd7",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "source-fact"
+        ],
+        "sourceFactState": "required",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-68b0f65fa59604fb",
+      "scenarioId": "v2s.handoff.case-68b0f65fa59604fb",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.handoff.case-68b0f65fa59604fb",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-a31d079de80b5ba3",
+      "scenarioId": "v2s.handoff.case-a31d079de80b5ba3",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.handoff.case-a31d079de80b5ba3",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-851d8da0cda9f610",
+      "scenarioId": "v2s.handoff.case-851d8da0cda9f610",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.handoff.case-851d8da0cda9f610",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-f5df5cf32ce74b18",
+      "scenarioId": "v2s.handoff.case-f5df5cf32ce74b18",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.handoff.case-f5df5cf32ce74b18",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-618f0232dee6c5fb",
+      "scenarioId": "v2s.handoff.case-618f0232dee6c5fb",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.handoff.case-618f0232dee6c5fb",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "state-transition",
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-9208c1a9969444c0",
+      "scenarioId": "v2s.restore.case-9208c1a9969444c0",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-9208c1a9969444c0",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-0e042a065fab2df9",
+      "scenarioId": "v2s.restore.case-0e042a065fab2df9",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-0e042a065fab2df9",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "identity-binding",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-0245a8b20537e56d",
+      "scenarioId": "v2s.restore.case-0245a8b20537e56d",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-0245a8b20537e56d",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-328187b3d7e9970d",
+      "scenarioId": "v2s.restore.case-328187b3d7e9970d",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-328187b3d7e9970d",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-257a8afa45e80f01",
+      "scenarioId": "v2s.restore.case-257a8afa45e80f01",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-257a8afa45e80f01",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "state-transition"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-a6ed285ae8d5d206",
+      "scenarioId": "v2s.restore.case-a6ed285ae8d5d206",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-a6ed285ae8d5d206",
+        "outcomeClass": "terminalized",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "state-transition",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "required",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-3e9388e64be6e424",
+      "scenarioId": "v2s.restore.case-3e9388e64be6e424",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-3e9388e64be6e424",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "state-transition",
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-c33b45229a234dc2",
+      "scenarioId": "v2s.restore.case-c33b45229a234dc2",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-c33b45229a234dc2",
+        "outcomeClass": "conflicted",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-ae8edc529117987b",
+      "scenarioId": "v2s.restore.case-ae8edc529117987b",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-ae8edc529117987b",
+        "outcomeClass": "idempotent",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "required",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-04f28f7e21f8c517",
+      "scenarioId": "v2s.restore.case-04f28f7e21f8c517",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-04f28f7e21f8c517",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-5f0865c543d38000",
+      "scenarioId": "v2s.restore.case-5f0865c543d38000",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-5f0865c543d38000",
+        "outcomeClass": "conflicted",
+        "requiredEvidenceKinds": [
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-b44252179c9e7a5d",
+      "scenarioId": "v2s.restore.case-b44252179c9e7a5d",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-b44252179c9e7a5d",
+        "outcomeClass": "conflicted",
+        "requiredEvidenceKinds": [
+          "effect-outcome",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-d5f19166b03545ac",
+      "scenarioId": "v2s.restore.case-d5f19166b03545ac",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-d5f19166b03545ac",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-d680f1a82c9712d0",
+      "scenarioId": "v2s.restore.case-d680f1a82c9712d0",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-d680f1a82c9712d0",
+        "outcomeClass": "conflicted",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-436bdaf8d0ce678e",
+      "scenarioId": "v2s.restore.case-436bdaf8d0ce678e",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-436bdaf8d0ce678e",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "identity-binding",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-da2a90fc7592ecac",
+      "scenarioId": "v2s.restore.case-da2a90fc7592ecac",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-da2a90fc7592ecac",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-0f6c0d299888f98a",
+      "scenarioId": "v2s.restore.case-0f6c0d299888f98a",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-0f6c0d299888f98a",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-200a3a215b8df2f9",
+      "scenarioId": "v2s.restore.case-200a3a215b8df2f9",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-200a3a215b8df2f9",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-57fad8805d2aa65d",
+      "scenarioId": "v2s.restore.case-57fad8805d2aa65d",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-57fad8805d2aa65d",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "effect-outcome",
+          "process-observation",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-baaf6879571987c3",
+      "scenarioId": "v2s.restore.case-baaf6879571987c3",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-baaf6879571987c3",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-3367c5c311edba14",
+      "scenarioId": "v2s.restore.case-3367c5c311edba14",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-3367c5c311edba14",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-b41e629410d6bd72",
+      "scenarioId": "v2s.restore.case-b41e629410d6bd72",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-b41e629410d6bd72",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "required",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-bd1a0e6d778e751e",
+      "scenarioId": "v2s.restore.case-bd1a0e6d778e751e",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-bd1a0e6d778e751e",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-f4ba9a3a00d08fc1",
+      "scenarioId": "v2s.restore.case-f4ba9a3a00d08fc1",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-f4ba9a3a00d08fc1",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-2535bafa3b986d9f",
+      "scenarioId": "v2s.restore.case-2535bafa3b986d9f",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-2535bafa3b986d9f",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "identity-binding",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-f0a80cef8d362eb0",
+      "scenarioId": "v2s.restore.case-f0a80cef8d362eb0",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-f0a80cef8d362eb0",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "forbidden",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-11821e6b8fe70162",
+      "scenarioId": "v2s.restore.case-11821e6b8fe70162",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-11821e6b8fe70162",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-21c4fe51e1eaaf75",
+      "scenarioId": "v2s.restore.case-21c4fe51e1eaaf75",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-21c4fe51e1eaaf75",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-77e7f58c0adbfd34",
+      "scenarioId": "v2s.restore.case-77e7f58c0adbfd34",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-77e7f58c0adbfd34",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "state-transition",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-6a06ceb80ff91466",
+      "scenarioId": "v2s.restore.case-6a06ceb80ff91466",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-6a06ceb80ff91466",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-16c82e6efcff0680",
+      "scenarioId": "v2s.restore.case-16c82e6efcff0680",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-16c82e6efcff0680",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "command-result",
+          "identity-binding",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-7866356202adaca5",
+      "scenarioId": "v2s.restore.case-7866356202adaca5",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-7866356202adaca5",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "effect-outcome",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-ef2a0d13845e9fce",
+      "scenarioId": "v2s.restore.case-ef2a0d13845e9fce",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-ef2a0d13845e9fce",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-3d641c3edf847bef",
+      "scenarioId": "v2s.restore.case-3d641c3edf847bef",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-3d641c3edf847bef",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "identity-binding"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-db75b8ca6e733373",
+      "scenarioId": "v2s.restore.case-db75b8ca6e733373",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-db75b8ca6e733373",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "effect-outcome"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-875c30fd430746cf",
+      "scenarioId": "v2s.restore.case-875c30fd430746cf",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-875c30fd430746cf",
+        "outcomeClass": "rejected",
+        "requiredEvidenceKinds": [
+          "effect-outcome",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "forbidden",
+        "mutationAuthorityState": "forbidden"
+      }
+    },
+    {
+      "caseId": "oracle-case-7e06f53c78c6245a",
+      "scenarioId": "v2s.restore.case-7e06f53c78c6245a",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-7e06f53c78c6245a",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "identity-binding",
+          "authority-evidence"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "required"
+      }
+    },
+    {
+      "caseId": "oracle-case-ea0f82fddbb05f2f",
+      "scenarioId": "v2s.restore.case-ea0f82fddbb05f2f",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.restore.case-ea0f82fddbb05f2f",
+        "outcomeClass": "idempotent",
+        "requiredEvidenceKinds": [
+          "command-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "required",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    },
+    {
+      "caseId": "oracle-case-0225d0fcb67a7e0c",
+      "scenarioId": "v2s.read-only.case-0225d0fcb67a7e0c",
+      "observation": {
+        "kind": "typed-public-observation-v1",
+        "scenarioId": "v2s.read-only.case-0225d0fcb67a7e0c",
+        "outcomeClass": "accepted",
+        "requiredEvidenceKinds": [
+          "contract-result"
+        ],
+        "sourceFactState": "not-applicable",
+        "commandState": "not-applicable",
+        "externalState": "not-applicable",
+        "mutationAuthorityState": "not-applicable"
+      }
+    }
+  ],
+  "expectationSetDigest": "03ec9aaa02388e51532a19bf05426d4900f65c77b4b90dc43d212d7c43449b66"
+}

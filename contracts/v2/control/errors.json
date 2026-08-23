@@ -1,0 +1,332 @@
+{
+  "schemaVersion": "v2-error-algebra-v1",
+  "requirementId": "v2c.errors",
+  "retryabilityKinds": [
+    "never",
+    "same-command",
+    "new-command",
+    "reconcile-only",
+    "after-reauthentication",
+    "after-reauthorization",
+    "after-authority-change",
+    "after-state-change",
+    "after-refresh",
+    "after-upgrade",
+    "after-contract-change",
+    "after-contract-fix",
+    "after-adapter-fix",
+    "after-artifact-fix",
+    "after-reconciliation",
+    "after-new-recovery-session",
+    "after-new-recovery-artifact",
+    "after-restore",
+    "after-environment-fix",
+    "after-source-restore",
+    "after-evidence-fix"
+  ],
+  "messageMaxUtf8Bytes": 160,
+  "detailSchemas": [
+    {
+      "id": "none",
+      "version": 0,
+      "fields": []
+    },
+    {
+      "id": "state-conflict-v1",
+      "version": 1,
+      "fields": [
+        {
+          "id": "winningState",
+          "dataClass": "control-metadata"
+        }
+      ]
+    },
+    {
+      "id": "missing-subject-v1",
+      "version": 1,
+      "fields": [
+        {
+          "id": "subjectKind",
+          "dataClass": "control-metadata"
+        }
+      ]
+    },
+    {
+      "id": "reason-code-v1",
+      "version": 1,
+      "fields": [
+        {
+          "id": "reasonCode",
+          "dataClass": "control-metadata",
+          "allowedValues": [
+            "invalid-input",
+            "missing-evidence",
+            "contract-mismatch",
+            "external-check-failed"
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "kind": "invalid_request",
+      "retryability": "never",
+      "messageTemplateId": "request-invalid-v1",
+      "message": "The request is invalid.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "unauthenticated",
+      "retryability": "after-reauthentication",
+      "messageTemplateId": "authentication-required-v1",
+      "message": "Authentication is required.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "unauthorized",
+      "retryability": "after-authority-change",
+      "messageTemplateId": "operation-not-authorized-v1",
+      "message": "The operation is not authorized.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "unsupported_version",
+      "retryability": "after-upgrade",
+      "messageTemplateId": "version-unsupported-v1",
+      "message": "The contract version is unsupported.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "unsupported_schedule",
+      "retryability": "after-contract-change",
+      "messageTemplateId": "schedule-unsupported-v1",
+      "message": "Scheduled admission is unsupported.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "idempotency_conflict",
+      "retryability": "never",
+      "messageTemplateId": "idempotency-conflict-v1",
+      "message": "The command identity conflicts with stored input.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "terminal_conflict",
+      "retryability": "never",
+      "messageTemplateId": "terminal-conflict-v1",
+      "message": "A terminal result already exists.",
+      "detailSchemaId": "state-conflict-v1",
+      "detailSchemaVersion": 1
+    },
+    {
+      "kind": "invalid_state",
+      "retryability": "after-state-change",
+      "messageTemplateId": "state-invalid-v1",
+      "message": "The operation is invalid for the current state.",
+      "detailSchemaId": "state-conflict-v1",
+      "detailSchemaVersion": 1
+    },
+    {
+      "kind": "stale_epoch",
+      "retryability": "after-refresh",
+      "messageTemplateId": "epoch-stale-v1",
+      "message": "The activation epoch is stale.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "stale_generation",
+      "retryability": "after-refresh",
+      "messageTemplateId": "generation-stale-v1",
+      "message": "The authority generation is stale.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "stale_attempt",
+      "retryability": "never",
+      "messageTemplateId": "attempt-stale-v1",
+      "message": "The run attempt is stale.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "protocol_failure",
+      "retryability": "after-adapter-fix",
+      "messageTemplateId": "protocol-failure-v1",
+      "message": "The adapter protocol failed.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "integrity_error",
+      "retryability": "after-artifact-fix",
+      "messageTemplateId": "integrity-failure-v1",
+      "message": "Artifact integrity verification failed.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "capability_denied",
+      "retryability": "after-authority-change",
+      "messageTemplateId": "capability-denied-v1",
+      "message": "The capability is not authorized.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "deadline_exceeded",
+      "retryability": "new-command",
+      "messageTemplateId": "deadline-exceeded-v1",
+      "message": "The operation deadline was exceeded.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "cancelled",
+      "retryability": "never",
+      "messageTemplateId": "operation-cancelled-v1",
+      "message": "The operation was cancelled.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "not_found",
+      "retryability": "after-state-change",
+      "messageTemplateId": "subject-not-found-v1",
+      "message": "The requested subject was not found.",
+      "detailSchemaId": "missing-subject-v1",
+      "detailSchemaVersion": 1
+    },
+    {
+      "kind": "conflict",
+      "retryability": "after-reconciliation",
+      "messageTemplateId": "conflict-unresolved-v1",
+      "message": "Conflicting evidence remains unresolved.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "recovery_in_progress",
+      "retryability": "same-command",
+      "messageTemplateId": "recovery-in-progress-v1",
+      "message": "Recovery coordination is already in progress.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "recovery_aborted",
+      "retryability": "never",
+      "messageTemplateId": "recovery-aborted-v1",
+      "message": "Recovery was aborted.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "recovery_evidence_conflict",
+      "retryability": "after-new-recovery-session",
+      "messageTemplateId": "recovery-evidence-conflict-v1",
+      "message": "Recovery evidence conflicts.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "recovery_artifact_expired",
+      "retryability": "after-new-recovery-artifact",
+      "messageTemplateId": "recovery-artifact-expired-v1",
+      "message": "The recovery artifact expired.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "stale_authority",
+      "retryability": "after-reauthorization",
+      "messageTemplateId": "authority-stale-v1",
+      "message": "The authority evidence is stale.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "target_mismatch",
+      "retryability": "never",
+      "messageTemplateId": "target-mismatch-v1",
+      "message": "The recovery target does not match.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "storage_corrupt",
+      "retryability": "after-restore",
+      "messageTemplateId": "storage-corrupt-v1",
+      "message": "Storage integrity verification failed.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    },
+    {
+      "kind": "prerequisite_missing",
+      "retryability": "after-environment-fix",
+      "messageTemplateId": "prerequisite-missing-v1",
+      "message": "A required prerequisite is unavailable.",
+      "detailSchemaId": "missing-subject-v1",
+      "detailSchemaVersion": 1
+    },
+    {
+      "kind": "missing_source",
+      "retryability": "after-source-restore",
+      "messageTemplateId": "source-missing-v1",
+      "message": "A pinned source is unavailable.",
+      "detailSchemaId": "missing-subject-v1",
+      "detailSchemaVersion": 1
+    },
+    {
+      "kind": "invalid_invocation",
+      "retryability": "new-command",
+      "messageTemplateId": "invocation-invalid-v1",
+      "message": "The validator invocation is invalid.",
+      "detailSchemaId": "reason-code-v1",
+      "detailSchemaVersion": 1
+    },
+    {
+      "kind": "contract_failure",
+      "retryability": "after-contract-fix",
+      "messageTemplateId": "contract-failure-v1",
+      "message": "Contract validation failed.",
+      "detailSchemaId": "reason-code-v1",
+      "detailSchemaVersion": 1
+    },
+    {
+      "kind": "evidence_failure",
+      "retryability": "after-evidence-fix",
+      "messageTemplateId": "evidence-failure-v1",
+      "message": "Required evidence validation failed.",
+      "detailSchemaId": "reason-code-v1",
+      "detailSchemaVersion": 1
+    },
+    {
+      "kind": "external_unknown",
+      "retryability": "reconcile-only",
+      "messageTemplateId": "external-outcome-unknown-v1",
+      "message": "The external outcome is unknown and requires reconciliation.",
+      "detailSchemaId": "none",
+      "detailSchemaVersion": 0
+    }
+  ],
+  "unknownKindPolicy": "reject",
+  "unknownDetailFieldPolicy": "reject",
+  "forbiddenDisclosureClasses": [
+    "runtime-only",
+    "secret-ref"
+  ],
+  "resultKinds": [
+    "success",
+    "usage-error",
+    "operational-failure"
+  ]
+}

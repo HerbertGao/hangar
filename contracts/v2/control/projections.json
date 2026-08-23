@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "v2-control-projections-v1",
+  "requirementId": "v2c.control-boundary",
+  "families": [
+    { "id": "agent", "requiredScopes": ["agent:read"] },
+    { "id": "release", "requiredScopes": ["release:read"] },
+    { "id": "activation", "requiredScopes": ["activation:read"] },
+    { "id": "run", "requiredScopes": ["run:read"] },
+    { "id": "attempt", "requiredScopes": ["run:read"] },
+    { "id": "event", "requiredScopes": ["event:read"] },
+    { "id": "approval", "requiredScopes": ["approval:read"] },
+    { "id": "effect", "requiredScopes": ["effect:read"] },
+    { "id": "health", "requiredScopes": ["health:read"] },
+    { "id": "recovery", "requiredScopes": ["recovery:read"] },
+    { "id": "command-result", "requiredScopes": ["command:read"] }
+  ],
+  "unknownFamilyPolicy": "reject",
+  "unknownViewPolicy": "reject",
+  "unknownScopePolicy": "reject",
+  "fieldPolicy": "v2c.durable-data",
+  "policyVersionRequired": true,
+  "readAuthorityOwner": "trusted-control-boundary",
+  "writeBoundary": {
+    "canonicalCommandIdentity": true,
+    "authorityContext": true,
+    "payloadDigest": true,
+    "releaseEpochPrecondition": true,
+    "httpRoutes": false,
+    "directStorage": false
+  }
+}

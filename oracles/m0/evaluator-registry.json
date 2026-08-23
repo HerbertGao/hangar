@@ -1,0 +1,118 @@
+{
+  "schemaVersion": "m0-evaluator-registry-v2",
+  "requirementId": "m0o.format",
+  "executor": {
+    "id": "normative-scenario-compiler-v1",
+    "source": "frozen-json-definition",
+    "candidateInternalsAllowed": false,
+    "outputKind": "typed-public-observation-v1",
+    "mode": "definition-compiler"
+  },
+  "scenarioObservationRequiredFields": [
+    "kind",
+    "scenarioId",
+    "outcomeClass",
+    "requiredEvidenceKinds",
+    "sourceFactState",
+    "commandState",
+    "externalState",
+    "mutationAuthorityState"
+  ],
+  "outcomeClasses": [
+    "accepted",
+    "rejected",
+    "idempotent",
+    "conflicted",
+    "terminalized"
+  ],
+  "evidenceKinds": [
+    "contract-result",
+    "source-fact",
+    "command-result",
+    "state-transition",
+    "identity-binding",
+    "effect-outcome",
+    "process-observation",
+    "authority-evidence"
+  ],
+  "stateClasses": [
+    "required",
+    "forbidden",
+    "unchanged",
+    "not-applicable"
+  ],
+  "fixtures": [
+    {
+      "id": "evaluator-self-test-v1",
+      "coverageClass": "evaluator-self-test",
+      "executorId": "normative-scenario-compiler-v1",
+      "definitionOwnerId": "m0o.format"
+    },
+    {
+      "id": "neutral-control-storage-v1",
+      "coverageClass": "neutral-control-storage",
+      "executorId": "normative-scenario-compiler-v1",
+      "definitionOwnerId": "m0o.format"
+    },
+    {
+      "id": "inbox-tenant-fixture-v1",
+      "coverageClass": "named-tenant",
+      "executorId": "normative-scenario-compiler-v1",
+      "definitionOwnerId": "m0o.format"
+    },
+    {
+      "id": "process-host-fixture-v1",
+      "coverageClass": "named-process-host",
+      "executorId": "normative-scenario-compiler-v1",
+      "definitionOwnerId": "m0o.format"
+    }
+  ],
+  "observationSchemas": [
+    {
+      "id": "evaluator-result-observation-v1",
+      "kind": "typed-public-observation-v1",
+      "closed": true
+    },
+    {
+      "id": "public-control-storage-observation-v1",
+      "kind": "typed-public-observation-v1",
+      "closed": true
+    },
+    {
+      "id": "tenant-public-observation-v1",
+      "kind": "typed-public-observation-v1",
+      "closed": true
+    },
+    {
+      "id": "process-host-observation-v1",
+      "kind": "typed-public-observation-v1",
+      "closed": true
+    }
+  ],
+  "applicabilityPredicates": [
+    {
+      "id": "evaluator-required-v1",
+      "owner": "evaluator",
+      "required": true
+    },
+    {
+      "id": "always-required-v1",
+      "owner": "evaluator",
+      "required": true
+    },
+    {
+      "id": "selected-tenant-v1",
+      "owner": "hangar-owner",
+      "requiredWhenSelected": true
+    },
+    {
+      "id": "selected-process-host-v1",
+      "owner": "hangar-owner",
+      "requiredWhenSelected": true
+    }
+  ],
+  "mode": "definition-only",
+  "m0ExecutesCandidate": false,
+  "candidateExecutionOwner": "m1+",
+  "fixturePassIsCandidateEvidence": false
+}

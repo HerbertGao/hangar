@@ -1,0 +1,4217 @@
+{
+  "schemaVersion": "m0-oracle-cases-v1",
+  "requirementId": "m0o.format",
+  "typedExpectationManifest": "oracles/m0/scenario-expectations.json",
+  "frozenBeforeCandidateExecution": true,
+  "caseUniverseDigest": "56195421ddf65fad9e1dbcf2a1a5aaeff892c8ed170baf259ca128f47b4e9c2e",
+  "cases": [
+    {
+      "caseId": "oracle-case-5be25c06932ee3c1",
+      "requirementId": "m0o.format",
+      "scenarioId": "m0o.format.case-5be25c06932ee3c1",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.format.case-5be25c06932ee3c1"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-c0e7bd6c39f2fd47",
+      "requirementId": "m0o.format",
+      "scenarioId": "m0o.format.case-c0e7bd6c39f2fd47",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.format.case-c0e7bd6c39f2fd47"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-ee5bd570739cae05",
+      "requirementId": "m0o.format",
+      "scenarioId": "m0o.format.case-ee5bd570739cae05",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.format.case-ee5bd570739cae05"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-0d5b80f3325f6dcd",
+      "requirementId": "m0o.format",
+      "scenarioId": "m0o.format.case-0d5b80f3325f6dcd",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.format.case-0d5b80f3325f6dcd"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-9fc8a1d4167a0b31",
+      "requirementId": "m0o.v0-reaper",
+      "scenarioId": "m0o.v0-reaper.case-9fc8a1d4167a0b31",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.v0-reaper.case-9fc8a1d4167a0b31"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-a62d31eb26def809",
+      "requirementId": "m0o.v0-reaper",
+      "scenarioId": "m0o.v0-reaper.case-a62d31eb26def809",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.v0-reaper.case-a62d31eb26def809"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-7de98c1b85dc6e91",
+      "requirementId": "m0o.v0-reaper",
+      "scenarioId": "m0o.v0-reaper.case-7de98c1b85dc6e91",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.v0-reaper.case-7de98c1b85dc6e91"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-ea8aa672669d0564",
+      "requirementId": "m0o.v0-reaper",
+      "scenarioId": "m0o.v0-reaper.case-ea8aa672669d0564",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.v0-reaper.case-ea8aa672669d0564"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-7493c1b668b29ffc",
+      "requirementId": "m0o.fault-matrix",
+      "scenarioId": "m0o.fault-matrix.case-7493c1b668b29ffc",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.fault-matrix.case-7493c1b668b29ffc"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-1c1a29207a85d888",
+      "requirementId": "m0o.fault-matrix",
+      "scenarioId": "m0o.fault-matrix.case-1c1a29207a85d888",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.fault-matrix.case-1c1a29207a85d888"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-b9d6b63610c48b96",
+      "requirementId": "m0o.fault-matrix",
+      "scenarioId": "m0o.fault-matrix.case-b9d6b63610c48b96",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.fault-matrix.case-b9d6b63610c48b96"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-be01590a4db2a18e",
+      "requirementId": "m0o.fault-matrix",
+      "scenarioId": "m0o.fault-matrix.case-be01590a4db2a18e",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.fault-matrix.case-be01590a4db2a18e"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-37053fffaf6f642b",
+      "requirementId": "m0o.inbox",
+      "scenarioId": "m0o.inbox.case-37053fffaf6f642b",
+      "inputFixtureId": "inbox-tenant-fixture-v1",
+      "observationSchemaId": "tenant-public-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.inbox.case-37053fffaf6f642b"
+      },
+      "applicabilityPredicateId": "selected-tenant-v1",
+      "qualificationProfiles": [
+        "inbox"
+      ],
+      "exclusionCodes": [
+        "tenant-not-selected"
+      ],
+      "coverageClass": "named-tenant"
+    },
+    {
+      "caseId": "oracle-case-b167e32ec41cdea6",
+      "requirementId": "m0o.inbox",
+      "scenarioId": "m0o.inbox.case-b167e32ec41cdea6",
+      "inputFixtureId": "inbox-tenant-fixture-v1",
+      "observationSchemaId": "tenant-public-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.inbox.case-b167e32ec41cdea6"
+      },
+      "applicabilityPredicateId": "selected-tenant-v1",
+      "qualificationProfiles": [
+        "inbox"
+      ],
+      "exclusionCodes": [
+        "tenant-not-selected"
+      ],
+      "coverageClass": "named-tenant"
+    },
+    {
+      "caseId": "oracle-case-7d62d5d7f62e5761",
+      "requirementId": "m0o.inbox",
+      "scenarioId": "m0o.inbox.case-7d62d5d7f62e5761",
+      "inputFixtureId": "inbox-tenant-fixture-v1",
+      "observationSchemaId": "tenant-public-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.inbox.case-7d62d5d7f62e5761"
+      },
+      "applicabilityPredicateId": "selected-tenant-v1",
+      "qualificationProfiles": [
+        "inbox"
+      ],
+      "exclusionCodes": [
+        "tenant-not-selected"
+      ],
+      "coverageClass": "named-tenant"
+    },
+    {
+      "caseId": "oracle-case-a87a23aa283ded9d",
+      "requirementId": "m0o.process-fixture",
+      "scenarioId": "m0o.process-fixture.case-a87a23aa283ded9d",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.process-fixture.case-a87a23aa283ded9d"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-7d7457d8ec7f4690",
+      "requirementId": "m0o.process-fixture",
+      "scenarioId": "m0o.process-fixture.case-7d7457d8ec7f4690",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.process-fixture.case-7d7457d8ec7f4690"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-ac1ff343c450afd0",
+      "requirementId": "m0o.process-fixture",
+      "scenarioId": "m0o.process-fixture.case-ac1ff343c450afd0",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.process-fixture.case-ac1ff343c450afd0"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-3d55277177b31053",
+      "requirementId": "m0o.harness-attribution",
+      "scenarioId": "m0o.harness-attribution.case-3d55277177b31053",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.harness-attribution.case-3d55277177b31053"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-f8f2fc1cf9d58a01",
+      "requirementId": "m0o.harness-attribution",
+      "scenarioId": "m0o.harness-attribution.case-f8f2fc1cf9d58a01",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.harness-attribution.case-f8f2fc1cf9d58a01"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-0cc33223b9c43411",
+      "requirementId": "m0o.harness-attribution",
+      "scenarioId": "m0o.harness-attribution.case-0cc33223b9c43411",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.harness-attribution.case-0cc33223b9c43411"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-82707c94512c91b5",
+      "requirementId": "m0o.harness-attribution",
+      "scenarioId": "m0o.harness-attribution.case-82707c94512c91b5",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.harness-attribution.case-82707c94512c91b5"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-dda21f95e7a50d7e",
+      "requirementId": "m0o.harness-attribution",
+      "scenarioId": "m0o.harness-attribution.case-dda21f95e7a50d7e",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.harness-attribution.case-dda21f95e7a50d7e"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-81b89a62ef11202a",
+      "requirementId": "m0o.harness-attribution",
+      "scenarioId": "m0o.harness-attribution.case-81b89a62ef11202a",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.harness-attribution.case-81b89a62ef11202a"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-9eac66f310b04558",
+      "requirementId": "m0o.cutover",
+      "scenarioId": "m0o.cutover.case-9eac66f310b04558",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.cutover.case-9eac66f310b04558"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-f9f459fef4ce8b63",
+      "requirementId": "m0o.cutover",
+      "scenarioId": "m0o.cutover.case-f9f459fef4ce8b63",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.cutover.case-f9f459fef4ce8b63"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-e51c6241ea07084b",
+      "requirementId": "m0o.cutover",
+      "scenarioId": "m0o.cutover.case-e51c6241ea07084b",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.cutover.case-e51c6241ea07084b"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-410902198ca99c22",
+      "requirementId": "m0o.effect-inventory",
+      "scenarioId": "m0o.effect-inventory.case-410902198ca99c22",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.effect-inventory.case-410902198ca99c22"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-fb3b8bf7a10d892a",
+      "requirementId": "m0o.effect-inventory",
+      "scenarioId": "m0o.effect-inventory.case-fb3b8bf7a10d892a",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.effect-inventory.case-fb3b8bf7a10d892a"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-c28ee66fe30ba8fe",
+      "requirementId": "m0o.effect-inventory",
+      "scenarioId": "m0o.effect-inventory.case-c28ee66fe30ba8fe",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.effect-inventory.case-c28ee66fe30ba8fe"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-2c26189c0114871c",
+      "requirementId": "m0o.host-mapping",
+      "scenarioId": "m0o.host-mapping.case-2c26189c0114871c",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.host-mapping.case-2c26189c0114871c"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-f671b474c14eb9e3",
+      "requirementId": "m0o.host-mapping",
+      "scenarioId": "m0o.host-mapping.case-f671b474c14eb9e3",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.host-mapping.case-f671b474c14eb9e3"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-5b501ace1dff7b23",
+      "requirementId": "m0o.measurements",
+      "scenarioId": "m0o.measurements.case-5b501ace1dff7b23",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.measurements.case-5b501ace1dff7b23"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-e33f51b9983a4a44",
+      "requirementId": "m0o.reproducibility",
+      "scenarioId": "m0o.reproducibility.case-e33f51b9983a4a44",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.reproducibility.case-e33f51b9983a4a44"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-baf58ef8254d52b9",
+      "requirementId": "m0o.reproducibility",
+      "scenarioId": "m0o.reproducibility.case-baf58ef8254d52b9",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.reproducibility.case-baf58ef8254d52b9"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-3ac58b3cb06fae04",
+      "requirementId": "m0o.reproducibility",
+      "scenarioId": "m0o.reproducibility.case-3ac58b3cb06fae04",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.reproducibility.case-3ac58b3cb06fae04"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-fc380c34a21ceed1",
+      "requirementId": "m0o.reproducibility",
+      "scenarioId": "m0o.reproducibility.case-fc380c34a21ceed1",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.reproducibility.case-fc380c34a21ceed1"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-96e26a5ef39b00d7",
+      "requirementId": "m0o.reproducibility",
+      "scenarioId": "m0o.reproducibility.case-96e26a5ef39b00d7",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.reproducibility.case-96e26a5ef39b00d7"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-021b7a0e4e9e6dc7",
+      "requirementId": "m0o.reproducibility",
+      "scenarioId": "m0o.reproducibility.case-021b7a0e4e9e6dc7",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.reproducibility.case-021b7a0e4e9e6dc7"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-37a353c8dd03bb26",
+      "requirementId": "m0o.reproducibility",
+      "scenarioId": "m0o.reproducibility.case-37a353c8dd03bb26",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.reproducibility.case-37a353c8dd03bb26"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-1ec16be1f59ecc47",
+      "requirementId": "m0o.reproducibility",
+      "scenarioId": "m0o.reproducibility.case-1ec16be1f59ecc47",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.reproducibility.case-1ec16be1f59ecc47"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-4704830eebf87e0f",
+      "requirementId": "m0o.reproducibility",
+      "scenarioId": "m0o.reproducibility.case-4704830eebf87e0f",
+      "inputFixtureId": "evaluator-self-test-v1",
+      "observationSchemaId": "evaluator-result-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "m0o.reproducibility.case-4704830eebf87e0f"
+      },
+      "applicabilityPredicateId": "evaluator-required-v1",
+      "qualificationProfiles": [
+        "m0-evaluator"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "evaluator-self-test"
+    },
+    {
+      "caseId": "oracle-case-2625bc33f3368451",
+      "requirementId": "v2c.core-objects",
+      "scenarioId": "v2c.core-objects.case-2625bc33f3368451",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.core-objects.case-2625bc33f3368451"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-f74dd5de6847249e",
+      "requirementId": "v2c.core-objects",
+      "scenarioId": "v2c.core-objects.case-f74dd5de6847249e",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.core-objects.case-f74dd5de6847249e"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-4f0c7298f9d90368",
+      "requirementId": "v2c.core-objects",
+      "scenarioId": "v2c.core-objects.case-4f0c7298f9d90368",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.core-objects.case-4f0c7298f9d90368"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-b1e6225e0bc92246",
+      "requirementId": "v2c.core-objects",
+      "scenarioId": "v2c.core-objects.case-b1e6225e0bc92246",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.core-objects.case-b1e6225e0bc92246"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-99c6189cd103b295",
+      "requirementId": "v2c.core-objects",
+      "scenarioId": "v2c.core-objects.case-99c6189cd103b295",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.core-objects.case-99c6189cd103b295"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-ee282e108b929d7a",
+      "requirementId": "v2c.core-objects",
+      "scenarioId": "v2c.core-objects.case-ee282e108b929d7a",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.core-objects.case-ee282e108b929d7a"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-059b139162921d92",
+      "requirementId": "v2c.durable-data",
+      "scenarioId": "v2c.durable-data.case-059b139162921d92",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.durable-data.case-059b139162921d92"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-3bad4dd6e919014e",
+      "requirementId": "v2c.durable-data",
+      "scenarioId": "v2c.durable-data.case-3bad4dd6e919014e",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.durable-data.case-3bad4dd6e919014e"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-a58f530be73f5ba8",
+      "requirementId": "v2c.durable-data",
+      "scenarioId": "v2c.durable-data.case-a58f530be73f5ba8",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.durable-data.case-a58f530be73f5ba8"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-0d99e7b6fbcd8fc8",
+      "requirementId": "v2c.durable-data",
+      "scenarioId": "v2c.durable-data.case-0d99e7b6fbcd8fc8",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.durable-data.case-0d99e7b6fbcd8fc8"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-69a7d96569601720",
+      "requirementId": "v2c.release-identity",
+      "scenarioId": "v2c.release-identity.case-69a7d96569601720",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.release-identity.case-69a7d96569601720"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-a4de272b16b48742",
+      "requirementId": "v2c.release-identity",
+      "scenarioId": "v2c.release-identity.case-a4de272b16b48742",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.release-identity.case-a4de272b16b48742"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-c92ef8d54b132b4b",
+      "requirementId": "v2c.release-identity",
+      "scenarioId": "v2c.release-identity.case-c92ef8d54b132b4b",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.release-identity.case-c92ef8d54b132b4b"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-2e2e1115131297ba",
+      "requirementId": "v2c.release-identity",
+      "scenarioId": "v2c.release-identity.case-2e2e1115131297ba",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.release-identity.case-2e2e1115131297ba"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-534d149bf165353d",
+      "requirementId": "v2c.release-identity",
+      "scenarioId": "v2c.release-identity.case-534d149bf165353d",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.release-identity.case-534d149bf165353d"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-e494a1dffa986843",
+      "requirementId": "v2c.release-identity",
+      "scenarioId": "v2c.release-identity.case-e494a1dffa986843",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.release-identity.case-e494a1dffa986843"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-844f43ad17b4d919",
+      "requirementId": "v2c.release-identity",
+      "scenarioId": "v2c.release-identity.case-844f43ad17b4d919",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.release-identity.case-844f43ad17b4d919"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-a2f0f8982e81e26f",
+      "requirementId": "v2c.release-compatibility",
+      "scenarioId": "v2c.release-compatibility.case-a2f0f8982e81e26f",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.release-compatibility.case-a2f0f8982e81e26f"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-75883b57b2954516",
+      "requirementId": "v2c.release-compatibility",
+      "scenarioId": "v2c.release-compatibility.case-75883b57b2954516",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.release-compatibility.case-75883b57b2954516"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-80eec2d75f35676f",
+      "requirementId": "v2c.harness-session",
+      "scenarioId": "v2c.harness-session.case-80eec2d75f35676f",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.harness-session.case-80eec2d75f35676f"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-cb42e12634f953ca",
+      "requirementId": "v2c.harness-session",
+      "scenarioId": "v2c.harness-session.case-cb42e12634f953ca",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.harness-session.case-cb42e12634f953ca"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-b943ecde74f72559",
+      "requirementId": "v2c.harness-session",
+      "scenarioId": "v2c.harness-session.case-b943ecde74f72559",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.harness-session.case-b943ecde74f72559"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-1d41b7cd691717cc",
+      "requirementId": "v2c.harness-session",
+      "scenarioId": "v2c.harness-session.case-1d41b7cd691717cc",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.harness-session.case-1d41b7cd691717cc"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-6e9a865e2f8ebcc9",
+      "requirementId": "v2c.harness-session",
+      "scenarioId": "v2c.harness-session.case-6e9a865e2f8ebcc9",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.harness-session.case-6e9a865e2f8ebcc9"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-4e97f754f85e6871",
+      "requirementId": "v2c.harness-session",
+      "scenarioId": "v2c.harness-session.case-4e97f754f85e6871",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.harness-session.case-4e97f754f85e6871"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-746de4e07d1cb663",
+      "requirementId": "v2c.harness-session",
+      "scenarioId": "v2c.harness-session.case-746de4e07d1cb663",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.harness-session.case-746de4e07d1cb663"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-04841c02ff8ac172",
+      "requirementId": "v2c.harness-session",
+      "scenarioId": "v2c.harness-session.case-04841c02ff8ac172",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.harness-session.case-04841c02ff8ac172"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-992da280c223705c",
+      "requirementId": "v2c.control-taxonomy",
+      "scenarioId": "v2c.control-taxonomy.case-992da280c223705c",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.control-taxonomy.case-992da280c223705c"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-9b1f2455b9486fb8",
+      "requirementId": "v2c.control-taxonomy",
+      "scenarioId": "v2c.control-taxonomy.case-9b1f2455b9486fb8",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.control-taxonomy.case-9b1f2455b9486fb8"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-ccba4fa4c23ea597",
+      "requirementId": "v2c.authority-policy",
+      "scenarioId": "v2c.authority-policy.case-ccba4fa4c23ea597",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.authority-policy.case-ccba4fa4c23ea597"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-9b97adc9c88e72db",
+      "requirementId": "v2c.authority-policy",
+      "scenarioId": "v2c.authority-policy.case-9b97adc9c88e72db",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.authority-policy.case-9b97adc9c88e72db"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-42e4f70f8db79275",
+      "requirementId": "v2c.authority-policy",
+      "scenarioId": "v2c.authority-policy.case-42e4f70f8db79275",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.authority-policy.case-42e4f70f8db79275"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-bf7b8be3fed43b6b",
+      "requirementId": "v2c.authority-policy",
+      "scenarioId": "v2c.authority-policy.case-bf7b8be3fed43b6b",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.authority-policy.case-bf7b8be3fed43b6b"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-5c67acc325c0c5cc",
+      "requirementId": "v2c.authority-policy",
+      "scenarioId": "v2c.authority-policy.case-5c67acc325c0c5cc",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.authority-policy.case-5c67acc325c0c5cc"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-883b1bf6cd8950c3",
+      "requirementId": "v2c.time",
+      "scenarioId": "v2c.time.case-883b1bf6cd8950c3",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.time.case-883b1bf6cd8950c3"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-9a9be5874a6bcccc",
+      "requirementId": "v2c.time",
+      "scenarioId": "v2c.time.case-9a9be5874a6bcccc",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.time.case-9a9be5874a6bcccc"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-7b31ba4290763ede",
+      "requirementId": "v2c.time",
+      "scenarioId": "v2c.time.case-7b31ba4290763ede",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.time.case-7b31ba4290763ede"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-a3e48ad5c4a68065",
+      "requirementId": "v2c.time",
+      "scenarioId": "v2c.time.case-a3e48ad5c4a68065",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.time.case-a3e48ad5c4a68065"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-437c70c5849e6f45",
+      "requirementId": "v2c.activation",
+      "scenarioId": "v2c.activation.case-437c70c5849e6f45",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.activation.case-437c70c5849e6f45"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-9517e01d762d1f29",
+      "requirementId": "v2c.activation",
+      "scenarioId": "v2c.activation.case-9517e01d762d1f29",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.activation.case-9517e01d762d1f29"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-9437319ace99e1c7",
+      "requirementId": "v2c.activation",
+      "scenarioId": "v2c.activation.case-9437319ace99e1c7",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.activation.case-9437319ace99e1c7"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-0ca0ce9a7b52c579",
+      "requirementId": "v2c.activation",
+      "scenarioId": "v2c.activation.case-0ca0ce9a7b52c579",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.activation.case-0ca0ce9a7b52c579"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-b2bbbf398a04a7b4",
+      "requirementId": "v2c.activation",
+      "scenarioId": "v2c.activation.case-b2bbbf398a04a7b4",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.activation.case-b2bbbf398a04a7b4"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-d29467a38bb37b18",
+      "requirementId": "v2c.activation",
+      "scenarioId": "v2c.activation.case-d29467a38bb37b18",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.activation.case-d29467a38bb37b18"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-0884a95354e80e88",
+      "requirementId": "v2c.command-idempotency",
+      "scenarioId": "v2c.command-idempotency.case-0884a95354e80e88",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.command-idempotency.case-0884a95354e80e88"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-44d0defb2c3ee6e8",
+      "requirementId": "v2c.command-idempotency",
+      "scenarioId": "v2c.command-idempotency.case-44d0defb2c3ee6e8",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.command-idempotency.case-44d0defb2c3ee6e8"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-7e2850f96e70f7f2",
+      "requirementId": "v2c.command-idempotency",
+      "scenarioId": "v2c.command-idempotency.case-7e2850f96e70f7f2",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.command-idempotency.case-7e2850f96e70f7f2"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-06f0de1c613562f0",
+      "requirementId": "v2c.command-idempotency",
+      "scenarioId": "v2c.command-idempotency.case-06f0de1c613562f0",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.command-idempotency.case-06f0de1c613562f0"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-fe14f31f64c6e9c7",
+      "requirementId": "v2c.command-idempotency",
+      "scenarioId": "v2c.command-idempotency.case-fe14f31f64c6e9c7",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.command-idempotency.case-fe14f31f64c6e9c7"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-a20b4cd54b52d782",
+      "requirementId": "v2c.command-idempotency",
+      "scenarioId": "v2c.command-idempotency.case-a20b4cd54b52d782",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.command-idempotency.case-a20b4cd54b52d782"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-c040b2b65fbdf156",
+      "requirementId": "v2c.command-idempotency",
+      "scenarioId": "v2c.command-idempotency.case-c040b2b65fbdf156",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.command-idempotency.case-c040b2b65fbdf156"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-8faa0ad96119dcd3",
+      "requirementId": "v2c.command-idempotency",
+      "scenarioId": "v2c.command-idempotency.case-8faa0ad96119dcd3",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.command-idempotency.case-8faa0ad96119dcd3"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-2921bf8d39cbedd0",
+      "requirementId": "v2c.run",
+      "scenarioId": "v2c.run.case-2921bf8d39cbedd0",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.run.case-2921bf8d39cbedd0"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-3d2ffc3684961b8b",
+      "requirementId": "v2c.run",
+      "scenarioId": "v2c.run.case-3d2ffc3684961b8b",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.run.case-3d2ffc3684961b8b"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-07b219604f77ec11",
+      "requirementId": "v2c.run",
+      "scenarioId": "v2c.run.case-07b219604f77ec11",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.run.case-07b219604f77ec11"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-f4f0e256f70be78a",
+      "requirementId": "v2c.run",
+      "scenarioId": "v2c.run.case-f4f0e256f70be78a",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.run.case-f4f0e256f70be78a"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-ec2c4c60bf3bed92",
+      "requirementId": "v2c.run",
+      "scenarioId": "v2c.run.case-ec2c4c60bf3bed92",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.run.case-ec2c4c60bf3bed92"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-a5aeebde48e9ef31",
+      "requirementId": "v2c.run-attempt",
+      "scenarioId": "v2c.run-attempt.case-a5aeebde48e9ef31",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.run-attempt.case-a5aeebde48e9ef31"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-3b06c1e112fc8cba",
+      "requirementId": "v2c.run-attempt",
+      "scenarioId": "v2c.run-attempt.case-3b06c1e112fc8cba",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.run-attempt.case-3b06c1e112fc8cba"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-a817b2f69a823972",
+      "requirementId": "v2c.run-attempt",
+      "scenarioId": "v2c.run-attempt.case-a817b2f69a823972",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.run-attempt.case-a817b2f69a823972"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-79ea5c5af64adc96",
+      "requirementId": "v2c.run-attempt",
+      "scenarioId": "v2c.run-attempt.case-79ea5c5af64adc96",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.run-attempt.case-79ea5c5af64adc96"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-ae7db6cf250cbc93",
+      "requirementId": "v2c.run-attempt",
+      "scenarioId": "v2c.run-attempt.case-ae7db6cf250cbc93",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.run-attempt.case-ae7db6cf250cbc93"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-e76d5ba84942b386",
+      "requirementId": "v2c.run-attempt",
+      "scenarioId": "v2c.run-attempt.case-e76d5ba84942b386",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.run-attempt.case-e76d5ba84942b386"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-ad8e55b719c20ac5",
+      "requirementId": "v2c.run-attempt",
+      "scenarioId": "v2c.run-attempt.case-ad8e55b719c20ac5",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.run-attempt.case-ad8e55b719c20ac5"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-dc99a9593d204e32",
+      "requirementId": "v2c.process-lifecycle",
+      "scenarioId": "v2c.process-lifecycle.case-dc99a9593d204e32",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.process-lifecycle.case-dc99a9593d204e32"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-41ed09ca1d5e1c11",
+      "requirementId": "v2c.process-lifecycle",
+      "scenarioId": "v2c.process-lifecycle.case-41ed09ca1d5e1c11",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.process-lifecycle.case-41ed09ca1d5e1c11"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-3959fd59b64289b9",
+      "requirementId": "v2c.process-lifecycle",
+      "scenarioId": "v2c.process-lifecycle.case-3959fd59b64289b9",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.process-lifecycle.case-3959fd59b64289b9"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-470b4e7f410682fc",
+      "requirementId": "v2c.process-lifecycle",
+      "scenarioId": "v2c.process-lifecycle.case-470b4e7f410682fc",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.process-lifecycle.case-470b4e7f410682fc"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-4d527d433a02b22e",
+      "requirementId": "v2c.process-lifecycle",
+      "scenarioId": "v2c.process-lifecycle.case-4d527d433a02b22e",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.process-lifecycle.case-4d527d433a02b22e"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-15d245ccca1f060a",
+      "requirementId": "v2c.process-lifecycle",
+      "scenarioId": "v2c.process-lifecycle.case-15d245ccca1f060a",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.process-lifecycle.case-15d245ccca1f060a"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-dc69d0aceed65d86",
+      "requirementId": "v2c.approval",
+      "scenarioId": "v2c.approval.case-dc69d0aceed65d86",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.approval.case-dc69d0aceed65d86"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-4b9af75392ae3179",
+      "requirementId": "v2c.approval",
+      "scenarioId": "v2c.approval.case-4b9af75392ae3179",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.approval.case-4b9af75392ae3179"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-af4c5a4f83eb7110",
+      "requirementId": "v2c.approval",
+      "scenarioId": "v2c.approval.case-af4c5a4f83eb7110",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.approval.case-af4c5a4f83eb7110"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-c5b2cb70424e191d",
+      "requirementId": "v2c.effect",
+      "scenarioId": "v2c.effect.case-c5b2cb70424e191d",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.effect.case-c5b2cb70424e191d"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-c577210f77a8f691",
+      "requirementId": "v2c.effect",
+      "scenarioId": "v2c.effect.case-c577210f77a8f691",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.effect.case-c577210f77a8f691"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-eb9596718e63e1e7",
+      "requirementId": "v2c.effect",
+      "scenarioId": "v2c.effect.case-eb9596718e63e1e7",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.effect.case-eb9596718e63e1e7"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-17f8ea1e2fe54f6c",
+      "requirementId": "v2c.effect",
+      "scenarioId": "v2c.effect.case-17f8ea1e2fe54f6c",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.effect.case-17f8ea1e2fe54f6c"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-0079735399055528",
+      "requirementId": "v2c.effect",
+      "scenarioId": "v2c.effect.case-0079735399055528",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.effect.case-0079735399055528"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-b451b3bac19d7219",
+      "requirementId": "v2c.effect",
+      "scenarioId": "v2c.effect.case-b451b3bac19d7219",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.effect.case-b451b3bac19d7219"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-787f5219b6462e71",
+      "requirementId": "v2c.effect",
+      "scenarioId": "v2c.effect.case-787f5219b6462e71",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.effect.case-787f5219b6462e71"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-21e1b4425801e363",
+      "requirementId": "v2c.effect",
+      "scenarioId": "v2c.effect.case-21e1b4425801e363",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.effect.case-21e1b4425801e363"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-1aa57d13a5b3e2c9",
+      "requirementId": "v2c.effect",
+      "scenarioId": "v2c.effect.case-1aa57d13a5b3e2c9",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.effect.case-1aa57d13a5b3e2c9"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-5a2152bf98f8ad78",
+      "requirementId": "v2c.effect",
+      "scenarioId": "v2c.effect.case-5a2152bf98f8ad78",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.effect.case-5a2152bf98f8ad78"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-06f29d5923eb27ff",
+      "requirementId": "v2c.effect",
+      "scenarioId": "v2c.effect.case-06f29d5923eb27ff",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.effect.case-06f29d5923eb27ff"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-3c81cfa02aa23d2b",
+      "requirementId": "v2c.effect",
+      "scenarioId": "v2c.effect.case-3c81cfa02aa23d2b",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.effect.case-3c81cfa02aa23d2b"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-68bf1a8ab565a087",
+      "requirementId": "v2c.direct-effect",
+      "scenarioId": "v2c.direct-effect.case-68bf1a8ab565a087",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.direct-effect.case-68bf1a8ab565a087"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-f3d2fd539d793604",
+      "requirementId": "v2c.direct-effect",
+      "scenarioId": "v2c.direct-effect.case-f3d2fd539d793604",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.direct-effect.case-f3d2fd539d793604"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-78b3454612fc61ab",
+      "requirementId": "v2c.direct-effect",
+      "scenarioId": "v2c.direct-effect.case-78b3454612fc61ab",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.direct-effect.case-78b3454612fc61ab"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-31c2ab6bd682eda5",
+      "requirementId": "v2c.errors",
+      "scenarioId": "v2c.errors.case-31c2ab6bd682eda5",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.errors.case-31c2ab6bd682eda5"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-2b2be212349bab76",
+      "requirementId": "v2c.errors",
+      "scenarioId": "v2c.errors.case-2b2be212349bab76",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.errors.case-2b2be212349bab76"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-0b1874f01659e11b",
+      "requirementId": "v2c.runtime-boundary",
+      "scenarioId": "v2c.runtime-boundary.case-0b1874f01659e11b",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.runtime-boundary.case-0b1874f01659e11b"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-04ff6b58f2fd0c86",
+      "requirementId": "v2c.runtime-boundary",
+      "scenarioId": "v2c.runtime-boundary.case-04ff6b58f2fd0c86",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.runtime-boundary.case-04ff6b58f2fd0c86"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-fc1ae165227e0aad",
+      "requirementId": "v2c.runtime-boundary",
+      "scenarioId": "v2c.runtime-boundary.case-fc1ae165227e0aad",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.runtime-boundary.case-fc1ae165227e0aad"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-84add5e324213bbb",
+      "requirementId": "v2c.runtime-boundary",
+      "scenarioId": "v2c.runtime-boundary.case-84add5e324213bbb",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.runtime-boundary.case-84add5e324213bbb"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-0193a18bfd177d6f",
+      "requirementId": "v2c.runtime-boundary",
+      "scenarioId": "v2c.runtime-boundary.case-0193a18bfd177d6f",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.runtime-boundary.case-0193a18bfd177d6f"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-f2679e28b8f6e5ea",
+      "requirementId": "v2c.runtime-boundary",
+      "scenarioId": "v2c.runtime-boundary.case-f2679e28b8f6e5ea",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.runtime-boundary.case-f2679e28b8f6e5ea"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-310c7b0081698071",
+      "requirementId": "v2c.runtime-boundary",
+      "scenarioId": "v2c.runtime-boundary.case-310c7b0081698071",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.runtime-boundary.case-310c7b0081698071"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-50cb629942f03c42",
+      "requirementId": "v2c.host-attestation",
+      "scenarioId": "v2c.host-attestation.case-50cb629942f03c42",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.host-attestation.case-50cb629942f03c42"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-98272db6decc78fe",
+      "requirementId": "v2c.host-attestation",
+      "scenarioId": "v2c.host-attestation.case-98272db6decc78fe",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.host-attestation.case-98272db6decc78fe"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-5c3db26dc9e6b746",
+      "requirementId": "v2c.host-attestation",
+      "scenarioId": "v2c.host-attestation.case-5c3db26dc9e6b746",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.host-attestation.case-5c3db26dc9e6b746"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-da5dd9ee5328835c",
+      "requirementId": "v2c.host-attestation",
+      "scenarioId": "v2c.host-attestation.case-da5dd9ee5328835c",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.host-attestation.case-da5dd9ee5328835c"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-dcbef2eddf546aa9",
+      "requirementId": "v2c.host-attestation",
+      "scenarioId": "v2c.host-attestation.case-dcbef2eddf546aa9",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.host-attestation.case-dcbef2eddf546aa9"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-5146596e4f18a1b5",
+      "requirementId": "v2c.host-attestation",
+      "scenarioId": "v2c.host-attestation.case-5146596e4f18a1b5",
+      "inputFixtureId": "process-host-fixture-v1",
+      "observationSchemaId": "process-host-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.host-attestation.case-5146596e4f18a1b5"
+      },
+      "applicabilityPredicateId": "selected-process-host-v1",
+      "qualificationProfiles": [
+        "process-host"
+      ],
+      "exclusionCodes": [
+        "host-not-selected"
+      ],
+      "coverageClass": "named-process-host"
+    },
+    {
+      "caseId": "oracle-case-a635871d9e818d72",
+      "requirementId": "v2c.health-facts",
+      "scenarioId": "v2c.health-facts.case-a635871d9e818d72",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.health-facts.case-a635871d9e818d72"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-2b4ea87746cb91bc",
+      "requirementId": "v2c.health-facts",
+      "scenarioId": "v2c.health-facts.case-2b4ea87746cb91bc",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.health-facts.case-2b4ea87746cb91bc"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-f3612354bebfb68b",
+      "requirementId": "v2c.health-facts",
+      "scenarioId": "v2c.health-facts.case-f3612354bebfb68b",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.health-facts.case-f3612354bebfb68b"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-0d9643ce87048dd1",
+      "requirementId": "v2c.health-facts",
+      "scenarioId": "v2c.health-facts.case-0d9643ce87048dd1",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.health-facts.case-0d9643ce87048dd1"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-486639fde4261c9e",
+      "requirementId": "v2c.control-boundary",
+      "scenarioId": "v2c.control-boundary.case-486639fde4261c9e",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.control-boundary.case-486639fde4261c9e"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-a580797d2bbf9851",
+      "requirementId": "v2c.control-boundary",
+      "scenarioId": "v2c.control-boundary.case-a580797d2bbf9851",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2c.control-boundary.case-a580797d2bbf9851"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-172434e8f69c8fde",
+      "requirementId": "v2s.sqlite",
+      "scenarioId": "v2s.sqlite.case-172434e8f69c8fde",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.sqlite.case-172434e8f69c8fde"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-e1bb817e54595928",
+      "requirementId": "v2s.sqlite",
+      "scenarioId": "v2s.sqlite.case-e1bb817e54595928",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.sqlite.case-e1bb817e54595928"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-6e190cfeca05b49f",
+      "requirementId": "v2s.sqlite",
+      "scenarioId": "v2s.sqlite.case-6e190cfeca05b49f",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.sqlite.case-6e190cfeca05b49f"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-aaefe760d261e4bf",
+      "requirementId": "v2s.sqlite",
+      "scenarioId": "v2s.sqlite.case-aaefe760d261e4bf",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.sqlite.case-aaefe760d261e4bf"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-929cebd105ea0925",
+      "requirementId": "v2s.sqlite",
+      "scenarioId": "v2s.sqlite.case-929cebd105ea0925",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.sqlite.case-929cebd105ea0925"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-bb747119f22de9e8",
+      "requirementId": "v2s.ddl",
+      "scenarioId": "v2s.ddl.case-bb747119f22de9e8",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.ddl.case-bb747119f22de9e8"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-633a4e32de7df4be",
+      "requirementId": "v2s.ddl",
+      "scenarioId": "v2s.ddl.case-633a4e32de7df4be",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.ddl.case-633a4e32de7df4be"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-64a293247b9fb32a",
+      "requirementId": "v2s.ddl",
+      "scenarioId": "v2s.ddl.case-64a293247b9fb32a",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.ddl.case-64a293247b9fb32a"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-a96c8105eaddf6f0",
+      "requirementId": "v2s.ddl",
+      "scenarioId": "v2s.ddl.case-a96c8105eaddf6f0",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.ddl.case-a96c8105eaddf6f0"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-16147bca7cebaa21",
+      "requirementId": "v2s.ddl",
+      "scenarioId": "v2s.ddl.case-16147bca7cebaa21",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.ddl.case-16147bca7cebaa21"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-ea22dd0a6e6b281d",
+      "requirementId": "v2s.ddl",
+      "scenarioId": "v2s.ddl.case-ea22dd0a6e6b281d",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.ddl.case-ea22dd0a6e6b281d"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-83427b6d51b66fa6",
+      "requirementId": "v2s.command-results",
+      "scenarioId": "v2s.command-results.case-83427b6d51b66fa6",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.command-results.case-83427b6d51b66fa6"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-4a248d5e73b2514f",
+      "requirementId": "v2s.command-results",
+      "scenarioId": "v2s.command-results.case-4a248d5e73b2514f",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.command-results.case-4a248d5e73b2514f"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-543e5abd1372fe6d",
+      "requirementId": "v2s.command-results",
+      "scenarioId": "v2s.command-results.case-543e5abd1372fe6d",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.command-results.case-543e5abd1372fe6d"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-207bca756be6ac0d",
+      "requirementId": "v2s.command-results",
+      "scenarioId": "v2s.command-results.case-207bca756be6ac0d",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.command-results.case-207bca756be6ac0d"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-7afc003bcd02ae6c",
+      "requirementId": "v2s.command-results",
+      "scenarioId": "v2s.command-results.case-7afc003bcd02ae6c",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.command-results.case-7afc003bcd02ae6c"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-9a101297cada90be",
+      "requirementId": "v2s.command-results",
+      "scenarioId": "v2s.command-results.case-9a101297cada90be",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.command-results.case-9a101297cada90be"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-9c51032e4d4038e1",
+      "requirementId": "v2s.transactions",
+      "scenarioId": "v2s.transactions.case-9c51032e4d4038e1",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.transactions.case-9c51032e4d4038e1"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-fe75138ace6ae93a",
+      "requirementId": "v2s.transactions",
+      "scenarioId": "v2s.transactions.case-fe75138ace6ae93a",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.transactions.case-fe75138ace6ae93a"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-c0fd0d3206248974",
+      "requirementId": "v2s.transactions",
+      "scenarioId": "v2s.transactions.case-c0fd0d3206248974",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.transactions.case-c0fd0d3206248974"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-9eb297ffe7853458",
+      "requirementId": "v2s.transactions",
+      "scenarioId": "v2s.transactions.case-9eb297ffe7853458",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.transactions.case-9eb297ffe7853458"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-63b1c687d34aeee5",
+      "requirementId": "v2s.transactions",
+      "scenarioId": "v2s.transactions.case-63b1c687d34aeee5",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.transactions.case-63b1c687d34aeee5"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-5358dd57d404c41a",
+      "requirementId": "v2s.transactions",
+      "scenarioId": "v2s.transactions.case-5358dd57d404c41a",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.transactions.case-5358dd57d404c41a"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-4863eac769e290dc",
+      "requirementId": "v2s.transactions",
+      "scenarioId": "v2s.transactions.case-4863eac769e290dc",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.transactions.case-4863eac769e290dc"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-e9834734c4ea005b",
+      "requirementId": "v2s.transactions",
+      "scenarioId": "v2s.transactions.case-e9834734c4ea005b",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.transactions.case-e9834734c4ea005b"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-ca300ae5f1073288",
+      "requirementId": "v2s.transactions",
+      "scenarioId": "v2s.transactions.case-ca300ae5f1073288",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.transactions.case-ca300ae5f1073288"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-e5e6bfa6b9efa5e9",
+      "requirementId": "v2s.transactions",
+      "scenarioId": "v2s.transactions.case-e5e6bfa6b9efa5e9",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.transactions.case-e5e6bfa6b9efa5e9"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-1cbd0389b01450b2",
+      "requirementId": "v2s.transactions",
+      "scenarioId": "v2s.transactions.case-1cbd0389b01450b2",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.transactions.case-1cbd0389b01450b2"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-983d8042df39a94b",
+      "requirementId": "v2s.transactions",
+      "scenarioId": "v2s.transactions.case-983d8042df39a94b",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.transactions.case-983d8042df39a94b"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-551eb32e55c10eb6",
+      "requirementId": "v2s.transactions",
+      "scenarioId": "v2s.transactions.case-551eb32e55c10eb6",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.transactions.case-551eb32e55c10eb6"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-a6e4bd377058f104",
+      "requirementId": "v2s.transactions",
+      "scenarioId": "v2s.transactions.case-a6e4bd377058f104",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.transactions.case-a6e4bd377058f104"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-8c6021fe8d0041a2",
+      "requirementId": "v2s.transactions",
+      "scenarioId": "v2s.transactions.case-8c6021fe8d0041a2",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.transactions.case-8c6021fe8d0041a2"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-e9aa255d0209ead8",
+      "requirementId": "v2s.source-facts",
+      "scenarioId": "v2s.source-facts.case-e9aa255d0209ead8",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.source-facts.case-e9aa255d0209ead8"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-7346d8522d592f0b",
+      "requirementId": "v2s.source-facts",
+      "scenarioId": "v2s.source-facts.case-7346d8522d592f0b",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.source-facts.case-7346d8522d592f0b"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-67e77675b7af2265",
+      "requirementId": "v2s.source-facts",
+      "scenarioId": "v2s.source-facts.case-67e77675b7af2265",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.source-facts.case-67e77675b7af2265"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-ff5f30494b34e8fa",
+      "requirementId": "v2s.source-facts",
+      "scenarioId": "v2s.source-facts.case-ff5f30494b34e8fa",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.source-facts.case-ff5f30494b34e8fa"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-9426ccb80cf037a4",
+      "requirementId": "v2s.source-facts",
+      "scenarioId": "v2s.source-facts.case-9426ccb80cf037a4",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.source-facts.case-9426ccb80cf037a4"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-6005b5c8c5c674d9",
+      "requirementId": "v2s.source-facts",
+      "scenarioId": "v2s.source-facts.case-6005b5c8c5c674d9",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.source-facts.case-6005b5c8c5c674d9"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-ce3f2208e42495a3",
+      "requirementId": "v2s.source-facts",
+      "scenarioId": "v2s.source-facts.case-ce3f2208e42495a3",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.source-facts.case-ce3f2208e42495a3"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-228708d02b4f7b72",
+      "requirementId": "v2s.source-facts",
+      "scenarioId": "v2s.source-facts.case-228708d02b4f7b72",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.source-facts.case-228708d02b4f7b72"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-0d073422ca59c3a0",
+      "requirementId": "v2s.source-facts",
+      "scenarioId": "v2s.source-facts.case-0d073422ca59c3a0",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.source-facts.case-0d073422ca59c3a0"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-daa1deb9b4d0f663",
+      "requirementId": "v2s.source-facts",
+      "scenarioId": "v2s.source-facts.case-daa1deb9b4d0f663",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.source-facts.case-daa1deb9b4d0f663"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-9d12d5cab51d80e9",
+      "requirementId": "v2s.source-facts",
+      "scenarioId": "v2s.source-facts.case-9d12d5cab51d80e9",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.source-facts.case-9d12d5cab51d80e9"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-cbe14e90f7c830d4",
+      "requirementId": "v2s.source-facts",
+      "scenarioId": "v2s.source-facts.case-cbe14e90f7c830d4",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.source-facts.case-cbe14e90f7c830d4"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-509c8f8ee66c48fe",
+      "requirementId": "v2s.source-facts",
+      "scenarioId": "v2s.source-facts.case-509c8f8ee66c48fe",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.source-facts.case-509c8f8ee66c48fe"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-b9798ce8ffef3ce4",
+      "requirementId": "v2s.source-facts",
+      "scenarioId": "v2s.source-facts.case-b9798ce8ffef3ce4",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.source-facts.case-b9798ce8ffef3ce4"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-6777c69a705f989d",
+      "requirementId": "v2s.source-facts",
+      "scenarioId": "v2s.source-facts.case-6777c69a705f989d",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.source-facts.case-6777c69a705f989d"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-c046c9999f5ab2e8",
+      "requirementId": "v2s.projection-rebuild",
+      "scenarioId": "v2s.projection-rebuild.case-c046c9999f5ab2e8",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.projection-rebuild.case-c046c9999f5ab2e8"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-b54e26fca3983bd7",
+      "requirementId": "v2s.projection-rebuild",
+      "scenarioId": "v2s.projection-rebuild.case-b54e26fca3983bd7",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.projection-rebuild.case-b54e26fca3983bd7"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-68b0f65fa59604fb",
+      "requirementId": "v2s.handoff",
+      "scenarioId": "v2s.handoff.case-68b0f65fa59604fb",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.handoff.case-68b0f65fa59604fb"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-a31d079de80b5ba3",
+      "requirementId": "v2s.handoff",
+      "scenarioId": "v2s.handoff.case-a31d079de80b5ba3",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.handoff.case-a31d079de80b5ba3"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-851d8da0cda9f610",
+      "requirementId": "v2s.handoff",
+      "scenarioId": "v2s.handoff.case-851d8da0cda9f610",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.handoff.case-851d8da0cda9f610"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-f5df5cf32ce74b18",
+      "requirementId": "v2s.handoff",
+      "scenarioId": "v2s.handoff.case-f5df5cf32ce74b18",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.handoff.case-f5df5cf32ce74b18"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-618f0232dee6c5fb",
+      "requirementId": "v2s.handoff",
+      "scenarioId": "v2s.handoff.case-618f0232dee6c5fb",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.handoff.case-618f0232dee6c5fb"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-9208c1a9969444c0",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-9208c1a9969444c0",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-9208c1a9969444c0"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-0e042a065fab2df9",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-0e042a065fab2df9",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-0e042a065fab2df9"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-0245a8b20537e56d",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-0245a8b20537e56d",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-0245a8b20537e56d"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-328187b3d7e9970d",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-328187b3d7e9970d",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-328187b3d7e9970d"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-257a8afa45e80f01",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-257a8afa45e80f01",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-257a8afa45e80f01"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-a6ed285ae8d5d206",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-a6ed285ae8d5d206",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-a6ed285ae8d5d206"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-3e9388e64be6e424",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-3e9388e64be6e424",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-3e9388e64be6e424"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-c33b45229a234dc2",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-c33b45229a234dc2",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-c33b45229a234dc2"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-ae8edc529117987b",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-ae8edc529117987b",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-ae8edc529117987b"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-04f28f7e21f8c517",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-04f28f7e21f8c517",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-04f28f7e21f8c517"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-5f0865c543d38000",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-5f0865c543d38000",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-5f0865c543d38000"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-b44252179c9e7a5d",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-b44252179c9e7a5d",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-b44252179c9e7a5d"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-d5f19166b03545ac",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-d5f19166b03545ac",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-d5f19166b03545ac"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-d680f1a82c9712d0",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-d680f1a82c9712d0",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-d680f1a82c9712d0"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-436bdaf8d0ce678e",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-436bdaf8d0ce678e",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-436bdaf8d0ce678e"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-da2a90fc7592ecac",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-da2a90fc7592ecac",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-da2a90fc7592ecac"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-0f6c0d299888f98a",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-0f6c0d299888f98a",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-0f6c0d299888f98a"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-200a3a215b8df2f9",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-200a3a215b8df2f9",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-200a3a215b8df2f9"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-57fad8805d2aa65d",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-57fad8805d2aa65d",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-57fad8805d2aa65d"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-baaf6879571987c3",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-baaf6879571987c3",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-baaf6879571987c3"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-3367c5c311edba14",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-3367c5c311edba14",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-3367c5c311edba14"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-b41e629410d6bd72",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-b41e629410d6bd72",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-b41e629410d6bd72"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-bd1a0e6d778e751e",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-bd1a0e6d778e751e",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-bd1a0e6d778e751e"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-f4ba9a3a00d08fc1",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-f4ba9a3a00d08fc1",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-f4ba9a3a00d08fc1"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-2535bafa3b986d9f",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-2535bafa3b986d9f",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-2535bafa3b986d9f"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-f0a80cef8d362eb0",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-f0a80cef8d362eb0",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-f0a80cef8d362eb0"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-11821e6b8fe70162",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-11821e6b8fe70162",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-11821e6b8fe70162"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-21c4fe51e1eaaf75",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-21c4fe51e1eaaf75",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-21c4fe51e1eaaf75"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-77e7f58c0adbfd34",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-77e7f58c0adbfd34",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-77e7f58c0adbfd34"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-6a06ceb80ff91466",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-6a06ceb80ff91466",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-6a06ceb80ff91466"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-16c82e6efcff0680",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-16c82e6efcff0680",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-16c82e6efcff0680"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-7866356202adaca5",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-7866356202adaca5",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-7866356202adaca5"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-ef2a0d13845e9fce",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-ef2a0d13845e9fce",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-ef2a0d13845e9fce"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-3d641c3edf847bef",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-3d641c3edf847bef",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-3d641c3edf847bef"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-db75b8ca6e733373",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-db75b8ca6e733373",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-db75b8ca6e733373"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-875c30fd430746cf",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-875c30fd430746cf",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-875c30fd430746cf"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-7e06f53c78c6245a",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-7e06f53c78c6245a",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-7e06f53c78c6245a"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-ea0f82fddbb05f2f",
+      "requirementId": "v2s.restore",
+      "scenarioId": "v2s.restore.case-ea0f82fddbb05f2f",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.restore.case-ea0f82fddbb05f2f"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    },
+    {
+      "caseId": "oracle-case-0225d0fcb67a7e0c",
+      "requirementId": "v2s.read-only",
+      "scenarioId": "v2s.read-only.case-0225d0fcb67a7e0c",
+      "inputFixtureId": "neutral-control-storage-v1",
+      "observationSchemaId": "public-control-storage-observation-v1",
+      "expected": {
+        "kind": "owner-scenario-outcome",
+        "ownerScenarioId": "v2s.read-only.case-0225d0fcb67a7e0c"
+      },
+      "applicabilityPredicateId": "always-required-v1",
+      "qualificationProfiles": [
+        "all"
+      ],
+      "exclusionCodes": [],
+      "coverageClass": "neutral-control-storage"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "v2-time-v1",
+  "requirementId": "v2c.time",
+  "authority": "TimeAuthority",
+  "instant": {
+    "unit": "utc-epoch-millisecond",
+    "numericDomain": "signed-safe-integer",
+    "expiryComparison": "now-greater-than-or-equal"
+  },
+  "elapsedBudget": {
+    "clock": "startup-cycle-monotonic",
+    "wallClockReconstruction": false
+  },
+  "wallClockPolicy": {
+    "forward": "advance-watermark",
+    "backwardWithinSkew": "clamp-to-watermark",
+    "backwardBeyondSkew": "fail-closed"
+  },
+  "evidenceStages": [
+    {
+      "id": "command-preflight",
+      "binding": ["commandIdentity", "commandDigest", "bootId", "startupCycleId", "clockGeneration"]
+    },
+    {
+      "id": "recovery-session",
+      "binding": ["recoverySessionId", "sessionChallenge", "bootId", "startupCycleId", "clockGeneration"]
+    },
+    {
+      "id": "recovery-agent-attempt",
+      "binding": ["agentAttemptId", "attemptChallenge", "bootId", "startupCycleId", "clockGeneration"]
+    }
+  ],
+  "evidenceFields": [
+    "timeAuthorityId",
+    "timeAuthorityVersion",
+    "bootId",
+    "startupCycleId",
+    "clockGeneration",
+    "subjectIdentity",
+    "observedUtcMs",
+    "effectiveUtcMs",
+    "priorWatermarkUtcMs",
+    "status"
+  ],
+  "vectors": [
+    {
+      "id": "expiry-equality",
+      "nowUtcMs": 1000,
+      "expiryUtcMs": 1000,
+      "expired": true
+    },
+    {
+      "id": "forward-sample",
+      "input": { "sampleUtcMs": 1100, "priorWatermarkUtcMs": 1000, "maxBackwardSkewMs": 50 },
+      "expected": { "status": "ok", "effectiveUtcMs": 1100, "watermarkUtcMs": 1100 }
+    },
+    {
+      "id": "tolerated-backward-skew",
+      "input": { "sampleUtcMs": 975, "priorWatermarkUtcMs": 1000, "maxBackwardSkewMs": 50 },
+      "expected": { "status": "clamped", "effectiveUtcMs": 1000, "watermarkUtcMs": 1000 }
+    },
+    {
+      "id": "excessive-rollback",
+      "input": { "sampleUtcMs": 949, "priorWatermarkUtcMs": 1000, "maxBackwardSkewMs": 50 },
+      "expected": { "status": "rollback", "effectiveUtcMs": null, "watermarkUtcMs": 1000 }
+    }
+  ],
+  "rejectedIdentifiers": {
+    "recoveryEvidenceSources": ["snapshot-time", "restored-wall-clock", "prior-startup-cycle-monotonic"]
+  }
+}

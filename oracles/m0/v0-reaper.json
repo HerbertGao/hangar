@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "m0-v0-reaper-v1",
+  "requirementId": "m0o.v0-reaper",
+  "observationSchema": [
+    "recordedPid",
+    "recordedStartTimeFingerprint",
+    "observedPid",
+    "observedStartTimeFingerprint",
+    "ownerAlive",
+    "signalsSent",
+    "terminalFactsAppended",
+    "ownershipRecordsRemaining"
+  ],
+  "cases": [
+    {
+      "caseId": "v0-reaper.dead-owner",
+      "input": { "pidMatches": false, "startTimeMatches": false, "terminalAlreadyExists": false },
+      "expected": { "signalsSent": 0, "terminalFactsAppended": 1, "ownershipRecordsRemaining": 0 }
+    },
+    {
+      "caseId": "v0-reaper.pid-reused",
+      "input": { "pidMatches": true, "startTimeMatches": false, "terminalAlreadyExists": false },
+      "expected": { "signalsSent": 0, "terminalFactsAppended": 1, "ownershipRecordsRemaining": 0 }
+    },
+    {
+      "caseId": "v0-reaper.repeat-after-terminal",
+      "input": { "pidMatches": false, "startTimeMatches": false, "terminalAlreadyExists": true },
+      "expected": { "signalsSent": 0, "terminalFactsAppended": 0, "ownershipRecordsRemaining": 0 }
+    },
+    {
+      "caseId": "v0-reaper.os-descendant-gap",
+      "input": { "databaseOwnershipReaped": true, "wholeTreeEvidence": false },
+      "expected": { "qualification": "known-false-green-to-fix", "productionContainment": false }
+    }
+  ]
+}

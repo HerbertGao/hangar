@@ -1,0 +1,1139 @@
+{
+  "schemaVersion": "m0-fault-matrix-v2",
+  "requirementId": "m0o.fault-matrix",
+  "typedRecoveryRaceManifest": "oracles/m0/recovery-race-contracts.json",
+  "closedDimensions": [
+    {
+      "id": "controlCommand",
+      "ownerRequirementId": "v2c.control-taxonomy",
+      "values": [
+        "publish-release",
+        "change-activation",
+        "admit-run",
+        "cancel-run",
+        "allocate-run-attempt",
+        "register-action",
+        "append-action-event",
+        "append-checkpoint",
+        "transfer-obligation-owner",
+        "decide-approval",
+        "create-effect-intent",
+        "issue-effect-claim",
+        "start-effect-dispatch",
+        "submit-receipt",
+        "claim-reconciliation",
+        "resolve-reconciliation",
+        "terminalize-run",
+        "register-process",
+        "submit-launch-attestation",
+        "restore-init",
+        "abort-recovery",
+        "recover-activate"
+      ]
+    },
+    {
+      "id": "runEvent",
+      "ownerRequirementId": "v2c.control-taxonomy",
+      "values": [
+        "release.published",
+        "activation.changed",
+        "run.admitted",
+        "run.cancel-requested",
+        "run.waiting",
+        "run.completed",
+        "run.failed",
+        "run.cancelled",
+        "attempt.allocated",
+        "attempt.starting",
+        "attempt.running",
+        "attempt.quiescing",
+        "attempt.checkpointed",
+        "attempt.succeeded",
+        "attempt.failed",
+        "attempt.cancelled",
+        "attempt.quiesced",
+        "harness.session-started",
+        "harness.technical-result",
+        "harness.protocol-failed",
+        "action.registered",
+        "action.event-appended",
+        "checkpoint.appended",
+        "obligation.owner-transferred",
+        "approval.requested",
+        "approval.approved",
+        "approval.rejected",
+        "approval.expired",
+        "approval.superseded",
+        "effect.intent-accepted",
+        "effect.claimed",
+        "effect.dispatch-started",
+        "effect.local-result",
+        "effect.receipt-admitted",
+        "effect.outcome-recorded",
+        "effect.reconciliation-updated",
+        "process.registered",
+        "process.signal-recorded",
+        "process.exited",
+        "process.reaped",
+        "attestation.recorded",
+        "attestation.invalidated",
+        "recovery.updated",
+        "command.completed"
+      ]
+    },
+    {
+      "id": "harnessEvent",
+      "ownerRequirementId": "v2c.control-taxonomy",
+      "values": [
+        "technical-started",
+        "action-event",
+        "checkpoint-proposed",
+        "outcome-proposed",
+        "technical-succeeded",
+        "technical-failed",
+        "protocol-failed"
+      ]
+    },
+    {
+      "id": "actionEvent",
+      "ownerRequirementId": "v2c.control-taxonomy",
+      "values": [
+        "action-started",
+        "action-progress",
+        "inner-retry",
+        "tool-result",
+        "subagent-result",
+        "action-succeeded",
+        "action-failed",
+        "action-skipped"
+      ]
+    },
+    {
+      "id": "sourceFact",
+      "ownerRequirementId": "v2s.source-facts",
+      "values": [
+        "database-genesis",
+        "control-instance-resumed",
+        "release-published",
+        "time-observed",
+        "activation-changed",
+        "activation-quarantined",
+        "run-admitted",
+        "run-attempt-allocated",
+        "run-attempt-state",
+        "run-health",
+        "run-terminal",
+        "attempt-quiesced",
+        "harness-session-started",
+        "action-registered",
+        "action-event",
+        "checkpoint-appended",
+        "obligation-owner-transferred",
+        "outcome-proposed",
+        "process-registered",
+        "process-signal",
+        "process-exit",
+        "process-reaped",
+        "approval-requested",
+        "approval-decided",
+        "effect-intent",
+        "effect-claim",
+        "effect-dispatch-started",
+        "local-dispatch-result",
+        "external-receipt",
+        "post-final-conflict",
+        "reconciliation-claim",
+        "reconciliation-observation",
+        "external-outcome",
+        "launch-attestation",
+        "launch-attestation-invalidated",
+        "command-result",
+        "mutation-authority-registered",
+        "mutation-authority-revoked",
+        "registration-closed",
+        "target-authority-closed",
+        "recovery-session",
+        "recovery-qualification",
+        "recovery-operation-discovered",
+        "recovery-operation-claim",
+        "recovery-operation-outcome",
+        "recovery-post-final-conflict",
+        "recovery-agent-binding-conflict",
+        "recovery-binding-invalidated",
+        "binding-certificate",
+        "activation-permit-evidence"
+      ]
+    },
+    {
+      "id": "activationState",
+      "ownerRequirementId": "v2c.activation",
+      "values": [
+        "inactive",
+        "shadow",
+        "active",
+        "draining",
+        "quarantined"
+      ]
+    },
+    {
+      "id": "runState",
+      "ownerRequirementId": "v2c.run",
+      "values": [
+        "admitted",
+        "running",
+        "waiting",
+        "settling",
+        "completed",
+        "failed",
+        "cancelled"
+      ]
+    },
+    {
+      "id": "runAttemptState",
+      "ownerRequirementId": "v2c.run-attempt",
+      "values": [
+        "created",
+        "starting",
+        "running",
+        "quiescing",
+        "checkpointed",
+        "succeeded",
+        "failed",
+        "cancelled"
+      ]
+    },
+    {
+      "id": "approvalState",
+      "ownerRequirementId": "v2c.approval",
+      "values": [
+        "pending",
+        "deciding",
+        "approved",
+        "rejected",
+        "expired",
+        "superseded"
+      ]
+    },
+    {
+      "id": "effectState",
+      "ownerRequirementId": "v2c.effect",
+      "values": [
+        "intent-recorded",
+        "approval-pending",
+        "authorized",
+        "claimed",
+        "dispatch-started",
+        "unknown",
+        "committed",
+        "not-committed",
+        "conflicted"
+      ]
+    },
+    {
+      "id": "reconciliationState",
+      "ownerRequirementId": "v2c.effect",
+      "values": [
+        "pending",
+        "claimed",
+        "resolved-committed",
+        "resolved-not-committed",
+        "unresolved"
+      ]
+    },
+    {
+      "id": "recoverySessionState",
+      "ownerRequirementId": "v2s.restore",
+      "values": [
+        "pending",
+        "initializing-awaiting-local",
+        "initialized",
+        "retiring-awaiting-local",
+        "retired"
+      ]
+    },
+    {
+      "id": "recoveryQualificationState",
+      "ownerRequirementId": "v2s.restore",
+      "values": [
+        "quarantined",
+        "fencing",
+        "enumerating",
+        "reconciling",
+        "ready",
+        "invalidating",
+        "aborted",
+        "qualified",
+        "invalidated"
+      ]
+    },
+    {
+      "id": "recoveryAgentAttemptState",
+      "ownerRequirementId": "v2s.restore",
+      "values": [
+        "pending",
+        "executing",
+        "aborted-awaiting-local",
+        "aborted",
+        "bound",
+        "binding-invalidated-awaiting-local",
+        "consumed",
+        "invalidated"
+      ]
+    },
+    {
+      "id": "recoveryOperationState",
+      "ownerRequirementId": "v2s.source-facts",
+      "values": [
+        "unknown-pending",
+        "unknown-claimed",
+        "committed-resolved",
+        "not-committed-resolved",
+        "conflicted-unresolved"
+      ]
+    },
+    {
+      "id": "bindingCertificateState",
+      "ownerRequirementId": "v2s.restore",
+      "values": [
+        "bound",
+        "binding-invalidated-awaiting-local",
+        "consumed",
+        "invalidated"
+      ]
+    },
+    {
+      "id": "activationPermitState",
+      "ownerRequirementId": "v2s.restore",
+      "values": [
+        "issued",
+        "superseded",
+        "expired",
+        "consumed",
+        "revoked"
+      ]
+    },
+    {
+      "id": "mutationAuthorityType",
+      "ownerRequirementId": "v2s.restore",
+      "values": [
+        "admission-owner",
+        "gateway-claim",
+        "connector-authority",
+        "direct-mutation-authority",
+        "runtime-grant",
+        "control-submission-grant",
+        "restricted-child-authority"
+      ]
+    },
+    {
+      "id": "hostStatus",
+      "ownerRequirementId": "v2c.host-attestation",
+      "values": [
+        "verified",
+        "unverified-claim",
+        "unsupported"
+      ]
+    },
+    {
+      "id": "hostMode",
+      "ownerRequirementId": "v2c.host-attestation",
+      "values": [
+        "production-control",
+        "production-child",
+        "effect-dispatch",
+        "recovery-control",
+        "mutation-disabled-evaluator"
+      ]
+    },
+    {
+      "id": "projectionFamily",
+      "ownerRequirementId": "v2c.control-boundary",
+      "values": [
+        "agent",
+        "release",
+        "activation",
+        "run",
+        "attempt",
+        "event",
+        "approval",
+        "effect",
+        "health",
+        "recovery",
+        "command-result"
+      ]
+    }
+  ],
+  "closedDimensionsDigest": "e779d1e355d4fc7512470c10dd14530561d036f59cfe187b47afab6eeaa79d4b",
+  "regressionClasses": [
+    "domain-term-attestation",
+    "safe-text-registry",
+    "release-mutable-proof-exclusion",
+    "unsafe-integer-command-canonicalization",
+    "issuer-subject-separation",
+    "execution-closure-dynamic-load",
+    "schedule-identity-unsupported-admission",
+    "command-conflict-result-crash",
+    "zero-row-cas",
+    "projection-host-fanout",
+    "stale-host-generation",
+    "run-attempt-checkpoint-allocation",
+    "checkpoint-obligation-owner-chain",
+    "attempt-quiesced-late-input",
+    "action-registration-parent",
+    "retry-owner-overlap",
+    "receipt-without-dispatch",
+    "single-operation-effect",
+    "no-receipt-not-committed",
+    "post-final-conflict",
+    "unknown-promotion-denial",
+    "direct-exception-denial",
+    "source-fact-prefix",
+    "containment-registration-descendant",
+    "database-clone-continuation",
+    "recovery-session-target-multi-agent",
+    "fresh-recovery-time",
+    "authority-lineage-denominator",
+    "recovery-discovery-membership",
+    "target-authority-closed",
+    "binding-permit-invalidation",
+    "safe-error-details",
+    "aggregate-gate-completeness"
+  ],
+  "recoveryRacePoints": [
+    "session-recorded",
+    "session-init-cas",
+    "session-abort-cas",
+    "session-local-init",
+    "session-local-retire",
+    "agent-abort-cas",
+    "agent-local-abort",
+    "prebind-finalization",
+    "binding-cas",
+    "recovery-conflict-fact",
+    "binding-invalidation-cas",
+    "binding-invalidation-local",
+    "activation-success-cas",
+    "session-init-local-ack",
+    "session-retire-local-ack",
+    "agent-abort-local-ack",
+    "activation-success-local-ack",
+    "binding-invalidation-local-ack",
+    "agent-binding-conflict-target-ack",
+    "target-authority-close-cas",
+    "target-authority-closed-proof",
+    "agent-binding-conflict"
+  ],
+  "dispositions": [
+    "crash-before",
+    "crash-after",
+    "response-loss",
+    "competing-command"
+  ],
+  "recoveryRaceCells": [
+    {
+      "caseId": "recovery-race.session-recorded.crash-before",
+      "recoveryRacePoint": "session-recorded",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.session-recorded.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-recorded.crash-after",
+      "recoveryRacePoint": "session-recorded",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.session-recorded.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-recorded.response-loss",
+      "recoveryRacePoint": "session-recorded",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.session-recorded.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-recorded.competing-command",
+      "recoveryRacePoint": "session-recorded",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.session-recorded.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-init-cas.crash-before",
+      "recoveryRacePoint": "session-init-cas",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.session-init-cas.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-init-cas.crash-after",
+      "recoveryRacePoint": "session-init-cas",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.session-init-cas.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-init-cas.response-loss",
+      "recoveryRacePoint": "session-init-cas",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.session-init-cas.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-init-cas.competing-command",
+      "recoveryRacePoint": "session-init-cas",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.session-init-cas.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-abort-cas.crash-before",
+      "recoveryRacePoint": "session-abort-cas",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.session-abort-cas.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-abort-cas.crash-after",
+      "recoveryRacePoint": "session-abort-cas",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.session-abort-cas.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-abort-cas.response-loss",
+      "recoveryRacePoint": "session-abort-cas",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.session-abort-cas.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-abort-cas.competing-command",
+      "recoveryRacePoint": "session-abort-cas",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.session-abort-cas.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-local-init.crash-before",
+      "recoveryRacePoint": "session-local-init",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.session-local-init.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-local-init.crash-after",
+      "recoveryRacePoint": "session-local-init",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.session-local-init.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-local-init.response-loss",
+      "recoveryRacePoint": "session-local-init",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.session-local-init.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-local-init.competing-command",
+      "recoveryRacePoint": "session-local-init",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.session-local-init.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-local-retire.crash-before",
+      "recoveryRacePoint": "session-local-retire",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.session-local-retire.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-local-retire.crash-after",
+      "recoveryRacePoint": "session-local-retire",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.session-local-retire.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-local-retire.response-loss",
+      "recoveryRacePoint": "session-local-retire",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.session-local-retire.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-local-retire.competing-command",
+      "recoveryRacePoint": "session-local-retire",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.session-local-retire.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-abort-cas.crash-before",
+      "recoveryRacePoint": "agent-abort-cas",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.agent-abort-cas.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-abort-cas.crash-after",
+      "recoveryRacePoint": "agent-abort-cas",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.agent-abort-cas.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-abort-cas.response-loss",
+      "recoveryRacePoint": "agent-abort-cas",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.agent-abort-cas.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-abort-cas.competing-command",
+      "recoveryRacePoint": "agent-abort-cas",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.agent-abort-cas.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-local-abort.crash-before",
+      "recoveryRacePoint": "agent-local-abort",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.agent-local-abort.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-local-abort.crash-after",
+      "recoveryRacePoint": "agent-local-abort",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.agent-local-abort.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-local-abort.response-loss",
+      "recoveryRacePoint": "agent-local-abort",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.agent-local-abort.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-local-abort.competing-command",
+      "recoveryRacePoint": "agent-local-abort",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.agent-local-abort.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.prebind-finalization.crash-before",
+      "recoveryRacePoint": "prebind-finalization",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.prebind-finalization.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.prebind-finalization.crash-after",
+      "recoveryRacePoint": "prebind-finalization",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.prebind-finalization.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.prebind-finalization.response-loss",
+      "recoveryRacePoint": "prebind-finalization",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.prebind-finalization.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.prebind-finalization.competing-command",
+      "recoveryRacePoint": "prebind-finalization",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.prebind-finalization.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.binding-cas.crash-before",
+      "recoveryRacePoint": "binding-cas",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.binding-cas.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.binding-cas.crash-after",
+      "recoveryRacePoint": "binding-cas",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.binding-cas.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.binding-cas.response-loss",
+      "recoveryRacePoint": "binding-cas",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.binding-cas.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.binding-cas.competing-command",
+      "recoveryRacePoint": "binding-cas",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.binding-cas.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.recovery-conflict-fact.crash-before",
+      "recoveryRacePoint": "recovery-conflict-fact",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.recovery-conflict-fact.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.recovery-conflict-fact.crash-after",
+      "recoveryRacePoint": "recovery-conflict-fact",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.recovery-conflict-fact.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.recovery-conflict-fact.response-loss",
+      "recoveryRacePoint": "recovery-conflict-fact",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.recovery-conflict-fact.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.recovery-conflict-fact.competing-command",
+      "recoveryRacePoint": "recovery-conflict-fact",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.recovery-conflict-fact.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-cas.crash-before",
+      "recoveryRacePoint": "binding-invalidation-cas",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.binding-invalidation-cas.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-cas.crash-after",
+      "recoveryRacePoint": "binding-invalidation-cas",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.binding-invalidation-cas.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-cas.response-loss",
+      "recoveryRacePoint": "binding-invalidation-cas",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.binding-invalidation-cas.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-cas.competing-command",
+      "recoveryRacePoint": "binding-invalidation-cas",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.binding-invalidation-cas.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-local.crash-before",
+      "recoveryRacePoint": "binding-invalidation-local",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.binding-invalidation-local.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-local.crash-after",
+      "recoveryRacePoint": "binding-invalidation-local",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.binding-invalidation-local.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-local.response-loss",
+      "recoveryRacePoint": "binding-invalidation-local",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.binding-invalidation-local.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-local.competing-command",
+      "recoveryRacePoint": "binding-invalidation-local",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.binding-invalidation-local.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.activation-success-cas.crash-before",
+      "recoveryRacePoint": "activation-success-cas",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.activation-success-cas.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.activation-success-cas.crash-after",
+      "recoveryRacePoint": "activation-success-cas",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.activation-success-cas.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.activation-success-cas.response-loss",
+      "recoveryRacePoint": "activation-success-cas",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.activation-success-cas.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.activation-success-cas.competing-command",
+      "recoveryRacePoint": "activation-success-cas",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.activation-success-cas.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-init-local-ack.crash-before",
+      "recoveryRacePoint": "session-init-local-ack",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.session-init-local-ack.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-init-local-ack.crash-after",
+      "recoveryRacePoint": "session-init-local-ack",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.session-init-local-ack.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-init-local-ack.response-loss",
+      "recoveryRacePoint": "session-init-local-ack",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.session-init-local-ack.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-init-local-ack.competing-command",
+      "recoveryRacePoint": "session-init-local-ack",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.session-init-local-ack.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-retire-local-ack.crash-before",
+      "recoveryRacePoint": "session-retire-local-ack",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.session-retire-local-ack.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-retire-local-ack.crash-after",
+      "recoveryRacePoint": "session-retire-local-ack",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.session-retire-local-ack.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-retire-local-ack.response-loss",
+      "recoveryRacePoint": "session-retire-local-ack",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.session-retire-local-ack.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.session-retire-local-ack.competing-command",
+      "recoveryRacePoint": "session-retire-local-ack",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.session-retire-local-ack.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-abort-local-ack.crash-before",
+      "recoveryRacePoint": "agent-abort-local-ack",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.agent-abort-local-ack.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-abort-local-ack.crash-after",
+      "recoveryRacePoint": "agent-abort-local-ack",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.agent-abort-local-ack.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-abort-local-ack.response-loss",
+      "recoveryRacePoint": "agent-abort-local-ack",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.agent-abort-local-ack.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-abort-local-ack.competing-command",
+      "recoveryRacePoint": "agent-abort-local-ack",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.agent-abort-local-ack.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.activation-success-local-ack.crash-before",
+      "recoveryRacePoint": "activation-success-local-ack",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.activation-success-local-ack.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.activation-success-local-ack.crash-after",
+      "recoveryRacePoint": "activation-success-local-ack",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.activation-success-local-ack.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.activation-success-local-ack.response-loss",
+      "recoveryRacePoint": "activation-success-local-ack",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.activation-success-local-ack.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.activation-success-local-ack.competing-command",
+      "recoveryRacePoint": "activation-success-local-ack",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.activation-success-local-ack.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-local-ack.crash-before",
+      "recoveryRacePoint": "binding-invalidation-local-ack",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.binding-invalidation-local-ack.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-local-ack.crash-after",
+      "recoveryRacePoint": "binding-invalidation-local-ack",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.binding-invalidation-local-ack.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-local-ack.response-loss",
+      "recoveryRacePoint": "binding-invalidation-local-ack",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.binding-invalidation-local-ack.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.binding-invalidation-local-ack.competing-command",
+      "recoveryRacePoint": "binding-invalidation-local-ack",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.binding-invalidation-local-ack.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-binding-conflict-target-ack.crash-before",
+      "recoveryRacePoint": "agent-binding-conflict-target-ack",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.agent-binding-conflict-target-ack.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-binding-conflict-target-ack.crash-after",
+      "recoveryRacePoint": "agent-binding-conflict-target-ack",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.agent-binding-conflict-target-ack.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-binding-conflict-target-ack.response-loss",
+      "recoveryRacePoint": "agent-binding-conflict-target-ack",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.agent-binding-conflict-target-ack.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-binding-conflict-target-ack.competing-command",
+      "recoveryRacePoint": "agent-binding-conflict-target-ack",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.agent-binding-conflict-target-ack.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.target-authority-close-cas.crash-before",
+      "recoveryRacePoint": "target-authority-close-cas",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.target-authority-close-cas.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.target-authority-close-cas.crash-after",
+      "recoveryRacePoint": "target-authority-close-cas",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.target-authority-close-cas.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.target-authority-close-cas.response-loss",
+      "recoveryRacePoint": "target-authority-close-cas",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.target-authority-close-cas.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.target-authority-close-cas.competing-command",
+      "recoveryRacePoint": "target-authority-close-cas",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.target-authority-close-cas.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.target-authority-closed-proof.crash-before",
+      "recoveryRacePoint": "target-authority-closed-proof",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.target-authority-closed-proof.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.target-authority-closed-proof.crash-after",
+      "recoveryRacePoint": "target-authority-closed-proof",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.target-authority-closed-proof.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.target-authority-closed-proof.response-loss",
+      "recoveryRacePoint": "target-authority-closed-proof",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.target-authority-closed-proof.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.target-authority-closed-proof.competing-command",
+      "recoveryRacePoint": "target-authority-closed-proof",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.target-authority-closed-proof.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-binding-conflict.crash-before",
+      "recoveryRacePoint": "agent-binding-conflict",
+      "disposition": "crash-before",
+      "requiredGate": "gate.recovery-race.agent-binding-conflict.crash-before",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-binding-conflict.crash-after",
+      "recoveryRacePoint": "agent-binding-conflict",
+      "disposition": "crash-after",
+      "requiredGate": "gate.recovery-race.agent-binding-conflict.crash-after",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-binding-conflict.response-loss",
+      "recoveryRacePoint": "agent-binding-conflict",
+      "disposition": "response-loss",
+      "requiredGate": "gate.recovery-race.agent-binding-conflict.response-loss",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    },
+    {
+      "caseId": "recovery-race.agent-binding-conflict.competing-command",
+      "recoveryRacePoint": "agent-binding-conflict",
+      "disposition": "competing-command",
+      "requiredGate": "gate.recovery-race.agent-binding-conflict.competing-command",
+      "excluded": false,
+      "candidateExecutionRequired": true
+    }
+  ],
+  "recoveryRaceCellDigest": "08d93d153b87845e281374750cf528a337eb6a589b66c8ea9dbb18f6aa8ba3dc"
+}

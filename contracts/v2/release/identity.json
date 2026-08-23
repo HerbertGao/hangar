@@ -1,0 +1,168 @@
+{
+  "schemaVersion": "v2-release-identity-v1",
+  "requirementIds": [
+    "v2c.release-identity",
+    "v2c.core-objects"
+  ],
+  "canonicalization": {
+    "version": "canonical-json-v1",
+    "inputModel": "strict-json",
+    "objectKeyOrder": "utf16-code-unit",
+    "arrayOrder": "preserve",
+    "unicodeNormalization": "none",
+    "numberModel": "finite-binary64-ecmascript-shortest",
+    "negativeZero": "0",
+    "hashAlgorithm": "sha256",
+    "outputWhitespace": "none",
+    "trailingNewline": false
+  },
+  "numericDomains": {
+    "safeIntegerFields": [
+      "activationEpoch",
+      "attempt",
+      "checkpointSchemaVersion",
+      "count",
+      "deadlineUtcMs",
+      "epoch",
+      "expiresAtUtcMs",
+      "generation",
+      "intentGeneration",
+      "issuedAtUtcMs",
+      "limit",
+      "maxUtf8Bytes",
+      "producerAttempt",
+      "runSeq"
+    ],
+    "binary64Fields": [
+      "binary64FixtureValue"
+    ],
+    "decimalQuantities": "schema-defined-canonical-string"
+  },
+  "releaseSchemaRef": "contracts/v2/control/core-objects.json#AgentRelease",
+  "requiredFields": [
+    "schemaVersion",
+    "canonicalizationVersion",
+    "hashAlgorithm",
+    "compilerVersion",
+    "agentId",
+    "normalizedSpecDigest",
+    "goalArtifact",
+    "instructionArtifact",
+    "harnessEntryId",
+    "executionClosureDigest",
+    "promptDigests",
+    "policyDigests",
+    "approvedSkillDigests",
+    "fixtureDigests",
+    "executableDigests",
+    "resourceDigests",
+    "harnessConstraintDigest",
+    "runtimeConstraintDigest",
+    "modelConstraintDigest",
+    "entitlementConstraintDigest",
+    "checkpointSchemaDigests",
+    "durableBoundaryKinds",
+    "effectDeclarationDigest",
+    "healthDeclarationDigest",
+    "evalDeclarationDigest",
+    "knowledgeDescriptorDigest",
+    "requiredCapabilities",
+    "requiredOperations",
+    "trustedDirectEffects",
+    "hostDeclarationDigest",
+    "secretRefs"
+  ],
+  "rejectedIdentifiers": {
+    "identityFields": [
+      "releaseId"
+    ],
+    "mutableEvidenceFields": [
+      "activationState",
+      "agentOwnedState",
+      "preferenceRecords",
+      "checkpointBody",
+      "launchProbeResult",
+      "publishedAtUtcMs",
+      "authorityState",
+      "recoveryObservation"
+    ],
+    "deferredFields": [
+      "workspaceSchema",
+      "workspaceWriteProtocol",
+      "capabilityRegistration",
+      "capabilityVisibility"
+    ]
+  },
+  "sampleRelease": {
+    "schemaVersion": "agent-release-v1",
+    "canonicalizationVersion": "canonical-json-v1",
+    "hashAlgorithm": "sha256",
+    "compilerVersion": "m0-fixture-1",
+    "agentId": "agent-demo",
+    "normalizedSpecDigest": "0000000000000000000000000000000000000000000000000000000000000000",
+    "goalArtifact": {
+      "artifactId": "artifact-goal",
+      "digest": "1111111111111111111111111111111111111111111111111111111111111111",
+      "classification": "control-input",
+      "accessPolicyId": "policy-owner"
+    },
+    "instructionArtifact": {
+      "artifactId": "artifact-instruction",
+      "digest": "2222222222222222222222222222222222222222222222222222222222222222",
+      "classification": "control-input",
+      "accessPolicyId": "policy-owner"
+    },
+    "harnessEntryId": "entry-main",
+    "executionClosureDigest": "3333333333333333333333333333333333333333333333333333333333333333",
+    "promptDigests": [
+      "4444444444444444444444444444444444444444444444444444444444444444"
+    ],
+    "policyDigests": [
+      "5555555555555555555555555555555555555555555555555555555555555555"
+    ],
+    "approvedSkillDigests": [
+      "6666666666666666666666666666666666666666666666666666666666666666"
+    ],
+    "fixtureDigests": [
+      "7777777777777777777777777777777777777777777777777777777777777777"
+    ],
+    "executableDigests": [
+      "8888888888888888888888888888888888888888888888888888888888888888"
+    ],
+    "resourceDigests": [
+      "9999999999999999999999999999999999999999999999999999999999999999"
+    ],
+    "harnessConstraintDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "runtimeConstraintDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "modelConstraintDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "entitlementConstraintDigest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "checkpointSchemaDigests": [
+      "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    ],
+    "durableBoundaryKinds": [
+      "human",
+      "effect",
+      "external-input"
+    ],
+    "effectDeclarationDigest": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "healthDeclarationDigest": "0000000000000000000000000000000000000000000000000000000000000000",
+    "evalDeclarationDigest": "1111111111111111111111111111111111111111111111111111111111111111",
+    "knowledgeDescriptorDigest": "2222222222222222222222222222222222222222222222222222222222222222",
+    "requiredCapabilities": [
+      "artifact-read"
+    ],
+    "requiredOperations": [
+      "read"
+    ],
+    "trustedDirectEffects": [],
+    "hostDeclarationDigest": "3333333333333333333333333333333333333333333333333333333333333333",
+    "secretRefs": [
+      {
+        "secretRefId": "secret-primary",
+        "purpose": "tool-auth",
+        "audience": "broker"
+      }
+    ]
+  },
+  "sampleReleaseId": "5686f6fa7a0ceb40b90fc0211598e1912cf3ba73683f7190ea9217ef0d670a7a"
+}

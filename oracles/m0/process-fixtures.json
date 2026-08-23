@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "m0-process-fixtures-v1",
+  "requirementId": "m0o.process-fixture",
+  "observationSchema": [
+    "runId",
+    "attempt",
+    "harnessSessionId",
+    "actionIds",
+    "grantDigests",
+    "checkpointId",
+    "effectIds",
+    "containmentId",
+    "terminalOwner",
+    "retryOwner",
+    "processMembersRemaining",
+    "outcome"
+  ],
+  "cases": [
+    { "caseId": "process.parent-death", "fault": "parent-death", "expected": "control-hard-reaps-whole-tree-and-terminalizes-once" },
+    { "caseId": "process.late-descendant", "fault": "late-descendant", "expected": "descendant-remains-contained-and-is-reaped" },
+    { "caseId": "process.partial-stream", "fault": "partial-jsonl", "expected": "protocol-failure-with-no-false-business-success" },
+    { "caseId": "process.cancel-during-spawn", "fault": "cancel-during-spawn", "expected": "entrypoint-remains-gated-and-containment-is-reaped" },
+    { "caseId": "process.term-to-kill", "fault": "term-timeout", "expected": "control-escalates-to-kill-using-monotonic-time" },
+    { "caseId": "process.ambiguous-effect", "fault": "dispatch-response-loss", "expected": "effect-unknown-and-reconcile-only" },
+    { "caseId": "process.checkpoint-resume", "fault": "crash-after-checkpoint", "expected": "new-attempt-consumes-checkpoint-after-quiescence" },
+    { "caseId": "process.double-scheduler", "fault": "two-trigger-owners", "expected": "boundary-violation-and-no-qualification" },
+    { "caseId": "process.overlapping-retry", "fault": "outer-retry-while-session-live", "expected": "boundary-violation-and-no-new-attempt" }
+  ],
+  "owners": {
+    "outerRetry": "control",
+    "terminal": "control",
+    "containment": "control",
+    "innerRetry": "harness",
+    "internalSession": "harness"
+  },
+  "requiredEvidence": ["ActionEvent", "effectiveGrant", "CheckpointRef", "Effect", "containment", "recoveryPoint"]
+}

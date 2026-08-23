@@ -1,15 +1,15 @@
 schema: spec-driven
 
 # Hangar v2 OpenSpec context. Canonical architecture lives in DESIGN.md.
-# 本分支说明：v2 从空树重建，不含 v0 实现与 openspec/specs/（v0 oracle）；
-# 该目录及 SKILL.md 仍在仓库 main（及其他既有分支），仅作参考。详见根 README.md。
+# 本分支说明：v2 从空树重建，不含 v0 实现；openspec/specs/ 只由外部 openspec-cn 管理。
+# main 上的历史 v0 specs 与 SKILL.md 仅作固定 revision 行为参考。详见根 README.md。
 context: |
   项目：Hangar v2
 
   定位：
-  - 开发者可完全掌控的个人 Agent 构筑与运行平台；
-  - 用 TypeScript 快速定义流程式 Agent；
-  - 通过 Web、小程序、Telegram Bot 或 CLI 控制同一个透明 runtime；
+  - 开发者可完全掌控的个人 Agent Harness 与控制平面；
+  - 用 TypeScript 定义不可变 Release、Harness、能力与安全边界；
+  - 通过 Web、小程序、Telegram Bot 或 CLI 控制同一套 Run/Effect 状态；
   - 先服务单个开发者，团队/公司能力以后另立赌注。
 
   当前决定：
@@ -20,53 +20,63 @@ context: |
 
   权威文档：
   - DESIGN.md：v2 架构 SOT 与不变量；
-  - ROADMAP.md：M0-M6 次序、预算、出口闸与止损；
+  - ROADMAP.md：M0-M7 次序、预算、出口闸与止损；
   - CLAUDE.md：仓库工作护栏；
   - docs/proposals/control-core-v2-migration.md：完整迁移论证；
   - docs/proposals/personal-agent-builder.md：产品选择、竞品和验证硬门。
-  - SKILL.md：仅为当前 v0 CLI 的迁移期运行契约，不是 v2 总架构 SOT。
-  - openspec/specs/：已交付 v0 行为的兼容 oracle；v2 counterpart 落地后逐项归档，不能反向覆盖 DESIGN.md。
+  - main:SKILL.md：历史 v0 CLI 的迁移期运行契约；本分支无该文件，只作行为 oracle。
+  - main:openspec/specs/：已交付 v0 行为的兼容 oracle，只通过固定 revision读取，不能反向覆盖 DESIGN.md。
+  - openspec/specs/：由外部 openspec-cn 管理的 M0 Control/Harness、存储与 evaluator requirement；产品代码与 M0 validator 不解析该目录。
 
   技术方向：
   - Node.js + TypeScript + pnpm；
   - TypeScript/Zod contract 同时生成 SDK 与 OpenAPI；
   - v2 为模块化单体 hangar-server；
-  - v2 使用独立 SQLite，逻辑实体包括 AgentRelease、Activation、Run、NodeAttempt、RunEvent、Approval、Effect；
-  - Pi 为首个 reference RuntimeAdapter，进程/legacy/Python runtime 均经 adapter；
+  - v2 使用独立 SQLite，逻辑实体包括 AgentRelease、Activation、Run、RunAttempt、RunEvent/SourceFact、Approval、Effect；
+  - Pi 为首个 reference HarnessAdapter，确定性程序、进程、legacy/Python/外部 SDK 均经同一边界；
+  - Harness 拥有 RunAttempt 内部推进；Control 拥有外层 Attempt/restart、wait/cancel/terminal、grant/Effect 与 whole-tree reap；
   - typed HTTP/SSE Control API 是所有 client 的唯一入口；
-  - Agent 领域库与 knowledge provider 由 Agent/provider 自己拥有。
+  - Agent Workspace、领域库与 knowledge provider 由 Agent/provider 自己拥有。
 
   核心不变量：
   1. control-core 零领域概念；
   2. AgentSpec 先编译为不可变 AgentRelease，之后才能 activation；
-  3. admission、Run、retry、terminal、effect 和进程回收各自单一 owner；
-  4. Run/Node 状态由 append-only event 推导，终态走唯一 choke point；
-  5. durable wait 只在 human/effect/subflow 显式边界；
-  6. RuntimeAdapter 不创建第二个 Run、不静默 retry、不持高风险业务凭据；
-  7. 受控 mutation 只经 Effect Gateway，unknown 不自动重提；
-  8. client 只经 typed Control API，不直写 SQLite/Agent 文件；
-  9. 迁移允许双读、禁止双写；
-  10. knowledge provider 拥有索引/ACL/更新，runtime 只拿最小 ToolDescriptor；
-  11. 模块化单体优先，不为包边界自动拆服务；
-  12. 架构变更先更新 DESIGN/ROADMAP/OpenSpec。
+  3. admission、Run、外层 RunAttempt/restart、durable wait、terminal、Effect 和 whole-tree reap 各自单一 Control owner；
+  4. Harness 只拥有同一 RunAttempt 内的 plan/context/tool/subagent 与声明过的模型、传输、可逆 action retry；
+  5. Run/RunAttempt/action graph 由 append-only event 推导，终态走唯一 choke point；
+  6. wait 只在 human/Effect/具名外部输入边界；checkpoint 版本化，不做任意 continuation replay；
+  7. Harness 不创建第二个 Run/外层 Attempt/terminal，不重试 unknown/committed Effect，不持高风险业务凭据；
+  8. 受控 mutation 只经 Effect Gateway，unknown 不自动重提；
+  9. client 与未来 Agent principal 只经 typed Control API，不直写 SQLite/Agent 文件；
+  10. 迁移允许双读、禁止双写；
+  11. Workspace/knowledge provider 拥有领域事实、索引/ACL/更新，Harness 只拿最小 ToolDescriptor；
+  12. 模块化单体优先，不为包边界自动拆服务；
+  13. 架构变更先更新 DESIGN/ROADMAP/OpenSpec；
+  14. 通用 ProcessSpec、Suggestion/AgentIntent 等共享原语必须有具名消费者、阶段与出口闸。
 
   当前阶段：
-  - M0：SOT、contracts、状态转移表、DDL、oracle 与成本测量；
-  - M1：Heartbeat v2 最小纵向切片；
+  - M0：SOT、Control/Harness contracts、状态转移表、DDL、oracle 与成本测量；
+  - M1：fake Harness Heartbeat v2 最小纵向切片；
+  - M2：Pi Harness、Control API 与两个 client；
+  - M3：Inbox Builder、suggestion-only shadow 与 cutover；
+  - M4-M6：Knowledge、Auto Developer Harness qualification 与 v0 退役；
+  - M7：AI Radar Harness 接入（M2 之后）；
   - M0+M1 主动开发预算上限 15 个工作日；
-  - M1 未通过前不开始 Pi、Control API 客户端、Knowledge 或 Auto Developer 改造。
+  - M1 未通过前不开始 Pi、Control API 客户端、Knowledge 或真实租户改造。
 
   关键验证：
   - no v0/v2 shared Run identity；
   - no production dual-write or double admission owner；
-  - no gateway bypass, stale epoch mutation, unknown-effect replay；
-  - projection rebuild、backup restore 与 activation rollback 可演练；
+  - no overlapping outer/inner retry or duplicate terminal/process owner；下一 Attempt 必须原子消费 AttemptQuiesced，旧 Attempt 的派生写入/launch 全部受 fence；
+  - no gateway bypass, stale epoch mutation, unknown/committed Effect replay；
+  - 任何candidate spec显式采用M0 evaluator universe时，fault-case分母才由owner冻结的完整universe/predicate推导，required case不可排除、适用分母非零且无漏跑，action/grant/checkpoint/Effect/recovery attribution不可归因率<=5%，boundary violation为0；未采用该bundle的阶段只按自身OpenSpec requirements/scenarios验收；
+  - projection rebuild、whole-tree reap、backup restore 与 activation rollback 可演练；完整 recoveryRacePoint × disposition 笛卡尔积每格绑定唯一 typed expected/required gate，N/A/skip 不移出分母；
   - Inbox clean build T_attempt <= 120 分钟，原子/加权功能 >=98%，category >=95%，安全门 100%；
   - T_ready、C_platform、C_enable、glue LOC 与 12 个月 TCO 单独记录。
 
   非目标：
-  多租户、团队 RBAC、计费、SSO、marketplace、工作流画布、统一向量库、任意 durable workflow、
-  Temporal 仿制品、完整不可信代码 sandbox。
+  多租户、团队 RBAC、计费、SSO、marketplace、工作流画布、通用 ProcessSpec、长驻推理进程、
+  Agent-to-Agent 自动执行、统一向量库、任意 continuation/durable workflow、Temporal 仿制品、完整不可信代码 sandbox。
 
   约定：
   - 中文为主要书写语言；
@@ -76,19 +86,19 @@ context: |
 
 rules:
   proposal:
-    - '必须说明本变更服务 ROADMAP 的哪个阶段，以及不做什么。'
-    - '必须逐条检查 DESIGN.md 的单一 owner、event truth、effect gateway、typed API 与 no-dual-write 不变量。'
-    - '新增核心能力必须给出至少两个 Agent 或一个真实 Agent 加一个中立 fixture 的使用证据。'
-    - '涉及外部平台时，必须计算 glue、部署、退出和 12 个月 TCO，不能只比较 SDK 功能。'
-    - '始终包含非目标、回滚和止损条件。'
+    - "必须说明本变更服务 ROADMAP 的哪个阶段，以及不做什么。"
+    - "必须逐条检查 DESIGN.md 的单一 owner、event truth、effect gateway、typed API 与 no-dual-write 不变量。"
+    - "新增核心能力必须给出至少两个 Agent 或一个真实 Agent 加一个中立 fixture 的使用证据。"
+    - "涉及外部平台时，必须计算 glue、部署、退出和 12 个月 TCO，不能只比较 SDK 功能。"
+    - "始终包含非目标、回滚和止损条件。"
   specs:
-    - '状态型需求必须提供穷尽 state × event 表、非法转换和 crash-point 行为。'
-    - 'effect 需求必须覆盖 intent、policy/approval、claim、receipt、unknown 和 reconciliation。'
-    - 'runtime 需求必须明确 Run/retry/terminal/credential 的 owner。'
-    - '存储需求必须说明唯一约束、事务边界、projection rebuild、backup restore 和 epoch fencing。'
-    - '迁移需求必须证明一个 Agent 只有一个 admission 与可写运行 owner。'
+    - "状态型需求必须提供穷尽 state × event 表、非法转换和 crash-point 行为。"
+    - "effect 需求必须覆盖 intent、policy/approval、claim、dispatch、可选 receipt、ExternalOutcome、unknown 和 reconciliation。"
+    - "Harness 需求必须明确 outer/inner retry、RunAttempt、checkpoint obligation/successor handoff、AttemptQuiesced、terminal、credential 与 whole-tree reap 的 owner。"
+    - "存储需求必须说明唯一约束、事务边界、projection rebuild、backup restore、数据库级 RecoverySession/共享 target/per-Agent qualification、session init/abort 单 CAS、旧实例 registration closure、authenticated Agent-bound operation lifecycle、跨 target ack/TargetAuthorityClosed、bound permit 与 binding-invalidated 恢复和 epoch fencing。"
+    - "迁移需求必须证明一个 Agent 只有一个 admission 与可写运行 owner。"
   tasks:
-    - '按 ROADMAP 阶段和依赖顺序拆分，每项可独立验证。'
-    - '先写 contract/fault fixture，再写非平凡实现。'
-    - '任务必须列验证命令、预期输出和失败时的 stop-loss。'
-    - '不得借当前 change 顺手重构 v0 或覆盖无关未提交修改。'
+    - "按 ROADMAP 阶段和依赖顺序拆分，每项可独立验证。"
+    - "先写 contract/fault fixture，再写非平凡实现。"
+    - "任务必须列验证命令、预期输出和失败时的 stop-loss。"
+    - "不得借当前 change 顺手重构 v0 或覆盖无关未提交修改。"

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "m0-scenario-assertion-review-summary-v1",
+  "requirementId": "m0o.fault-matrix",
+  "runtimeConsumed": false,
+  "originalArtifact": {
+    "path": "measurements/scenario-assertion-authority-review.json",
+    "sha256": "ca96dc5cf760e766b3b6d4c80ef7b2ae31c694a5115c752e50c48056f5f035fa",
+    "bytes": 542990,
+    "removedAsAbandonedAssertionLevelDetail": true
+  },
+  "reviewMethod": "Existing 244-way mapping rationale plus focused current-source review for all formerly generic mappings; authority bytes independently rediscovered after planning changes.",
+  "authorityDigest": "2ec63e2e490e16ca93bcb46c7a165ca3bd777fa3455617c4c1064a8ca3a0aa13",
+  "counts": {
+    "scenarios": 244,
+    "assertionBodies": 147,
+    "unresolved": 53
+  },
+  "statusCounts": {
+    "accepted": 191,
+    "gap": 53
+  },
+  "stopLoss": {
+    "threshold": 25,
+    "reviewerRequiredNewSemanticGates": {
+      "codeReviewer": 54,
+      "realityChecker": 42,
+      "testAutomation": 39
+    },
+    "triggered": true,
+    "disposition": "I1-stopped; later Q3/composite disproved; M0 advisory-only"
+  },
+  "historicalReferences": [
+    "/tmp/hangar-i1-gap-review-round.md",
+    "/tmp/hangar-q3-review-round.md",
+    "/tmp/hangar-composite-review-round.md",
+    "/tmp/hangar-bundle-review-round.md"
+  ]
+}

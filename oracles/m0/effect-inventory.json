@@ -1,0 +1,2244 @@
+{
+  "schemaVersion": "m0-effect-inventory-v1",
+  "requirementId": "m0o.effect-inventory",
+  "scanner": {
+    "version": "effect-inventory-scanner-v1",
+    "classes": [
+      {
+        "id": "credential-reference",
+        "pattern": "process\\.env|token|secret|password|authJson|oauth"
+      },
+      {
+        "id": "external-mutation-call",
+        "pattern": "markRead|mark.*read|sendMessage|sendDigest|modify\\(|addLabel|removeLabel|setFlags|messageFlagsAdd"
+      },
+      {
+        "id": "filesystem-write",
+        "pattern": "writeFile|appendFile|rename\\(|unlink\\(|mkdir\\("
+      },
+      {
+        "id": "subprocess-launch",
+        "pattern": "spawn\\(|execFile|exec\\("
+      }
+    ]
+  },
+  "memberDenominatorDigest": "fb536cec95c037085f87362911a02eccd472fc24a53086bc189efb346c4416fd",
+  "members": [
+    {
+      "memberId": "hangar-main-v0:apps/.gitkeep",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "apps/.gitkeep",
+      "contentDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:apps/heartbeat/app.yaml",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "apps/heartbeat/app.yaml",
+      "contentDigest": "3e61543403d31b38306a524129d045fced187974ce6d2086c319901483b4dd3d",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:apps/heartbeat/package.json",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "apps/heartbeat/package.json",
+      "contentDigest": "3ff5625af262b8ebc0272f729606ce62d28202afb24f6809c77f0e12e79f9b1a",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:apps/heartbeat/pipeline.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "apps/heartbeat/pipeline.ts",
+      "contentDigest": "2466b429ba8f6a86fedded725e0efa31dc8bbc7aa65fa14ed78f732399b3e369",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:apps/heartbeat/tools.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "apps/heartbeat/tools.ts",
+      "contentDigest": "9d419d02ecc9ab9bfa34cb0031a767b28582a4e5b7da183fbfa334e6aabda980",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "filesystem-write"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:apps/heartbeat/tsconfig.json",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "apps/heartbeat/tsconfig.json",
+      "contentDigest": "71feb92c618e139d49d7baf78fb2eebd4984a0f12590c38d8ff4870c7a72798c",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:deploy/README.md",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "deploy/README.md",
+      "contentDigest": "089c28fa0e9491331fe3c8f19c940b266c5d1f442ddaaa5a659ff109c260065e",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:deploy/com.herbertgao.hangar-inbox.plist",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "deploy/com.herbertgao.hangar-inbox.plist",
+      "contentDigest": "68bef4c042e70e1d4565110863f7a0e3dc60f7ad540d26ea1b68457674ac356a",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:deploy/hangar-pg.docker-compose.yml",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "deploy/hangar-pg.docker-compose.yml",
+      "contentDigest": "76cd5dedd07a4f43d14a4acddadd457a2b934ac90a1daf32d3169052a75c6c10",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/package.json",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/package.json",
+      "contentDigest": "663cfc28ba1fb739356a2d9dd0bb2c6c3b872f32cf1312f6140db70670ef823c",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/src/capabilities.test.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/src/capabilities.test.ts",
+      "contentDigest": "21feee0d1579543b3c93261de6bbf5d1d48fb5582ce08035895969671b9fc26d",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/src/capabilities.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/src/capabilities.ts",
+      "contentDigest": "6e3e260d151b58301be799c2bc976b84b5a1ffbd1fdda3ff311a7ebbd1f3c69c",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/src/cli.test.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/src/cli.test.ts",
+      "contentDigest": "5a9d981ed9db0f149348594ccccaae3eff1929fe8a86f0908cc10735158a27e0",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "filesystem-write",
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/src/cli.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/src/cli.ts",
+      "contentDigest": "5ebbdca90e1154f079dc7d565cae6c70fa480e9f5383aca99c249b9ac7af65b4",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/src/db.test.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/src/db.test.ts",
+      "contentDigest": "1ae7de312afe6b0185105eab6740a1f54c72f05ddcbccdd32e4e9b44b71bb90a",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/src/db.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/src/db.ts",
+      "contentDigest": "0ab0f2fffe0375ba7a0eaecbe771c7789a2bff006ff8a5045221dec678be9a24",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/src/dod.test.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/src/dod.test.ts",
+      "contentDigest": "5a3c801571980f3822abbc0951207d827b72f509733e08f2a0ab3dae35f98c0c",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call",
+          "filesystem-write"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/src/events.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/src/events.ts",
+      "contentDigest": "fa57856384a29d9720ea90d31d61c62264e90660478f5a935d427a0110847531",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/src/executor.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/src/executor.ts",
+      "contentDigest": "62edaf6b61eb80aaba8630fb1a42b456b38c5691fd2bae8b709e6b300e0ac00b",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/src/gateway.test.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/src/gateway.test.ts",
+      "contentDigest": "21323d6824fcf57de626fd306844a47c56243368fbbd82a619289abed050100d",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "filesystem-write"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/src/gateway.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/src/gateway.ts",
+      "contentDigest": "0a33fc31f8b792c3758ee51a5455971f88adf7ff067d56494fda2af12d6b06d8",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/src/index.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/src/index.ts",
+      "contentDigest": "612d0196df4fc0e65c7c979d75226a5de73afee10db3ae3754286f06650baa3f",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/src/lock.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/src/lock.ts",
+      "contentDigest": "3a51441cc6b9a599027f76928d52cc7d2b1c1aac2cf99df6c796155f44f5a005",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/src/reaper.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/src/reaper.ts",
+      "contentDigest": "9f5e4e4dc9d080d6e5b7b762a2a9cd84c34c8cbbe545f6ee99d8acd0321dacf1",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/src/registry.test.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/src/registry.test.ts",
+      "contentDigest": "150eca2046eda8c73255277d85fad7c5c66a66abd055c7db076429fb17a3d88a",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "filesystem-write"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/src/registry.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/src/registry.ts",
+      "contentDigest": "3ed904d9a4a68860f739f174f100fac44dedabcc0f3d7cfd5f299e3bfd3c3db0",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/src/run-engine.test.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/src/run-engine.test.ts",
+      "contentDigest": "1ac1a6247dd10d2b34bcd4d59a350d1db52817b94898418bac89460636391092",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "filesystem-write"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/src/store.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/src/store.ts",
+      "contentDigest": "ac10ef3f874743e3492f84bee40762e9976ad6f0a22e32fd6f350a86f09060cc",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/core/tsconfig.json",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/core/tsconfig.json",
+      "contentDigest": "1a9f0873fec04475a675b9b11b9402a9eca94c930c65a199019538b9f521b861",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/hangar-view/deploy/README.md",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/hangar-view/deploy/README.md",
+      "contentDigest": "84666d86d4b59eb19c5099ee65d2eedc039490be836f0fb92a8539da5e6eb166",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/hangar-view/deploy/cloudflared/config.yml",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/hangar-view/deploy/cloudflared/config.yml",
+      "contentDigest": "7e8bcfb8d4a0209cacbd384c6476789d0a39d5eff65755b8a9a38106727479a3",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/hangar-view/deploy/com.herbertgao.agent-hangar-tunnel.plist",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/hangar-view/deploy/com.herbertgao.agent-hangar-tunnel.plist",
+      "contentDigest": "92475708041251b42488bf52f4a7ffe1968903ed358e3639f1c35a5b74cc0308",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/hangar-view/deploy/com.herbertgao.hangar-view.plist",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/hangar-view/deploy/com.herbertgao.hangar-view.plist",
+      "contentDigest": "da7113cb7457ae19a90992cfb9840bf6a4a3f4b398ae510149bde459d0e2d8ba",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/hangar-view/deploy/hangar-view.sh",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/hangar-view/deploy/hangar-view.sh",
+      "contentDigest": "b30197e52ae964a4e1df6bf970efeb7cf2be07c17b7f78c525667751ce60c612",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/hangar-view/deploy/hangar-view.test.sh",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/hangar-view/deploy/hangar-view.test.sh",
+      "contentDigest": "b8098066355dc58c0d5d2d49fe9833660c8d2143a59136b4955cdde931e72573",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/hangar-view/package.json",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/hangar-view/package.json",
+      "contentDigest": "da4756c432c7da30e30e07e84eacf8c78d0d445cdaf618703c83b0d2e15f4f1f",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/hangar-view/public/index.html",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/hangar-view/public/index.html",
+      "contentDigest": "857fc1bd6da8fed845e4d0d85986f737fa45cd7d3b60b6974e4e06ba31481dfc",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/hangar-view/src/cron.js",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/hangar-view/src/cron.js",
+      "contentDigest": "6ebce19e1d0877843809566539147105722e8683fb19b113e9f24a6743c7a8b2",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/hangar-view/src/cron.test.js",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/hangar-view/src/cron.test.js",
+      "contentDigest": "86a690a6ca50c120f1560bafc26e080a98a7e5b61cc6a540a4b335b53275bf59",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/hangar-view/src/derive.js",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/hangar-view/src/derive.js",
+      "contentDigest": "9745a9269cc34cd14c1f9652b995065c8090bf8cd67eb5fcb72249b9dfcb7d2a",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/hangar-view/src/derive.test.js",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/hangar-view/src/derive.test.js",
+      "contentDigest": "47a441216c0a364ec94c73d6702609b7d9637277b36a1fe1d0d26be907274fb0",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/hangar-view/src/server.js",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/hangar-view/src/server.js",
+      "contentDigest": "5e76a469dab37fd678aed77cea72b664daac2f7673bcf9b340b04d3fe9c5a335",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/hangar-view/src/server.test.js",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/hangar-view/src/server.test.js",
+      "contentDigest": "24b62ac9bf5d24dfbcdc3c4cde7c5263fbd9aeb4962e9793b1743694b2a5da3d",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "filesystem-write"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/notify/LICENSE",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/notify/LICENSE",
+      "contentDigest": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/notify/README.md",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/notify/README.md",
+      "contentDigest": "092b7d47c02728bd68dbecee1a5a99e099600f65b425acb8aa7b835b08bfcb69",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/notify/package.json",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/notify/package.json",
+      "contentDigest": "6c23f6a220c304155cc5b9e2b3045b607e33f1a982e585a2bc58efce991f57a7",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/notify/src/cli.test.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/notify/src/cli.test.ts",
+      "contentDigest": "d6e12b9042523295d0143c901ffa58c302ea3c871e9351b9f0101dfaa685735f",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "filesystem-write"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/notify/src/cli.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/notify/src/cli.ts",
+      "contentDigest": "e573929ba2dc68c0db989021ae145f5c130c8e597e35d1010026cfa4b4680afc",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/notify/src/index.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/notify/src/index.ts",
+      "contentDigest": "74bc5f4e5d0d052fc72e932ea51572fc36d9f402a4176eb6c278d083343a653d",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/notify/src/resolve.test.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/notify/src/resolve.test.ts",
+      "contentDigest": "11ee619df973a78efc83bee9344f81b8b3e09f5457b94bf61373747f4f201da1",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "filesystem-write"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/notify/tsconfig.json",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/notify/tsconfig.json",
+      "contentDigest": "02982171206a22021543e2eb917f29b51a9d5d6ab3406822d3a0878dde0e4c00",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/pgconfig/deploy/README.md",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/pgconfig/deploy/README.md",
+      "contentDigest": "64d1a61b97ed6ae2c862203c4ab27c4e5c957fdc1bdf62fc4cc966efc095f9e5",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/pgconfig/deploy/docker-compose.yml",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/pgconfig/deploy/docker-compose.yml",
+      "contentDigest": "53ecf97e167c3a733e7f4629d02b516098c924305f841eb8e728f4f50ecc2dc6",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/pgconfig/deploy/roles.sql",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/pgconfig/deploy/roles.sql",
+      "contentDigest": "0ed19b74fc985e84f148f2a501cea1af3470b27609229865177f50255f64add3",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/pgconfig/package.json",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/pgconfig/package.json",
+      "contentDigest": "48bc22b80d10faf65d78d22c2ddc9e5ae87ed7c754ebacbc792d60632f0d8989",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/pgconfig/src/cli.test.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/pgconfig/src/cli.test.ts",
+      "contentDigest": "4d642ff907c6b45d1b7b9b505e1f950e4843a0fa4c00418e4fdf95201c787c25",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "filesystem-write"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/pgconfig/src/cli.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/pgconfig/src/cli.ts",
+      "contentDigest": "e5ddf9a993f4aa190d72ec3fadfc074d5ffe7fe7a7b03fa65074b418ecfcfc25",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/pgconfig/src/index.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/pgconfig/src/index.ts",
+      "contentDigest": "955bbef033f272f2e0b24b4ba22df655fca840c676c644265fe5bd722e32624f",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/pgconfig/src/invariants.test.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/pgconfig/src/invariants.test.ts",
+      "contentDigest": "b458126f0faea892516cfdac680bd5170803bcf2cb2bba36daee386430f28445",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/pgconfig/src/resolve.test.ts",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/pgconfig/src/resolve.test.ts",
+      "contentDigest": "a7e03b693e3bc719f6f7d7ccc0baabdec83889a4ca5217f47d57863cd7d5e18d",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "filesystem-write"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:packages/pgconfig/tsconfig.json",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "packages/pgconfig/tsconfig.json",
+      "contentDigest": "02982171206a22021543e2eb917f29b51a9d5d6ab3406822d3a0878dde0e4c00",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "hangar-main-v0:scripts/check-delta-headings.mjs",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "scripts/check-delta-headings.mjs",
+      "contentDigest": "d145211adb890c2158e4c9b7ea5fa6b8831c5d27d52bf8622715edf22ba41886",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:scripts/check-delta-headings.test.mjs",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "scripts/check-delta-headings.test.mjs",
+      "contentDigest": "043dbddcbc6cd190e954843832c09ec54ad0fb683db5a3e57d138631e1bdfa08",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "filesystem-write"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:scripts/check-workspace-members.mjs",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "scripts/check-workspace-members.mjs",
+      "contentDigest": "f891728f14f25a2256110c23ef501ba6f54bb85da85baf21e50dcbfcf6aeb82d",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "hangar-main-v0:scripts/validate-openspec-cn.mjs",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "scripts/validate-openspec-cn.mjs",
+      "contentDigest": "6c4e29121c771a71a36fa478727974f362aa6e555a466186fa11640bcaa25206",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:app.yaml",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "app.yaml",
+      "contentDigest": "43d764d2e220a4df287d33bf683888076f62702e42aa13909846a1bdca439c4b",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:docker-compose.yml",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "docker-compose.yml",
+      "contentDigest": "144e4fcaac2dff34e2b878eef6e4ea4dc54ef6a1e34098241189df007d2f5e7c",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:package.json",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "package.json",
+      "contentDigest": "acae8670843a8cf444b7652eb929d9f1266a86a58bf965e97320c18625f34890",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:prisma/migrations/20260620051536_init/migration.sql",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "prisma/migrations/20260620051536_init/migration.sql",
+      "contentDigest": "5d8e80225d85c9ba04ab92a1e78c3c989e66fe54588a94722f84000d06bc0f75",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:prisma/migrations/20260623132838_durable_action_retry/ROLLBACK.sql",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "prisma/migrations/20260623132838_durable_action_retry/ROLLBACK.sql",
+      "contentDigest": "99a3c72b81366603454fcf2540492ebcb7d3fd1fd6abcd54b161415cc4f2df23",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:prisma/migrations/20260623132838_durable_action_retry/migration.sql",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "prisma/migrations/20260623132838_durable_action_retry/migration.sql",
+      "contentDigest": "f18f3cb0419e65b2dffc8a762abb26127209365151b292b036126dd49b13b8bc",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:prisma/migrations/20260624024115_add_process_from/migration.sql",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "prisma/migrations/20260624024115_add_process_from/migration.sql",
+      "contentDigest": "0a3648e485da5bf3a15cc8e329c71b3ac3f8ef3c6fbc0041b5c9b1be3d81fd02",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:prisma/migrations/20260624190000_add_account_label/migration.sql",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "prisma/migrations/20260624190000_add_account_label/migration.sql",
+      "contentDigest": "99c739028b8c5fe089097b738c6ea7dcc7e9a8527f4df025c8a6124ab3c3880e",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:prisma/migrations/20260625025758_add_mail_messages_received_at_index/migration.sql",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "prisma/migrations/20260625025758_add_mail_messages_received_at_index/migration.sql",
+      "contentDigest": "6a4b2170efa570c46b0c2cd391df25759c599b7d39d507d74893871f33972104",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:prisma/migrations/20260707000000_add_repoll_count/migration.sql",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "prisma/migrations/20260707000000_add_repoll_count/migration.sql",
+      "contentDigest": "a34e73a5beb0e4e55457516f0a00dc3fa45bbfb9097466a4237bd4e7fab4fac7",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:prisma/migrations/migration_lock.toml",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "prisma/migrations/migration_lock.toml",
+      "contentDigest": "99836963713b4f5b269ad49af0ed3d7b0b2e336115c2f92dc9ac683d139d0900",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:prisma/schema.prisma",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "prisma/schema.prisma",
+      "contentDigest": "044c72ea77db3aa4523a70156177af1fcd4d34c09c1b3ecf0e80f6c4142ceedb",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:rules/rules.yaml",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "rules/rules.yaml",
+      "contentDigest": "b6f014e78f45479ea3d3e0f6d6817cd2bb965bc3d41efdff9d87d084a7a00c90",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/accounts/accountRegistry.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/accounts/accountRegistry.test.ts",
+      "contentDigest": "5c583293adbc7252f627cf5bcbc3390e012031af13779aac6a35abd23251bd4b",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/accounts/accountRegistry.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/accounts/accountRegistry.ts",
+      "contentDigest": "0b1b30345b9aa758c269cb97822a458931015177c6d95c895c02bf65ab5f3a1b",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/accounts/accountService.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/accounts/accountService.test.ts",
+      "contentDigest": "de3ec10e846981004ca4745d2a621c9b59c82b1175f08b90d59acf597a3b5bfa",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:src/accounts/accountService.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/accounts/accountService.ts",
+      "contentDigest": "26a4445f0b7b4a322095b8725b29889cf10bc12cf21661cfe43e16d9b8ceddda",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/actions/executeActions.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/actions/executeActions.test.ts",
+      "contentDigest": "42768d77c6eb4237ba7bce95a505c48253a610a30405e532253d72b0748e48cd",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/actions/executeActions.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/actions/executeActions.ts",
+      "contentDigest": "586efc0c6e9351b5d21740c9b12f948b70f039c0b00dc19ca1587a91804675ca",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/actions/providerActions.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/actions/providerActions.ts",
+      "contentDigest": "c2d09b9713d59af2c5afba0cc8fddf2efa5320ef604b50cb038d6cb131e5b66a",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/actions/redactError.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/actions/redactError.ts",
+      "contentDigest": "b4d1ac96c249c7a54934222067db6d542b45f70db38082440494a95d5357548b",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/actions/retryConstants.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/actions/retryConstants.ts",
+      "contentDigest": "995385ff624e6258022bebaac34898432caffbec49af665e164e4f070131abf7",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/classifier/classifyEmail.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/classifier/classifyEmail.test.ts",
+      "contentDigest": "859870cfdb478be8ce740bf39676c59f800219804aac77b477c7fff60bd63fbc",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/classifier/classifyEmail.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/classifier/classifyEmail.ts",
+      "contentDigest": "ef934e02aa874d3d13768a90792dd55f88543cdcaa0a587153a0332a841073bd",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/classifier/eval/README.md",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/classifier/eval/README.md",
+      "contentDigest": "ffb10fc733adad75f399c23efd7bae61d73ba41055c7bf215f1697f00ffb0a29",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/classifier/eval/corpus.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/classifier/eval/corpus.ts",
+      "contentDigest": "247f0c705e43f2a1126c39755b1ba74978748755e23f68633098b1df31f72c9e",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/classifier/eval/run.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/classifier/eval/run.ts",
+      "contentDigest": "697d8e01c20494373f07a45b109882f64005f47929f1e1c8bddf90d7bc9b4863",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:src/classifier/openrouterClient.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/classifier/openrouterClient.ts",
+      "contentDigest": "63ff1f677e434dcb7832e64515dbd86bbff0517a9b8ca7b08a742aaf1217c349",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:src/classifier/prompt.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/classifier/prompt.ts",
+      "contentDigest": "832017def463f9fef099b0131d2e878826c15abbed088ccef7887574150f7c38",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/classifier/schema.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/classifier/schema.ts",
+      "contentDigest": "4ae34197d22e05e07c015a81a211110a9057018a7130f4faf8a843b3d4f66ff5",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/cli/account.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/cli/account.test.ts",
+      "contentDigest": "479e11a1efe870be512a191599fe58ac7738e566c15843088630d0fc9e066e36",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/cli/account.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/cli/account.ts",
+      "contentDigest": "5229c8958997eda2d79243d7ff2e31cb292f86efd3720707f6ad3a1f0fe5063d",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/cli/accountId.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/cli/accountId.test.ts",
+      "contentDigest": "f743f0f5e4c5c9fad3fadbf326a77613f5848cd9d3d92c3e58601d15c47f8046",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:src/cli/accountId.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/cli/accountId.ts",
+      "contentDigest": "641af2f2929800155b2c8994f8f7abf0ecd76ab48e4c52086874ab7b1b2c18c3",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:src/cli/doctor.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/cli/doctor.test.ts",
+      "contentDigest": "7ceaefdfd43cc8a89cce37e231a127c0dca58e9026e54b839d5324d435c07c94",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/cli/doctor.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/cli/doctor.ts",
+      "contentDigest": "f0a3d14de206042b011a157cc2b3a72e008ba15ec5e226af283c8ae4b01f303a",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/cli/inbox-pilot.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/cli/inbox-pilot.test.ts",
+      "contentDigest": "68feea2ad215009d8ffc79b1c2f1efc267a5930785db36e7d160397ed00c1966",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/cli/inbox-pilot.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/cli/inbox-pilot.ts",
+      "contentDigest": "98b5585e70ccaaa77362e2ae275ade26876392d37fe247df2c9566ef5da4ebf7",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/cli/passwordSource.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/cli/passwordSource.test.ts",
+      "contentDigest": "3974d8a32fbebb145224828c988464a43002fb778284c0b3f98d2cb19b68ad6a",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "filesystem-write",
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/cli/passwordSource.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/cli/passwordSource.ts",
+      "contentDigest": "d2c978f12af42b56120af14a705d8c183633ab47deeefc9ad30eeee7d5051647",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/cli/processFromDate.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/cli/processFromDate.test.ts",
+      "contentDigest": "d3257a81974ac6bff93e79de3e1f0f0e455df0abc85a7b2affed81d58197490f",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/cli/processFromDate.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/cli/processFromDate.ts",
+      "contentDigest": "bd4e37ff767245a00e34d5157932059485f2b36c3eb63780eed94b98505686e2",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:src/config/config.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/config/config.test.ts",
+      "contentDigest": "92307757bae2478b5d8ee5b37643b3006ebd7afb74238519a2815fdf20803ac4",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/config/config.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/config/config.ts",
+      "contentDigest": "cec60f8a5c1662cc1d0ceda081dd22ce2729b3761cfe07905442aaa22845e95c",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/config/configSchema.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/config/configSchema.ts",
+      "contentDigest": "83700ebd623bc6cc16cb8cd0f411213cf56b2bc642bf73dc4258431588fc7d03",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/db/prisma.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/db/prisma.test.ts",
+      "contentDigest": "757aaaddbe6275028cc74b3122082e5e75ac4e440fabd09fe7037929c6163aa6",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:src/db/prisma.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/db/prisma.ts",
+      "contentDigest": "20631139a3567bfba08c2cdec745a1f229f66572f353e8deeb24a37042221279",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/digest/buildDigest.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/digest/buildDigest.test.ts",
+      "contentDigest": "214a99d9d195a3ba51bfb48ffa851446a738f7ff4c0e684604a11f2f4156a1e0",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/digest/buildDigest.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/digest/buildDigest.ts",
+      "contentDigest": "d3f617fd4f1b22fa3bcbc7641de3a35fd03ff5c8db46306f1518e69609032f95",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/digest/digestScheduler.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/digest/digestScheduler.test.ts",
+      "contentDigest": "dbb180b452f1dabddce48c51014d5bdb46f36be84cffcfff2202f86676e56abd",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:src/digest/digestScheduler.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/digest/digestScheduler.ts",
+      "contentDigest": "7a867a65e90e8570c6cd24c74cfdc36660db7c724ed1554eb8c03fb6435e30b1",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:src/digestTimezone.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/digestTimezone.test.ts",
+      "contentDigest": "216753e407dc710200803332ce791aebfa8056f28e12377dc7961fda8fdcf775",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:src/digestTimezone.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/digestTimezone.ts",
+      "contentDigest": "93b2278a574f0bee40eb1d930dca7a69836c1a43d4ef5cf6efbb48d4cb690fd7",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:src/logger.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/logger.ts",
+      "contentDigest": "bcb70712d47ea75b952cc5be90ed4d086cbadc1910237648d99ccaec111b5931",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/normalizer/normalizeEmail.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/normalizer/normalizeEmail.ts",
+      "contentDigest": "46945e07261a8adfde3345eaf8b236cea910422bc90fadb93be6eecc4be8cafe",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:src/notify/categoryLabels.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/notify/categoryLabels.test.ts",
+      "contentDigest": "93ea62169b3209d4b0165b8b9a2eb82b3d56273a59c0c2c17423d70640d7aa6d",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:src/notify/categoryLabels.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/notify/categoryLabels.ts",
+      "contentDigest": "e81ece367fd6bec512d332231d487e19aab77978412f351ed346797551dd8d4d",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:src/notify/notifier.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/notify/notifier.test.ts",
+      "contentDigest": "4385aa78b79e1bff5bdb8cde4c5cb4e90552bb6392453e98d7161dae7d8d231e",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call",
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/notify/notifier.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/notify/notifier.ts",
+      "contentDigest": "3eca6e79b81e60ecabe86c05b8aa9b8fd5a3499a429a6e6172f09f32e4dd9b58",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/notify/telegram.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/notify/telegram.test.ts",
+      "contentDigest": "92b365fae07e19a9edd8763dbd5eb02e76e473b33acc5a2c1cb6015c84151747",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/notify/telegram.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/notify/telegram.ts",
+      "contentDigest": "e4e524395fbda085fba05eccdc6d24875af61b64bc0062d36db87681adf2bd69",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/notify/telegramConfigError.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/notify/telegramConfigError.test.ts",
+      "contentDigest": "de8e0c8eefe10480b68b443ed49b25678a3ce45c89e32de80210b9c9f124095e",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "filesystem-write",
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/notify/telegramWire.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/notify/telegramWire.test.ts",
+      "contentDigest": "7d28de5295b6dbccd8003849a2a8dd8430211903fe071bd11524c749602dc8a9",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/pipeline.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/pipeline.test.ts",
+      "contentDigest": "291e2c6177a9797a31aba1f13a7e93c0eef19e9f7f5b465a5799b7f8fa26a5dc",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call",
+          "filesystem-write",
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/pipeline.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/pipeline.ts",
+      "contentDigest": "8c75981d7a2585763b4ee4c1f37156aa5de8c0ecd287d11818b90a1139a609d4",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call",
+          "filesystem-write",
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/providers/gmail/gmailActions.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/providers/gmail/gmailActions.test.ts",
+      "contentDigest": "aca9709a5239ecc151a0d1eaba323add29319f6c9e97464619a40e6c1e1b7c50",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/providers/gmail/gmailActions.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/providers/gmail/gmailActions.ts",
+      "contentDigest": "213465df7b183aaa1d68a9c42774e329c83a5bcae51d0dc455f8c1b7c4eaeb0b",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/providers/gmail/gmailClient.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/providers/gmail/gmailClient.ts",
+      "contentDigest": "fdde23d5aba47363d40379132b6632d209ca2f72c9b8b4fb4ee47323503721be",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/providers/gmail/gmailMap.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/providers/gmail/gmailMap.test.ts",
+      "contentDigest": "027c77ffba5d522da77eefdff74066d1d53dae2eb559d97b400aea56d6796805",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:src/providers/gmail/gmailMap.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/providers/gmail/gmailMap.ts",
+      "contentDigest": "39c2e44f873256aefcb950e25a6b00c360722a736a61b8a91c5ba25f46a2c355",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "subprocess-launch"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/providers/gmail/oauth.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/providers/gmail/oauth.ts",
+      "contentDigest": "aeec08753eeab022e89d32a6bc482a5a54724ca45174b713cf06008598b0eb20",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/providers/imap/imapActions.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/providers/imap/imapActions.ts",
+      "contentDigest": "55160436327ffffecc93855767f9170e7ed64aec5ab2320d07ed4b90be89c35b",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/providers/imap/imapClient.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/providers/imap/imapClient.test.ts",
+      "contentDigest": "12a1be69fbe93e692a347b66366184f05b39d4a7954623ef7538fdf956a394e5",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:src/providers/imap/imapClient.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/providers/imap/imapClient.ts",
+      "contentDigest": "39328b61c708d5315094ecb141f6c3ab9af4526f10aca0aa5de2b9192f83535e",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/providers/provider.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/providers/provider.ts",
+      "contentDigest": "9a084bd8c69f9415ed57f73e21ba5febb9b12e3842578e2f89baf595b8518ff3",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/repo/inMemoryMailRepo.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/repo/inMemoryMailRepo.test.ts",
+      "contentDigest": "c772e00a70b00443af464d2b48aaf739e197cc8635b26338a0d603c304e540f7",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/repo/inMemoryMailRepo.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/repo/inMemoryMailRepo.ts",
+      "contentDigest": "c58d2615e5fb0445b8942bbd5a72d82a4b594cbbfecd1a749c3e5309a15e36ad",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/repo/mailRepo.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/repo/mailRepo.ts",
+      "contentDigest": "d186aa85d0b1e4d85030967dc938e2d26c14f2be812abb92fd3c6118bdd58737",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/repo/watermark.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/repo/watermark.test.ts",
+      "contentDigest": "bf2629e033127b6db2f4b43d4f4b5a060bb8819545b7bbae473256d03fb4a194",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:src/repo/watermark.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/repo/watermark.ts",
+      "contentDigest": "2d35e5aa305a61fe5cd016e7d4acbaf19024a55d3e27de454a7435755afc9baa",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    },
+    {
+      "memberId": "inbox-upstream:src/rules/applySafetyRules.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/rules/applySafetyRules.test.ts",
+      "contentDigest": "e953375484104c175b1c9e7f9223c712ce49e453434300dedef9bafea3c676e4",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/rules/applySafetyRules.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/rules/applySafetyRules.ts",
+      "contentDigest": "4e6214c86c3b75eb6451b8baacf6b7d42d11447f278eb5f4390a3df2d906696f",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/rules/finalDecision.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/rules/finalDecision.ts",
+      "contentDigest": "ab72f953c4dd91a777ccbe44249dde954ed8f98c578b43ad9ac405e54da35242",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/rules/lists.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/rules/lists.ts",
+      "contentDigest": "3fa814749f33362a2a75be710c345d960987ec4f31e0aac6b829fcd601297be4",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/rules/notifyMarkReadInvariant.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/rules/notifyMarkReadInvariant.test.ts",
+      "contentDigest": "346d4c420d4d91a77f385b3b05b0ef2c87c4a86391e9bbd74b4af1e71580db4f",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/rules/rulesConfig.test.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/rules/rulesConfig.test.ts",
+      "contentDigest": "284c522f788d70cb5918ce04a19e850539b65e465413650883251714371e8098",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call",
+          "filesystem-write"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:src/rules/rulesConfig.ts",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "src/rules/rulesConfig.ts",
+      "contentDigest": "d8968578076f936fe4c71f8c3edb8fa8531dd9f13b9a3f9db3e80534f1a249a8",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": [
+          "credential-reference",
+          "external-mutation-call"
+        ]
+      },
+      "disposition": "reviewed-reference-or-mutation-surface"
+    },
+    {
+      "memberId": "inbox-upstream:tsconfig.json",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "tsconfig.json",
+      "contentDigest": "09f025e4e0771af4dee6d27bd141088f631b949fbb7a7daaad6176983b1966f0",
+      "scanEvidence": {
+        "scannerVersion": "effect-inventory-scanner-v1",
+        "matchedClasses": []
+      },
+      "disposition": "no-mutation-or-holder-pattern"
+    }
+  ],
+  "directEntries": [
+    {
+      "inventoryId": "direct.heartbeat-marker",
+      "location": "hangar-main-v0:apps/heartbeat/tools.ts",
+      "owner": "heartbeat",
+      "sink": "local-filesystem-marker",
+      "operations": [
+        "marker-write"
+      ],
+      "authorizationCapability": "process-filesystem-write",
+      "risk": "low",
+      "gatewayStatus": "v0-handler-direct",
+      "migrationDisposition": "inventory-only-mutation-disabled",
+      "recoveryDiscoveryMethod": "enumerate-marker-file",
+      "recoveryEligible": false
+    },
+    {
+      "inventoryId": "direct.inbox-gmail-actions",
+      "location": "inbox-upstream:src/providers/gmail/gmailActions.ts",
+      "owner": "inbox",
+      "sink": "gmail",
+      "operations": [
+        "mark-read",
+        "apply-label",
+        "remove-label"
+      ],
+      "authorizationCapability": "gmail-oauth-mutation",
+      "risk": "high",
+      "gatewayStatus": "direct",
+      "migrationDisposition": "move-to-effect-gateway",
+      "recoveryDiscoveryMethod": "gmail-message-state-enumeration",
+      "recoveryEligible": false
+    },
+    {
+      "inventoryId": "direct.inbox-imap-actions",
+      "location": "inbox-upstream:src/providers/imap/imapActions.ts",
+      "owner": "inbox",
+      "sink": "imap",
+      "operations": [
+        "mark-read",
+        "set-flags"
+      ],
+      "authorizationCapability": "imap-account-mutation",
+      "risk": "high",
+      "gatewayStatus": "direct",
+      "migrationDisposition": "move-to-effect-gateway",
+      "recoveryDiscoveryMethod": "imap-uid-flag-enumeration",
+      "recoveryEligible": false
+    },
+    {
+      "inventoryId": "direct.inbox-telegram-notify",
+      "location": "inbox-upstream:src/notify/telegram.ts",
+      "owner": "inbox",
+      "sink": "telegram",
+      "operations": [
+        "send-notification"
+      ],
+      "authorizationCapability": "telegram-bot-send",
+      "risk": "moderate",
+      "gatewayStatus": "direct",
+      "migrationDisposition": "move-to-effect-gateway",
+      "recoveryDiscoveryMethod": "not-complete",
+      "recoveryEligible": false
+    }
+  ],
+  "sensitiveHolders": [
+    {
+      "holderId": "holder.inbox-config",
+      "location": "inbox-upstream:src/config/config.ts",
+      "owner": "inbox",
+      "referenceKinds": [
+        "environment-variable-name"
+      ]
+    },
+    {
+      "holderId": "holder.gmail-oauth",
+      "location": "inbox-upstream:src/providers/gmail/oauth.ts",
+      "owner": "inbox",
+      "referenceKinds": [
+        "oauth-token-ref"
+      ]
+    },
+    {
+      "holderId": "holder.imap-client",
+      "location": "inbox-upstream:src/providers/imap/imapClient.ts",
+      "owner": "inbox",
+      "referenceKinds": [
+        "account-credential-ref"
+      ]
+    },
+    {
+      "holderId": "holder.telegram",
+      "location": "inbox-upstream:src/notify/telegram.ts",
+      "owner": "inbox",
+      "referenceKinds": [
+        "bot-token-ref"
+      ]
+    },
+    {
+      "holderId": "holder.notify-resolver",
+      "location": "hangar-main-v0:packages/notify/src/index.ts",
+      "owner": "hangar-notify",
+      "referenceKinds": [
+        "environment-placeholder-ref"
+      ]
+    }
+  ],
+  "resolvedValuesIncluded": false,
+  "exceptions": [
+    {
+      "exceptionId": "exception.direct.heartbeat-marker",
+      "inventoryId": "direct.heartbeat-marker",
+      "releaseEligibility": "mutation-disabled-only"
+    },
+    {
+      "exceptionId": "exception.direct.inbox-gmail-actions",
+      "inventoryId": "direct.inbox-gmail-actions",
+      "releaseEligibility": "mutation-disabled-only"
+    },
+    {
+      "exceptionId": "exception.direct.inbox-imap-actions",
+      "inventoryId": "direct.inbox-imap-actions",
+      "releaseEligibility": "mutation-disabled-only"
+    },
+    {
+      "exceptionId": "exception.direct.inbox-telegram-notify",
+      "inventoryId": "direct.inbox-telegram-notify",
+      "releaseEligibility": "mutation-disabled-only"
+    }
+  ],
+  "beforeDirectCount": 4,
+  "afterDirectCount": 4,
+  "m0M1ProductionEligible": false
+}

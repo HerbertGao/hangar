@@ -1,0 +1,452 @@
+{
+  "schemaVersion": "m0-v0-oracle-v1",
+  "requirementId": "m0o.v0-reaper",
+  "ledgerDigest": "496e492b88b66398d3c06410719ccf198a719a2523f3f6b21678c2004c20648f",
+  "caseDigest": "203de6592f3bdddc23daffe4c43e4f1112f574faf55b53a23078fad937d715a0",
+  "cases": [
+    {
+      "caseId": "v0-oracle.v0.cli.r01.d01",
+      "sourceId": "v0.cli.r01",
+      "decisionId": "v0.cli.r01.d01",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "behavior": "需求:CLI 遵循 I/O 与退出码约定",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.cli.r03.d01",
+      "sourceId": "v0.cli.r03",
+      "decisionId": "v0.cli.r03.d01",
+      "ownerRequirementId": "m0o.reproducibility",
+      "behavior": "需求:doctor 显式化环境前置检查,且非破坏性",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.cli.r04.d01",
+      "sourceId": "v0.cli.r04",
+      "decisionId": "v0.cli.r04.d01",
+      "ownerRequirementId": "v2s.projection-rebuild",
+      "behavior": "需求:只读命令映射事件状态",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.cli.r07.d01",
+      "sourceId": "v0.cli.r07",
+      "decisionId": "v0.cli.r07.d01",
+      "ownerRequirementId": "v2c.process-lifecycle",
+      "behavior": "需求:daemon 收 SIGINT/SIGTERM 取消 active run 并宽限等待清理;手动 run 装 SIGINT 取消自身",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.hangar-view.r01.d01",
+      "sourceId": "v0.hangar-view.r01",
+      "decisionId": "v0.hangar-view.r01.d01",
+      "ownerRequirementId": "v2c.control-boundary",
+      "behavior": "需求:只读呈现层、零改 core、不直读 sqlite",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.hangar-view.r06.d01",
+      "sourceId": "v0.hangar-view.r06",
+      "decisionId": "v0.hangar-view.r06.d01",
+      "ownerRequirementId": "v2c.errors",
+      "behavior": "需求:CLI 取数失败即降级、粒度分明、绝不沿用陈旧绿灯",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.hangar-view.r07.d01",
+      "sourceId": "v0.hangar-view.r07",
+      "decisionId": "v0.hangar-view.r07.d01",
+      "ownerRequirementId": "v2c.durable-data",
+      "behavior": "需求:数据最小化 = 域无关 default-drop 白名单",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.hangar-view.r09.d01",
+      "sourceId": "v0.hangar-view.r09",
+      "decisionId": "v0.hangar-view.r09.d01",
+      "ownerRequirementId": "v2c.control-boundary",
+      "behavior": "需求:v1 只读、写路径不在本变更",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.host-capabilities.r01.d01",
+      "sourceId": "v0.host-capabilities.r01",
+      "decisionId": "v0.host-capabilities.r01.d01",
+      "ownerRequirementId": "v2c.host-attestation",
+      "behavior": "需求:host 从同一 canonical set 广播版本化能力集",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.host-capabilities.r02.d01",
+      "sourceId": "v0.host-capabilities.r02",
+      "decisionId": "v0.host-capabilities.r02.d01",
+      "ownerRequirementId": "v2c.host-attestation",
+      "behavior": "需求:消费者按精确版本对 host 提供集 fail closed",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.host-capabilities.r03.d01",
+      "sourceId": "v0.host-capabilities.r03",
+      "decisionId": "v0.host-capabilities.r03.d01",
+      "ownerRequirementId": "v2c.host-attestation",
+      "behavior": "需求:每个 run 获得不可伪造的新鲜冻结能力快照",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.host-capabilities.r04.d01",
+      "sourceId": "v0.host-capabilities.r04",
+      "decisionId": "v0.host-capabilities.r04.d01",
+      "ownerRequirementId": "v2c.process-lifecycle",
+      "behavior": "需求:hard-crash containment 能力闸只在通过 fault test 后广播",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.inbox-app.r02.d01",
+      "sourceId": "v0.inbox-app.r02",
+      "decisionId": "v0.inbox-app.r02.d01",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "behavior": "需求:自动动作在 run() 内直接编排,不经 gateway/propose",
+      "expected": {
+        "kind": "known-false-green",
+        "qualification": "must-fail-until-fixed"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.inbox-app.r03.d01",
+      "sourceId": "v0.inbox-app.r03",
+      "decisionId": "v0.inbox-app.r03.d01",
+      "ownerRequirementId": "m0o.inbox",
+      "behavior": "需求:notify 耗尽走 coarse re-poll,依赖不变量并有死信终态",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.inbox-app.r04.d01",
+      "sourceId": "v0.inbox-app.r04",
+      "decisionId": "v0.inbox-app.r04.d01",
+      "ownerRequirementId": "m0o.inbox",
+      "behavior": "需求:fetch 编排复刻两级读错误模型与成本上界",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.inbox-app.r05.d01",
+      "sourceId": "v0.inbox-app.r05",
+      "decisionId": "v0.inbox-app.r05.d01",
+      "ownerRequirementId": "m0o.inbox",
+      "behavior": "需求:每 email 超时 + 每 run 兜底,机制必须安全(取消尽力 + 吞拒绝 + fence)",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.inbox-app.r06.d01",
+      "sourceId": "v0.inbox-app.r06",
+      "decisionId": "v0.inbox-app.r06.d01",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "behavior": "需求:in-process pilot 模块加载安全(顶层禁 process.exit/throw)",
+      "expected": {
+        "kind": "known-false-green",
+        "qualification": "must-fail-until-fixed"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.inbox-app.r07.d01",
+      "sourceId": "v0.inbox-app.r07",
+      "decisionId": "v0.inbox-app.r07.d01",
+      "ownerRequirementId": "v2c.core-objects",
+      "behavior": "需求:域库与脊柱库并存,脊柱零域概念",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.inbox-app.r09.d01",
+      "sourceId": "v0.inbox-app.r09",
+      "decisionId": "v0.inbox-app.r09.d01",
+      "ownerRequirementId": "m0o.inbox",
+      "behavior": "需求:每日摘要作为 digest 触发器",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.inbox-app.r10.d01",
+      "sourceId": "v0.inbox-app.r10",
+      "decisionId": "v0.inbox-app.r10.d01",
+      "ownerRequirementId": "m0o.inbox",
+      "behavior": "需求:DIGEST_TIMES 环境变量退役",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.run-engine.r02.d01",
+      "sourceId": "v0.run-engine.r02",
+      "decisionId": "v0.run-engine.r02.d01",
+      "ownerRequirementId": "v2c.run",
+      "behavior": "需求:Run 状态由最新 RunEvent 全映射推导,终态只认 run.* 事件",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.run-engine.r03.d01",
+      "sourceId": "v0.run-engine.r03",
+      "decisionId": "v0.run-engine.r03.d01",
+      "ownerRequirementId": "v2c.run",
+      "behavior": "需求:所有终态转换走单一同事务 choke-point",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.run-engine.r04.d01",
+      "sourceId": "v0.run-engine.r04",
+      "decisionId": "v0.run-engine.r04.d01",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "behavior": "DB/锁 reaper identity 与终态收敛",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.run-engine.r04.d02",
+      "sourceId": "v0.run-engine.r04",
+      "decisionId": "v0.run-engine.r04.d02",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "behavior": "OS descendant containment/reap",
+      "expected": {
+        "kind": "known-false-green",
+        "qualification": "must-fail-until-fixed"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.run-engine.r06.d01",
+      "sourceId": "v0.run-engine.r06",
+      "decisionId": "v0.run-engine.r06.d01",
+      "ownerRequirementId": "v2c.run-attempt",
+      "behavior": "需求:run 锁防止重复执行",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.run-engine.r07.d01",
+      "sourceId": "v0.run-engine.r07",
+      "decisionId": "v0.run-engine.r07.d01",
+      "ownerRequirementId": "v2c.run",
+      "behavior": "需求:active run 持 AbortController,取消经 choke-point 记 cancelled 且终态幂等",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.tool-gateway.r02.d01",
+      "sourceId": "v0.tool-gateway.r02",
+      "decisionId": "v0.tool-gateway.r02.d01",
+      "ownerRequirementId": "v2c.effect",
+      "behavior": "需求:动作经单一异步 propose 入口分派",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.tool-gateway.r04.d02",
+      "sourceId": "v0.tool-gateway.r04",
+      "decisionId": "v0.tool-gateway.r04.d02",
+      "ownerRequirementId": "v2c.errors",
+      "behavior": "错误脱敏",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.tool-gateway.r05.d01",
+      "sourceId": "v0.tool-gateway.r05",
+      "decisionId": "v0.tool-gateway.r05.d01",
+      "ownerRequirementId": "v2c.approval",
+      "behavior": "需求:approve/reject 必须先守 run 状态、再取 run 锁,幂等透传",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.tool-gateway.r06.d01",
+      "sourceId": "v0.tool-gateway.r06",
+      "decisionId": "v0.tool-gateway.r06.d01",
+      "ownerRequirementId": "v2c.effect",
+      "behavior": "需求:approve 第二阶段部分失败有明确终态",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.tool-gateway.r07.d01",
+      "sourceId": "v0.tool-gateway.r07",
+      "decisionId": "v0.tool-gateway.r07.d01",
+      "ownerRequirementId": "v2c.approval",
+      "behavior": "需求:reject 驳回不执行",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.tool-gateway.r08.d01",
+      "sourceId": "v0.tool-gateway.r08",
+      "decisionId": "v0.tool-gateway.r08.d01",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "behavior": "需求:Phase 0 单进程假设(多进程并发硬化留 Phase 1)",
+      "expected": {
+        "kind": "known-false-green",
+        "qualification": "must-fail-until-fixed"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.skill.s01.d01",
+      "sourceId": "v0.skill.s01",
+      "decisionId": "v0.skill.s01.d01",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "behavior": "`hangar doctor [--json]`",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.skill.s02.d01",
+      "sourceId": "v0.skill.s02",
+      "decisionId": "v0.skill.s02.d01",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "behavior": "`hangar status [--json]`",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.skill.s03.d01",
+      "sourceId": "v0.skill.s03",
+      "decisionId": "v0.skill.s03.d01",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "behavior": "`hangar runs [<app>] [--limit N] [--json]`",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.skill.s04.d01",
+      "sourceId": "v0.skill.s04",
+      "decisionId": "v0.skill.s04.d01",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "behavior": "`hangar trace <run> [--json]`",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.skill.s05.d01",
+      "sourceId": "v0.skill.s05",
+      "decisionId": "v0.skill.s05.d01",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "behavior": "`hangar run <app> [--input <json>] [--json]`",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.skill.s06.d01",
+      "sourceId": "v0.skill.s06",
+      "decisionId": "v0.skill.s06.d01",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "behavior": "`hangar approve <run> [--json]`",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.skill.s07.d01",
+      "sourceId": "v0.skill.s07",
+      "decisionId": "v0.skill.s07.d01",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "behavior": "`hangar reject <run> [--reason <text>] [--json]`",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    },
+    {
+      "caseId": "v0-oracle.v0.skill.s08.d01",
+      "sourceId": "v0.skill.s08",
+      "decisionId": "v0.skill.s08.d01",
+      "ownerRequirementId": "v2c.control-boundary",
+      "behavior": "不暴露给 Agent 的能力(别调)",
+      "expected": {
+        "kind": "preserved-public-observation"
+      },
+      "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce"
+    }
+  ]
+}

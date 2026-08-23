@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "v2-health-facts-v1",
+  "requirementId": "v2c.health-facts",
+  "factKinds": ["invoked", "produced", "skipped", "degraded", "failed"],
+  "terminalKinds": ["produced", "skipped", "failed"],
+  "assertionKinds": ["liveness", "readiness", "outcome"],
+  "subjects": ["run-attempt", "declared-action", "declared-tool"],
+  "sequences": [
+    {
+      "id": "pre-invocation-skip",
+      "facts": ["skipped"],
+      "terminal": true
+    },
+    {
+      "id": "pre-invocation-failure",
+      "facts": ["failed"],
+      "terminal": true
+    },
+    {
+      "id": "invoked-produced",
+      "facts": ["invoked", "produced"],
+      "terminal": true
+    },
+    {
+      "id": "invoked-zero-result",
+      "facts": ["invoked", "skipped"],
+      "terminal": true
+    },
+    {
+      "id": "invoked-degraded-failed",
+      "facts": ["invoked", "degraded", "failed"],
+      "terminal": true
+    }
+  ],
+  "rules": {
+    "invokedAtMostOnce": true,
+    "invokedMustBeFirstWhenPresent": true,
+    "degradedAfterInvocationOnly": true,
+    "degradedAtMostOnce": true,
+    "terminalExactlyOnce": true,
+    "producedCountMinimum": 1,
+    "declaredSubjectRequiresActionId": true
+  }
+}

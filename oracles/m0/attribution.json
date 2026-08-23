@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "m0-attribution-v1",
+  "requirementId": "m0o.harness-attribution",
+  "requiredDimensions": [
+    "runAttempt",
+    "action",
+    "parentAction",
+    "effectiveGrant",
+    "actualRuntimeToolIdentity",
+    "inputCheckpoint",
+    "outputCheckpoint",
+    "effectOutcome",
+    "reconciliationObligation",
+    "recoveryPoint",
+    "outerRetryOwner",
+    "innerRetryOwner",
+    "terminalOwner",
+    "containmentOwner"
+  ],
+  "profileCoverageClasses": {
+    "m0-evaluator": ["neutral-control-storage", "evaluator-self-test"],
+    "inbox": ["neutral-control-storage", "evaluator-self-test", "named-tenant"],
+    "process-host": ["neutral-control-storage", "evaluator-self-test", "named-process-host"]
+  },
+  "rules": {
+    "denominatorFrozenBeforeExecution": true,
+    "requiredCaseExclusion": false,
+    "candidateExclusion": false,
+    "missingResultRemovedFromDenominator": false,
+    "zeroDenominatorPass": false,
+    "opaqueRateMaximum": 0.05,
+    "rounding": false,
+    "boundaryViolationsMaximum": 0
+  },
+  "vectors": [
+    { "id": "complete", "manifestApplicableCases": 20, "executedResults": 20, "opaqueApplicableCases": 0, "boundaryViolations": 0, "expected": "pass" },
+    { "id": "exact-threshold", "manifestApplicableCases": 20, "executedResults": 20, "opaqueApplicableCases": 1, "boundaryViolations": 0, "expected": "pass" },
+    { "id": "over-threshold", "manifestApplicableCases": 20, "executedResults": 20, "opaqueApplicableCases": 2, "boundaryViolations": 0, "expected": "evidence_failure" },
+    { "id": "zero-denominator", "manifestApplicableCases": 0, "executedResults": 0, "opaqueApplicableCases": 0, "boundaryViolations": 0, "expected": "invalid_invocation" },
+    { "id": "missing-result", "manifestApplicableCases": 20, "executedResults": 19, "opaqueApplicableCases": 0, "boundaryViolations": 0, "expected": "evidence_failure" },
+    { "id": "rare-boundary-violation", "manifestApplicableCases": 100, "executedResults": 100, "opaqueApplicableCases": 0, "boundaryViolations": 1, "expected": "contract_failure" }
+  ],
+  "tenantDecisions": [
+    { "tenantId": "inbox", "platformDependencyState": "undecided", "owner": "inbox-owner", "faultCaseRefs": [] },
+    { "tenantId": "auto-developer", "platformDependencyState": "not-required", "owner": "auto-developer-owner", "faultCaseRefs": ["process.checkpoint-resume"] },
+    { "tenantId": "ai-radar", "platformDependencyState": "undecided", "owner": "ai-radar-owner", "faultCaseRefs": [] }
+  ],
+  "platformDependencyStates": ["required", "not-required", "undecided"],
+  "processSpecChangeThreshold": 2
+}

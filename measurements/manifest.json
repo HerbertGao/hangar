@@ -1,0 +1,33 @@
+{
+  "schemaVersion": "m0-measurements-v1",
+  "requirementId": "m0o.measurements",
+  "evidenceManifest": "measurements/evidence.json",
+  "metrics": [
+    { "id": "T_attempt", "unit": "wall-clock-millisecond", "startBoundary": "challenge-brief-visible", "endBoundary": "immutable-release-submitted" },
+    { "id": "T_ready", "unit": "wall-clock-millisecond", "startBoundary": "clean-host-start", "endBoundary": "platform-and-prerequisites-ready" },
+    { "id": "C_platform", "unit": "person-millisecond", "scope": "shared-platform-investment" },
+    { "id": "C_enable", "unit": "person-millisecond", "scope": "agent-specific-enablement" },
+    { "id": "glue_LOC", "unit": "logical-lines", "scope": "candidate-specific-integration" },
+    { "id": "cold_start", "unit": "millisecond", "scope": "process-start-to-ready" },
+    { "id": "idle_RSS", "unit": "byte", "scope": "steady-idle-resident-memory" },
+    { "id": "peak_RSS", "unit": "byte", "scope": "peak-resident-memory" },
+    { "id": "disk", "unit": "byte", "scope": "installed-and-runtime-artifacts" },
+    { "id": "process_count", "unit": "count", "scope": "steady-and-peak-processes" },
+    { "id": "TCO_12_month", "unit": "currency-canonical-string", "scope": "twelve-month-total-cost" }
+  ],
+  "recordRequiredFields": [
+    "recordId",
+    "metricId",
+    "environmentId",
+    "startBoundaryEvidence",
+    "endBoundaryEvidence",
+    "collectionCommandOrSource",
+    "rawEvidenceRef",
+    "value",
+    "quality",
+    "recordedAtUtcMs",
+    "supersedesRecordId"
+  ],
+  "correctionPolicy": "append-superseding-record",
+  "overwriteAllowed": false
+}

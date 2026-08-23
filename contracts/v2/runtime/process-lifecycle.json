@@ -1,0 +1,1016 @@
+{
+  "schemaVersion": "v2-process-lifecycle-v1",
+  "requirementId": "v2c.process-lifecycle",
+  "states": [
+    "allocated",
+    "bootstrap-gated",
+    "registered",
+    "attested",
+    "running",
+    "terminating",
+    "reaped",
+    "failed-before-entry"
+  ],
+  "events": [
+    "create-containment",
+    "spawn-root",
+    "register-identity",
+    "attestation-verified",
+    "attestation-superseded",
+    "release-entrypoint",
+    "cancel",
+    "parent-died",
+    "timeout",
+    "signal-term",
+    "signal-kill",
+    "observe-exit",
+    "hard-reap",
+    "recover"
+  ],
+  "terminalStates": [
+    "reaped"
+  ],
+  "table": [
+    {
+      "state": "allocated",
+      "event": "create-containment",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "bootstrap-gated"
+      }
+    },
+    {
+      "state": "allocated",
+      "event": "spawn-root",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "allocated",
+      "event": "register-identity",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "allocated",
+      "event": "attestation-verified",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "allocated",
+      "event": "attestation-superseded",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "stale_generation"
+      }
+    },
+    {
+      "state": "allocated",
+      "event": "release-entrypoint",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "allocated",
+      "event": "cancel",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "allocated",
+      "event": "parent-died",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "allocated",
+      "event": "timeout",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "allocated",
+      "event": "signal-term",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "allocated",
+      "event": "signal-kill",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "allocated",
+      "event": "observe-exit",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "allocated",
+      "event": "hard-reap",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "reaped",
+        "scope": "whole-containment"
+      }
+    },
+    {
+      "state": "allocated",
+      "event": "recover",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "bootstrap-gated",
+      "event": "create-containment",
+      "outcome": {
+        "kind": "idempotent",
+        "nextState": "bootstrap-gated"
+      }
+    },
+    {
+      "state": "bootstrap-gated",
+      "event": "spawn-root",
+      "outcome": {
+        "kind": "allow",
+        "nextState": "bootstrap-gated",
+        "entrypointReleased": false
+      }
+    },
+    {
+      "state": "bootstrap-gated",
+      "event": "register-identity",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "registered"
+      }
+    },
+    {
+      "state": "bootstrap-gated",
+      "event": "attestation-verified",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "bootstrap-gated",
+      "event": "attestation-superseded",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "failed-before-entry",
+        "entrypointReleased": false,
+        "mustHardReap": true
+      }
+    },
+    {
+      "state": "bootstrap-gated",
+      "event": "release-entrypoint",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "bootstrap-gated",
+      "event": "cancel",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "bootstrap-gated",
+      "event": "parent-died",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "bootstrap-gated",
+      "event": "timeout",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "bootstrap-gated",
+      "event": "signal-term",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "bootstrap-gated",
+      "event": "signal-kill",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "bootstrap-gated",
+      "event": "observe-exit",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "bootstrap-gated",
+      "event": "hard-reap",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "reaped",
+        "scope": "whole-containment"
+      }
+    },
+    {
+      "state": "bootstrap-gated",
+      "event": "recover",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "failed-before-entry",
+        "entrypointReleased": false,
+        "mustHardReap": true
+      }
+    },
+    {
+      "state": "registered",
+      "event": "create-containment",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "registered",
+      "event": "spawn-root",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "registered",
+      "event": "register-identity",
+      "outcome": {
+        "kind": "idempotent",
+        "nextState": "registered"
+      }
+    },
+    {
+      "state": "registered",
+      "event": "attestation-verified",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "attested"
+      }
+    },
+    {
+      "state": "registered",
+      "event": "attestation-superseded",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "failed-before-entry",
+        "entrypointReleased": false,
+        "mustHardReap": true
+      }
+    },
+    {
+      "state": "registered",
+      "event": "release-entrypoint",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "registered",
+      "event": "cancel",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "registered",
+      "event": "parent-died",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "registered",
+      "event": "timeout",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "registered",
+      "event": "signal-term",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "registered",
+      "event": "signal-kill",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "registered",
+      "event": "observe-exit",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "registered",
+      "event": "hard-reap",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "reaped",
+        "scope": "whole-containment"
+      }
+    },
+    {
+      "state": "registered",
+      "event": "recover",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "failed-before-entry",
+        "entrypointReleased": false,
+        "mustHardReap": true
+      }
+    },
+    {
+      "state": "attested",
+      "event": "create-containment",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "attested",
+      "event": "spawn-root",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "attested",
+      "event": "register-identity",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "attested",
+      "event": "attestation-verified",
+      "outcome": {
+        "kind": "idempotent",
+        "nextState": "attested"
+      }
+    },
+    {
+      "state": "attested",
+      "event": "attestation-superseded",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "failed-before-entry",
+        "entrypointReleased": false,
+        "mustHardReap": true
+      }
+    },
+    {
+      "state": "attested",
+      "event": "release-entrypoint",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "running"
+      }
+    },
+    {
+      "state": "attested",
+      "event": "cancel",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "attested",
+      "event": "parent-died",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "attested",
+      "event": "timeout",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "attested",
+      "event": "signal-term",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "attested",
+      "event": "signal-kill",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "attested",
+      "event": "observe-exit",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "attested",
+      "event": "hard-reap",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "reaped",
+        "scope": "whole-containment"
+      }
+    },
+    {
+      "state": "attested",
+      "event": "recover",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "failed-before-entry",
+        "entrypointReleased": false,
+        "mustHardReap": true
+      }
+    },
+    {
+      "state": "running",
+      "event": "create-containment",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "running",
+      "event": "spawn-root",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "running",
+      "event": "register-identity",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "running",
+      "event": "attestation-verified",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "running",
+      "event": "attestation-superseded",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "stale_generation"
+      }
+    },
+    {
+      "state": "running",
+      "event": "release-entrypoint",
+      "outcome": {
+        "kind": "idempotent",
+        "nextState": "running"
+      }
+    },
+    {
+      "state": "running",
+      "event": "cancel",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "terminating"
+      }
+    },
+    {
+      "state": "running",
+      "event": "parent-died",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "terminating"
+      }
+    },
+    {
+      "state": "running",
+      "event": "timeout",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "terminating"
+      }
+    },
+    {
+      "state": "running",
+      "event": "signal-term",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "running",
+      "event": "signal-kill",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "running",
+      "event": "observe-exit",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "reaped",
+        "wholeTreeEmptyRequired": true
+      }
+    },
+    {
+      "state": "running",
+      "event": "hard-reap",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "reaped",
+        "scope": "whole-containment"
+      }
+    },
+    {
+      "state": "running",
+      "event": "recover",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "terminating"
+      }
+    },
+    {
+      "state": "terminating",
+      "event": "create-containment",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "terminating",
+      "event": "spawn-root",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "terminating",
+      "event": "register-identity",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "terminating",
+      "event": "attestation-verified",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "terminating",
+      "event": "attestation-superseded",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "stale_generation"
+      }
+    },
+    {
+      "state": "terminating",
+      "event": "release-entrypoint",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "terminating",
+      "event": "cancel",
+      "outcome": {
+        "kind": "idempotent",
+        "nextState": "terminating"
+      }
+    },
+    {
+      "state": "terminating",
+      "event": "parent-died",
+      "outcome": {
+        "kind": "idempotent",
+        "nextState": "terminating"
+      }
+    },
+    {
+      "state": "terminating",
+      "event": "timeout",
+      "outcome": {
+        "kind": "idempotent",
+        "nextState": "terminating"
+      }
+    },
+    {
+      "state": "terminating",
+      "event": "signal-term",
+      "outcome": {
+        "kind": "allow",
+        "nextState": "terminating",
+        "identityRecheck": true
+      }
+    },
+    {
+      "state": "terminating",
+      "event": "signal-kill",
+      "outcome": {
+        "kind": "allow",
+        "nextState": "terminating",
+        "identityRecheck": true
+      }
+    },
+    {
+      "state": "terminating",
+      "event": "observe-exit",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "reaped",
+        "wholeTreeEmptyRequired": true
+      }
+    },
+    {
+      "state": "terminating",
+      "event": "hard-reap",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "reaped",
+        "scope": "whole-containment"
+      }
+    },
+    {
+      "state": "terminating",
+      "event": "recover",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "terminating"
+      }
+    },
+    {
+      "state": "reaped",
+      "event": "create-containment",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "reaped",
+      "event": "spawn-root",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "reaped",
+      "event": "register-identity",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "reaped",
+      "event": "attestation-verified",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "reaped",
+      "event": "attestation-superseded",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "reaped",
+      "event": "release-entrypoint",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "reaped",
+      "event": "cancel",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "reaped",
+      "event": "parent-died",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "reaped",
+      "event": "timeout",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "reaped",
+      "event": "signal-term",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "reaped",
+      "event": "signal-kill",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "reaped",
+      "event": "observe-exit",
+      "outcome": {
+        "kind": "idempotent",
+        "nextState": "reaped"
+      }
+    },
+    {
+      "state": "reaped",
+      "event": "hard-reap",
+      "outcome": {
+        "kind": "idempotent",
+        "nextState": "reaped"
+      }
+    },
+    {
+      "state": "reaped",
+      "event": "recover",
+      "outcome": {
+        "kind": "idempotent",
+        "nextState": "reaped"
+      }
+    },
+    {
+      "state": "failed-before-entry",
+      "event": "create-containment",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "failed-before-entry",
+      "event": "spawn-root",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "failed-before-entry",
+      "event": "register-identity",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "failed-before-entry",
+      "event": "attestation-verified",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "failed-before-entry",
+      "event": "attestation-superseded",
+      "outcome": {
+        "kind": "idempotent",
+        "nextState": "failed-before-entry"
+      }
+    },
+    {
+      "state": "failed-before-entry",
+      "event": "release-entrypoint",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "failed-before-entry",
+      "event": "cancel",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "failed-before-entry",
+      "event": "parent-died",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "failed-before-entry",
+      "event": "timeout",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "failed-before-entry",
+      "event": "signal-term",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "failed-before-entry",
+      "event": "signal-kill",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "failed-before-entry",
+      "event": "observe-exit",
+      "outcome": {
+        "kind": "reject",
+        "errorKind": "invalid_state"
+      }
+    },
+    {
+      "state": "failed-before-entry",
+      "event": "hard-reap",
+      "outcome": {
+        "kind": "transition",
+        "nextState": "reaped"
+      }
+    },
+    {
+      "state": "failed-before-entry",
+      "event": "recover",
+      "outcome": {
+        "kind": "idempotent",
+        "nextState": "failed-before-entry"
+      }
+    }
+  ],
+  "identityFields": [
+    "hostBootId",
+    "startupCycleId",
+    "containmentId",
+    "containmentGeneration",
+    "rootPid",
+    "rootStartTimeFingerprint"
+  ],
+  "containment": {
+    "createdBeforeRootRelease": true,
+    "descendantMembershipEnforced": true,
+    "descendantEscapePrevented": true,
+    "allMembersEnumerable": true,
+    "hardReapWholeTree": true,
+    "directChildOnlySufficient": false
+  },
+  "registration": {
+    "transactionFields": [
+      "processOwnershipRecord",
+      "productionChildAttestationId",
+      "productionChildAttestationDigest",
+      "productionChildAttestationGeneration",
+      "launchSourceFact"
+    ],
+    "bootstrapGateUntilCommit": true,
+    "zeroOrComplete": true
+  },
+  "signals": {
+    "identityRecheckEachAct": true,
+    "pidOnlySufficient": false,
+    "termToKillClock": "startup-cycle-monotonic"
+  },
+  "recovery": {
+    "terminalChokePoint": "Run",
+    "restrictedChildAuthorityReplacesLocalLifecycle": false
+  },
+  "qualification": {
+    "requiredStatus": "verified",
+    "requiredObservations": [
+      "descendantMembershipEnforced",
+      "descendantEscapePrevented",
+      "allMembersEnumerable",
+      "hardReapWholeTree"
+    ],
+    "selfReportedEvidenceAccepted": false
+  },
+  "qualificationProfiles": [
+    {
+      "id": "local-process-group-probe",
+      "probeId": "node-posix-process-group-v1",
+      "evidenceStatus": "unverified-claim",
+      "productionEligible": false,
+      "reason": "process-groups-do-not-prevent-descendant-escape"
+    },
+    {
+      "id": "direct-child-only-fixture",
+      "probeId": "direct-child-reap-v1",
+      "evidenceStatus": "unsupported",
+      "productionEligible": false,
+      "reason": "direct-child-reap-is-not-whole-tree-containment"
+    }
+  ]
+}

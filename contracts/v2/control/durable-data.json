@@ -1,0 +1,86 @@
+{
+  "schemaVersion": "v2-durable-data-v1",
+  "requirementId": "v2c.durable-data",
+  "classes": ["control-metadata", "safe-text", "artifact-ref", "secret-ref", "runtime-only"],
+  "boundaryAllowlist": {
+    "release": ["control-metadata", "artifact-ref", "secret-ref"],
+    "source-fact": ["control-metadata", "safe-text", "artifact-ref"],
+    "trace": ["control-metadata", "safe-text", "artifact-ref"],
+    "command-result": ["control-metadata", "safe-text", "artifact-ref"],
+    "client-projection": ["control-metadata", "safe-text", "artifact-ref"],
+    "harness-request": ["control-metadata", "artifact-ref", "secret-ref", "runtime-only"]
+  },
+  "sanitizerRegistry": [
+    {
+      "id": "single-line-safe-text",
+      "version": 1,
+      "algorithm": "replace-c0-and-del-with-space-collapse-trim"
+    },
+    {
+      "id": "stable-label",
+      "version": 1,
+      "algorithm": "remove-c0-and-del-trim"
+    }
+  ],
+  "safeTextFields": [
+    {
+      "schemaPath": "objectSchemas.HealthFact.fields.reason",
+      "maxUtf8Bytes": 256,
+      "sanitizerId": "single-line-safe-text",
+      "sanitizerVersion": 1
+    },
+    {
+      "schemaPath": "objectSchemas.ErrorEnvelope.fields.details",
+      "maxUtf8Bytes": 512,
+      "sanitizerId": "single-line-safe-text",
+      "sanitizerVersion": 1
+    }
+  ],
+  "artifactRefSchema": {
+    "closed": true,
+    "fields": ["artifactId", "digest", "classification", "accessPolicyId"]
+  },
+  "secretRefSchema": {
+    "closed": true,
+    "fields": ["secretRefId", "purpose", "audience"]
+  },
+  "runtimeOnlyPolicy": {
+    "persistence": "drop",
+    "trace": "drop",
+    "error": "drop",
+    "client": "drop"
+  },
+  "unknownFieldPolicy": "reject",
+  "negativeVectors": [
+    {
+      "id": "unknown-source-fact-field",
+      "boundary": "source-fact",
+      "field": "unregisteredField",
+      "expected": "unknown_field"
+    },
+    {
+      "id": "runtime-input-in-trace",
+      "boundary": "trace",
+      "class": "runtime-only",
+      "expected": "runtime_only_persistence"
+    },
+    {
+      "id": "inline-business-body",
+      "boundary": "client-projection",
+      "field": "emailBody",
+      "expected": "inline_sensitive_content"
+    },
+    {
+      "id": "resolved-secret-value",
+      "boundary": "source-fact",
+      "field": "secretValue",
+      "expected": "resolved_secret"
+    },
+    {
+      "id": "missing-sanitizer",
+      "boundary": "client-projection",
+      "class": "safe-text",
+      "expected": "unknown_sanitizer"
+    }
+  ]
+}

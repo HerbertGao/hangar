@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "v2-handoff-v1",
+  "requirementId": "v2s.handoff",
+  "productionBarrier": {
+    "closeOldAdmission": true,
+    "revokeUnstartedClaims": true,
+    "rejectStaleEpochDispatch": true,
+    "scheduledMutationSupported": false
+  },
+  "reconciliationTransfer": {
+    "command": "transfer-obligation-owner",
+    "factKind": "obligation-owner-transferred",
+    "identity": [
+      "runId",
+      "obligationKind",
+      "subjectId",
+      "subjectGeneration",
+      "fromOwnerKind",
+      "fromOwnerGeneration"
+    ],
+    "binding": ["toOwnerKind", "toOwnerGeneration", "transferAuthorityDigest", "activationEpoch"],
+    "singleSuccessor": true,
+    "subjectGenerationImmutable": true,
+    "createsEffectIntent": false,
+    "grantsDispatchAuthority": false
+  },
+  "promotionGate": {
+    "allowedExternalOutcomes": ["committed", "not-committed"],
+    "allowedReconciliationStates": ["resolved-committed", "resolved-not-committed"],
+    "blockingExternalOutcomes": ["unknown", "conflicted"],
+    "blockingReconciliationStates": ["pending", "claimed", "unresolved"]
+  },
+  "rollback": {
+    "higherEpochRequired": true,
+    "simultaneousOwners": false
+  }
+}

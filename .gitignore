@@ -9,6 +9,7 @@ dist/
 *.sqlite-wal
 hangar.sqlite*
 *.log
+/*-pi-automode.jsonl
 .DS_Store
 .impeccable/
 

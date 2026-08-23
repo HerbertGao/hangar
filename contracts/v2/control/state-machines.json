@@ -1,0 +1,2665 @@
+{
+  "schemaVersion": "v2-state-machines-v1",
+  "machines": [
+    {
+      "id": "Activation",
+      "requirementId": "v2c.activation",
+      "states": [
+        "inactive",
+        "shadow",
+        "active",
+        "draining",
+        "quarantined"
+      ],
+      "events": [
+        "set-shadow",
+        "promote-active",
+        "recover-activate",
+        "begin-drain",
+        "quarantine",
+        "deactivate",
+        "admit-manual",
+        "admit-intent",
+        "admit-scheduled",
+        "reconcile"
+      ],
+      "terminalStates": [],
+      "table": [
+        {
+          "state": "inactive",
+          "event": "set-shadow",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "shadow"
+          }
+        },
+        {
+          "state": "inactive",
+          "event": "promote-active",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "active",
+            "conditions": [
+              "single-production-owner",
+              "handoff-complete",
+              "current-production-control-attestation",
+              "trusted-direct-effects-empty"
+            ]
+          }
+        },
+        {
+          "state": "inactive",
+          "event": "recover-activate",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "inactive",
+          "event": "begin-drain",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "inactive",
+          "event": "quarantine",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "quarantined"
+          }
+        },
+        {
+          "state": "inactive",
+          "event": "deactivate",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "inactive"
+          }
+        },
+        {
+          "state": "inactive",
+          "event": "admit-manual",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "inactive",
+          "event": "admit-intent",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "inactive",
+          "event": "admit-scheduled",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "unsupported_schedule"
+          }
+        },
+        {
+          "state": "inactive",
+          "event": "reconcile",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "shadow",
+          "event": "set-shadow",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "shadow"
+          }
+        },
+        {
+          "state": "shadow",
+          "event": "promote-active",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "active",
+            "conditions": [
+              "single-production-owner",
+              "handoff-complete",
+              "current-production-control-attestation",
+              "trusted-direct-effects-empty"
+            ]
+          }
+        },
+        {
+          "state": "shadow",
+          "event": "recover-activate",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "shadow",
+          "event": "begin-drain",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "shadow",
+          "event": "quarantine",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "quarantined"
+          }
+        },
+        {
+          "state": "shadow",
+          "event": "deactivate",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "inactive"
+          }
+        },
+        {
+          "state": "shadow",
+          "event": "admit-manual",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "shadow",
+          "event": "admit-intent",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "shadow",
+          "event": "admit-scheduled",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "unsupported_schedule"
+          }
+        },
+        {
+          "state": "shadow",
+          "event": "reconcile",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "active",
+          "event": "set-shadow",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "active",
+          "event": "promote-active",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "active"
+          }
+        },
+        {
+          "state": "active",
+          "event": "recover-activate",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "active",
+          "event": "begin-drain",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "draining"
+          }
+        },
+        {
+          "state": "active",
+          "event": "quarantine",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "quarantined"
+          }
+        },
+        {
+          "state": "active",
+          "event": "deactivate",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "active",
+          "event": "admit-manual",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "active",
+            "conditions": [
+              "current-production-control-attestation",
+              "activation-epoch-match"
+            ]
+          }
+        },
+        {
+          "state": "active",
+          "event": "admit-intent",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "active",
+            "conditions": [
+              "current-production-control-attestation",
+              "activation-epoch-match"
+            ]
+          }
+        },
+        {
+          "state": "active",
+          "event": "admit-scheduled",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "unsupported_schedule"
+          }
+        },
+        {
+          "state": "active",
+          "event": "reconcile",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "draining",
+          "event": "set-shadow",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "draining",
+          "event": "promote-active",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "draining",
+          "event": "recover-activate",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "draining",
+          "event": "begin-drain",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "draining"
+          }
+        },
+        {
+          "state": "draining",
+          "event": "quarantine",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "quarantined"
+          }
+        },
+        {
+          "state": "draining",
+          "event": "deactivate",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "inactive"
+          }
+        },
+        {
+          "state": "draining",
+          "event": "admit-manual",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "draining",
+          "event": "admit-intent",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "draining",
+          "event": "admit-scheduled",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "unsupported_schedule"
+          }
+        },
+        {
+          "state": "draining",
+          "event": "reconcile",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "draining"
+          }
+        },
+        {
+          "state": "quarantined",
+          "event": "set-shadow",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "quarantined",
+          "event": "promote-active",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "quarantined",
+          "event": "recover-activate",
+          "outcome": {
+            "kind": "delegate",
+            "ownerRequirementId": "v2s.restore",
+            "conditions": ["trusted-direct-effects-empty"]
+          }
+        },
+        {
+          "state": "quarantined",
+          "event": "begin-drain",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "quarantined",
+          "event": "quarantine",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "quarantined"
+          }
+        },
+        {
+          "state": "quarantined",
+          "event": "deactivate",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "inactive"
+          }
+        },
+        {
+          "state": "quarantined",
+          "event": "admit-manual",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "quarantined",
+          "event": "admit-intent",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "quarantined",
+          "event": "admit-scheduled",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "unsupported_schedule"
+          }
+        },
+        {
+          "state": "quarantined",
+          "event": "reconcile",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "quarantined"
+          }
+        }
+      ]
+    },
+    {
+      "id": "Run",
+      "requirementId": "v2c.run",
+      "states": [
+        "admitted",
+        "running",
+        "waiting",
+        "settling",
+        "completed",
+        "failed",
+        "cancelled"
+      ],
+      "events": [
+        "allocate-attempt",
+        "attempt-succeeded",
+        "attempt-failed",
+        "wait-durable",
+        "resume-ready",
+        "cancel-requested",
+        "harness-failed",
+        "effect-final",
+        "outcome-proposed",
+        "retry-approved",
+        "recover",
+        "terminal-complete",
+        "terminal-fail",
+        "terminal-cancel",
+        "new-action",
+        "new-effect-intent",
+        "late-effect-outcome"
+      ],
+      "terminalStates": [
+        "completed",
+        "failed",
+        "cancelled"
+      ],
+      "table": [
+        {
+          "state": "admitted",
+          "event": "allocate-attempt",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "running"
+          }
+        },
+        {
+          "state": "admitted",
+          "event": "attempt-succeeded",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "admitted",
+          "event": "attempt-failed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "admitted",
+          "event": "wait-durable",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "admitted",
+          "event": "resume-ready",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "admitted",
+          "event": "cancel-requested",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "settling"
+          }
+        },
+        {
+          "state": "admitted",
+          "event": "harness-failed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "admitted",
+          "event": "effect-final",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "admitted",
+          "event": "outcome-proposed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "admitted",
+          "event": "retry-approved",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "admitted",
+          "event": "recover",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "admitted"
+          }
+        },
+        {
+          "state": "admitted",
+          "event": "terminal-complete",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "admitted",
+          "event": "terminal-fail",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "failed",
+            "owner": "terminal-choke-point"
+          }
+        },
+        {
+          "state": "admitted",
+          "event": "terminal-cancel",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "cancelled",
+            "owner": "terminal-choke-point"
+          }
+        },
+        {
+          "state": "admitted",
+          "event": "new-action",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "admitted",
+          "event": "new-effect-intent",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "admitted",
+          "event": "late-effect-outcome",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "running",
+          "event": "allocate-attempt",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "running",
+          "event": "attempt-succeeded",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "settling"
+          }
+        },
+        {
+          "state": "running",
+          "event": "attempt-failed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "settling"
+          }
+        },
+        {
+          "state": "running",
+          "event": "wait-durable",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "waiting"
+          }
+        },
+        {
+          "state": "running",
+          "event": "resume-ready",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "running",
+          "event": "cancel-requested",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "settling"
+          }
+        },
+        {
+          "state": "running",
+          "event": "harness-failed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "settling"
+          }
+        },
+        {
+          "state": "running",
+          "event": "effect-final",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "running",
+            "schedulesWork": false
+          }
+        },
+        {
+          "state": "running",
+          "event": "outcome-proposed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "settling"
+          }
+        },
+        {
+          "state": "running",
+          "event": "retry-approved",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "running",
+          "event": "recover",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "running",
+          "event": "terminal-complete",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "running",
+          "event": "terminal-fail",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "failed",
+            "owner": "terminal-choke-point"
+          }
+        },
+        {
+          "state": "running",
+          "event": "terminal-cancel",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "cancelled",
+            "owner": "terminal-choke-point"
+          }
+        },
+        {
+          "state": "running",
+          "event": "new-action",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "running"
+          }
+        },
+        {
+          "state": "running",
+          "event": "new-effect-intent",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "running"
+          }
+        },
+        {
+          "state": "running",
+          "event": "late-effect-outcome",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "running",
+            "schedulesWork": false
+          }
+        },
+        {
+          "state": "waiting",
+          "event": "allocate-attempt",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "waiting",
+          "event": "attempt-succeeded",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "waiting",
+          "event": "attempt-failed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "waiting",
+          "event": "wait-durable",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "waiting"
+          }
+        },
+        {
+          "state": "waiting",
+          "event": "resume-ready",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "admitted",
+            "conditions": [
+              "obligations-resolved",
+              "valid-checkpoint"
+            ]
+          }
+        },
+        {
+          "state": "waiting",
+          "event": "cancel-requested",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "settling"
+          }
+        },
+        {
+          "state": "waiting",
+          "event": "harness-failed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "waiting",
+          "event": "effect-final",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "waiting",
+            "schedulesWork": false
+          }
+        },
+        {
+          "state": "waiting",
+          "event": "outcome-proposed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "waiting",
+          "event": "retry-approved",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "waiting",
+          "event": "recover",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "waiting"
+          }
+        },
+        {
+          "state": "waiting",
+          "event": "terminal-complete",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "waiting",
+          "event": "terminal-fail",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "failed",
+            "owner": "terminal-choke-point"
+          }
+        },
+        {
+          "state": "waiting",
+          "event": "terminal-cancel",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "cancelled",
+            "owner": "terminal-choke-point"
+          }
+        },
+        {
+          "state": "waiting",
+          "event": "new-action",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "waiting",
+          "event": "new-effect-intent",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "waiting",
+          "event": "late-effect-outcome",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "waiting",
+            "schedulesWork": false
+          }
+        },
+        {
+          "state": "settling",
+          "event": "allocate-attempt",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "settling",
+          "event": "attempt-succeeded",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "settling",
+          "event": "attempt-failed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "settling",
+          "event": "wait-durable",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "settling",
+          "event": "resume-ready",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "settling",
+          "event": "cancel-requested",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "settling"
+          }
+        },
+        {
+          "state": "settling",
+          "event": "harness-failed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "settling",
+          "event": "effect-final",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "settling",
+            "schedulesWork": false
+          }
+        },
+        {
+          "state": "settling",
+          "event": "outcome-proposed",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "settling"
+          }
+        },
+        {
+          "state": "settling",
+          "event": "retry-approved",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "admitted",
+            "owner": "control"
+          }
+        },
+        {
+          "state": "settling",
+          "event": "recover",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "settling"
+          }
+        },
+        {
+          "state": "settling",
+          "event": "terminal-complete",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "completed",
+            "conditions": [
+              "domain-outcome-gate"
+            ]
+          }
+        },
+        {
+          "state": "settling",
+          "event": "terminal-fail",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "failed",
+            "owner": "terminal-choke-point"
+          }
+        },
+        {
+          "state": "settling",
+          "event": "terminal-cancel",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "cancelled",
+            "owner": "terminal-choke-point"
+          }
+        },
+        {
+          "state": "settling",
+          "event": "new-action",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "settling",
+          "event": "new-effect-intent",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "settling",
+          "event": "late-effect-outcome",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "settling",
+            "schedulesWork": false
+          }
+        },
+        {
+          "state": "completed",
+          "event": "allocate-attempt",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "completed",
+          "event": "attempt-succeeded",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "completed",
+          "event": "attempt-failed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "completed",
+          "event": "wait-durable",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "completed",
+          "event": "resume-ready",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "completed",
+          "event": "cancel-requested",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "completed",
+          "event": "harness-failed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "completed",
+          "event": "effect-final",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "completed",
+          "event": "outcome-proposed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "completed",
+          "event": "retry-approved",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "completed",
+          "event": "recover",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "completed",
+          "event": "terminal-complete",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "completed"
+          }
+        },
+        {
+          "state": "completed",
+          "event": "terminal-fail",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "completed",
+          "event": "terminal-cancel",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "completed",
+          "event": "new-action",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "completed",
+          "event": "new-effect-intent",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "completed",
+          "event": "late-effect-outcome",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "completed",
+            "dispatchMustPrecedeTerminal": true,
+            "schedulesWork": false
+          }
+        },
+        {
+          "state": "failed",
+          "event": "allocate-attempt",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "attempt-succeeded",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "attempt-failed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "wait-durable",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "resume-ready",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "cancel-requested",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "harness-failed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "effect-final",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "outcome-proposed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "retry-approved",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "recover",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "terminal-complete",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "terminal-fail",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "failed"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "terminal-cancel",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "new-action",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "new-effect-intent",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "late-effect-outcome",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "failed",
+            "dispatchMustPrecedeTerminal": true,
+            "schedulesWork": false
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "allocate-attempt",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "attempt-succeeded",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "attempt-failed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "wait-durable",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "resume-ready",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "cancel-requested",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "harness-failed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "effect-final",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "outcome-proposed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "retry-approved",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "recover",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "terminal-complete",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "terminal-fail",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "terminal-cancel",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "cancelled"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "new-action",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "new-effect-intent",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "terminal_conflict"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "late-effect-outcome",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "cancelled",
+            "dispatchMustPrecedeTerminal": true,
+            "schedulesWork": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "RunAttempt",
+      "requirementId": "v2c.run-attempt",
+      "states": [
+        "created",
+        "starting",
+        "running",
+        "quiescing",
+        "checkpointed",
+        "succeeded",
+        "failed",
+        "cancelled"
+      ],
+      "events": [
+        "start",
+        "entry-released",
+        "begin-quiesce",
+        "checkpoint-committed",
+        "technical-succeeded",
+        "technical-failed",
+        "cancelled",
+        "append-action",
+        "append-action-event",
+        "append-checkpoint",
+        "append-effect-intent",
+        "use-grant",
+        "launch-child",
+        "late-obligation-outcome",
+        "control-cleanup",
+        "record-attempt-quiesced",
+        "allocate-next-attempt"
+      ],
+      "terminalStates": [
+        "checkpointed",
+        "succeeded",
+        "failed",
+        "cancelled"
+      ],
+      "table": [
+        {
+          "state": "created",
+          "event": "start",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "starting"
+          }
+        },
+        {
+          "state": "created",
+          "event": "entry-released",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "created",
+          "event": "begin-quiesce",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "quiescing"
+          }
+        },
+        {
+          "state": "created",
+          "event": "checkpoint-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "created",
+          "event": "technical-succeeded",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "created",
+          "event": "technical-failed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "failed"
+          }
+        },
+        {
+          "state": "created",
+          "event": "cancelled",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "cancelled"
+          }
+        },
+        {
+          "state": "created",
+          "event": "append-action",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "created",
+          "event": "append-action-event",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "created",
+          "event": "append-checkpoint",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "created",
+          "event": "append-effect-intent",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "created",
+          "event": "use-grant",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "created",
+          "event": "launch-child",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "created",
+          "event": "late-obligation-outcome",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "created",
+          "event": "control-cleanup",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "created",
+            "owner": "control"
+          }
+        },
+        {
+          "state": "created",
+          "event": "record-attempt-quiesced",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "created",
+          "event": "allocate-next-attempt",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "starting",
+          "event": "start",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "starting"
+          }
+        },
+        {
+          "state": "starting",
+          "event": "entry-released",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "running"
+          }
+        },
+        {
+          "state": "starting",
+          "event": "begin-quiesce",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "quiescing"
+          }
+        },
+        {
+          "state": "starting",
+          "event": "checkpoint-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "starting",
+          "event": "technical-succeeded",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "starting",
+          "event": "technical-failed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "failed"
+          }
+        },
+        {
+          "state": "starting",
+          "event": "cancelled",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "cancelled"
+          }
+        },
+        {
+          "state": "starting",
+          "event": "append-action",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "starting",
+          "event": "append-action-event",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "starting",
+          "event": "append-checkpoint",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "starting",
+          "event": "append-effect-intent",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "starting",
+          "event": "use-grant",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "starting",
+          "event": "launch-child",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "starting",
+          "event": "late-obligation-outcome",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "starting",
+          "event": "control-cleanup",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "starting",
+            "owner": "control"
+          }
+        },
+        {
+          "state": "starting",
+          "event": "record-attempt-quiesced",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "starting",
+          "event": "allocate-next-attempt",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "running",
+          "event": "start",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "running",
+          "event": "entry-released",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "running"
+          }
+        },
+        {
+          "state": "running",
+          "event": "begin-quiesce",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "quiescing"
+          }
+        },
+        {
+          "state": "running",
+          "event": "checkpoint-committed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "checkpointed"
+          }
+        },
+        {
+          "state": "running",
+          "event": "technical-succeeded",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "succeeded"
+          }
+        },
+        {
+          "state": "running",
+          "event": "technical-failed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "failed"
+          }
+        },
+        {
+          "state": "running",
+          "event": "cancelled",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "cancelled"
+          }
+        },
+        {
+          "state": "running",
+          "event": "append-action",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "running"
+          }
+        },
+        {
+          "state": "running",
+          "event": "append-action-event",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "running"
+          }
+        },
+        {
+          "state": "running",
+          "event": "append-checkpoint",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "running"
+          }
+        },
+        {
+          "state": "running",
+          "event": "append-effect-intent",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "running"
+          }
+        },
+        {
+          "state": "running",
+          "event": "use-grant",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "running"
+          }
+        },
+        {
+          "state": "running",
+          "event": "launch-child",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "running"
+          }
+        },
+        {
+          "state": "running",
+          "event": "late-obligation-outcome",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "running",
+          "event": "control-cleanup",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "running",
+            "owner": "control"
+          }
+        },
+        {
+          "state": "running",
+          "event": "record-attempt-quiesced",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "running",
+          "event": "allocate-next-attempt",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "quiescing",
+          "event": "start",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "quiescing",
+          "event": "entry-released",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "quiescing",
+          "event": "begin-quiesce",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "quiescing"
+          }
+        },
+        {
+          "state": "quiescing",
+          "event": "checkpoint-committed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "checkpointed"
+          }
+        },
+        {
+          "state": "quiescing",
+          "event": "technical-succeeded",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "succeeded"
+          }
+        },
+        {
+          "state": "quiescing",
+          "event": "technical-failed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "failed"
+          }
+        },
+        {
+          "state": "quiescing",
+          "event": "cancelled",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "cancelled"
+          }
+        },
+        {
+          "state": "quiescing",
+          "event": "append-action",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "quiescing",
+          "event": "append-action-event",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "quiescing",
+          "event": "append-checkpoint",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "quiescing",
+          "event": "append-effect-intent",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "quiescing",
+          "event": "use-grant",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "quiescing",
+          "event": "launch-child",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "quiescing",
+          "event": "late-obligation-outcome",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "quiescing",
+          "event": "control-cleanup",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "quiescing",
+            "owner": "control"
+          }
+        },
+        {
+          "state": "quiescing",
+          "event": "record-attempt-quiesced",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "quiescing",
+          "event": "allocate-next-attempt",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "checkpointed",
+          "event": "start",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "checkpointed",
+          "event": "entry-released",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "checkpointed",
+          "event": "begin-quiesce",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "checkpointed",
+          "event": "checkpoint-committed",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "checkpointed"
+          }
+        },
+        {
+          "state": "checkpointed",
+          "event": "technical-succeeded",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "checkpointed",
+          "event": "technical-failed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "checkpointed",
+          "event": "cancelled",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "checkpointed",
+          "event": "append-action",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "checkpointed",
+          "event": "append-action-event",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "checkpointed",
+          "event": "append-checkpoint",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "checkpointed",
+          "event": "append-effect-intent",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "checkpointed",
+          "event": "use-grant",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "checkpointed",
+          "event": "launch-child",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "checkpointed",
+          "event": "late-obligation-outcome",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "checkpointed",
+            "existingObligationOnly": true,
+            "schedulesWork": false
+          }
+        },
+        {
+          "state": "checkpointed",
+          "event": "control-cleanup",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "checkpointed",
+            "owner": "control",
+            "schedulesWork": false
+          }
+        },
+        {
+          "state": "checkpointed",
+          "event": "record-attempt-quiesced",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "checkpointed",
+            "conditions": [
+              "containment-sealed",
+              "grant-generation-revoked",
+              "obligation-digest-current"
+            ]
+          }
+        },
+        {
+          "state": "checkpointed",
+          "event": "allocate-next-attempt",
+          "outcome": {
+            "kind": "delegate",
+            "ownerRequirementId": "v2s.transactions"
+          }
+        },
+        {
+          "state": "succeeded",
+          "event": "start",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "succeeded",
+          "event": "entry-released",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "succeeded",
+          "event": "begin-quiesce",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "succeeded",
+          "event": "checkpoint-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "succeeded",
+          "event": "technical-succeeded",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "succeeded"
+          }
+        },
+        {
+          "state": "succeeded",
+          "event": "technical-failed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "succeeded",
+          "event": "cancelled",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "succeeded",
+          "event": "append-action",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "succeeded",
+          "event": "append-action-event",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "succeeded",
+          "event": "append-checkpoint",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "succeeded",
+          "event": "append-effect-intent",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "succeeded",
+          "event": "use-grant",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "succeeded",
+          "event": "launch-child",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "succeeded",
+          "event": "late-obligation-outcome",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "succeeded",
+            "existingObligationOnly": true,
+            "schedulesWork": false
+          }
+        },
+        {
+          "state": "succeeded",
+          "event": "control-cleanup",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "succeeded",
+            "owner": "control",
+            "schedulesWork": false
+          }
+        },
+        {
+          "state": "succeeded",
+          "event": "record-attempt-quiesced",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "succeeded",
+            "conditions": [
+              "containment-sealed",
+              "grant-generation-revoked",
+              "obligation-digest-current"
+            ]
+          }
+        },
+        {
+          "state": "succeeded",
+          "event": "allocate-next-attempt",
+          "outcome": {
+            "kind": "delegate",
+            "ownerRequirementId": "v2s.transactions"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "start",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "entry-released",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "begin-quiesce",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "checkpoint-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "technical-succeeded",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "technical-failed",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "failed"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "cancelled",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "append-action",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "append-action-event",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "append-checkpoint",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "append-effect-intent",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "use-grant",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "launch-child",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "failed",
+          "event": "late-obligation-outcome",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "failed",
+            "existingObligationOnly": true,
+            "schedulesWork": false
+          }
+        },
+        {
+          "state": "failed",
+          "event": "control-cleanup",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "failed",
+            "owner": "control",
+            "schedulesWork": false
+          }
+        },
+        {
+          "state": "failed",
+          "event": "record-attempt-quiesced",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "failed",
+            "conditions": [
+              "containment-sealed",
+              "grant-generation-revoked",
+              "obligation-digest-current"
+            ]
+          }
+        },
+        {
+          "state": "failed",
+          "event": "allocate-next-attempt",
+          "outcome": {
+            "kind": "delegate",
+            "ownerRequirementId": "v2s.transactions"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "start",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "entry-released",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "begin-quiesce",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "checkpoint-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "technical-succeeded",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "technical-failed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "cancelled",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "cancelled"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "append-action",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "append-action-event",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "append-checkpoint",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "append-effect-intent",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "use-grant",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "launch-child",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "stale_attempt"
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "late-obligation-outcome",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "cancelled",
+            "existingObligationOnly": true,
+            "schedulesWork": false
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "control-cleanup",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "cancelled",
+            "owner": "control",
+            "schedulesWork": false
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "record-attempt-quiesced",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "cancelled",
+            "conditions": [
+              "containment-sealed",
+              "grant-generation-revoked",
+              "obligation-digest-current"
+            ]
+          }
+        },
+        {
+          "state": "cancelled",
+          "event": "allocate-next-attempt",
+          "outcome": {
+            "kind": "delegate",
+            "ownerRequirementId": "v2s.transactions"
+          }
+        }
+      ]
+    }
+  ],
+  "terminalChokePoint": {
+    "owner": "control",
+    "firstCommittedTerminalWins": true,
+    "harnessMaySubmitTerminal": false
+  },
+  "retryOwnership": {
+    "outer": {
+      "owner": "control",
+      "unit": "RunAttempt"
+    },
+    "inner": {
+      "owner": "harness",
+      "kinds": [
+        "model",
+        "transport",
+        "provider-session",
+        "reversible-uncommitted-action"
+      ],
+      "sameRunAttemptOnly": true
+    },
+    "prohibitedAutomaticRetry": [
+      "unknown-effect",
+      "committed-effect"
+    ]
+  }
+}

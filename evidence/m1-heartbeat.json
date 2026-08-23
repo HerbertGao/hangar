@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "m1-heartbeat-observation-v3",
+  "command": "node --test tests/m1/release-lifecycle.test.ts tests/m1/storage-faults.test.ts tests/m1/effect-resume.test.ts tests/m1/process-restore.test.ts",
+  "testFiles": [
+    "tests/m1/release-lifecycle.test.ts",
+    "tests/m1/storage-faults.test.ts",
+    "tests/m1/effect-resume.test.ts",
+    "tests/m1/process-restore.test.ts"
+  ],
+  "limitations": [
+    "No power-loss or fsync proof",
+    "Darwin process groups do not prevent setsid escape or close PID-reuse races",
+    "Restore is disposable local evidence, not production qualification",
+    "Stage acceptance does not confer candidate or production qualification"
+  ],
+  "measurements": {
+    "status": "informational-not-measured",
+    "references": [
+      "measurements/evidence.json",
+      "measurements/ledger.json"
+    ]
+  }
+}

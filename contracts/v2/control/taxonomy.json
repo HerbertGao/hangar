@@ -1,0 +1,792 @@
+{
+  "schemaVersion": "v2-control-taxonomy-v1",
+  "requirementId": "v2c.control-taxonomy",
+  "unions": [
+    {
+      "id": "control-command",
+      "version": "control-command-v1",
+      "members": [
+        "publish-release",
+        "change-activation",
+        "admit-run",
+        "cancel-run",
+        "allocate-run-attempt",
+        "register-action",
+        "append-action-event",
+        "append-checkpoint",
+        "transfer-obligation-owner",
+        "decide-approval",
+        "create-effect-intent",
+        "issue-effect-claim",
+        "start-effect-dispatch",
+        "submit-receipt",
+        "claim-reconciliation",
+        "resolve-reconciliation",
+        "terminalize-run",
+        "register-process",
+        "submit-launch-attestation",
+        "restore-init",
+        "abort-recovery",
+        "recover-activate"
+      ]
+    },
+    {
+      "id": "run-event",
+      "version": "run-event-v1",
+      "members": [
+        "release.published",
+        "activation.changed",
+        "run.admitted",
+        "run.cancel-requested",
+        "run.waiting",
+        "run.completed",
+        "run.failed",
+        "run.cancelled",
+        "attempt.allocated",
+        "attempt.starting",
+        "attempt.running",
+        "attempt.quiescing",
+        "attempt.checkpointed",
+        "attempt.succeeded",
+        "attempt.failed",
+        "attempt.cancelled",
+        "attempt.quiesced",
+        "harness.session-started",
+        "harness.technical-result",
+        "harness.protocol-failed",
+        "action.registered",
+        "action.event-appended",
+        "checkpoint.appended",
+        "obligation.owner-transferred",
+        "approval.requested",
+        "approval.approved",
+        "approval.rejected",
+        "approval.expired",
+        "approval.superseded",
+        "effect.intent-accepted",
+        "effect.claimed",
+        "effect.dispatch-started",
+        "effect.local-result",
+        "effect.receipt-admitted",
+        "effect.outcome-recorded",
+        "effect.reconciliation-updated",
+        "process.registered",
+        "process.signal-recorded",
+        "process.exited",
+        "process.reaped",
+        "attestation.recorded",
+        "attestation.invalidated",
+        "recovery.updated",
+        "command.completed"
+      ]
+    },
+    {
+      "id": "harness-event",
+      "version": "harness-event-v1",
+      "members": [
+        "technical-started",
+        "action-event",
+        "checkpoint-proposed",
+        "outcome-proposed",
+        "technical-succeeded",
+        "technical-failed",
+        "protocol-failed"
+      ]
+    },
+    {
+      "id": "action-event",
+      "version": "action-event-v1",
+      "members": [
+        "action-started",
+        "action-progress",
+        "inner-retry",
+        "tool-result",
+        "subagent-result",
+        "action-succeeded",
+        "action-failed",
+        "action-skipped"
+      ]
+    }
+  ],
+  "projectionFamilies": [
+    "agent",
+    "release",
+    "activation",
+    "run",
+    "attempt",
+    "event",
+    "approval",
+    "effect",
+    "health",
+    "recovery",
+    "command-result"
+  ],
+  "fanout": [
+    {
+      "unionId": "control-command",
+      "member": "publish-release",
+      "families": [
+        "command-result",
+        "release"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "change-activation",
+      "families": [
+        "activation",
+        "command-result"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "admit-run",
+      "families": [
+        "command-result",
+        "run"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "cancel-run",
+      "families": [
+        "command-result",
+        "run"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "allocate-run-attempt",
+      "families": [
+        "attempt",
+        "command-result",
+        "event"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "register-action",
+      "families": [
+        "attempt",
+        "command-result",
+        "event"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "append-action-event",
+      "families": [
+        "attempt",
+        "command-result",
+        "event"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "append-checkpoint",
+      "families": [
+        "attempt",
+        "command-result",
+        "event"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "transfer-obligation-owner",
+      "families": [
+        "command-result",
+        "run"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "decide-approval",
+      "families": [
+        "approval",
+        "command-result"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "create-effect-intent",
+      "families": [
+        "command-result",
+        "effect"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "issue-effect-claim",
+      "families": [
+        "command-result",
+        "effect"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "start-effect-dispatch",
+      "families": [
+        "command-result",
+        "effect"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "submit-receipt",
+      "families": [
+        "command-result",
+        "effect"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "claim-reconciliation",
+      "families": [
+        "command-result",
+        "effect"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "resolve-reconciliation",
+      "families": [
+        "command-result",
+        "effect"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "terminalize-run",
+      "families": [
+        "command-result",
+        "run"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "register-process",
+      "families": [
+        "attempt",
+        "command-result",
+        "event"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "submit-launch-attestation",
+      "families": [
+        "command-result",
+        "run"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "restore-init",
+      "families": [
+        "command-result",
+        "recovery"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "abort-recovery",
+      "families": [
+        "command-result",
+        "recovery"
+      ]
+    },
+    {
+      "unionId": "control-command",
+      "member": "recover-activate",
+      "families": [
+        "command-result",
+        "run"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "release.published",
+      "families": [
+        "release"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "activation.changed",
+      "families": [
+        "activation",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "run.admitted",
+      "families": [
+        "event",
+        "health",
+        "run"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "run.cancel-requested",
+      "families": [
+        "event",
+        "health",
+        "run"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "run.waiting",
+      "families": [
+        "event",
+        "health",
+        "run"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "run.completed",
+      "families": [
+        "event",
+        "health",
+        "run"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "run.failed",
+      "families": [
+        "event",
+        "health",
+        "run"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "run.cancelled",
+      "families": [
+        "event",
+        "health",
+        "run"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "attempt.allocated",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "attempt.starting",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "attempt.running",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "attempt.quiescing",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "attempt.checkpointed",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "attempt.succeeded",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "attempt.failed",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "attempt.cancelled",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "attempt.quiesced",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "harness.session-started",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "harness.technical-result",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "harness.protocol-failed",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "action.registered",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "action.event-appended",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "checkpoint.appended",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "obligation.owner-transferred",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "approval.requested",
+      "families": [
+        "approval",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "approval.approved",
+      "families": [
+        "approval",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "approval.rejected",
+      "families": [
+        "approval",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "approval.expired",
+      "families": [
+        "approval",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "approval.superseded",
+      "families": [
+        "approval",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "effect.intent-accepted",
+      "families": [
+        "effect",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "effect.claimed",
+      "families": [
+        "effect",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "effect.dispatch-started",
+      "families": [
+        "effect",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "effect.local-result",
+      "families": [
+        "effect",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "effect.receipt-admitted",
+      "families": [
+        "effect",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "effect.outcome-recorded",
+      "families": [
+        "effect",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "effect.reconciliation-updated",
+      "families": [
+        "effect",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "process.registered",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "process.signal-recorded",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "process.exited",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "process.reaped",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "attestation.recorded",
+      "families": [
+        "event",
+        "health"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "attestation.invalidated",
+      "families": [
+        "event",
+        "health"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "recovery.updated",
+      "families": [
+        "event",
+        "recovery"
+      ]
+    },
+    {
+      "unionId": "run-event",
+      "member": "command.completed",
+      "families": [
+        "command-result",
+        "event"
+      ]
+    },
+    {
+      "unionId": "harness-event",
+      "member": "technical-started",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "harness-event",
+      "member": "action-event",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "harness-event",
+      "member": "checkpoint-proposed",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "harness-event",
+      "member": "outcome-proposed",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "harness-event",
+      "member": "technical-succeeded",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "harness-event",
+      "member": "technical-failed",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "harness-event",
+      "member": "protocol-failed",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "action-event",
+      "member": "action-started",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "action-event",
+      "member": "action-progress",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "action-event",
+      "member": "inner-retry",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "action-event",
+      "member": "tool-result",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "action-event",
+      "member": "subagent-result",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "action-event",
+      "member": "action-succeeded",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "action-event",
+      "member": "action-failed",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    },
+    {
+      "unionId": "action-event",
+      "member": "action-skipped",
+      "families": [
+        "attempt",
+        "event"
+      ]
+    }
+  ],
+  "rejections": {
+    "unknownVersion": "unsupported_version",
+    "unknownType": "protocol_failure",
+    "malformedPayload": "invalid_request",
+    "streamWithoutTechnicalTerminal": "protocol_failure",
+    "deadlineRace": "deadline_exceeded",
+    "abortRace": "cancelled"
+  }
+}

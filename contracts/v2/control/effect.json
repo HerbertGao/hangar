@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "v2-effect-v1",
+  "requirementId": "v2c.effect",
+  "identity": {
+    "logicalKey": ["runId", "intentKey", "intentGeneration"],
+    "globalId": "effectId",
+    "binding": ["operation", "intentDigest", "firstOriginRunAttempt", "firstOriginActionId"],
+    "firstOriginImmutable": true,
+    "singleOperation": true,
+    "generationStartsAt": 0
+  },
+  "claim": {
+    "internal": true,
+    "singleUse": true,
+    "binding": [
+      "effectId",
+      "releaseId",
+      "activationEpoch",
+      "sink",
+      "operation",
+      "audience",
+      "claimGeneration",
+      "expiresAtUtcMs"
+    ],
+    "clientVisible": false
+  },
+  "dispatch": {
+    "owner": "effect-gateway",
+    "casState": "dispatch-started",
+    "requiredAttestationMode": "effect-dispatch",
+    "requiredBindings": [
+      "databaseIdentity",
+      "controlInstanceId",
+      "effectId",
+      "claimGeneration",
+      "intentGeneration",
+      "releaseId",
+      "activationEpoch",
+      "sink",
+      "operation",
+      "connectorId",
+      "externalRequestId",
+      "discoveryKey",
+      "attestationId",
+      "attestationDigest",
+      "attestationGeneration"
+    ],
+    "unknownAutomaticRedispatch": false
+  },
+  "authorityRoles": ["connector-receipt-producer", "reconciler", "conflict-resolver"],
+  "authorityProofFields": [
+    "authorityId",
+    "authorityVersion",
+    "authorityGeneration",
+    "authenticationEvidenceDigest",
+    "proofRef"
+  ],
+  "receipt": {
+    "statuses": ["committed", "rejected", "failed-not-committed"],
+    "requiresDispatchStarted": true,
+    "oneAuthoritativeReceiptPerDispatchGeneration": true,
+    "authorityBindings": [
+      "connectorId",
+      "connectorAuthorityId",
+      "connectorAuthorityVersion",
+      "connectorAuthorityGeneration",
+      "authenticationEvidenceDigest",
+      "discoveryProofRef"
+    ],
+    "exactReplay": "existing-receipt",
+    "conflictingReplay": "conflicted"
+  },
+  "localDispatchResult": {
+    "statuses": ["denied", "claim-expired", "claim-revoked", "transport-not-started"],
+    "externalReceipt": false,
+    "onlyBeforeInvocation": true
+  },
+  "externalOutcomes": ["unknown", "committed", "not-committed", "conflicted"],
+  "reconciliationStates": [
+    "pending",
+    "claimed",
+    "resolved-committed",
+    "resolved-not-committed",
+    "unresolved"
+  ],
+  "reconciliation": {
+    "ownerCas": true,
+    "receiptOptional": true,
+    "notCommittedWithoutReceipt": true,
+    "redispatch": false,
+    "conflictResolutionRequiresCompleteEvidenceSet": true
+  },
+  "postFinalConflict": {
+    "appendOnly": true,
+    "reopenAs": ["conflicted", "unresolved"],
+    "quarantineActivation": true,
+    "revokeMutationAuthority": true,
+    "redispatch": false
+  },
+  "sinkCapability": {
+    "oneOperationCredential": true,
+    "externalIdempotencyField": "effectId",
+    "completeReconciliationRequiredForHighRisk": true,
+    "transportRetryWhenExternalIdempotencyMissing": false
+  }
+}

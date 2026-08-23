@@ -1,0 +1,169 @@
+{
+  "schemaVersion": "v2-command-idempotency-v1",
+  "requirementId": "v2c.command-idempotency",
+  "identityFields": [
+    "actorSubjectId",
+    "commandKind",
+    "targetAggregateId",
+    "idempotencyKey"
+  ],
+  "digestFields": [
+    "commandSchemaVersion",
+    "canonicalizationVersion",
+    "hashAlgorithm",
+    "payloadDigest",
+    "preconditionDigest"
+  ],
+  "digestTuples": [
+    {
+      "id": "command-digest-v1",
+      "commandSchemaVersion": "control-command-v1",
+      "canonicalizationVersion": "canonical-json-v1",
+      "hashAlgorithm": "sha256",
+      "status": "current"
+    }
+  ],
+  "resultStates": [
+    "pending-coordination",
+    "completed"
+  ],
+  "lookupOrder": [
+    "strict-parse",
+    "derive-stable-actor-subject",
+    "derive-target",
+    "lookup-stored-identity",
+    "stored-tuple-digest-compare",
+    "current-disclosure-authorization",
+    "new-command-authorization"
+  ],
+  "commands": [
+    {
+      "kind": "publish-release",
+      "mode": "normal",
+      "targetDerivation": "preallocatedReleaseId"
+    },
+    {
+      "kind": "change-activation",
+      "mode": "normal",
+      "targetDerivation": "activationId"
+    },
+    {
+      "kind": "admit-run",
+      "mode": "normal",
+      "targetDerivation": "preallocatedRunId"
+    },
+    {
+      "kind": "cancel-run",
+      "mode": "normal",
+      "targetDerivation": "runId"
+    },
+    {
+      "kind": "allocate-run-attempt",
+      "mode": "normal",
+      "targetDerivation": "runId"
+    },
+    {
+      "kind": "register-action",
+      "mode": "normal",
+      "targetDerivation": "runId"
+    },
+    {
+      "kind": "append-action-event",
+      "mode": "normal",
+      "targetDerivation": "runId"
+    },
+    {
+      "kind": "append-checkpoint",
+      "mode": "normal",
+      "targetDerivation": "runId"
+    },
+    {
+      "kind": "transfer-obligation-owner",
+      "mode": "normal",
+      "targetDerivation": "runId"
+    },
+    {
+      "kind": "decide-approval",
+      "mode": "normal",
+      "targetDerivation": "approvalId"
+    },
+    {
+      "kind": "create-effect-intent",
+      "mode": "normal",
+      "targetDerivation": "runId"
+    },
+    {
+      "kind": "issue-effect-claim",
+      "mode": "normal",
+      "targetDerivation": "effectId"
+    },
+    {
+      "kind": "start-effect-dispatch",
+      "mode": "normal",
+      "targetDerivation": "effectId"
+    },
+    {
+      "kind": "submit-receipt",
+      "mode": "normal",
+      "targetDerivation": "effectId"
+    },
+    {
+      "kind": "claim-reconciliation",
+      "mode": "normal",
+      "targetDerivation": "effectId"
+    },
+    {
+      "kind": "resolve-reconciliation",
+      "mode": "normal",
+      "targetDerivation": "effectId"
+    },
+    {
+      "kind": "terminalize-run",
+      "mode": "normal",
+      "targetDerivation": "runId"
+    },
+    {
+      "kind": "register-process",
+      "mode": "normal",
+      "targetDerivation": "runAttemptId"
+    },
+    {
+      "kind": "submit-launch-attestation",
+      "mode": "normal",
+      "targetDerivation": "launchAttemptId"
+    },
+    {
+      "kind": "restore-init",
+      "mode": "coordination",
+      "coordinationOwner": "recovery-authority",
+      "targetDerivation": "digest(databaseIdentity,sourceControlInstanceId,backupDigest)"
+    },
+    {
+      "kind": "abort-recovery",
+      "mode": "coordination",
+      "coordinationOwner": "recovery-authority",
+      "targetDerivation": "recoverySessionId | tuple(recoverySessionId,agentId,qualificationGeneration)"
+    },
+    {
+      "kind": "recover-activate",
+      "mode": "coordination",
+      "coordinationOwner": "recovery-authority",
+      "targetDerivation": "tuple(recoverySessionId,agentId,qualificationGeneration)"
+    }
+  ],
+  "coordinationRules": {
+    "pendingBeforeExternalCas": true,
+    "pendingClientStatus": "pending",
+    "pendingContainsCapability": false,
+    "normalCommandMayBePending": false,
+    "sideCommandIds": false
+  },
+  "replayRules": {
+    "sameDigest": "stored-safe-result",
+    "differentDigest": "idempotency_conflict",
+    "mutationReexecution": false,
+    "currentDisclosureAuthorization": true,
+    "storedTupleCanonicalization": true
+  },
+  "malformedRegistration": false
+}

@@ -1,0 +1,490 @@
+{
+  "schemaVersion": "v2-source-facts-v1",
+  "requirementId": "v2s.source-facts",
+  "factKinds": [
+    "database-genesis",
+    "control-instance-resumed",
+    "release-published",
+    "time-observed",
+    "activation-changed",
+    "activation-quarantined",
+    "run-admitted",
+    "run-attempt-allocated",
+    "run-attempt-state",
+    "run-health",
+    "run-terminal",
+    "attempt-quiesced",
+    "harness-session-started",
+    "action-registered",
+    "action-event",
+    "checkpoint-appended",
+    "obligation-owner-transferred",
+    "outcome-proposed",
+    "process-registered",
+    "process-signal",
+    "process-exit",
+    "process-reaped",
+    "approval-requested",
+    "approval-decided",
+    "effect-intent",
+    "effect-claim",
+    "effect-dispatch-started",
+    "local-dispatch-result",
+    "external-receipt",
+    "post-final-conflict",
+    "reconciliation-claim",
+    "reconciliation-observation",
+    "external-outcome",
+    "launch-attestation",
+    "launch-attestation-invalidated",
+    "command-result",
+    "mutation-authority-registered",
+    "mutation-authority-revoked",
+    "registration-closed",
+    "target-authority-closed",
+    "recovery-session",
+    "recovery-qualification",
+    "recovery-operation-discovered",
+    "recovery-operation-claim",
+    "recovery-operation-outcome",
+    "recovery-post-final-conflict",
+    "recovery-agent-binding-conflict",
+    "recovery-binding-invalidated",
+    "binding-certificate",
+    "activation-permit-evidence"
+  ],
+  "fields": [
+    "factSeq",
+    "databaseIdentity",
+    "previousFactHash",
+    "factHash",
+    "factKind",
+    "schemaVersion",
+    "payload",
+    "producerProofDigest"
+  ],
+  "authenticatedEvidence": {
+    "profileRegistry": "contracts/v2/runtime/evidence-profiles.json",
+    "authorityIdentityFields": ["issuerId", "authorityVersion", "keyVersion", "authorityGeneration"],
+    "ledgerTable": "authenticated_evidence",
+    "consumptionTable": "authenticated_evidence_consumptions",
+    "envelopeAndContextDigestsRequired": true,
+    "exactConsumptionRowRequiredForSingleUseProfiles": true,
+    "consumedFlagAloneSufficient": false,
+    "arbitraryProducerDigestSufficient": false
+  },
+  "ordering": {
+    "scope": "database",
+    "firstSeq": 1,
+    "noGaps": true,
+    "rollbackConsumesSequence": false,
+    "wallClockAuthority": false
+  },
+  "hash": {
+    "algorithm": "sha256",
+    "canonicalizationVersion": "canonical-json-v1",
+    "tuple": [
+      "source-fact-v1",
+      "databaseIdentity",
+      "factSeq",
+      "previousFactHash",
+      "factKindId",
+      "schemaVersion",
+      "payload"
+    ],
+    "genesisPreviousHash": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "appendOnly": {
+    "update": false,
+    "delete": false,
+    "prefixTruncation": false
+  },
+  "receiptAdmission": {
+    "requiresDispatchStarted": true,
+    "authorityProofFields": [
+      "authorityId",
+      "authorityVersion",
+      "authorityGeneration",
+      "authenticationEvidenceDigest",
+      "proofRef"
+    ],
+    "oneAuthoritativeReceiptPerDispatchGeneration": true,
+    "exactReplay": "existing-receipt",
+    "preInvocationResultBranch": "local-dispatch-result"
+  },
+  "recoveryOperation": {
+    "identityTuple": [
+      "recovery-operation-v1",
+      "databaseIdentity",
+      "actualControlInstanceId",
+      "sink",
+      "discoveryKey"
+    ],
+    "identityExcludes": [
+      "operation",
+      "externalRequestId",
+      "outcome",
+      "evidence",
+      "recoveryAttemptId"
+    ],
+    "memberDigestSeparate": true,
+    "ownerAgentAuthenticated": true,
+    "attemptMembershipRequired": true,
+    "externalRegistryProofRequired": true,
+    "dispatchAuthority": false,
+    "effectIdentity": false,
+    "lifecycle": {
+      "states": [
+        "unknown-pending",
+        "unknown-claimed",
+        "committed-resolved",
+        "not-committed-resolved",
+        "conflicted-unresolved"
+      ],
+      "events": [
+        "claim",
+        "observe-committed",
+        "observe-not-committed",
+        "observe-conflict",
+        "resolve-committed",
+        "resolve-not-committed",
+        "post-final-conflict",
+        "replay"
+      ],
+      "table": [
+        {
+          "state": "unknown-pending",
+          "event": "claim",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "unknown-claimed"
+          }
+        },
+        {
+          "state": "unknown-pending",
+          "event": "observe-committed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "committed-resolved"
+          }
+        },
+        {
+          "state": "unknown-pending",
+          "event": "observe-not-committed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "not-committed-resolved"
+          }
+        },
+        {
+          "state": "unknown-pending",
+          "event": "observe-conflict",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "conflicted-unresolved"
+          }
+        },
+        {
+          "state": "unknown-pending",
+          "event": "resolve-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "unknown-pending",
+          "event": "resolve-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "unknown-pending",
+          "event": "post-final-conflict",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "unknown-pending",
+          "event": "replay",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "unknown-pending"
+          }
+        },
+        {
+          "state": "unknown-claimed",
+          "event": "claim",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "unknown-claimed"
+          }
+        },
+        {
+          "state": "unknown-claimed",
+          "event": "observe-committed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "committed-resolved"
+          }
+        },
+        {
+          "state": "unknown-claimed",
+          "event": "observe-not-committed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "not-committed-resolved"
+          }
+        },
+        {
+          "state": "unknown-claimed",
+          "event": "observe-conflict",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "conflicted-unresolved"
+          }
+        },
+        {
+          "state": "unknown-claimed",
+          "event": "resolve-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "unknown-claimed",
+          "event": "resolve-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "unknown-claimed",
+          "event": "post-final-conflict",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "unknown-claimed",
+          "event": "replay",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "unknown-claimed"
+          }
+        },
+        {
+          "state": "committed-resolved",
+          "event": "claim",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "committed-resolved",
+          "event": "observe-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "committed-resolved",
+          "event": "observe-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "committed-resolved",
+          "event": "observe-conflict",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "committed-resolved",
+          "event": "resolve-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "committed-resolved",
+          "event": "resolve-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "committed-resolved",
+          "event": "post-final-conflict",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "conflicted-unresolved",
+            "factKind": "recovery-post-final-conflict"
+          }
+        },
+        {
+          "state": "committed-resolved",
+          "event": "replay",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "committed-resolved"
+          }
+        },
+        {
+          "state": "not-committed-resolved",
+          "event": "claim",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "not-committed-resolved",
+          "event": "observe-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "not-committed-resolved",
+          "event": "observe-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "not-committed-resolved",
+          "event": "observe-conflict",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "not-committed-resolved",
+          "event": "resolve-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "not-committed-resolved",
+          "event": "resolve-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "not-committed-resolved",
+          "event": "post-final-conflict",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "conflicted-unresolved",
+            "factKind": "recovery-post-final-conflict"
+          }
+        },
+        {
+          "state": "not-committed-resolved",
+          "event": "replay",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "not-committed-resolved"
+          }
+        },
+        {
+          "state": "conflicted-unresolved",
+          "event": "claim",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "conflicted-unresolved",
+          "event": "observe-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "conflicted-unresolved",
+          "event": "observe-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "conflicted-unresolved",
+          "event": "observe-conflict",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "conflicted-unresolved"
+          }
+        },
+        {
+          "state": "conflicted-unresolved",
+          "event": "resolve-committed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "committed-resolved"
+          }
+        },
+        {
+          "state": "conflicted-unresolved",
+          "event": "resolve-not-committed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "not-committed-resolved"
+          }
+        },
+        {
+          "state": "conflicted-unresolved",
+          "event": "post-final-conflict",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "conflicted-unresolved",
+          "event": "replay",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "conflicted-unresolved"
+          }
+        }
+      ]
+    }
+  },
+  "terminalRunLateFacts": {
+    "allowed": [
+      "external-receipt",
+      "reconciliation-observation",
+      "external-outcome"
+    ],
+    "mustBindPreTerminalDispatch": true,
+    "schedulesWork": false
+  },
+  "rawActivationPermitPersisted": false
+}

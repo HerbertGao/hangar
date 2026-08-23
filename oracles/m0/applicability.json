@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "m0-applicability-v1",
+  "requirementId": "m0o.format",
+  "predicates": [
+    {
+      "id": "always-required-v1",
+      "inputs": ["profileId", "hostId", "tenantId", "capabilityClaims"],
+      "result": "applicable",
+      "candidateMutable": false
+    },
+    {
+      "id": "evaluator-required-v1",
+      "inputs": ["profileId"],
+      "applicableProfiles": ["m0-evaluator"],
+      "candidateMutable": false
+    },
+    {
+      "id": "selected-tenant-v1",
+      "inputs": ["profileId", "tenantId"],
+      "applicableProfiles": ["inbox"],
+      "excludedCode": "tenant-not-selected",
+      "candidateMutable": false
+    },
+    {
+      "id": "selected-process-host-v1",
+      "inputs": ["profileId", "hostId"],
+      "applicableProfiles": ["process-host"],
+      "excludedCode": "host-not-selected",
+      "candidateMutable": false
+    }
+  ],
+  "invocation": {
+    "signed": true,
+    "selectedBeforeExecution": ["profileId", "hostId", "tenantId", "capabilityClaims"],
+    "candidateDispositionField": false,
+    "postExecutionChange": false
+  },
+  "invalidReasons": ["free-text-reason", "missing-evidence", "predicate-mismatch", "post-execution-exclusion"]
+}

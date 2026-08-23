@@ -1,0 +1,1723 @@
+{
+  "schemaVersion": "m0-authority-map-v1",
+  "coverageClasses": [
+    "neutral-control-storage",
+    "evaluator-self-test",
+    "named-tenant",
+    "named-process-host"
+  ],
+  "requirementSetDigest": "177750ca5b1a343d7cf31157d9e65abc81086fd32e2699c348e4bcc7393fda96",
+  "scenarioSetDigest": "5dc50723a05e665e4a61b6a8ac9ec98f553ed952f0c71f4e49812ae85b91cb24",
+  "requirements": [
+    {
+      "requirementId": "m0o.format",
+      "title": "适配器中立的 oracle 格式与权威可追溯性",
+      "scenarios": [
+        {
+          "scenarioId": "m0o.format.case-5be25c06932ee3c1",
+          "slug": "case-5be25c06932ee3c1",
+          "title": "同一用例评估两个候选",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.format.case-c0e7bd6c39f2fd47",
+          "slug": "case-c0e7bd6c39f2fd47",
+          "title": "Oracle 发明第二套状态定义",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.format.case-ee5bd570739cae05",
+          "slug": "case-ee5bd570739cae05",
+          "title": "场景标题被重命名",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.format.case-0d5b80f3325f6dcd",
+          "slug": "case-0d5b80f3325f6dcd",
+          "title": "候选排除困难用例",
+          "coverageClass": "evaluator-self-test"
+        }
+      ]
+    },
+    {
+      "requirementId": "m0o.v0-reaper",
+      "title": "经筛选的 v0 行为与 reaper oracle",
+      "scenarios": [
+        {
+          "scenarioId": "m0o.v0-reaper.case-9fc8a1d4167a0b31",
+          "slug": "case-9fc8a1d4167a0b31",
+          "title": "所有者进程已死亡",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "m0o.v0-reaper.case-a62d31eb26def809",
+          "slug": "case-a62d31eb26def809",
+          "title": "PID 已被复用",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "m0o.v0-reaper.case-7de98c1b85dc6e91",
+          "slug": "case-7de98c1b85dc6e91",
+          "title": "Reaper 恢复重复执行",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "m0o.v0-reaper.case-ea8aa672669d0564",
+          "slug": "case-ea8aa672669d0564",
+          "title": "v0 实现细节被提议为需求",
+          "coverageClass": "evaluator-self-test"
+        }
+      ]
+    },
+    {
+      "requirementId": "m0o.fault-matrix",
+      "title": "完整的权威与故障矩阵",
+      "scenarios": [
+        {
+          "scenarioId": "m0o.fault-matrix.case-7493c1b668b29ffc",
+          "slug": "case-7493c1b668b29ffc",
+          "title": "恢复竞态矩阵漏格",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.fault-matrix.case-1c1a29207a85d888",
+          "slug": "case-1c1a29207a85d888",
+          "title": "需求场景缺少其必需覆盖类别",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.fault-matrix.case-b9d6b63610c48b96",
+          "slug": "case-b9d6b63610c48b96",
+          "title": "范围内用例被临时跳过",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.fault-matrix.case-be01590a4db2a18e",
+          "slug": "case-be01590a4db2a18e",
+          "title": "Oracle 预期含糊不清",
+          "coverageClass": "evaluator-self-test"
+        }
+      ]
+    },
+    {
+      "requirementId": "m0o.inbox",
+      "title": "Inbox 对等清单与冲突权威",
+      "scenarios": [
+        {
+          "scenarioId": "m0o.inbox.case-37053fffaf6f642b",
+          "slug": "case-37053fffaf6f642b",
+          "title": "缺少硬性安全行为",
+          "coverageClass": "named-tenant"
+        },
+        {
+          "scenarioId": "m0o.inbox.case-b167e32ec41cdea6",
+          "slug": "case-b167e32ec41cdea6",
+          "title": "源需求在无保管决策时被拆分",
+          "coverageClass": "named-tenant"
+        },
+        {
+          "scenarioId": "m0o.inbox.case-7d62d5d7f62e5761",
+          "slug": "case-7d62d5d7f62e5761",
+          "title": "领域概念泄漏到核心",
+          "coverageClass": "named-tenant"
+        }
+      ]
+    },
+    {
+      "requirementId": "m0o.process-fixture",
+      "title": "Auto Developer Harness fixture 与分层所有权",
+      "scenarios": [
+        {
+          "scenarioId": "m0o.process-fixture.case-a87a23aa283ded9d",
+          "slug": "case-a87a23aa283ded9d",
+          "title": "候选借用租户 supervisor",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "m0o.process-fixture.case-7d7457d8ec7f4690",
+          "slug": "case-7d7457d8ec7f4690",
+          "title": "顶层 retry 与活动 session 重叠",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "m0o.process-fixture.case-ac1ff343c450afd0",
+          "slug": "case-ac1ff343c450afd0",
+          "title": "租户清理掩盖 containment 缺失",
+          "coverageClass": "named-process-host"
+        }
+      ]
+    },
+    {
+      "requirementId": "m0o.harness-attribution",
+      "title": "Harness 归因与 ProcessSpec 证据",
+      "scenarios": [
+        {
+          "scenarioId": "m0o.harness-attribution.case-3d55277177b31053",
+          "slug": "case-3d55277177b31053",
+          "title": "归因分母超过不透明度闸门",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.harness-attribution.case-f8f2fc1cf9d58a01",
+          "slug": "case-f8f2fc1cf9d58a01",
+          "title": "适用分母为零或有用例漏跑",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.harness-attribution.case-0cc33223b9c43411",
+          "slug": "case-0cc33223b9c43411",
+          "title": "边界违规很少见",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.harness-attribution.case-82707c94512c91b5",
+          "slug": "case-82707c94512c91b5",
+          "title": "候选私有 trace 提供唯一解释",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.harness-attribution.case-dda21f95e7a50d7e",
+          "slug": "case-dda21f95e7a50d7e",
+          "title": "两个租户需要平台依赖状态",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.harness-attribution.case-81b89a62ef11202a",
+          "slug": "case-81b89a62ef11202a",
+          "title": "一个租户偏好宏观阶段",
+          "coverageClass": "evaluator-self-test"
+        }
+      ]
+    },
+    {
+      "requirementId": "m0o.cutover",
+      "title": "Cutover 单一生产所有者 oracle",
+      "scenarios": [
+        {
+          "scenarioId": "m0o.cutover.case-9eac66f310b04558",
+          "slug": "case-9eac66f310b04558",
+          "title": "Enabled false 仍允许手动准入",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "m0o.cutover.case-f9f459fef4ce8b63",
+          "slug": "case-f9f459fef4ce8b63",
+          "title": "旧所有者关闭后发生崩溃",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "m0o.cutover.case-e51c6241ea07084b",
+          "slug": "case-e51c6241ea07084b",
+          "title": "未解决的 reconciliation 跨 handoff 携带",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "m0o.effect-inventory",
+      "title": "完整的直接 Effect 与业务敏感材料持有者清单",
+      "scenarios": [
+        {
+          "scenarioId": "m0o.effect-inventory.case-410902198ca99c22",
+          "slug": "case-410902198ca99c22",
+          "title": "清单成员没有处置结论",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.effect-inventory.case-fb3b8bf7a10d892a",
+          "slug": "case-fb3b8bf7a10d892a",
+          "title": "直接例外缺少恢复方法",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.effect-inventory.case-c28ee66fe30ba8fe",
+          "slug": "case-c28ee66fe30ba8fe",
+          "title": "清单中出现解析后的值",
+          "coverageClass": "evaluator-self-test"
+        }
+      ]
+    },
+    {
+      "requirementId": "m0o.host-mapping",
+      "title": "受限主机 oracle 映射",
+      "scenarios": [
+        {
+          "scenarioId": "m0o.host-mapping.case-2c26189c0114871c",
+          "slug": "case-2c26189c0114871c",
+          "title": "主机映射不完整",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "m0o.host-mapping.case-f671b474c14eb9e3",
+          "slug": "case-f671b474c14eb9e3",
+          "title": "Probe 失败以不同方式影响各模式",
+          "coverageClass": "named-process-host"
+        }
+      ]
+    },
+    {
+      "requirementId": "m0o.measurements",
+      "title": "仅追加的度量账本",
+      "scenarios": [
+        {
+          "scenarioId": "m0o.measurements.case-5b501ace1dff7b23",
+          "slug": "case-5b501ace1dff7b23",
+          "title": "Agent 专属设置被隐藏为平台成本",
+          "coverageClass": "evaluator-self-test"
+        }
+      ]
+    },
+    {
+      "requirementId": "m0o.reproducibility",
+      "title": "只读且可复现的评估",
+      "scenarios": [
+        {
+          "scenarioId": "m0o.reproducibility.case-e33f51b9983a4a44",
+          "slug": "case-e33f51b9983a4a44",
+          "title": "固定源不可用",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.reproducibility.case-baf58ef8254d52b9",
+          "slug": "case-baf58ef8254d52b9",
+          "title": "必需可执行文件不可用",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.reproducibility.case-3ac58b3cb06fae04",
+          "slug": "case-3ac58b3cb06fae04",
+          "title": "聚合同时包含不可用 gate 和失败 gate",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.reproducibility.case-fc380c34a21ceed1",
+          "slug": "case-fc380c34a21ceed1",
+          "title": "Prerequisite 失败后 gate 未执行",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.reproducibility.case-96e26a5ef39b00d7",
+          "slug": "case-96e26a5ef39b00d7",
+          "title": "多个依赖失败",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.reproducibility.case-021b7a0e4e9e6dc7",
+          "slug": "case-021b7a0e4e9e6dc7",
+          "title": "未运行 gate 没有有效阻塞项",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.reproducibility.case-37a353c8dd03bb26",
+          "slug": "case-37a353c8dd03bb26",
+          "title": "清单中不存在 aggregate gate",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.reproducibility.case-1ec16be1f59ecc47",
+          "slug": "case-1ec16be1f59ecc47",
+          "title": "External validator 在失败前输出成功",
+          "coverageClass": "evaluator-self-test"
+        },
+        {
+          "scenarioId": "m0o.reproducibility.case-4704830eebf87e0f",
+          "slug": "case-4704830eebf87e0f",
+          "title": "无关 working tree 不干净",
+          "coverageClass": "evaluator-self-test"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.core-objects",
+      "title": "版本化核心对象契约",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.core-objects.case-2625bc33f3368451",
+          "slug": "case-2625bc33f3368451",
+          "title": "源 spec 不能直接运行",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.core-objects.case-f74dd5de6847249e",
+          "slug": "case-f74dd5de6847249e",
+          "title": "将可变证明加入 release",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.core-objects.case-4f0c7298f9d90368",
+          "slug": "case-4f0c7298f9d90368",
+          "title": "运行中的 Agent 扩展已发布 capability",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.core-objects.case-b1e6225e0bc92246",
+          "slug": "case-b1e6225e0bc92246",
+          "title": "已知租户术语进入核心 schema",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.core-objects.case-99c6189cd103b295",
+          "slug": "case-99c6189cd103b295",
+          "title": "新核心标识符缺少 owner 证据",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.core-objects.case-ee282e108b929d7a",
+          "slug": "case-ee282e108b929d7a",
+          "title": "敏感值进入 durable boundary",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.durable-data",
+      "title": "类型化持久化与运行时数据边界",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.durable-data.case-059b139162921d92",
+          "slug": "case-059b139162921d92",
+          "title": "提供未知持久化字段",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.durable-data.case-3bad4dd6e919014e",
+          "slug": "case-3bad4dd6e919014e",
+          "title": "仅运行时内容进入 trace",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.durable-data.case-a58f530be73f5ba8",
+          "slug": "case-a58f530be73f5ba8",
+          "title": "detector 漏掉未知值模式",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.durable-data.case-0d99e7b6fbcd8fc8",
+          "slug": "case-0d99e7b6fbcd8fc8",
+          "title": "安全文本没有精确 sanitizer",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.release-identity",
+      "title": "规范化 release 内容寻址",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.release-identity.case-69a7d96569601720",
+          "slug": "case-69a7d96569601720",
+          "title": "等价的源格式",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.release-identity.case-a4de272b16b48742",
+          "slug": "case-a4de272b16b48742",
+          "title": "不安全整数进入 release 内容",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.release-identity.case-c92ef8d54b132b4b",
+          "slug": "case-c92ef8d54b132b4b",
+          "title": "边缘表示在语义上不同",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.release-identity.case-2e2e1115131297ba",
+          "slug": "case-2e2e1115131297ba",
+          "title": "提供重复的源 key",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.release-identity.case-534d149bf165353d",
+          "slug": "case-534d149bf165353d",
+          "title": "执行 bytes 在 launch 前漂移",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.release-identity.case-e494a1dffa986843",
+          "slug": "case-e494a1dffa986843",
+          "title": "Runtime 解析未声明的 dependency",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.release-identity.case-844f43ad17b4d919",
+          "slug": "case-844f43ad17b4d919",
+          "title": "传递 dependency 发生变化",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.release-compatibility",
+      "title": "显式 release 兼容性",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.release-compatibility.case-a2f0f8982e81e26f",
+          "slug": "case-a2f0f8982e81e26f",
+          "title": "遇到未知 release 字段",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.release-compatibility.case-75883b57b2954516",
+          "slug": "case-75883b57b2954516",
+          "title": "规范化版本已退役",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.harness-session",
+      "title": "Harness 会话、动作与 checkpoint 契约",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.harness-session.case-80eec2d75f35676f",
+          "slug": "case-80eec2d75f35676f",
+          "title": "Harness 选择未声明的动作序列",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.harness-session.case-cb42e12634f953ca",
+          "slug": "case-cb42e12634f953ca",
+          "title": "以不同内容复用动作身份",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.harness-session.case-b943ecde74f72559",
+          "slug": "case-b943ecde74f72559",
+          "title": "Checkpoint 包含内联会话状态",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.harness-session.case-1d41b7cd691717cc",
+          "slug": "case-1d41b7cd691717cc",
+          "title": "Attempt 恢复自身",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.harness-session.case-6e9a865e2f8ebcc9",
+          "slug": "case-6e9a865e2f8ebcc9",
+          "title": "Checkpoint obligation 使用错误 owner generation",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.harness-session.case-4e97f754f85e6871",
+          "slug": "case-4e97f754f85e6871",
+          "title": "Dispatch 崩溃后从 checkpoint 恢复",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.harness-session.case-746de4e07d1cb663",
+          "slug": "case-746de4e07d1cb663",
+          "title": "Checkpoint obligation 跨 owner handoff",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.harness-session.case-04841c02ff8ac172",
+          "slug": "case-04841c02ff8ac172",
+          "title": "将动作图用作 scheduler 输入",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.control-taxonomy",
+      "title": "封闭命令与事件分类",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.control-taxonomy.case-992da280c223705c",
+          "slug": "case-992da280c223705c",
+          "title": "未知 Harness 事件到达",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.control-taxonomy.case-9b1f2455b9486fb8",
+          "slug": "case-9b1f2455b9486fb8",
+          "title": "状态表遗漏已声明事件",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.authority-policy",
+      "title": "权威 actor、委派与策略解析",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.authority-policy.case-ccba4fa4c23ea597",
+          "slug": "case-ccba4fa4c23ea597",
+          "title": "一个 principal 代表两个 subject",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.authority-policy.case-9b97adc9c88e72db",
+          "slug": "case-9b97adc9c88e72db",
+          "title": "两个 issuer 复用本地 subject 字符串",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.authority-policy.case-42e4f70f8db79275",
+          "slug": "case-42e4f70f8db79275",
+          "title": "Delegation 在 dispatch 前被撤销",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.authority-policy.case-bf7b8be3fed43b6b",
+          "slug": "case-bf7b8be3fed43b6b",
+          "title": "策略约束不可比较",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.authority-policy.case-5c67acc325c0c5cc",
+          "slug": "case-5c67acc325c0c5cc",
+          "title": "丧失披露权限后请求先前结果",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.time",
+      "title": "可信时间与规范时刻",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.time.case-883b1bf6cd8950c3",
+          "slug": "case-883b1bf6cd8950c3",
+          "title": "到期时间等于当前时间",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.time.case-9a9be5874a6bcccc",
+          "slug": "case-9a9be5874a6bcccc",
+          "title": "时钟回拨超出容差",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.time.case-7b31ba4290763ede",
+          "slug": "case-7b31ba4290763ede",
+          "title": "经过时间的 deadline 跨越 wall-clock 调整",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.time.case-a3e48ad5c4a68065",
+          "slug": "case-a3e48ad5c4a68065",
+          "title": "Restore 根据 snapshot 时间评估到期",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.activation",
+      "title": "穷尽的 Activation 转换与准入权限表",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.activation.case-437c70c5849e6f45",
+          "slug": "case-437c70c5849e6f45",
+          "title": "Active 转换缺少当前 host 证据",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.activation.case-9517e01d762d1f29",
+          "slug": "case-9517e01d762d1f29",
+          "title": "请求两个 production owner",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.activation.case-9437319ace99e1c7",
+          "slug": "case-9437319ace99e1c7",
+          "title": "Shadow 收到 production input",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.activation.case-0ca0ce9a7b52c579",
+          "slug": "case-0ca0ce9a7b52c579",
+          "title": "M0 或 M1 启用 scheduled admission",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.activation.case-b2bbbf398a04a7b4",
+          "slug": "case-b2bbbf398a04a7b4",
+          "title": "Cutover 在 promotion 前崩溃",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.activation.case-d29467a38bb37b18",
+          "slug": "case-d29467a38bb37b18",
+          "title": "恢复的 activation 使用普通 promotion",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.command-idempotency",
+      "title": "持久化写命令幂等性",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.command-idempotency.case-0884a95354e80e88",
+          "slug": "case-0884a95354e80e88",
+          "title": "成功响应丢失",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.command-idempotency.case-44d0defb2c3ee6e8",
+          "slug": "case-44d0defb2c3ee6e8",
+          "title": "Authority context 发生变化",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.command-idempotency.case-7e2850f96e70f7f2",
+          "slug": "case-7e2850f96e70f7f2",
+          "title": "Command digest parser 意见不一致",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.command-idempotency.case-06f0de1c613562f0",
+          "slug": "case-06f0de1c613562f0",
+          "title": "Recovery command 绕过 command manifest",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.command-idempotency.case-fe14f31f64c6e9c7",
+          "slug": "case-fe14f31f64c6e9c7",
+          "title": "协调命令在 pending 时被 replay",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.command-idempotency.case-a20b4cd54b52d782",
+          "slug": "case-a20b4cd54b52d782",
+          "title": "已存储命令使用较旧的规范化 tuple",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.command-idempotency.case-c040b2b65fbdf156",
+          "slug": "case-c040b2b65fbdf156",
+          "title": "Create command 缺少确定性目标",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.command-idempotency.case-8faa0ad96119dcd3",
+          "slug": "case-8faa0ad96119dcd3",
+          "title": "Key 被不同 payload 或 precondition 复用",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.run",
+      "title": "穷尽的 Run 转换表与终态收口点",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.run.case-2921bf8d39cbedd0",
+          "slug": "case-2921bf8d39cbedd0",
+          "title": "Host 证明在 admission 期间被取代",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.run.case-3d2ffc3684961b8b",
+          "slug": "case-3d2ffc3684961b8b",
+          "title": "Completion 与 cancellation 竞争",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.run.case-07b219604f77ec11",
+          "slug": "case-07b219604f77ec11",
+          "title": "Harness 在没有 outcome 证据时提议 completion",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.run.case-f4f0e256f70be78a",
+          "slug": "case-f4f0e256f70be78a",
+          "title": "Terminal 后有新工作到达",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.run.case-ec2c4c60bf3bed92",
+          "slug": "case-ec2c4c60bf3bed92",
+          "title": "Projection 重建",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.run-attempt",
+      "title": "穷尽的 RunAttempt 与分层重试所有权",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.run-attempt.case-a5aeebde48e9ef31",
+          "slug": "case-a5aeebde48e9ef31",
+          "title": "Harness 发出 outer retry",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.run-attempt.case-3b06c1e112fc8cba",
+          "slug": "case-3b06c1e112fc8cba",
+          "title": "Control 在旧 session 有歧义时重试",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.run-attempt.case-a817b2f69a823972",
+          "slug": "case-a817b2f69a823972",
+          "title": "Harness 在没有业务 gate 时以零退出",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.run-attempt.case-79ea5c5af64adc96",
+          "slug": "case-79ea5c5af64adc96",
+          "title": "旧 session 在 quiescence 后迟到派生写入",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.run-attempt.case-ae7db6cf250cbc93",
+          "slug": "case-ae7db6cf250cbc93",
+          "title": "Quiescence 后到达既有 dispatch 的 receipt",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.run-attempt.case-e76d5ba84942b386",
+          "slug": "case-e76d5ba84942b386",
+          "title": "Attempt 分配前 obligation 发生变化",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.run-attempt.case-ad8e55b719c20ac5",
+          "slug": "case-ad8e55b719c20ac5",
+          "title": "Checkpoint resume 分配新 attempt",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.process-lifecycle",
+      "title": "受限进程生命周期所有权",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.process-lifecycle.case-dc99a9593d204e32",
+          "slug": "case-dc99a9593d204e32",
+          "title": "PID 在 recovery 前被复用",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "v2c.process-lifecycle.case-41ed09ca1d5e1c11",
+          "slug": "case-41ed09ca1d5e1c11",
+          "title": "Owner 死亡但 descendant 仍存活",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "v2c.process-lifecycle.case-3959fd59b64289b9",
+          "slug": "case-3959fd59b64289b9",
+          "title": "Launch identity 无法提交",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "v2c.process-lifecycle.case-470b4e7f410682fc",
+          "slug": "case-470b4e7f410682fc",
+          "title": "Child host 证明在释放前被取代",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "v2c.process-lifecycle.case-4d527d433a02b22e",
+          "slug": "case-4d527d433a02b22e",
+          "title": "External orchestrator 拥有逻辑 descendant",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "v2c.process-lifecycle.case-15d245ccca1f060a",
+          "slug": "case-15d245ccca1f060a",
+          "title": "Host 只能 reap direct child",
+          "coverageClass": "named-process-host"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.approval",
+      "title": "穷尽的 Approval 转换",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.approval.case-dc69d0aceed65d86",
+          "slug": "case-dc69d0aceed65d86",
+          "title": "未授权 actor 作出决定",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.approval.case-4b9af75392ae3179",
+          "slug": "case-4b9af75392ae3179",
+          "title": "Approval 在 dispatch 前过期",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.approval.case-af4c5a4f83eb7110",
+          "slug": "case-af4c5a4f83eb7110",
+          "title": "重复 decision 竞争",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.effect",
+      "title": "穷尽的 Effect 生命周期与端到端身份",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.effect.case-c5b2cb70424e191d",
+          "slug": "case-c5b2cb70424e191d",
+          "title": "等价 intent 在 retry 后返回",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.effect.case-c577210f77a8f691",
+          "slug": "case-c577210f77a8f691",
+          "title": "Host 证明在 claim 后变化",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.effect.case-eb9596718e63e1e7",
+          "slug": "case-eb9596718e63e1e7",
+          "title": "一个 Effect 请求多个 operation",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.effect.case-17f8ea1e2fe54f6c",
+          "slug": "case-17f8ea1e2fe54f6c",
+          "title": "Receipt authority 过期",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.effect.case-0079735399055528",
+          "slug": "case-0079735399055528",
+          "title": "Receipt 在没有持久化 dispatch 时到达",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.effect.case-b451b3bac19d7219",
+          "slug": "case-b451b3bac19d7219",
+          "title": "Owner handoff 遇到 unresolved Effect",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.effect.case-787f5219b6462e71",
+          "slug": "case-787f5219b6462e71",
+          "title": "冲突 receipt 到达",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.effect.case-21e1b4425801e363",
+          "slug": "case-21e1b4425801e363",
+          "title": "已声明 conflict authority 解析全部证据",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.effect.case-1aa57d13a5b3e2c9",
+          "slug": "case-1aa57d13a5b3e2c9",
+          "title": "矛盾在 final outcome 后到达",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.effect.case-5a2152bf98f8ad78",
+          "slug": "case-5a2152bf98f8ad78",
+          "title": "Committed Effect 后发生 domain failure",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.effect.case-06f29d5923eb27ff",
+          "slug": "case-06f29d5923eb27ff",
+          "title": "Unknown 在没有 receipt 时被证明未 committed",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.effect.case-3c81cfa02aa23d2b",
+          "slug": "case-3c81cfa02aa23d2b",
+          "title": "再次尝试已解析为 not-committed 的 Effect",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.direct-effect",
+      "title": "可信直接 Effect 默认拒绝",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.direct-effect.case-68bf1a8ab565a087",
+          "slug": "case-68bf1a8ab565a087",
+          "title": "共享 endpoint 暴露未列出的 mutation",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.direct-effect.case-f3d2fd539d793604",
+          "slug": "case-f3d2fd539d793604",
+          "title": "Direct exception 缺少 operation 证据",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.direct-effect.case-78b3454612fc61ab",
+          "slug": "case-78b3454612fc61ab",
+          "title": "M0 或 M1 release 声明 direct exception",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.errors",
+      "title": "类型化错误代数",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.errors.case-31c2ab6bd682eda5",
+          "slug": "case-31c2ab6bd682eda5",
+          "title": "Adapter failure 包含内部 detail",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.errors.case-2b2be212349bab76",
+          "slug": "case-2b2be212349bab76",
+          "title": "Error 发出未声明 detail",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.runtime-boundary",
+      "title": "完整 HarnessRequest 与受限执行边界",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.runtime-boundary.case-0b1874f01659e11b",
+          "slug": "case-0b1874f01659e11b",
+          "title": "Grant 被另一个 attempt replay",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "v2c.runtime-boundary.case-04ff6b58f2fd0c86",
+          "slug": "case-04ff6b58f2fd0c86",
+          "title": "Context 包含未声明字段",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "v2c.runtime-boundary.case-fc1ae165227e0aad",
+          "slug": "case-fc1ae165227e0aad",
+          "title": "Tool 使用省略 action 归因",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "v2c.runtime-boundary.case-84add5e324213bbb",
+          "slug": "case-84add5e324213bbb",
+          "title": "Child 继承 host environment 或 descriptor",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "v2c.runtime-boundary.case-0193a18bfd177d6f",
+          "slug": "case-0193a18bfd177d6f",
+          "title": "实际 runtime 与声明不同",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "v2c.runtime-boundary.case-f2679e28b8f6e5ea",
+          "slug": "case-f2679e28b8f6e5ea",
+          "title": "Child 可以访问 control storage",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "v2c.runtime-boundary.case-310c7b0081698071",
+          "slug": "case-310c7b0081698071",
+          "title": "缺少必需 HarnessRequest 字段",
+          "coverageClass": "named-process-host"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.host-attestation",
+      "title": "目标宿主证明与激活语义",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.host-attestation.case-50cb629942f03c42",
+          "slug": "case-50cb629942f03c42",
+          "title": "Production 尝试复用过期证明",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "v2c.host-attestation.case-98272db6decc78fe",
+          "slug": "case-98272db6decc78fe",
+          "title": "Mutation-disabled evaluator 使用未验证 host",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "v2c.host-attestation.case-5c3db26dc9e6b746",
+          "slug": "case-5c3db26dc9e6b746",
+          "title": "Target host 未列出",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "v2c.host-attestation.case-da5dd9ee5328835c",
+          "slug": "case-da5dd9ee5328835c",
+          "title": "Child replay 先前 attestation",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "v2c.host-attestation.case-dcbef2eddf546aa9",
+          "slug": "case-dcbef2eddf546aa9",
+          "title": "Probe set 不完整",
+          "coverageClass": "named-process-host"
+        },
+        {
+          "scenarioId": "v2c.host-attestation.case-5146596e4f18a1b5",
+          "slug": "case-5146596e4f18a1b5",
+          "title": "同一 cycle 的 failure 取代 verification",
+          "coverageClass": "named-process-host"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.health-facts",
+      "title": "有序 RunAttempt 与动作健康事实",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.health-facts.case-a635871d9e818d72",
+          "slug": "case-a635871d9e818d72",
+          "title": "Empty input 在 Harness launch 前跳过",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.health-facts.case-2b4ea87746cb91bc",
+          "slug": "case-2b4ea87746cb91bc",
+          "title": "Spawn 在 invocation 前失败",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.health-facts.case-f3612354bebfb68b",
+          "slug": "case-f3612354bebfb68b",
+          "title": "已调用 source 返回零项",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.health-facts.case-0d9643ce87048dd1",
+          "slug": "case-0d9643ce87048dd1",
+          "title": "多个 terminal health outcome 到达",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2c.control-boundary",
+      "title": "类型化控制边界所有权",
+      "scenarios": [
+        {
+          "scenarioId": "v2c.control-boundary.case-486639fde4261c9e",
+          "slug": "case-486639fde4261c9e",
+          "title": "Candidate client 直接写入 storage",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2c.control-boundary.case-a580797d2bbf9851",
+          "slug": "case-a580797d2bbf9851",
+          "title": "请求未知 projection family",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2s.sqlite",
+      "title": "独立的 v2 SQLite schema",
+      "scenarios": [
+        {
+          "scenarioId": "v2s.sqlite.case-172434e8f69c8fde",
+          "slug": "case-172434e8f69c8fde",
+          "title": "M0 验证在 v0 数据库旁运行",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.sqlite.case-e1bb817e54595928",
+          "slug": "case-e1bb817e54595928",
+          "title": "复制的数据库复用可写实例标识",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.sqlite.case-6e190cfeca05b49f",
+          "slug": "case-6e190cfeca05b49f",
+          "title": "干净重启在续用提交前崩溃",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.sqlite.case-aaefe760d261e4bf",
+          "slug": "case-aaefe760d261e4bf",
+          "title": "干净重启证明指向另一启动过程",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.sqlite.case-929cebd105ea0925",
+          "slug": "case-929cebd105ea0925",
+          "title": "恢复创建新的可写化身",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2s.ddl",
+      "title": "由状态推导的 DDL 与逻辑发生项唯一性",
+      "scenarios": [
+        {
+          "scenarioId": "v2s.ddl.case-bb747119f22de9e8",
+          "slug": "case-bb747119f22de9e8",
+          "title": "存储第二个生产 owner",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.ddl.case-633a4e32de7df4be",
+          "slug": "case-633a4e32de7df4be",
+          "title": "Schedule 发生项跨越 release 或 owner 切换",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.ddl.case-64a293247b9fb32a",
+          "slug": "case-64a293247b9fb32a",
+          "title": "手动准入缺少命令标识",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.ddl.case-a96c8105eaddf6f0",
+          "slug": "case-a96c8105eaddf6f0",
+          "title": "Effect 重放跨越 RunAttempt",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.ddl.case-16147bca7cebaa21",
+          "slug": "case-16147bca7cebaa21",
+          "title": "Checkpoint 指向另一生产者",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.ddl.case-ea22dd0a6e6b281d",
+          "slug": "case-ea22dd0a6e6b281d",
+          "title": "外键强制执行被禁用",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2s.command-results",
+      "title": "持久命令结果存储",
+      "scenarios": [
+        {
+          "scenarioId": "v2s.command-results.case-83427b6d51b66fa6",
+          "slug": "case-83427b6d51b66fa6",
+          "title": "Aggregate 状态变化后发生重放",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.command-results.case-4a248d5e73b2514f",
+          "slug": "case-4a248d5e73b2514f",
+          "title": "冲突的 key 复用发生竞态",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.command-results.case-543e5abd1372fe6d",
+          "slug": "case-543e5abd1372fe6d",
+          "title": "重放跨越命令规范化器变更",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.command-results.case-207bca756be6ac0d",
+          "slug": "case-207bca756be6ac0d",
+          "title": "协调命令在外部 CAS 前崩溃",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.command-results.case-7afc003bcd02ae6c",
+          "slug": "case-7afc003bcd02ae6c",
+          "title": "外部 CAS 缺少 pending 命令行",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.command-results.case-9a101297cada90be",
+          "slug": "case-9a101297cada90be",
+          "title": "崩溃拆分命令结果与 mutation",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2s.transactions",
+      "title": "显式事务与崩溃边界",
+      "scenarios": [
+        {
+          "scenarioId": "v2s.transactions.case-9c51032e4d4038e1",
+          "slug": "case-9c51032e4d4038e1",
+          "title": "受 fence 保护的 CAS 影响零行",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.transactions.case-fe75138ace6ae93a",
+          "slug": "case-fe75138ace6ae93a",
+          "title": "数据库标识引导期间崩溃",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.transactions.case-c0fd0d3206248974",
+          "slug": "case-c0fd0d3206248974",
+          "title": "Restore-init proposed target 预分配期间崩溃",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.transactions.case-9eb297ffe7853458",
+          "slug": "case-9eb297ffe7853458",
+          "title": "恢复目标初始化期间崩溃",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.transactions.case-63b1c687d34aeee5",
+          "slug": "case-63b1c687d34aeee5",
+          "title": "RecoveryAuthority 绑定另一 target",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.transactions.case-5358dd57d404c41a",
+          "slug": "case-5358dd57d404c41a",
+          "title": "Run 准入期间崩溃",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.transactions.case-4863eac769e290dc",
+          "slug": "case-4863eac769e290dc",
+          "title": "准入主机 generation 在提交前变化",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.transactions.case-e9834734c4ea005b",
+          "slug": "case-e9834734c4ea005b",
+          "title": "RunAttempt 分配携带 checkpoint 输入时崩溃",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.transactions.case-ca300ae5f1073288",
+          "slug": "case-ca300ae5f1073288",
+          "title": "RunAttempt 分配与旧 session 迟到事件竞争",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.transactions.case-e5e6bfa6b9efa5e9",
+          "slug": "case-e5e6bfa6b9efa5e9",
+          "title": "Recovery discovery 准入期间崩溃",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.transactions.case-1cbd0389b01450b2",
+          "slug": "case-1cbd0389b01450b2",
+          "title": "Action 注册响应丢失",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.transactions.case-983d8042df39a94b",
+          "slug": "case-983d8042df39a94b",
+          "title": "受限 child 注册期间崩溃",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.transactions.case-551eb32e55c10eb6",
+          "slug": "case-551eb32e55c10eb6",
+          "title": "Dispatch 开始后崩溃",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.transactions.case-a6e4bd377058f104",
+          "slug": "case-a6e4bd377058f104",
+          "title": "绑定 Effect 标识期间崩溃",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.transactions.case-8c6021fe8d0041a2",
+          "slug": "case-8c6021fe8d0041a2",
+          "title": "最终结果后隔离期间崩溃",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2s.source-facts",
+      "title": "全局有序的仅追加源事实与 receipt 准入",
+      "scenarios": [
+        {
+          "scenarioId": "v2s.source-facts.case-e9aa255d0209ead8",
+          "slug": "case-e9aa255d0209ead8",
+          "title": "Receipt 或 reconciliation 缺少 authority 证据",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.source-facts.case-7346d8522d592f0b",
+          "slug": "case-7346d8522d592f0b",
+          "title": "Receipt 先于 dispatch",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.source-facts.case-67e77675b7af2265",
+          "slug": "case-67e77675b7af2265",
+          "title": "相同 receipt 被重放",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.source-facts.case-ff5f30494b34e8fa",
+          "slug": "case-ff5f30494b34e8fa",
+          "title": "冲突 receipt 出现在最终 outcome 之后",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.source-facts.case-9426ccb80cf037a4",
+          "slug": "case-9426ccb80cf037a4",
+          "title": "迟到 receipt 到达终态 Run",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.source-facts.case-6005b5c8c5c674d9",
+          "slug": "case-6005b5c8c5c674d9",
+          "title": "追加未知 fact kind",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.source-facts.case-ce3f2208e42495a3",
+          "slug": "case-ce3f2208e42495a3",
+          "title": "Source-fact hash chain 断裂",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.source-facts.case-228708d02b4f7b72",
+          "slug": "case-228708d02b4f7b72",
+          "title": "Reconciliation 在没有 receipt 时证明未提交",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.source-facts.case-0d073422ca59c3a0",
+          "slug": "case-0d073422ca59c3a0",
+          "title": "恢复发现本地不存在的快照后操作",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.source-facts.case-daa1deb9b4d0f663",
+          "slug": "case-daa1deb9b4d0f663",
+          "title": "同一 discovery key 携带不同成员",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.source-facts.case-9d12d5cab51d80e9",
+          "slug": "case-9d12d5cab51d80e9",
+          "title": "恢复发现被当作普通 receipt",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.source-facts.case-cbe14e90f7c830d4",
+          "slug": "case-cbe14e90f7c830d4",
+          "title": "Recovery operation final 前出现矛盾证据",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.source-facts.case-509c8f8ee66c48fe",
+          "slug": "case-509c8f8ee66c48fe",
+          "title": "Recovery operation final 后出现矛盾证据",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.source-facts.case-b9798ce8ffef3ce4",
+          "slug": "case-b9798ce8ffef3ce4",
+          "title": "Recovery operation 跨 Agent 归属冲突",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.source-facts.case-6777c69a705f989d",
+          "slug": "case-6777c69a705f989d",
+          "title": "Recovery operation 事实完全重放",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2s.projection-rebuild",
+      "title": "确定性投影重建",
+      "scenarios": [
+        {
+          "scenarioId": "v2s.projection-rebuild.case-c046c9999f5ab2e8",
+          "slug": "case-c046c9999f5ab2e8",
+          "title": "重放未知 fact version",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.projection-rebuild.case-b54e26fca3983bd7",
+          "slug": "case-b54e26fca3983bd7",
+          "title": "Arrival timestamp 被重新排序",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2s.handoff",
+      "title": "受 epoch fence 保护的生产切换与 reconciliation 所有权",
+      "scenarios": [
+        {
+          "scenarioId": "v2s.handoff.case-68b0f65fa59604fb",
+          "slug": "case-68b0f65fa59604fb",
+          "title": "旧 scheduler 在切换后唤醒",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.handoff.case-a31d079de80b5ba3",
+          "slug": "case-a31d079de80b5ba3",
+          "title": "切换遇到未开始的 claim",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.handoff.case-851d8da0cda9f610",
+          "slug": "case-851d8da0cda9f610",
+          "title": "切换遇到 unknown Effect",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.handoff.case-f5df5cf32ce74b18",
+          "slug": "case-f5df5cf32ce74b18",
+          "title": "Obligation owner handoff 发生分支",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.handoff.case-618f0232dee6c5fb",
+          "slug": "case-618f0232dee6c5fb",
+          "title": "Reconciliation 解析为未提交",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2s.restore",
+      "title": "绑定快照的备份与受 authority fence 保护的恢复",
+      "scenarios": [
+        {
+          "scenarioId": "v2s.restore.case-9208c1a9969444c0",
+          "slug": "case-9208c1a9969444c0",
+          "title": "同一数据库文件初始化第二个 RecoverySession",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-0e042a065fab2df9",
+          "slug": "case-0e042a065fab2df9",
+          "title": "同库两个 Agent 并发恢复",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-0245a8b20537e56d",
+          "slug": "case-0245a8b20537e56d",
+          "title": "RecoverySession init 与 abort 竞争",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-328187b3d7e9970d",
+          "slug": "case-328187b3d7e9970d",
+          "title": "Pending RecoverySession 中止时崩溃",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-257a8afa45e80f01",
+          "slug": "case-257a8afa45e80f01",
+          "title": "RecoverySession init CAS 后崩溃",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-a6ed285ae8d5d206",
+          "slug": "case-a6ed285ae8d5d206",
+          "title": "Abort CAS 在本地中止前提交",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-3e9388e64be6e424",
+          "slug": "case-3e9388e64be6e424",
+          "title": "Agent abort 与 binding 竞争",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-c33b45229a234dc2",
+          "slug": "case-c33b45229a234dc2",
+          "title": "Permit 绑定后请求普通中止",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-ae8edc529117987b",
+          "slug": "case-ae8edc529117987b",
+          "title": "Binding 后冲突先于 SQLite success",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-04f28f7e21f8c517",
+          "slug": "case-04f28f7e21f8c517",
+          "title": "Binding success 与冲突竞争",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-5f0865c543d38000",
+          "slug": "case-5f0865c543d38000",
+          "title": "Recovery conflict 到达终态 qualification",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-b44252179c9e7a5d",
+          "slug": "case-b44252179c9e7a5d",
+          "title": "Recovery operation 归属发生跨 Agent 冲突",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-d5f19166b03545ac",
+          "slug": "case-d5f19166b03545ac",
+          "title": "冲突 consumer target 永久失联",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-d680f1a82c9712d0",
+          "slug": "case-d680f1a82c9712d0",
+          "title": "Target retirement proof 缺少 authority member",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-436bdaf8d0ce678e",
+          "slug": "case-436bdaf8d0ce678e",
+          "title": "Bound permit 过期或主机 generation 被取代",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-da2a90fc7592ecac",
+          "slug": "case-da2a90fc7592ecac",
+          "title": "Restore-init 完全相同的重放",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-0f6c0d299888f98a",
+          "slug": "case-0f6c0d299888f98a",
+          "title": "恢复演练检查内部完整性",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-200a3a215b8df2f9",
+          "slug": "case-200a3a215b8df2f9",
+          "title": "旧的有效备份遗漏后续外部提交",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-57fad8805d2aa65d",
+          "slug": "case-57fad8805d2aa65d",
+          "title": "无法 fence 直接 mutation authority",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-baaf6879571987c3",
+          "slug": "case-baaf6879571987c3",
+          "title": "Direct exception 缺少 discovery method",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-3367c5c311edba14",
+          "slug": "case-3367c5c311edba14",
+          "title": "Recovery artifact 由恢复的存储自行签发",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-b41e629410d6bd72",
+          "slug": "case-b41e629410d6bd72",
+          "title": "Unknown 在没有 receipt 时解析为未提交",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-bd1a0e6d778e751e",
+          "slug": "case-bd1a0e6d778e751e",
+          "title": "Recovery challenge 被重放",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-f4ba9a3a00d08fc1",
+          "slug": "case-f4ba9a3a00d08fc1",
+          "title": "Ready artifact 过期或 authority 轮换",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-2535bafa3b986d9f",
+          "slug": "case-2535bafa3b986d9f",
+          "title": "Activation 目标与 artifact 不同",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-f0a80cef8d362eb0",
+          "slug": "case-f0a80cef8d362eb0",
+          "title": "Recovery 使用恢复的时间证据",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-11821e6b8fe70162",
+          "slug": "case-11821e6b8fe70162",
+          "title": "Recovery activation 缺少当前主机证明",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-21c4fe51e1eaaf75",
+          "slug": "case-21c4fe51e1eaaf75",
+          "title": "替代 Activation 尝试绕过限制",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-77e7f58c0adbfd34",
+          "slug": "case-77e7f58c0adbfd34",
+          "title": "Client 在 authority 绑定后重放",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-6a06ceb80ff91466",
+          "slug": "case-6a06ceb80ff91466",
+          "title": "Authority 绑定后发生崩溃",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-16c82e6efcff0680",
+          "slug": "case-16c82e6efcff0680",
+          "title": "Authority 在绑定后变化",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-7866356202adaca5",
+          "slug": "case-7866356202adaca5",
+          "title": "仅存在于 authority 的谱系实例被遗漏",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-ef2a0d13845e9fce",
+          "slug": "case-ef2a0d13845e9fce",
+          "title": "快照后的 authority 被遗漏",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-3d641c3edf847bef",
+          "slug": "case-3d641c3edf847bef",
+          "title": "旧实例在 registration closure 后注册 authority",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-db75b8ca6e733373",
+          "slug": "case-db75b8ca6e733373",
+          "title": "外部枚举遗漏谱系实例",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-875c30fd430746cf",
+          "slug": "case-875c30fd430746cf",
+          "title": "Recovery authority 自行断言 sink 完整性",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-7e06f53c78c6245a",
+          "slug": "case-7e06f53c78c6245a",
+          "title": "完整恢复 activation 成功",
+          "coverageClass": "neutral-control-storage"
+        },
+        {
+          "scenarioId": "v2s.restore.case-ea0f82fddbb05f2f",
+          "slug": "case-ea0f82fddbb05f2f",
+          "title": "Recovery activation 响应丢失",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    },
+    {
+      "requirementId": "v2s.read-only",
+      "title": "只读检查不产生隐式写入",
+      "scenarios": [
+        {
+          "scenarioId": "v2s.read-only.case-0225d0fcb67a7e0c",
+          "slug": "case-0225d0fcb67a7e0c",
+          "title": "检查现有数据库",
+          "coverageClass": "neutral-control-storage"
+        }
+      ]
+    }
+  ]
+}

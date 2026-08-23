@@ -1,0 +1,1243 @@
+{
+  "schemaVersion": "m0-v0-ledger-v1",
+  "sourceRepositoryId": "hangar-main-v0",
+  "sourceRevision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+  "allowedDispositions": [
+    "preserve",
+    "known-false-green-to-fix",
+    "excluded"
+  ],
+  "denominatorDigest": "d62739fa48e35905b78cfb974c6fe945774edc46d6c9424f8efeb96b06106999",
+  "denominator": [
+    {
+      "sourceId": "v0.app-registry.r01",
+      "path": "openspec/specs/app-registry/spec.md",
+      "line": 8,
+      "heading": "需求:从 apps 目录发现并注册 app",
+      "headingDigest": "0b7c4c6af1a6af326077f6e4010f20ebd133ee1c4e4c5572178501414d501a14"
+    },
+    {
+      "sourceId": "v0.app-registry.r02",
+      "path": "openspec/specs/app-registry/spec.md",
+      "line": 19,
+      "heading": "需求:app.yaml 必须通过 zod 校验",
+      "headingDigest": "859439112ca67927b2553e18335efd824056962c0907f9d9d87140445937632e"
+    },
+    {
+      "sourceId": "v0.app-registry.r03",
+      "path": "openspec/specs/app-registry/spec.md",
+      "line": 30,
+      "heading": "需求:executor 字段决定加载方向",
+      "headingDigest": "722af7efd9c67b1563cdd349124c1d95c81a9091399bc6a92a793ffd2000ea7d"
+    },
+    {
+      "sourceId": "v0.app-registry.r04",
+      "path": "openspec/specs/app-registry/spec.md",
+      "line": 45,
+      "heading": "需求:app 可经 enabled 字段禁用",
+      "headingDigest": "40cc48ff0d9b6f926c38f1e54bfb059c4804a997355caa112603632d34a1f5bc"
+    },
+    {
+      "sourceId": "v0.ci.r01",
+      "path": "openspec/specs/ci/spec.md",
+      "line": 7,
+      "heading": "需求:每个 PR 与 main push 必须过 typecheck + test + build 合并门",
+      "headingDigest": "415a6bea5726464f41ed0765f79c17c0512e50a49defc361adede92187ee1aee"
+    },
+    {
+      "sourceId": "v0.ci.r02",
+      "path": "openspec/specs/ci/spec.md",
+      "line": 40,
+      "heading": "需求:依赖必须由 dependabot 每周跟版",
+      "headingDigest": "bb8e10dbb26d81ecd522c8de98a02bf4f8101d7de1b1ee1ceb08c2e6484d5230"
+    },
+    {
+      "sourceId": "v0.cli.r01",
+      "path": "openspec/specs/cli/spec.md",
+      "line": 7,
+      "heading": "需求:CLI 遵循 I/O 与退出码约定",
+      "headingDigest": "40fe032ef65dbe91f67041d9be0315132d59cb6ecb6f4f14d109f192bc09ff55"
+    },
+    {
+      "sourceId": "v0.cli.r02",
+      "path": "openspec/specs/cli/spec.md",
+      "line": 26,
+      "heading": "需求:写操作拒绝 root",
+      "headingDigest": "75d4c08f11936f925178ccc7f8ee781f3c590468321a1c87127b9b7db23a44df"
+    },
+    {
+      "sourceId": "v0.cli.r03",
+      "path": "openspec/specs/cli/spec.md",
+      "line": 37,
+      "heading": "需求:doctor 显式化环境前置检查,且非破坏性",
+      "headingDigest": "5f994e1114a61717309b95bb129d567df6fd05d9b56f0dbf5302595da151a4c7"
+    },
+    {
+      "sourceId": "v0.cli.r04",
+      "path": "openspec/specs/cli/spec.md",
+      "line": 56,
+      "heading": "需求:只读命令映射事件状态",
+      "headingDigest": "73ea5b8c5b581a97313b86aafa40e2f6cb5a4226836110b08f3a7cadf2c1f1f1"
+    },
+    {
+      "sourceId": "v0.cli.r05",
+      "path": "openspec/specs/cli/spec.md",
+      "line": 75,
+      "heading": "需求:daemon 按 triggers 调度,遇活跃 run 跳过;阻塞由 status/doctor 派生",
+      "headingDigest": "cf7893c0e512978a82ea2eab3ef523972ddaed8540379221cb1dd296fc7e0d04"
+    },
+    {
+      "sourceId": "v0.cli.r06",
+      "path": "openspec/specs/cli/spec.md",
+      "line": 90,
+      "heading": "需求:doctor 上报 enabled;手动 run/approve 不受影响",
+      "headingDigest": "4f146b2cac7ce319bda959b329688d9fcaccd86078bebc8ca45c6a02c2400e80"
+    },
+    {
+      "sourceId": "v0.cli.r07",
+      "path": "openspec/specs/cli/spec.md",
+      "line": 103,
+      "heading": "需求:daemon 收 SIGINT/SIGTERM 取消 active run 并宽限等待清理;手动 run 装 SIGINT 取消自身",
+      "headingDigest": "7ea88b147f5b03b6423776bbd7b79c0d652213333d06d0c87d0130f30daa5400"
+    },
+    {
+      "sourceId": "v0.hangar-view.r01",
+      "path": "openspec/specs/hangar-view/spec.md",
+      "line": 8,
+      "heading": "需求:只读呈现层、零改 core、不直读 sqlite",
+      "headingDigest": "7b9ddaa2a9876ba14285a6374de5806536def1ea3e4ecfd195dc38f339bc8f34"
+    },
+    {
+      "sourceId": "v0.hangar-view.r02",
+      "path": "openspec/specs/hangar-view/spec.md",
+      "line": 19,
+      "heading": "需求:配置显式对齐 daemon、不依赖 doctor 回显路径",
+      "headingDigest": "827d296ffb96728704bddfa413fc4851be5fb6b373a5b3d47f3c754b98a5c31e"
+    },
+    {
+      "sourceId": "v0.hangar-view.r03",
+      "path": "openspec/specs/hangar-view/spec.md",
+      "line": 26,
+      "heading": "需求:每个 pilot 呈现为一名虚拟员工、覆盖完整状态与注册错误",
+      "headingDigest": "2f21dbb144fa7457fdd6c7c5390956668448e5691bbcd4cbec21207c5bfd03c8"
+    },
+    {
+      "sourceId": "v0.hangar-view.r04",
+      "path": "openspec/specs/hangar-view/spec.md",
+      "line": 57,
+      "heading": "需求:诊断嵌在员工上(⚠️)、按年龄区分工作中 vs 疑似卡住",
+      "headingDigest": "c27336533bf4cb24679d9234991839c441e24a7f22371051b48b8d24e1615539"
+    },
+    {
+      "sourceId": "v0.hangar-view.r05",
+      "path": "openspec/specs/hangar-view/spec.md",
+      "line": 76,
+      "heading": "需求:本体存活 = 新鲜度启发式、终态按 endedAt、非终态由员工级卡住兜底",
+      "headingDigest": "573039b9537a3ee278e796262f85e4036c243bd521b9a93f5d666dd803b74b2e"
+    },
+    {
+      "sourceId": "v0.hangar-view.r06",
+      "path": "openspec/specs/hangar-view/spec.md",
+      "line": 99,
+      "heading": "需求:CLI 取数失败即降级、粒度分明、绝不沿用陈旧绿灯",
+      "headingDigest": "89f15f2431570fbd767c14c7584d054bf914a0431f57ba78a0c59b1d904a0f85"
+    },
+    {
+      "sourceId": "v0.hangar-view.r07",
+      "path": "openspec/specs/hangar-view/spec.md",
+      "line": 114,
+      "heading": "需求:数据最小化 = 域无关 default-drop 白名单",
+      "headingDigest": "4d0e109b0c1270af46ff9781d3c297f2dbc416f41ac35e5011da9e670062ccce"
+    },
+    {
+      "sourceId": "v0.hangar-view.r08",
+      "path": "openspec/specs/hangar-view/spec.md",
+      "line": 125,
+      "heading": "需求:远程接入经 Cloudflare Tunnel + Access、v1 无 app 级登录",
+      "headingDigest": "f242517b5a5e299d8f9f985b4139ae47e9b86da53349c02d77ac09a5065659ff"
+    },
+    {
+      "sourceId": "v0.hangar-view.r09",
+      "path": "openspec/specs/hangar-view/spec.md",
+      "line": 132,
+      "heading": "需求:v1 只读、写路径不在本变更",
+      "headingDigest": "be3b623aa9bcaae78e35fb80f1f4406520270f6aec2394c663f92a4701dcadc1"
+    },
+    {
+      "sourceId": "v0.hangar-view.r10",
+      "path": "openspec/specs/hangar-view/spec.md",
+      "line": 143,
+      "heading": "需求:向 pilot 下达命令的写路径(白名单、经既有 CLI、不新增存储/进程)",
+      "headingDigest": "910a80010fef7b199cc3fc96ede6308439e42500b0ec355f4541939c39df1d52"
+    },
+    {
+      "sourceId": "v0.hangar-view.r11",
+      "path": "openspec/specs/hangar-view/spec.md",
+      "line": 154,
+      "heading": "需求:confirm-before-apply 两阶段(干跑解析 → 人确认 → 应用),不 park",
+      "headingDigest": "16ba500b6746d46b4e238756a16755d3c098b740bbed61a6c730c0b23b1c520b"
+    },
+    {
+      "sourceId": "v0.hangar-view.r12",
+      "path": "openspec/specs/hangar-view/spec.md",
+      "line": 171,
+      "heading": "需求:命令/事件契约,未知 trigger 响亮失败",
+      "headingDigest": "32678f28b679ca485c8ad174491ca87ab22dd18e24302116604a1e114f3ce83e"
+    },
+    {
+      "sourceId": "v0.hangar-view.r13",
+      "path": "openspec/specs/hangar-view/spec.md",
+      "line": 182,
+      "heading": "需求:pilot 忙(already_running)时呈现「稍后重发」、不建队列",
+      "headingDigest": "5191661ced18bd76e4c76bfa00086a7fada5c84ca2ee5b060468820fc5c7b373"
+    },
+    {
+      "sourceId": "v0.hangar-view.r14",
+      "path": "openspec/specs/hangar-view/spec.md",
+      "line": 189,
+      "heading": "需求:命令确认视图的受控数据最小化放宽(仅此路径)",
+      "headingDigest": "85c58c25508940cc96cf539d4ae37257a4a78a468f5fac041bdcbf466e553d55"
+    },
+    {
+      "sourceId": "v0.host-capabilities.r01",
+      "path": "openspec/specs/host-capabilities/spec.md",
+      "line": 6,
+      "heading": "需求:host 从同一 canonical set 广播版本化能力集",
+      "headingDigest": "c5e9cff842ae584b137e22ae1a27e366c8750ad8cce4b533388256a7373b927b"
+    },
+    {
+      "sourceId": "v0.host-capabilities.r02",
+      "path": "openspec/specs/host-capabilities/spec.md",
+      "line": 27,
+      "heading": "需求:消费者按精确版本对 host 提供集 fail closed",
+      "headingDigest": "506985ee1e1c61acc0d492c49868102a263bf7e2305d97044d3b2e8e6d718daa"
+    },
+    {
+      "sourceId": "v0.host-capabilities.r03",
+      "path": "openspec/specs/host-capabilities/spec.md",
+      "line": 46,
+      "heading": "需求:每个 run 获得不可伪造的新鲜冻结能力快照",
+      "headingDigest": "4bf2f5df4b9ed57d8d9be37ecd95695d9cd8c517a6809be2a0b2a0e224a0f454"
+    },
+    {
+      "sourceId": "v0.host-capabilities.r04",
+      "path": "openspec/specs/host-capabilities/spec.md",
+      "line": 61,
+      "heading": "需求:hard-crash containment 能力闸只在通过 fault test 后广播",
+      "headingDigest": "23b0728498573833bb670475de086922ea26078c67403976a5f9dc8b188f2d37"
+    },
+    {
+      "sourceId": "v0.inbox-app.r01",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 6,
+      "heading": "需求:inbox 以 pipeline executor + cron 触发作为 app 运行",
+      "headingDigest": "fdb3502e81f83364daf398a757fd12d8a033de8bae1575f3bac44e26ffd463eb"
+    },
+    {
+      "sourceId": "v0.inbox-app.r02",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 20,
+      "heading": "需求:自动动作在 run() 内直接编排,不经 gateway/propose",
+      "headingDigest": "3d6ca2d45ce403710a12817e454955b612bea74e7906ec2aba02a8659333d12f"
+    },
+    {
+      "sourceId": "v0.inbox-app.r03",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 46,
+      "heading": "需求:notify 耗尽走 coarse re-poll,依赖不变量并有死信终态",
+      "headingDigest": "6b07e2f44606b474869d6f48b10b6e2a95b50b35101ff80c6e5823160df9997a"
+    },
+    {
+      "sourceId": "v0.inbox-app.r04",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 65,
+      "heading": "需求:fetch 编排复刻两级读错误模型与成本上界",
+      "headingDigest": "c04ca7a5570696d6e5cf3e1e306ada8a3e19429bf4af7086ec7846324d75d0bc"
+    },
+    {
+      "sourceId": "v0.inbox-app.r05",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 81,
+      "heading": "需求:每 email 超时 + 每 run 兜底,机制必须安全(取消尽力 + 吞拒绝 + fence)",
+      "headingDigest": "88dc637ddffef0d4a1d16c0773589661f3bbe5a9bd9014a177bfd4973c152687"
+    },
+    {
+      "sourceId": "v0.inbox-app.r06",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 95,
+      "heading": "需求:in-process pilot 模块加载安全(顶层禁 process.exit/throw)",
+      "headingDigest": "8e5d7a085b9f5dac800c307d0177d4b83e61086e641ccbdea5051db6d5d5a438"
+    },
+    {
+      "sourceId": "v0.inbox-app.r07",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 104,
+      "heading": "需求:域库与脊柱库并存,脊柱零域概念",
+      "headingDigest": "05b17b58f356fba64d1eab5dd699292ed55d6ebbda7547dc163cf342bba3dccb"
+    },
+    {
+      "sourceId": "v0.inbox-app.r08",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 113,
+      "heading": "需求:Phase 1 不引入 approval 动作",
+      "headingDigest": "f0de36ae68154e904b7ff0efda4ad6cf2b37525537ecfa693d222fd2e69181fd"
+    },
+    {
+      "sourceId": "v0.inbox-app.r09",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 122,
+      "heading": "需求:每日摘要作为 digest 触发器",
+      "headingDigest": "a3fa65176441f20039c6cd85488d3e279858d4bb28eb782404533f713b5e37dc"
+    },
+    {
+      "sourceId": "v0.inbox-app.r10",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 141,
+      "heading": "需求:DIGEST_TIMES 环境变量退役",
+      "headingDigest": "ea11efc25c1361ba1cc1fab3fd0a5c84df6d2089d14c6e1f9ede5e7f7a68f66e"
+    },
+    {
+      "sourceId": "v0.multi-trigger.r01",
+      "path": "openspec/specs/multi-trigger/spec.md",
+      "line": 6,
+      "heading": "需求:多个具名触发器",
+      "headingDigest": "f925a514ebc10f9a43708a82ed911625d617eecea4abe7f486760e83571b6d65"
+    },
+    {
+      "sourceId": "v0.multi-trigger.r02",
+      "path": "openspec/specs/multi-trigger/spec.md",
+      "line": 21,
+      "heading": "需求:多触发器时 name 必填且唯一",
+      "headingDigest": "6d1aa173f0133130aed079f08fadf678c3a5cd66944d916f7e51064fd22861a5"
+    },
+    {
+      "sourceId": "v0.multi-trigger.r03",
+      "path": "openspec/specs/multi-trigger/spec.md",
+      "line": 36,
+      "heading": "需求:触发身份进 run(ctx)",
+      "headingDigest": "a011e9183b6b9ae5ad734a73d46fd7e1b7d5e1bad7031a3ecaefc10037a3bbe5"
+    },
+    {
+      "sourceId": "v0.multi-trigger.r04",
+      "path": "openspec/specs/multi-trigger/spec.md",
+      "line": 65,
+      "heading": "需求:同 app 多触发 fire 本进程内序列化",
+      "headingDigest": "cd7621d00c2a621a5d8edadd55cb59701b462a5d98b27b57324031aba694604d"
+    },
+    {
+      "sourceId": "v0.multi-trigger.r05",
+      "path": "openspec/specs/multi-trigger/spec.md",
+      "line": 80,
+      "heading": "需求:具名触发可手动调用",
+      "headingDigest": "89a719e36a20ecaec88ab74033ce33aaaadf914c99165777d0869b79591cafaf"
+    },
+    {
+      "sourceId": "v0.multi-trigger.r06",
+      "path": "openspec/specs/multi-trigger/spec.md",
+      "line": 91,
+      "heading": "需求:为未来触发形式留扩展位、不建机制",
+      "headingDigest": "80136b608bb10bd91b506e48ad6427b7e364c75b7c3bbcd29b8d64bfc9eb228d"
+    },
+    {
+      "sourceId": "v0.run-engine.r01",
+      "path": "openspec/specs/run-engine/spec.md",
+      "line": 7,
+      "heading": "需求:运行状态持久化于 SQLite 四表",
+      "headingDigest": "b08452dbeacf0c8f05780c724fd1b91eedc9680c4c116e9feb08d1607261ffe9"
+    },
+    {
+      "sourceId": "v0.run-engine.r02",
+      "path": "openspec/specs/run-engine/spec.md",
+      "line": 18,
+      "heading": "需求:Run 状态由最新 RunEvent 全映射推导,终态只认 run.* 事件",
+      "headingDigest": "622b46827370769f79269928dd5291eaaabca9ceb1edad7ccf7d02a9abf4f311"
+    },
+    {
+      "sourceId": "v0.run-engine.r03",
+      "path": "openspec/specs/run-engine/spec.md",
+      "line": 29,
+      "heading": "需求:所有终态转换走单一同事务 choke-point",
+      "headingDigest": "8c3b8a04133dc83b3d0e4ea19dd8ab553aed4222fbe3ddc13083e4d7a61b51fa"
+    },
+    {
+      "sourceId": "v0.run-engine.r04",
+      "path": "openspec/specs/run-engine/spec.md",
+      "line": 36,
+      "heading": "需求:崩溃孤儿 run 由 reaper 回收(PID+启动时刻,仅写命令入口)",
+      "headingDigest": "8b5842ebb7a3018814a85f56ad84dd40429e673c730f8dc7b59eb8aa7963df6e"
+    },
+    {
+      "sourceId": "v0.run-engine.r05",
+      "path": "openspec/specs/run-engine/spec.md",
+      "line": 53,
+      "heading": "需求:PipelineExecutor 执行 app 的 run",
+      "headingDigest": "55f0f372c71b5c92577d852cc153bb0c027c6f4ce61c380ecb3b4f797e44b069"
+    },
+    {
+      "sourceId": "v0.run-engine.r06",
+      "path": "openspec/specs/run-engine/spec.md",
+      "line": 76,
+      "heading": "需求:run 锁防止重复执行",
+      "headingDigest": "ba47c5e92d6bfc572a7fc19565d4b5b9a2a4a89aadb7d4f7a17331db9f911e50"
+    },
+    {
+      "sourceId": "v0.run-engine.r07",
+      "path": "openspec/specs/run-engine/spec.md",
+      "line": 83,
+      "heading": "需求:active run 持 AbortController,取消经 choke-point 记 cancelled 且终态幂等",
+      "headingDigest": "ee9244d18c56670c3553fb81a4d97bd6179c2adaf81dc44437bb41ad5c852d3e"
+    },
+    {
+      "sourceId": "v0.tool-gateway.r01",
+      "path": "openspec/specs/tool-gateway/spec.md",
+      "line": 7,
+      "heading": "需求:app 必须提供按名索引的工具处理器(tool handler)",
+      "headingDigest": "afdd18df4de8ff87ca862aa15e812aa00f337751353ed57673856c22addc3147"
+    },
+    {
+      "sourceId": "v0.tool-gateway.r02",
+      "path": "openspec/specs/tool-gateway/spec.md",
+      "line": 14,
+      "heading": "需求:动作经单一异步 propose 入口分派",
+      "headingDigest": "5194fe4a8ae325d5cb8269cf71c7fed6b187020085107791540d7b159078343c"
+    },
+    {
+      "sourceId": "v0.tool-gateway.r03",
+      "path": "openspec/specs/tool-gateway/spec.md",
+      "line": 25,
+      "heading": "需求:PARK 在 run 结束后统一评估一次(check-after-return)",
+      "headingDigest": "a6224bdcca7132709af28549d85d1a652cf41da66986f0abb8f2fc831a01f8fe"
+    },
+    {
+      "sourceId": "v0.tool-gateway.r04",
+      "path": "openspec/specs/tool-gateway/spec.md",
+      "line": 32,
+      "heading": "需求:重试为内存有界、不引入 durable 队列;错误脱敏",
+      "headingDigest": "5901da170d75daf250817d2f228481f72754f4e72d172e70c7d4e4d546d02329"
+    },
+    {
+      "sourceId": "v0.tool-gateway.r05",
+      "path": "openspec/specs/tool-gateway/spec.md",
+      "line": 39,
+      "heading": "需求:approve/reject 必须先守 run 状态、再取 run 锁,幂等透传",
+      "headingDigest": "6bb02be39b725265492ba5f76a02b844eaadb19bf0806bb9a439d8823a006334"
+    },
+    {
+      "sourceId": "v0.tool-gateway.r06",
+      "path": "openspec/specs/tool-gateway/spec.md",
+      "line": 58,
+      "heading": "需求:approve 第二阶段部分失败有明确终态",
+      "headingDigest": "1c9fa2754b1c01a328b55bc3837b0263a8fb23db1c3804338a4b2a386d4fcd5d"
+    },
+    {
+      "sourceId": "v0.tool-gateway.r07",
+      "path": "openspec/specs/tool-gateway/spec.md",
+      "line": 65,
+      "heading": "需求:reject 驳回不执行",
+      "headingDigest": "b619e4f69a95ec8af8b46a01a55af95b2fea9b923ec4d6245a741939ebe88458"
+    },
+    {
+      "sourceId": "v0.tool-gateway.r08",
+      "path": "openspec/specs/tool-gateway/spec.md",
+      "line": 72,
+      "heading": "需求:Phase 0 单进程假设(多进程并发硬化留 Phase 1)",
+      "headingDigest": "4ee474cdb93b6b001704c3217797f46b3a8c285cba29d53e1b76b95ac0a23620"
+    },
+    {
+      "sourceId": "v0.skill.s01",
+      "path": "SKILL.md",
+      "line": 15,
+      "heading": "`hangar doctor [--json]`",
+      "headingDigest": "ce6b9b23a7ab5b42d669c469e8fdeb88384b525c8b4f9f0cdd47b804e7d9403b"
+    },
+    {
+      "sourceId": "v0.skill.s02",
+      "path": "SKILL.md",
+      "line": 31,
+      "heading": "`hangar status [--json]`",
+      "headingDigest": "89e071458651c0bec125a6315c20fad643add6202248a511a300aeec5f9e28b6"
+    },
+    {
+      "sourceId": "v0.skill.s03",
+      "path": "SKILL.md",
+      "line": 38,
+      "heading": "`hangar runs [<app>] [--limit N] [--json]`",
+      "headingDigest": "14561b5c2ebd07419a4dea32ca83cbeffe6216ca7f0e44921b21c8ad6dc95714"
+    },
+    {
+      "sourceId": "v0.skill.s04",
+      "path": "SKILL.md",
+      "line": 43,
+      "heading": "`hangar trace <run> [--json]`",
+      "headingDigest": "4fe9f0ee8ba3a81e35a2b3a414145ff8d689ed5a733f10582c5be3fdd65b48b9"
+    },
+    {
+      "sourceId": "v0.skill.s05",
+      "path": "SKILL.md",
+      "line": 56,
+      "heading": "`hangar run <app> [--input <json>] [--json]`",
+      "headingDigest": "42ebae272fdc677bb342ae55ff6e1de55b5d82c41756ea4193bf0b7403cca937"
+    },
+    {
+      "sourceId": "v0.skill.s06",
+      "path": "SKILL.md",
+      "line": 62,
+      "heading": "`hangar approve <run> [--json]`",
+      "headingDigest": "27e6a185a0e3719f007815577795ca7d46edae5b79c1b6c276ac0622de81ea00"
+    },
+    {
+      "sourceId": "v0.skill.s07",
+      "path": "SKILL.md",
+      "line": 69,
+      "heading": "`hangar reject <run> [--reason <text>] [--json]`",
+      "headingDigest": "adb31d446865400b4886e6dfc095ffad35a93b5b80e1cd863e0f326eacac3a5d"
+    },
+    {
+      "sourceId": "v0.skill.s08",
+      "path": "SKILL.md",
+      "line": 77,
+      "heading": "不暴露给 Agent 的能力(别调)",
+      "headingDigest": "29191340b66bfbe11e354097efc4ffd434ee3dfe3febcccfe4ba012fa90b75dd"
+    },
+    {
+      "sourceId": "v0.skill.s09",
+      "path": "SKILL.md",
+      "line": 85,
+      "heading": "备注",
+      "headingDigest": "a1321f11d48bbc80d4b16d4abbe7bef119ad64d28b13001f8431dab5d0f97ea0"
+    }
+  ],
+  "decisionDigest": "496e492b88b66398d3c06410719ccf198a719a2523f3f6b21678c2004c20648f",
+  "decisions": [
+    {
+      "decisionId": "v0.app-registry.r01.d01",
+      "sourceId": "v0.app-registry.r01",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "legacy-app-definition",
+      "reason": "v2 以 AgentSpec/AgentRelease 取代 app.yaml registry；只保留兼容证据。",
+      "behavior": "需求:从 apps 目录发现并注册 app"
+    },
+    {
+      "decisionId": "v0.app-registry.r02.d01",
+      "sourceId": "v0.app-registry.r02",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "legacy-app-definition",
+      "reason": "v2 以 AgentSpec/AgentRelease 取代 app.yaml registry；只保留兼容证据。",
+      "behavior": "需求:app.yaml 必须通过 zod 校验"
+    },
+    {
+      "decisionId": "v0.app-registry.r03.d01",
+      "sourceId": "v0.app-registry.r03",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "legacy-app-definition",
+      "reason": "v2 以 AgentSpec/AgentRelease 取代 app.yaml registry；只保留兼容证据。",
+      "behavior": "需求:executor 字段决定加载方向"
+    },
+    {
+      "decisionId": "v0.app-registry.r04.d01",
+      "sourceId": "v0.app-registry.r04",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "legacy-app-definition",
+      "reason": "v2 以 AgentSpec/AgentRelease 取代 app.yaml registry；只保留兼容证据。",
+      "behavior": "需求:app 可经 enabled 字段禁用"
+    },
+    {
+      "decisionId": "v0.ci.r01.d01",
+      "sourceId": "v0.ci.r01",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "repository-operations",
+      "reason": "仓库 CI/Dependabot 策略不是 Control/Harness 运行语义。",
+      "behavior": "需求:每个 PR 与 main push 必须过 typecheck + test + build 合并门"
+    },
+    {
+      "decisionId": "v0.ci.r02.d01",
+      "sourceId": "v0.ci.r02",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "repository-operations",
+      "reason": "仓库 CI/Dependabot 策略不是 Control/Harness 运行语义。",
+      "behavior": "需求:依赖必须由 dependabot 每周跟版"
+    },
+    {
+      "decisionId": "v0.cli.r01.d01",
+      "sourceId": "v0.cli.r01",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "cli-io-contract",
+      "reason": "stdout 数据、stderr 日志、JSON 与退出码 0/1/2 保留。",
+      "behavior": "需求:CLI 遵循 I/O 与退出码约定"
+    },
+    {
+      "decisionId": "v0.cli.r02.d01",
+      "sourceId": "v0.cli.r02",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "legacy-cli-policy",
+      "reason": "拒绝 root 是 v0 本地 CLI policy，不替代 v2 actor/authority。",
+      "behavior": "需求:写操作拒绝 root"
+    },
+    {
+      "decisionId": "v0.cli.r03.d01",
+      "sourceId": "v0.cli.r03",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "m0o.reproducibility",
+      "reasonCode": "read-only-no-write",
+      "reason": "doctor/prerequisite 检查不得创建数据库或 sidecar。",
+      "behavior": "需求:doctor 显式化环境前置检查,且非破坏性"
+    },
+    {
+      "decisionId": "v0.cli.r04.d01",
+      "sourceId": "v0.cli.r04",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2s.projection-rebuild",
+      "reasonCode": "event-derived-read",
+      "reason": "读取状态只消费事件投影，不成为第二真相。",
+      "behavior": "需求:只读命令映射事件状态"
+    },
+    {
+      "decisionId": "v0.cli.r05.d01",
+      "sourceId": "v0.cli.r05",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "deferred-scheduler",
+      "reason": "daemon cron/misfire/cursor 在 M0/M1 unsupported。",
+      "behavior": "需求:daemon 按 triggers 调度,遇活跃 run 跳过;阻塞由 status/doctor 派生"
+    },
+    {
+      "decisionId": "v0.cli.r06.d01",
+      "sourceId": "v0.cli.r06",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "legacy-enabled-flag",
+      "reason": "v0 enabled 语义不承担 v2 cutover/admission barrier。",
+      "behavior": "需求:doctor 上报 enabled;手动 run/approve 不受影响"
+    },
+    {
+      "decisionId": "v0.cli.r07.d01",
+      "sourceId": "v0.cli.r07",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.process-lifecycle",
+      "reasonCode": "cancel-convergence",
+      "reason": "信号取消、宽限清理与单一终态收敛是公共进程语义。",
+      "behavior": "需求:daemon 收 SIGINT/SIGTERM 取消 active run 并宽限等待清理;手动 run 装 SIGINT 取消自身"
+    },
+    {
+      "decisionId": "v0.hangar-view.r01.d01",
+      "sourceId": "v0.hangar-view.r01",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.control-boundary",
+      "reasonCode": "client-storage-boundary",
+      "reason": "client 只经控制契约且只读路径无隐式写入。",
+      "behavior": "需求:只读呈现层、零改 core、不直读 sqlite"
+    },
+    {
+      "decisionId": "v0.hangar-view.r02.d01",
+      "sourceId": "v0.hangar-view.r02",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "client-specific",
+      "reason": "虚拟员工呈现、Cloudflare 和确认 UI 属 v0 client 产品细节。",
+      "behavior": "需求:配置显式对齐 daemon、不依赖 doctor 回显路径"
+    },
+    {
+      "decisionId": "v0.hangar-view.r03.d01",
+      "sourceId": "v0.hangar-view.r03",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "client-specific",
+      "reason": "虚拟员工呈现、Cloudflare 和确认 UI 属 v0 client 产品细节。",
+      "behavior": "需求:每个 pilot 呈现为一名虚拟员工、覆盖完整状态与注册错误"
+    },
+    {
+      "decisionId": "v0.hangar-view.r04.d01",
+      "sourceId": "v0.hangar-view.r04",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "client-specific",
+      "reason": "虚拟员工呈现、Cloudflare 和确认 UI 属 v0 client 产品细节。",
+      "behavior": "需求:诊断嵌在员工上(⚠️)、按年龄区分工作中 vs 疑似卡住"
+    },
+    {
+      "decisionId": "v0.hangar-view.r05.d01",
+      "sourceId": "v0.hangar-view.r05",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "client-specific",
+      "reason": "虚拟员工呈现、Cloudflare 和确认 UI 属 v0 client 产品细节。",
+      "behavior": "需求:本体存活 = 新鲜度启发式、终态按 endedAt、非终态由员工级卡住兜底"
+    },
+    {
+      "decisionId": "v0.hangar-view.r06.d01",
+      "sourceId": "v0.hangar-view.r06",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.errors",
+      "reasonCode": "safe-observation-failure",
+      "reason": "取数失败不得沿用陈旧成功或泄露内部错误。",
+      "behavior": "需求:CLI 取数失败即降级、粒度分明、绝不沿用陈旧绿灯"
+    },
+    {
+      "decisionId": "v0.hangar-view.r07.d01",
+      "sourceId": "v0.hangar-view.r07",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.durable-data",
+      "reasonCode": "data-minimization",
+      "reason": "client projection 采用领域中立 allowlist/default-drop。",
+      "behavior": "需求:数据最小化 = 域无关 default-drop 白名单"
+    },
+    {
+      "decisionId": "v0.hangar-view.r08.d01",
+      "sourceId": "v0.hangar-view.r08",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "client-specific",
+      "reason": "虚拟员工呈现、Cloudflare 和确认 UI 属 v0 client 产品细节。",
+      "behavior": "需求:远程接入经 Cloudflare Tunnel + Access、v1 无 app 级登录"
+    },
+    {
+      "decisionId": "v0.hangar-view.r09.d01",
+      "sourceId": "v0.hangar-view.r09",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.control-boundary",
+      "reasonCode": "client-storage-boundary",
+      "reason": "client 只经控制契约且只读路径无隐式写入。",
+      "behavior": "需求:v1 只读、写路径不在本变更"
+    },
+    {
+      "decisionId": "v0.hangar-view.r10.d01",
+      "sourceId": "v0.hangar-view.r10",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "client-specific",
+      "reason": "虚拟员工呈现、Cloudflare 和确认 UI 属 v0 client 产品细节。",
+      "behavior": "需求:向 pilot 下达命令的写路径(白名单、经既有 CLI、不新增存储/进程)"
+    },
+    {
+      "decisionId": "v0.hangar-view.r11.d01",
+      "sourceId": "v0.hangar-view.r11",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "client-specific",
+      "reason": "虚拟员工呈现、Cloudflare 和确认 UI 属 v0 client 产品细节。",
+      "behavior": "需求:confirm-before-apply 两阶段(干跑解析 → 人确认 → 应用),不 park"
+    },
+    {
+      "decisionId": "v0.hangar-view.r12.d01",
+      "sourceId": "v0.hangar-view.r12",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "client-specific",
+      "reason": "虚拟员工呈现、Cloudflare 和确认 UI 属 v0 client 产品细节。",
+      "behavior": "需求:命令/事件契约,未知 trigger 响亮失败"
+    },
+    {
+      "decisionId": "v0.hangar-view.r13.d01",
+      "sourceId": "v0.hangar-view.r13",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "client-specific",
+      "reason": "虚拟员工呈现、Cloudflare 和确认 UI 属 v0 client 产品细节。",
+      "behavior": "需求:pilot 忙(already_running)时呈现「稍后重发」、不建队列"
+    },
+    {
+      "decisionId": "v0.hangar-view.r14.d01",
+      "sourceId": "v0.hangar-view.r14",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "client-specific",
+      "reason": "虚拟员工呈现、Cloudflare 和确认 UI 属 v0 client 产品细节。",
+      "behavior": "需求:命令确认视图的受控数据最小化放宽(仅此路径)"
+    },
+    {
+      "decisionId": "v0.host-capabilities.r01.d01",
+      "sourceId": "v0.host-capabilities.r01",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.host-attestation",
+      "reasonCode": "host-proof-boundary",
+      "reason": "版本化、不可伪造且经 fault probe 的 host evidence 是公共安全边界。",
+      "behavior": "需求:host 从同一 canonical set 广播版本化能力集"
+    },
+    {
+      "decisionId": "v0.host-capabilities.r02.d01",
+      "sourceId": "v0.host-capabilities.r02",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.host-attestation",
+      "reasonCode": "host-proof-boundary",
+      "reason": "版本化、不可伪造且经 fault probe 的 host evidence 是公共安全边界。",
+      "behavior": "需求:消费者按精确版本对 host 提供集 fail closed"
+    },
+    {
+      "decisionId": "v0.host-capabilities.r03.d01",
+      "sourceId": "v0.host-capabilities.r03",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.host-attestation",
+      "reasonCode": "host-proof-boundary",
+      "reason": "版本化、不可伪造且经 fault probe 的 host evidence 是公共安全边界。",
+      "behavior": "需求:每个 run 获得不可伪造的新鲜冻结能力快照"
+    },
+    {
+      "decisionId": "v0.host-capabilities.r04.d01",
+      "sourceId": "v0.host-capabilities.r04",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.process-lifecycle",
+      "reasonCode": "host-proof-boundary",
+      "reason": "版本化、不可伪造且经 fault probe 的 host evidence 是公共安全边界。",
+      "behavior": "需求:hard-crash containment 能力闸只在通过 fault test 后广播"
+    },
+    {
+      "decisionId": "v0.inbox-app.r01.d01",
+      "sourceId": "v0.inbox-app.r01",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "legacy-runtime-abstraction",
+      "reason": "PipelineExecutor 与 cron owner 不进入 M0 Harness-first 核心。",
+      "behavior": "需求:inbox 以 pipeline executor + cron 触发作为 app 运行"
+    },
+    {
+      "decisionId": "v0.inbox-app.r02.d01",
+      "sourceId": "v0.inbox-app.r02",
+      "owner": "hangar-owner",
+      "disposition": "known-false-green-to-fix",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "direct-effect-bypass",
+      "reason": "Inbox 自动 mutation 绕过 gateway；仅进入 inventory/mutation-disabled oracle。",
+      "behavior": "需求:自动动作在 run() 内直接编排,不经 gateway/propose"
+    },
+    {
+      "decisionId": "v0.inbox-app.r03.d01",
+      "sourceId": "v0.inbox-app.r03",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "m0o.inbox",
+      "reasonCode": "delegated-tenant-oracle",
+      "reason": "该行为保留在 Inbox parity，不进入领域中立 core。",
+      "behavior": "需求:notify 耗尽走 coarse re-poll,依赖不变量并有死信终态"
+    },
+    {
+      "decisionId": "v0.inbox-app.r04.d01",
+      "sourceId": "v0.inbox-app.r04",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "m0o.inbox",
+      "reasonCode": "delegated-tenant-oracle",
+      "reason": "该行为保留在 Inbox parity，不进入领域中立 core。",
+      "behavior": "需求:fetch 编排复刻两级读错误模型与成本上界"
+    },
+    {
+      "decisionId": "v0.inbox-app.r05.d01",
+      "sourceId": "v0.inbox-app.r05",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "m0o.inbox",
+      "reasonCode": "delegated-tenant-oracle",
+      "reason": "该行为保留在 Inbox parity，不进入领域中立 core。",
+      "behavior": "需求:每 email 超时 + 每 run 兜底,机制必须安全(取消尽力 + 吞拒绝 + fence)"
+    },
+    {
+      "decisionId": "v0.inbox-app.r06.d01",
+      "sourceId": "v0.inbox-app.r06",
+      "owner": "hangar-owner",
+      "disposition": "known-false-green-to-fix",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "in-process-load-boundary",
+      "reason": "in-process 顶层退出/抛错可杀 daemon；v2 必须使用受限子进程。",
+      "behavior": "需求:in-process pilot 模块加载安全(顶层禁 process.exit/throw)"
+    },
+    {
+      "decisionId": "v0.inbox-app.r07.d01",
+      "sourceId": "v0.inbox-app.r07",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.core-objects",
+      "reasonCode": "domain-separation",
+      "reason": "领域数据库与 core 分离、core 零领域概念。",
+      "behavior": "需求:域库与脊柱库并存,脊柱零域概念"
+    },
+    {
+      "decisionId": "v0.inbox-app.r08.d01",
+      "sourceId": "v0.inbox-app.r08",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "historical-phase-rule",
+      "reason": "历史 Phase 约束不形成 v2 核心运行契约。",
+      "behavior": "需求:Phase 1 不引入 approval 动作"
+    },
+    {
+      "decisionId": "v0.inbox-app.r09.d01",
+      "sourceId": "v0.inbox-app.r09",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "m0o.inbox",
+      "reasonCode": "delegated-tenant-oracle",
+      "reason": "该行为保留在 Inbox parity，不进入领域中立 core。",
+      "behavior": "需求:每日摘要作为 digest 触发器"
+    },
+    {
+      "decisionId": "v0.inbox-app.r10.d01",
+      "sourceId": "v0.inbox-app.r10",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "m0o.inbox",
+      "reasonCode": "delegated-tenant-oracle",
+      "reason": "该行为保留在 Inbox parity，不进入领域中立 core。",
+      "behavior": "需求:DIGEST_TIMES 环境变量退役"
+    },
+    {
+      "decisionId": "v0.multi-trigger.r01.d01",
+      "sourceId": "v0.multi-trigger.r01",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "deferred-scheduler",
+      "reason": "M0/M1 scheduled admission 明确 unsupported；后续具名 change 冻结。",
+      "behavior": "需求:多个具名触发器"
+    },
+    {
+      "decisionId": "v0.multi-trigger.r02.d01",
+      "sourceId": "v0.multi-trigger.r02",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "deferred-scheduler",
+      "reason": "M0/M1 scheduled admission 明确 unsupported；后续具名 change 冻结。",
+      "behavior": "需求:多触发器时 name 必填且唯一"
+    },
+    {
+      "decisionId": "v0.multi-trigger.r03.d01",
+      "sourceId": "v0.multi-trigger.r03",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "deferred-scheduler",
+      "reason": "M0/M1 scheduled admission 明确 unsupported；后续具名 change 冻结。",
+      "behavior": "需求:触发身份进 run(ctx)"
+    },
+    {
+      "decisionId": "v0.multi-trigger.r04.d01",
+      "sourceId": "v0.multi-trigger.r04",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "deferred-scheduler",
+      "reason": "M0/M1 scheduled admission 明确 unsupported；后续具名 change 冻结。",
+      "behavior": "需求:同 app 多触发 fire 本进程内序列化"
+    },
+    {
+      "decisionId": "v0.multi-trigger.r05.d01",
+      "sourceId": "v0.multi-trigger.r05",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "deferred-scheduler",
+      "reason": "M0/M1 scheduled admission 明确 unsupported；后续具名 change 冻结。",
+      "behavior": "需求:具名触发可手动调用"
+    },
+    {
+      "decisionId": "v0.multi-trigger.r06.d01",
+      "sourceId": "v0.multi-trigger.r06",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "deferred-scheduler",
+      "reason": "M0/M1 scheduled admission 明确 unsupported；后续具名 change 冻结。",
+      "behavior": "需求:为未来触发形式留扩展位、不建机制"
+    },
+    {
+      "decisionId": "v0.run-engine.r01.d01",
+      "sourceId": "v0.run-engine.r01",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "legacy-storage-detail",
+      "reason": "v0 四表与禁止第五表不约束独立 v2 DDL。",
+      "behavior": "需求:运行状态持久化于 SQLite 四表"
+    },
+    {
+      "decisionId": "v0.run-engine.r02.d01",
+      "sourceId": "v0.run-engine.r02",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.run",
+      "reasonCode": "event-truth",
+      "reason": "Run 状态由 append-only event 推导，终态事件单独拥有语义。",
+      "behavior": "需求:Run 状态由最新 RunEvent 全映射推导,终态只认 run.* 事件"
+    },
+    {
+      "decisionId": "v0.run-engine.r03.d01",
+      "sourceId": "v0.run-engine.r03",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.run",
+      "reasonCode": "terminal-choke-point",
+      "reason": "终态只经唯一原子 choke point，首个终态获胜。",
+      "behavior": "需求:所有终态转换走单一同事务 choke-point"
+    },
+    {
+      "decisionId": "v0.run-engine.r04.d01",
+      "sourceId": "v0.run-engine.r04",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "pid-start-identity",
+      "reason": "PID 与启动时刻共同识别 owner，重复恢复幂等。",
+      "behavior": "DB/锁 reaper identity 与终态收敛"
+    },
+    {
+      "decisionId": "v0.run-engine.r04.d02",
+      "sourceId": "v0.run-engine.r04",
+      "owner": "hangar-owner",
+      "disposition": "known-false-green-to-fix",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "missing-whole-tree-containment",
+      "reason": "v0 reaper 不回收 OS 后代，不能冒充 whole-tree hard reap。",
+      "behavior": "OS descendant containment/reap"
+    },
+    {
+      "decisionId": "v0.run-engine.r05.d01",
+      "sourceId": "v0.run-engine.r05",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "legacy-runtime-abstraction",
+      "reason": "PipelineExecutor 被 RunAttempt-bound Harness 取代。",
+      "behavior": "需求:PipelineExecutor 执行 app 的 run"
+    },
+    {
+      "decisionId": "v0.run-engine.r06.d01",
+      "sourceId": "v0.run-engine.r06",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.run-attempt",
+      "reasonCode": "single-live-owner",
+      "reason": "同一 Agent/Run 外层执行 owner 不得重叠。",
+      "behavior": "需求:run 锁防止重复执行"
+    },
+    {
+      "decisionId": "v0.run-engine.r07.d01",
+      "sourceId": "v0.run-engine.r07",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.run",
+      "reasonCode": "cancel-terminal-idempotency",
+      "reason": "取消与其他终态竞争时首个终态获胜且清理幂等。",
+      "behavior": "需求:active run 持 AbortController,取消经 choke-point 记 cancelled 且终态幂等"
+    },
+    {
+      "decisionId": "v0.tool-gateway.r01.d01",
+      "sourceId": "v0.tool-gateway.r01",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "legacy-tool-handler",
+      "reason": "app-local handler 装载方式不是 v2 Effect connector 契约。",
+      "behavior": "需求:app 必须提供按名索引的工具处理器(tool handler)"
+    },
+    {
+      "decisionId": "v0.tool-gateway.r02.d01",
+      "sourceId": "v0.tool-gateway.r02",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.effect",
+      "reasonCode": "single-effect-boundary",
+      "reason": "受控 mutation 只有一个 intent/policy/commit 边界。",
+      "behavior": "需求:动作经单一异步 propose 入口分派"
+    },
+    {
+      "decisionId": "v0.tool-gateway.r03.d01",
+      "sourceId": "v0.tool-gateway.r03",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "legacy-wrapper",
+      "reason": "PARK/check-after-return wrapper 不是 v2 durable wait 状态机。",
+      "behavior": "需求:PARK 在 run 结束后统一评估一次(check-after-return)"
+    },
+    {
+      "decisionId": "v0.tool-gateway.r04.d01",
+      "sourceId": "v0.tool-gateway.r04",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "in-memory-retry-detail",
+      "reason": "v0 内存 action retry/无 durable queue 是可替换实现细节。",
+      "behavior": "内存有界 retry"
+    },
+    {
+      "decisionId": "v0.tool-gateway.r04.d02",
+      "sourceId": "v0.tool-gateway.r04",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.errors",
+      "reasonCode": "safe-error-contract",
+      "reason": "持久事件、日志和 client 错误不得泄露内部或敏感文本。",
+      "behavior": "错误脱敏"
+    },
+    {
+      "decisionId": "v0.tool-gateway.r05.d01",
+      "sourceId": "v0.tool-gateway.r05",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.approval",
+      "reasonCode": "approval-cas-idempotency",
+      "reason": "Approval 先守状态并以 CAS/幂等 identity 防重复执行。",
+      "behavior": "需求:approve/reject 必须先守 run 状态、再取 run 锁,幂等透传"
+    },
+    {
+      "decisionId": "v0.tool-gateway.r06.d01",
+      "sourceId": "v0.tool-gateway.r06",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.effect",
+      "reasonCode": "partial-failure-evidence",
+      "reason": "部分执行不回滚既有外部事实，未执行项关闭且终态明确。",
+      "behavior": "需求:approve 第二阶段部分失败有明确终态"
+    },
+    {
+      "decisionId": "v0.tool-gateway.r07.d01",
+      "sourceId": "v0.tool-gateway.r07",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.approval",
+      "reasonCode": "reject-no-dispatch",
+      "reason": "拒绝决策不得触发外部 operation。",
+      "behavior": "需求:reject 驳回不执行"
+    },
+    {
+      "decisionId": "v0.tool-gateway.r08.d01",
+      "sourceId": "v0.tool-gateway.r08",
+      "owner": "hangar-owner",
+      "disposition": "known-false-green-to-fix",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "single-process-concurrency-gap",
+      "reason": "v0 未闭合多进程 approve/reject 与 lease 竞态；M0 必须以 fenced CAS 取代。",
+      "behavior": "需求:Phase 0 单进程假设(多进程并发硬化留 Phase 1)"
+    },
+    {
+      "decisionId": "v0.skill.s01.d01",
+      "sourceId": "v0.skill.s01",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "legacy-cli-contract",
+      "reason": "迁移期保留该 CLI 的 stdout/stderr、JSON、退出码与安全结果行为。",
+      "behavior": "`hangar doctor [--json]`"
+    },
+    {
+      "decisionId": "v0.skill.s02.d01",
+      "sourceId": "v0.skill.s02",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "legacy-cli-contract",
+      "reason": "迁移期保留该 CLI 的 stdout/stderr、JSON、退出码与安全结果行为。",
+      "behavior": "`hangar status [--json]`"
+    },
+    {
+      "decisionId": "v0.skill.s03.d01",
+      "sourceId": "v0.skill.s03",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "legacy-cli-contract",
+      "reason": "迁移期保留该 CLI 的 stdout/stderr、JSON、退出码与安全结果行为。",
+      "behavior": "`hangar runs [<app>] [--limit N] [--json]`"
+    },
+    {
+      "decisionId": "v0.skill.s04.d01",
+      "sourceId": "v0.skill.s04",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "legacy-cli-contract",
+      "reason": "迁移期保留该 CLI 的 stdout/stderr、JSON、退出码与安全结果行为。",
+      "behavior": "`hangar trace <run> [--json]`"
+    },
+    {
+      "decisionId": "v0.skill.s05.d01",
+      "sourceId": "v0.skill.s05",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "legacy-cli-contract",
+      "reason": "迁移期保留该 CLI 的 stdout/stderr、JSON、退出码与安全结果行为。",
+      "behavior": "`hangar run <app> [--input <json>] [--json]`"
+    },
+    {
+      "decisionId": "v0.skill.s06.d01",
+      "sourceId": "v0.skill.s06",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "legacy-cli-contract",
+      "reason": "迁移期保留该 CLI 的 stdout/stderr、JSON、退出码与安全结果行为。",
+      "behavior": "`hangar approve <run> [--json]`"
+    },
+    {
+      "decisionId": "v0.skill.s07.d01",
+      "sourceId": "v0.skill.s07",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "legacy-cli-contract",
+      "reason": "迁移期保留该 CLI 的 stdout/stderr、JSON、退出码与安全结果行为。",
+      "behavior": "`hangar reject <run> [--reason <text>] [--json]`"
+    },
+    {
+      "decisionId": "v0.skill.s08.d01",
+      "sourceId": "v0.skill.s08",
+      "owner": "hangar-owner",
+      "disposition": "preserve",
+      "ownerRequirementId": "v2c.control-boundary",
+      "reasonCode": "single-control-entry",
+      "reason": "Agent 不得调用 daemon 或直写 SQLite。",
+      "behavior": "不暴露给 Agent 的能力(别调)"
+    },
+    {
+      "decisionId": "v0.skill.s09.d01",
+      "sourceId": "v0.skill.s09",
+      "owner": "hangar-owner",
+      "disposition": "excluded",
+      "ownerRequirementId": "m0o.v0-reaper",
+      "reasonCode": "non-normative-note",
+      "reason": "备注不定义可执行行为。",
+      "behavior": "备注"
+    }
+  ]
+}

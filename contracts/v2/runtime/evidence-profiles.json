@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "v2-authenticated-evidence-profiles-v1",
+  "requirementIds": ["v2c.host-attestation", "v2s.restore"],
+  "algorithm": "Ed25519",
+  "canonicalDomain": "hangar-evidence-v1",
+  "profiles": [
+    {
+      "id": "production-child",
+      "singleUse": true,
+      "claimFields": ["evidenceId", "authorityGeneration", "issuedAtUtcMs", "expiresAtUtcMs", "hostId", "profileId", "mode", "launchAttemptId", "challengeDigest", "releaseId", "activationEpoch", "runId", "attempt", "containmentId", "containmentGeneration", "bootId", "startupCycleId", "timeGeneration", "probeResults"],
+      "expectedContextFields": ["hostId", "profileId", "mode", "launchAttemptId", "challengeDigest", "releaseId", "activationEpoch", "runId", "attempt", "containmentId", "containmentGeneration"],
+      "currentStateFields": ["authorityGeneration", "bootId", "startupCycleId", "timeGeneration"],
+      "requiredProbeIds": ["environment-allowlist", "descriptor-close-all", "control-plane-isolation", "grant-operation-enforcement", "egress-operation-enforcement", "execution-closure-enforcement", "whole-tree-containment"],
+      "wholeTreeFields": ["containmentId", "containmentGeneration", "descendantMembershipEnforced", "descendantEscapePrevented", "allMembersEnumerable", "hardReapWholeTree"]
+    },
+    {
+      "id": "clean-restart",
+      "singleUse": true,
+      "claimFields": ["evidenceId", "authorityId", "authorityVersion", "authorityGeneration", "issuedAtUtcMs", "expiresAtUtcMs", "databaseIdentity", "targetControlInstanceId", "casIdentity", "priorIncarnationState", "bootId", "startupCycleId", "continuationGeneration", "timeEvidenceId", "timeEvidenceDigest", "timeGeneration", "productionControlAttestationId", "productionControlAttestationDigest", "productionControlAttestationGeneration"],
+      "expectedContextFields": ["authorityId", "authorityVersion", "databaseIdentity", "targetControlInstanceId", "casIdentity", "priorIncarnationState", "continuationGeneration"],
+      "currentStateFields": ["authorityGeneration", "bootId", "startupCycleId", "timeEvidenceId", "timeEvidenceDigest", "timeGeneration", "productionControlAttestationId", "productionControlAttestationDigest", "productionControlAttestationGeneration"]
+    },
+    {
+      "id": "recovery-artifact",
+      "singleUse": true,
+      "claimFields": ["evidenceId", "authorityId", "authorityVersion", "authorityGeneration", "issuedAtUtcMs", "expiresAtUtcMs", "artifactId", "recoverySessionId", "agentAttemptId", "attemptChallenge", "agentId", "qualificationGeneration", "releaseId", "activationId", "databaseIdentity", "sourceControlInstanceId", "targetControlInstanceId", "agentSetDigest", "lineageSetDigest", "authoritySetDigest", "backupDigest", "sourceFactHead", "executionClosureDigest", "timeEvidenceId", "timeEvidenceDigest", "timeGeneration", "hostAttestationId", "hostAttestationDigest", "hostAttestationGeneration", "registrationClosureDigest", "dispatchDenominatorDigest", "finalOutcomeDigest", "reservedEpoch", "commandDigest"],
+      "expectedContextFields": ["authorityId", "authorityVersion", "artifactId", "recoverySessionId", "agentAttemptId", "attemptChallenge", "agentId", "qualificationGeneration", "releaseId", "activationId", "databaseIdentity", "sourceControlInstanceId", "targetControlInstanceId", "agentSetDigest", "lineageSetDigest", "authoritySetDigest", "backupDigest", "sourceFactHead", "executionClosureDigest", "registrationClosureDigest", "dispatchDenominatorDigest", "finalOutcomeDigest", "reservedEpoch", "commandDigest"],
+      "currentStateFields": ["authorityId", "authorityVersion", "authorityGeneration", "timeEvidenceId", "timeEvidenceDigest", "timeGeneration", "hostAttestationId", "hostAttestationDigest", "hostAttestationGeneration"]
+    },
+    {
+      "id": "activation-permit",
+      "singleUse": true,
+      "claimFields": ["evidenceId", "authorityId", "authorityVersion", "authorityGeneration", "issuedAtUtcMs", "expiresAtUtcMs", "certificateId", "commandId", "targetControlInstanceId", "reservedEpoch", "artifactEvidenceDigest", "permitGeneration", "bootId", "startupCycleId", "hostAttestationId", "hostAttestationDigest", "hostGeneration", "timeEvidenceId", "timeEvidenceDigest", "timeGeneration"],
+      "expectedContextFields": ["authorityId", "authorityVersion", "certificateId", "commandId", "targetControlInstanceId", "reservedEpoch", "artifactEvidenceDigest", "permitGeneration"],
+      "currentStateFields": ["authorityGeneration", "bootId", "startupCycleId", "hostAttestationId", "hostAttestationDigest", "hostGeneration", "timeEvidenceId", "timeEvidenceDigest", "timeGeneration"]
+    },
+    {
+      "id": "bound-conflict",
+      "singleUse": true,
+      "claimFields": ["evidenceId", "authorityId", "authorityVersion", "authorityGeneration", "issuedAtUtcMs", "expiresAtUtcMs", "kind", "certificateId", "commandId", "artifactEvidenceDigest", "recoveryOperationId", "recoverySessionId", "agentId", "qualificationGeneration", "targetControlInstanceId", "conflictGeneration", "registryProofDigest", "authenticationEvidenceDigest"],
+      "expectedContextFields": ["authorityId", "authorityVersion", "kind", "certificateId", "commandId", "artifactEvidenceDigest", "recoveryOperationId", "recoverySessionId", "agentId", "qualificationGeneration", "targetControlInstanceId"],
+      "currentStateFields": ["authorityGeneration", "conflictGeneration", "registryProofDigest", "authenticationEvidenceDigest"]
+    },
+    {
+      "id": "target-authority-closed",
+      "singleUse": false,
+      "claimFields": ["evidenceId", "authorityId", "authorityVersion", "authorityGeneration", "issuedAtUtcMs", "expiresAtUtcMs", "databaseIdentity", "targetControlInstanceId", "casIdentity", "registrationClosureWatermark", "continuationClosureWatermark", "revokedMemberSetDigest", "invalidatedAttestationDigest", "maxGrantExpiryUtcMs", "observedAtUtcMs", "timeEvidenceDigest", "dispatchObligationDigest", "discoveryObligationDigest", "obligationDigest", "targetRetired"],
+      "expectedContextFields": ["authorityId", "authorityVersion", "databaseIdentity", "targetControlInstanceId", "casIdentity"],
+      "currentStateFields": ["authorityGeneration", "registrationClosureWatermark", "continuationClosureWatermark", "revokedMemberSetDigest", "invalidatedAttestationDigest", "maxGrantExpiryUtcMs", "observedAtUtcMs", "timeEvidenceDigest", "dispatchObligationDigest", "discoveryObligationDigest", "obligationDigest", "targetRetired"]
+    }
+  ]
+}

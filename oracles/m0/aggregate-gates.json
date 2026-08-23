@@ -1,0 +1,6306 @@
+{
+  "schemaVersion": "m0-aggregate-gates-v2",
+  "requirementId": "m0o.reproducibility",
+  "kindPrecedence": [
+    "invalid_invocation",
+    "prerequisite_missing",
+    "missing_source",
+    "contract_failure",
+    "evidence_failure",
+    "pass"
+  ],
+  "manifestOrderIsTopological": true,
+  "gates": [
+    {
+      "id": "local.prerequisites",
+      "type": "local-subcommand",
+      "members": [
+        "subcommand:prerequisites"
+      ],
+      "dependsOn": []
+    },
+    {
+      "id": "local.sources",
+      "type": "local-subcommand",
+      "members": [
+        "subcommand:sources"
+      ],
+      "dependsOn": [
+        "local.prerequisites"
+      ]
+    },
+    {
+      "id": "local.taxonomy",
+      "type": "local-subcommand",
+      "members": [
+        "subcommand:taxonomy"
+      ],
+      "dependsOn": [
+        "local.prerequisites"
+      ]
+    },
+    {
+      "id": "local.safe-errors",
+      "type": "local-subcommand",
+      "members": [
+        "subcommand:safe-errors"
+      ],
+      "dependsOn": [
+        "local.taxonomy"
+      ]
+    },
+    {
+      "id": "local.source-facts",
+      "type": "local-subcommand",
+      "members": [
+        "subcommand:source-facts"
+      ],
+      "dependsOn": [
+        "local.prerequisites"
+      ]
+    },
+    {
+      "id": "local.transactions",
+      "type": "local-subcommand",
+      "members": [
+        "subcommand:transactions"
+      ],
+      "dependsOn": [
+        "local.source-facts"
+      ]
+    },
+    {
+      "id": "local.harness",
+      "type": "local-subcommand",
+      "members": [
+        "subcommand:harness"
+      ],
+      "dependsOn": [
+        "local.taxonomy"
+      ]
+    },
+    {
+      "id": "local.state-machines",
+      "type": "local-subcommand",
+      "members": [
+        "subcommand:state-machines"
+      ],
+      "dependsOn": [
+        "local.taxonomy"
+      ]
+    },
+    {
+      "id": "local.fanout",
+      "type": "local-subcommand",
+      "members": [
+        "subcommand:fanout"
+      ],
+      "dependsOn": [
+        "local.taxonomy"
+      ]
+    },
+    {
+      "id": "local.fault-matrix",
+      "type": "local-subcommand",
+      "members": [
+        "subcommand:fault-matrix"
+      ],
+      "dependsOn": [
+        "local.sources",
+        "local.safe-errors",
+        "local.transactions",
+        "local.state-machines",
+        "local.fanout"
+      ]
+    },
+    {
+      "id": "local.contracts",
+      "type": "local-subcommand",
+      "members": [
+        "subcommand:contracts"
+      ],
+      "dependsOn": [
+        "local.sources",
+        "local.safe-errors",
+        "local.transactions",
+        "local.harness",
+        "local.state-machines",
+        "local.fault-matrix"
+      ]
+    },
+    {
+      "id": "external.openspec-strict",
+      "type": "external-validator",
+      "members": [
+        "external:openspec-strict"
+      ],
+      "dependsOn": [
+        "local.prerequisites"
+      ]
+    },
+    {
+      "id": "requirement.m0o.format",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:m0o.format"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-5be25c06932ee3c1",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.format.case-5be25c06932ee3c1"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-c0e7bd6c39f2fd47",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.format.case-c0e7bd6c39f2fd47"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-ee5bd570739cae05",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.format.case-ee5bd570739cae05"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-0d5b80f3325f6dcd",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.format.case-0d5b80f3325f6dcd"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.m0o.v0-reaper",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:m0o.v0-reaper"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-9fc8a1d4167a0b31",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.v0-reaper.case-9fc8a1d4167a0b31"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-a62d31eb26def809",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.v0-reaper.case-a62d31eb26def809"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-7de98c1b85dc6e91",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.v0-reaper.case-7de98c1b85dc6e91"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-ea8aa672669d0564",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.v0-reaper.case-ea8aa672669d0564"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.m0o.fault-matrix",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:m0o.fault-matrix"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-7493c1b668b29ffc",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.fault-matrix.case-7493c1b668b29ffc"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-1c1a29207a85d888",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.fault-matrix.case-1c1a29207a85d888"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-b9d6b63610c48b96",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.fault-matrix.case-b9d6b63610c48b96"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-be01590a4db2a18e",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.fault-matrix.case-be01590a4db2a18e"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.m0o.inbox",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:m0o.inbox"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-37053fffaf6f642b",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.inbox.case-37053fffaf6f642b"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-b167e32ec41cdea6",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.inbox.case-b167e32ec41cdea6"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-7d62d5d7f62e5761",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.inbox.case-7d62d5d7f62e5761"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.m0o.process-fixture",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:m0o.process-fixture"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-a87a23aa283ded9d",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.process-fixture.case-a87a23aa283ded9d"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-7d7457d8ec7f4690",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.process-fixture.case-7d7457d8ec7f4690"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-ac1ff343c450afd0",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.process-fixture.case-ac1ff343c450afd0"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.m0o.harness-attribution",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:m0o.harness-attribution"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-3d55277177b31053",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.harness-attribution.case-3d55277177b31053"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-f8f2fc1cf9d58a01",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.harness-attribution.case-f8f2fc1cf9d58a01"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-0cc33223b9c43411",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.harness-attribution.case-0cc33223b9c43411"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-82707c94512c91b5",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.harness-attribution.case-82707c94512c91b5"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-dda21f95e7a50d7e",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.harness-attribution.case-dda21f95e7a50d7e"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-81b89a62ef11202a",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.harness-attribution.case-81b89a62ef11202a"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.m0o.cutover",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:m0o.cutover"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-9eac66f310b04558",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.cutover.case-9eac66f310b04558"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-f9f459fef4ce8b63",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.cutover.case-f9f459fef4ce8b63"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-e51c6241ea07084b",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.cutover.case-e51c6241ea07084b"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.m0o.effect-inventory",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:m0o.effect-inventory"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-410902198ca99c22",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.effect-inventory.case-410902198ca99c22"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-fb3b8bf7a10d892a",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.effect-inventory.case-fb3b8bf7a10d892a"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-c28ee66fe30ba8fe",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.effect-inventory.case-c28ee66fe30ba8fe"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.m0o.host-mapping",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:m0o.host-mapping"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-2c26189c0114871c",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.host-mapping.case-2c26189c0114871c"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-f671b474c14eb9e3",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.host-mapping.case-f671b474c14eb9e3"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.m0o.measurements",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:m0o.measurements"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-5b501ace1dff7b23",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.measurements.case-5b501ace1dff7b23"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.m0o.reproducibility",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:m0o.reproducibility"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-e33f51b9983a4a44",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.reproducibility.case-e33f51b9983a4a44"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-baf58ef8254d52b9",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.reproducibility.case-baf58ef8254d52b9"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-3ac58b3cb06fae04",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.reproducibility.case-3ac58b3cb06fae04"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-fc380c34a21ceed1",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.reproducibility.case-fc380c34a21ceed1"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-96e26a5ef39b00d7",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.reproducibility.case-96e26a5ef39b00d7"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-021b7a0e4e9e6dc7",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.reproducibility.case-021b7a0e4e9e6dc7"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-37a353c8dd03bb26",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.reproducibility.case-37a353c8dd03bb26"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-1ec16be1f59ecc47",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.reproducibility.case-1ec16be1f59ecc47"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-4704830eebf87e0f",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:m0o.reproducibility.case-4704830eebf87e0f"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.core-objects",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.core-objects"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-2625bc33f3368451",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.core-objects.case-2625bc33f3368451"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-f74dd5de6847249e",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.core-objects.case-f74dd5de6847249e"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-4f0c7298f9d90368",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.core-objects.case-4f0c7298f9d90368"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-b1e6225e0bc92246",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.core-objects.case-b1e6225e0bc92246"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-99c6189cd103b295",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.core-objects.case-99c6189cd103b295"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-ee282e108b929d7a",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.core-objects.case-ee282e108b929d7a"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.durable-data",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.durable-data"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-059b139162921d92",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.durable-data.case-059b139162921d92"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-3bad4dd6e919014e",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.durable-data.case-3bad4dd6e919014e"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-a58f530be73f5ba8",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.durable-data.case-a58f530be73f5ba8"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-0d99e7b6fbcd8fc8",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.durable-data.case-0d99e7b6fbcd8fc8"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.release-identity",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.release-identity"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-69a7d96569601720",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.release-identity.case-69a7d96569601720"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-a4de272b16b48742",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.release-identity.case-a4de272b16b48742"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-c92ef8d54b132b4b",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.release-identity.case-c92ef8d54b132b4b"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-2e2e1115131297ba",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.release-identity.case-2e2e1115131297ba"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-534d149bf165353d",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.release-identity.case-534d149bf165353d"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-e494a1dffa986843",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.release-identity.case-e494a1dffa986843"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-844f43ad17b4d919",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.release-identity.case-844f43ad17b4d919"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.release-compatibility",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.release-compatibility"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-a2f0f8982e81e26f",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.release-compatibility.case-a2f0f8982e81e26f"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-75883b57b2954516",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.release-compatibility.case-75883b57b2954516"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.harness-session",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.harness-session"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-80eec2d75f35676f",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.harness-session.case-80eec2d75f35676f"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-cb42e12634f953ca",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.harness-session.case-cb42e12634f953ca"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-b943ecde74f72559",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.harness-session.case-b943ecde74f72559"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-1d41b7cd691717cc",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.harness-session.case-1d41b7cd691717cc"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-6e9a865e2f8ebcc9",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.harness-session.case-6e9a865e2f8ebcc9"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-4e97f754f85e6871",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.harness-session.case-4e97f754f85e6871"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-746de4e07d1cb663",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.harness-session.case-746de4e07d1cb663"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-04841c02ff8ac172",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.harness-session.case-04841c02ff8ac172"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.control-taxonomy",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.control-taxonomy"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-992da280c223705c",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.control-taxonomy.case-992da280c223705c"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-9b1f2455b9486fb8",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.control-taxonomy.case-9b1f2455b9486fb8"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.authority-policy",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.authority-policy"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-ccba4fa4c23ea597",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.authority-policy.case-ccba4fa4c23ea597"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-9b97adc9c88e72db",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.authority-policy.case-9b97adc9c88e72db"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-42e4f70f8db79275",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.authority-policy.case-42e4f70f8db79275"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-bf7b8be3fed43b6b",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.authority-policy.case-bf7b8be3fed43b6b"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-5c67acc325c0c5cc",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.authority-policy.case-5c67acc325c0c5cc"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.time",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.time"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-883b1bf6cd8950c3",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.time.case-883b1bf6cd8950c3"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-9a9be5874a6bcccc",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.time.case-9a9be5874a6bcccc"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-7b31ba4290763ede",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.time.case-7b31ba4290763ede"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-a3e48ad5c4a68065",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.time.case-a3e48ad5c4a68065"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.activation",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.activation"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-437c70c5849e6f45",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.activation.case-437c70c5849e6f45"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-9517e01d762d1f29",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.activation.case-9517e01d762d1f29"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-9437319ace99e1c7",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.activation.case-9437319ace99e1c7"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-0ca0ce9a7b52c579",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.activation.case-0ca0ce9a7b52c579"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-b2bbbf398a04a7b4",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.activation.case-b2bbbf398a04a7b4"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-d29467a38bb37b18",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.activation.case-d29467a38bb37b18"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.command-idempotency",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.command-idempotency"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-0884a95354e80e88",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.command-idempotency.case-0884a95354e80e88"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-44d0defb2c3ee6e8",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.command-idempotency.case-44d0defb2c3ee6e8"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-7e2850f96e70f7f2",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.command-idempotency.case-7e2850f96e70f7f2"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-06f0de1c613562f0",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.command-idempotency.case-06f0de1c613562f0"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-fe14f31f64c6e9c7",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.command-idempotency.case-fe14f31f64c6e9c7"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-a20b4cd54b52d782",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.command-idempotency.case-a20b4cd54b52d782"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-c040b2b65fbdf156",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.command-idempotency.case-c040b2b65fbdf156"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-8faa0ad96119dcd3",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.command-idempotency.case-8faa0ad96119dcd3"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.run",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.run"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-2921bf8d39cbedd0",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.run.case-2921bf8d39cbedd0"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-3d2ffc3684961b8b",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.run.case-3d2ffc3684961b8b"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-07b219604f77ec11",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.run.case-07b219604f77ec11"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-f4f0e256f70be78a",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.run.case-f4f0e256f70be78a"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-ec2c4c60bf3bed92",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.run.case-ec2c4c60bf3bed92"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.run-attempt",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.run-attempt"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-a5aeebde48e9ef31",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.run-attempt.case-a5aeebde48e9ef31"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-3b06c1e112fc8cba",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.run-attempt.case-3b06c1e112fc8cba"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-a817b2f69a823972",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.run-attempt.case-a817b2f69a823972"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-79ea5c5af64adc96",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.run-attempt.case-79ea5c5af64adc96"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-ae7db6cf250cbc93",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.run-attempt.case-ae7db6cf250cbc93"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-e76d5ba84942b386",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.run-attempt.case-e76d5ba84942b386"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-ad8e55b719c20ac5",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.run-attempt.case-ad8e55b719c20ac5"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.process-lifecycle",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.process-lifecycle"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-dc99a9593d204e32",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.process-lifecycle.case-dc99a9593d204e32"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-41ed09ca1d5e1c11",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.process-lifecycle.case-41ed09ca1d5e1c11"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-3959fd59b64289b9",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.process-lifecycle.case-3959fd59b64289b9"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-470b4e7f410682fc",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.process-lifecycle.case-470b4e7f410682fc"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-4d527d433a02b22e",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.process-lifecycle.case-4d527d433a02b22e"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-15d245ccca1f060a",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.process-lifecycle.case-15d245ccca1f060a"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.approval",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.approval"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-dc69d0aceed65d86",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.approval.case-dc69d0aceed65d86"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-4b9af75392ae3179",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.approval.case-4b9af75392ae3179"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-af4c5a4f83eb7110",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.approval.case-af4c5a4f83eb7110"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.effect",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.effect"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-c5b2cb70424e191d",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.effect.case-c5b2cb70424e191d"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-c577210f77a8f691",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.effect.case-c577210f77a8f691"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-eb9596718e63e1e7",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.effect.case-eb9596718e63e1e7"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-17f8ea1e2fe54f6c",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.effect.case-17f8ea1e2fe54f6c"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-0079735399055528",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.effect.case-0079735399055528"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-b451b3bac19d7219",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.effect.case-b451b3bac19d7219"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-787f5219b6462e71",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.effect.case-787f5219b6462e71"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-21e1b4425801e363",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.effect.case-21e1b4425801e363"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-1aa57d13a5b3e2c9",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.effect.case-1aa57d13a5b3e2c9"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-5a2152bf98f8ad78",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.effect.case-5a2152bf98f8ad78"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-06f29d5923eb27ff",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.effect.case-06f29d5923eb27ff"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-3c81cfa02aa23d2b",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.effect.case-3c81cfa02aa23d2b"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.direct-effect",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.direct-effect"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-68bf1a8ab565a087",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.direct-effect.case-68bf1a8ab565a087"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-f3d2fd539d793604",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.direct-effect.case-f3d2fd539d793604"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-78b3454612fc61ab",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.direct-effect.case-78b3454612fc61ab"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.errors",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.errors"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-31c2ab6bd682eda5",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.errors.case-31c2ab6bd682eda5"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-2b2be212349bab76",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.errors.case-2b2be212349bab76"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.runtime-boundary",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.runtime-boundary"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-0b1874f01659e11b",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.runtime-boundary.case-0b1874f01659e11b"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-04ff6b58f2fd0c86",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.runtime-boundary.case-04ff6b58f2fd0c86"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-fc1ae165227e0aad",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.runtime-boundary.case-fc1ae165227e0aad"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-84add5e324213bbb",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.runtime-boundary.case-84add5e324213bbb"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-0193a18bfd177d6f",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.runtime-boundary.case-0193a18bfd177d6f"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-f2679e28b8f6e5ea",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.runtime-boundary.case-f2679e28b8f6e5ea"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-310c7b0081698071",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.runtime-boundary.case-310c7b0081698071"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.host-attestation",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.host-attestation"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-50cb629942f03c42",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.host-attestation.case-50cb629942f03c42"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-98272db6decc78fe",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.host-attestation.case-98272db6decc78fe"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-5c3db26dc9e6b746",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.host-attestation.case-5c3db26dc9e6b746"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-da5dd9ee5328835c",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.host-attestation.case-da5dd9ee5328835c"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-dcbef2eddf546aa9",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.host-attestation.case-dcbef2eddf546aa9"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-5146596e4f18a1b5",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.host-attestation.case-5146596e4f18a1b5"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.health-facts",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.health-facts"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-a635871d9e818d72",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.health-facts.case-a635871d9e818d72"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-2b4ea87746cb91bc",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.health-facts.case-2b4ea87746cb91bc"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-f3612354bebfb68b",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.health-facts.case-f3612354bebfb68b"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-0d9643ce87048dd1",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.health-facts.case-0d9643ce87048dd1"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2c.control-boundary",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2c.control-boundary"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-486639fde4261c9e",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.control-boundary.case-486639fde4261c9e"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-a580797d2bbf9851",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2c.control-boundary.case-a580797d2bbf9851"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2s.sqlite",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2s.sqlite"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-172434e8f69c8fde",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.sqlite.case-172434e8f69c8fde"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-e1bb817e54595928",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.sqlite.case-e1bb817e54595928"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-6e190cfeca05b49f",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.sqlite.case-6e190cfeca05b49f"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-aaefe760d261e4bf",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.sqlite.case-aaefe760d261e4bf"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-929cebd105ea0925",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.sqlite.case-929cebd105ea0925"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2s.ddl",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2s.ddl"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-bb747119f22de9e8",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.ddl.case-bb747119f22de9e8"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-633a4e32de7df4be",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.ddl.case-633a4e32de7df4be"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-64a293247b9fb32a",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.ddl.case-64a293247b9fb32a"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-a96c8105eaddf6f0",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.ddl.case-a96c8105eaddf6f0"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-16147bca7cebaa21",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.ddl.case-16147bca7cebaa21"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-ea22dd0a6e6b281d",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.ddl.case-ea22dd0a6e6b281d"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2s.command-results",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2s.command-results"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-83427b6d51b66fa6",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.command-results.case-83427b6d51b66fa6"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-4a248d5e73b2514f",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.command-results.case-4a248d5e73b2514f"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-543e5abd1372fe6d",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.command-results.case-543e5abd1372fe6d"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-207bca756be6ac0d",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.command-results.case-207bca756be6ac0d"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-7afc003bcd02ae6c",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.command-results.case-7afc003bcd02ae6c"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-9a101297cada90be",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.command-results.case-9a101297cada90be"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2s.transactions",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2s.transactions"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-9c51032e4d4038e1",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.transactions.case-9c51032e4d4038e1"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-fe75138ace6ae93a",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.transactions.case-fe75138ace6ae93a"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-c0fd0d3206248974",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.transactions.case-c0fd0d3206248974"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-9eb297ffe7853458",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.transactions.case-9eb297ffe7853458"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-63b1c687d34aeee5",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.transactions.case-63b1c687d34aeee5"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-5358dd57d404c41a",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.transactions.case-5358dd57d404c41a"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-4863eac769e290dc",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.transactions.case-4863eac769e290dc"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-e9834734c4ea005b",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.transactions.case-e9834734c4ea005b"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-ca300ae5f1073288",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.transactions.case-ca300ae5f1073288"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-e5e6bfa6b9efa5e9",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.transactions.case-e5e6bfa6b9efa5e9"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-1cbd0389b01450b2",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.transactions.case-1cbd0389b01450b2"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-983d8042df39a94b",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.transactions.case-983d8042df39a94b"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-551eb32e55c10eb6",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.transactions.case-551eb32e55c10eb6"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-a6e4bd377058f104",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.transactions.case-a6e4bd377058f104"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-8c6021fe8d0041a2",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.transactions.case-8c6021fe8d0041a2"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2s.source-facts",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2s.source-facts"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-e9aa255d0209ead8",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.source-facts.case-e9aa255d0209ead8"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-7346d8522d592f0b",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.source-facts.case-7346d8522d592f0b"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-67e77675b7af2265",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.source-facts.case-67e77675b7af2265"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-ff5f30494b34e8fa",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.source-facts.case-ff5f30494b34e8fa"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-9426ccb80cf037a4",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.source-facts.case-9426ccb80cf037a4"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-6005b5c8c5c674d9",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.source-facts.case-6005b5c8c5c674d9"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-ce3f2208e42495a3",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.source-facts.case-ce3f2208e42495a3"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-228708d02b4f7b72",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.source-facts.case-228708d02b4f7b72"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-0d073422ca59c3a0",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.source-facts.case-0d073422ca59c3a0"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-daa1deb9b4d0f663",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.source-facts.case-daa1deb9b4d0f663"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-9d12d5cab51d80e9",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.source-facts.case-9d12d5cab51d80e9"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-cbe14e90f7c830d4",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.source-facts.case-cbe14e90f7c830d4"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-509c8f8ee66c48fe",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.source-facts.case-509c8f8ee66c48fe"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-b9798ce8ffef3ce4",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.source-facts.case-b9798ce8ffef3ce4"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-6777c69a705f989d",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.source-facts.case-6777c69a705f989d"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2s.projection-rebuild",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2s.projection-rebuild"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-c046c9999f5ab2e8",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.projection-rebuild.case-c046c9999f5ab2e8"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-b54e26fca3983bd7",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.projection-rebuild.case-b54e26fca3983bd7"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2s.handoff",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2s.handoff"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-68b0f65fa59604fb",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.handoff.case-68b0f65fa59604fb"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-a31d079de80b5ba3",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.handoff.case-a31d079de80b5ba3"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-851d8da0cda9f610",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.handoff.case-851d8da0cda9f610"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-f5df5cf32ce74b18",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.handoff.case-f5df5cf32ce74b18"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-618f0232dee6c5fb",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.handoff.case-618f0232dee6c5fb"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2s.restore",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2s.restore"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-9208c1a9969444c0",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-9208c1a9969444c0"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-0e042a065fab2df9",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-0e042a065fab2df9"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-0245a8b20537e56d",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-0245a8b20537e56d"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-328187b3d7e9970d",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-328187b3d7e9970d"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-257a8afa45e80f01",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-257a8afa45e80f01"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-a6ed285ae8d5d206",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-a6ed285ae8d5d206"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-3e9388e64be6e424",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-3e9388e64be6e424"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-c33b45229a234dc2",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-c33b45229a234dc2"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-ae8edc529117987b",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-ae8edc529117987b"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-04f28f7e21f8c517",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-04f28f7e21f8c517"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-5f0865c543d38000",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-5f0865c543d38000"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-b44252179c9e7a5d",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-b44252179c9e7a5d"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-d5f19166b03545ac",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-d5f19166b03545ac"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-d680f1a82c9712d0",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-d680f1a82c9712d0"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-436bdaf8d0ce678e",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-436bdaf8d0ce678e"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-da2a90fc7592ecac",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-da2a90fc7592ecac"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-0f6c0d299888f98a",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-0f6c0d299888f98a"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-200a3a215b8df2f9",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-200a3a215b8df2f9"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-57fad8805d2aa65d",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-57fad8805d2aa65d"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-baaf6879571987c3",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-baaf6879571987c3"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-3367c5c311edba14",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-3367c5c311edba14"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-b41e629410d6bd72",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-b41e629410d6bd72"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-bd1a0e6d778e751e",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-bd1a0e6d778e751e"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-f4ba9a3a00d08fc1",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-f4ba9a3a00d08fc1"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-2535bafa3b986d9f",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-2535bafa3b986d9f"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-f0a80cef8d362eb0",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-f0a80cef8d362eb0"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-11821e6b8fe70162",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-11821e6b8fe70162"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-21c4fe51e1eaaf75",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-21c4fe51e1eaaf75"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-77e7f58c0adbfd34",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-77e7f58c0adbfd34"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-6a06ceb80ff91466",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-6a06ceb80ff91466"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-16c82e6efcff0680",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-16c82e6efcff0680"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-7866356202adaca5",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-7866356202adaca5"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-ef2a0d13845e9fce",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-ef2a0d13845e9fce"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-3d641c3edf847bef",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-3d641c3edf847bef"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-db75b8ca6e733373",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-db75b8ca6e733373"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-875c30fd430746cf",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-875c30fd430746cf"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-7e06f53c78c6245a",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-7e06f53c78c6245a"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-ea0f82fddbb05f2f",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.restore.case-ea0f82fddbb05f2f"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "requirement.v2s.read-only",
+      "type": "requirement-definition",
+      "members": [
+        "requirement:v2s.read-only"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "scenario.case-0225d0fcb67a7e0c",
+      "type": "scenario-definition",
+      "members": [
+        "scenario:v2s.read-only.case-0225d0fcb67a7e0c"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.db30a3dace75",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:publish-release"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.a6e6e1d8e110",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:change-activation"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.ac1c718bba26",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:admit-run"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.c2f841ff5b45",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:cancel-run"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.a77d72c10479",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:allocate-run-attempt"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.75df0ab629b2",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:register-action"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.0995696d022d",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:append-action-event"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.70e1530fb55d",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:append-checkpoint"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.adf99bd6c404",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:transfer-obligation-owner"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.d78af523f4b1",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:decide-approval"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.21aedd979f3a",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:create-effect-intent"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.fed7840a98a0",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:issue-effect-claim"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.58ddfdc0b593",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:start-effect-dispatch"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.2ad1953ac928",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:submit-receipt"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.2825cdda867f",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:claim-reconciliation"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.346780932351",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:resolve-reconciliation"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.1a195aa8b690",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:terminalize-run"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.ba9963280860",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:register-process"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.ff73b4243920",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:submit-launch-attestation"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.cec1c67c3aec",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:restore-init"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.6ebffdc2851a",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:abort-recovery"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.controlCommand.e2153bacc769",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:controlCommand:recover-activate"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.21ef77985daa",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:release.published"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.76434bd3101d",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:activation.changed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.652e96ec9a71",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:run.admitted"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.251e2bcbe3b6",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:run.cancel-requested"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.162d9022eca9",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:run.waiting"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.2b6ab4c927b8",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:run.completed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.67a8eb00fc0b",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:run.failed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.03a89df5b96c",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:run.cancelled"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.01e39916f701",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:attempt.allocated"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.915d8989e29a",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:attempt.starting"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.7feb3b0adeeb",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:attempt.running"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.2fcaad88b500",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:attempt.quiescing"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.e19f56318305",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:attempt.checkpointed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.8906368cd9b8",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:attempt.succeeded"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.000952c04ecd",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:attempt.failed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.c3727ffdbb36",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:attempt.cancelled"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.39ab221d1dbc",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:attempt.quiesced"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.4011b7ba8432",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:harness.session-started"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.1c3792f80150",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:harness.technical-result"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.3cac6340aa7a",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:harness.protocol-failed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.b9552ef11281",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:action.registered"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.dc11c53c994d",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:action.event-appended"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.2e4b7efd6ec8",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:checkpoint.appended"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.89f032d54435",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:obligation.owner-transferred"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.04a5f1618389",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:approval.requested"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.63a9680dc6e5",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:approval.approved"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.4950bd1ae2f4",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:approval.rejected"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.48f0defc3c0a",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:approval.expired"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.96fbcd573dcd",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:approval.superseded"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.60cac8beb674",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:effect.intent-accepted"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.256dec27fb5c",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:effect.claimed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.754644b05ccc",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:effect.dispatch-started"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.f93663571f6b",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:effect.local-result"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.58289638f4df",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:effect.receipt-admitted"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.235cbe8549e5",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:effect.outcome-recorded"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.f1250c1fb9d3",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:effect.reconciliation-updated"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.dde9b8294708",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:process.registered"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.be606680b435",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:process.signal-recorded"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.f7736f66dd33",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:process.exited"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.3163d9aa1377",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:process.reaped"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.59c5626400c1",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:attestation.recorded"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.6a100ae276ce",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:attestation.invalidated"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.df607de93464",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:recovery.updated"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runEvent.7884f9efe3b3",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runEvent:command.completed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.harnessEvent.e83e987f8af7",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:harnessEvent:technical-started"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.harnessEvent.3913146e64ca",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:harnessEvent:action-event"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.harnessEvent.c447b951adc3",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:harnessEvent:checkpoint-proposed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.harnessEvent.9aef07e205d0",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:harnessEvent:outcome-proposed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.harnessEvent.b22108ae0bc2",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:harnessEvent:technical-succeeded"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.harnessEvent.a6f694db4f27",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:harnessEvent:technical-failed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.harnessEvent.6596a26b0b35",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:harnessEvent:protocol-failed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.actionEvent.b3c06d64a377",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:actionEvent:action-started"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.actionEvent.ec6e567d8d69",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:actionEvent:action-progress"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.actionEvent.290e720ccffa",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:actionEvent:inner-retry"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.actionEvent.90c6783d80fa",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:actionEvent:tool-result"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.actionEvent.1b92fbc5a953",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:actionEvent:subagent-result"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.actionEvent.c357887a3b61",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:actionEvent:action-succeeded"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.actionEvent.a5edf1b79c2e",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:actionEvent:action-failed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.actionEvent.301323cbbec3",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:actionEvent:action-skipped"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.bec0797cc80e",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:database-genesis"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.51171808c6f9",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:control-instance-resumed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.e9151e5bdf08",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:release-published"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.c8acb9ba65a5",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:time-observed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.906bf36a4af4",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:activation-changed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.e4993f742d8b",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:activation-quarantined"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.d1d45aaf3d5f",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:run-admitted"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.4f936d24040a",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:run-attempt-allocated"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.0e27bb84fe24",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:run-attempt-state"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.3173f8f882e3",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:run-health"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.a4c4ceae3f5f",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:run-terminal"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.02579fee81f1",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:attempt-quiesced"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.2444e0940b4d",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:harness-session-started"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.e9716e73d24f",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:action-registered"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.3913146e64ca",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:action-event"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.ae2188128255",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:checkpoint-appended"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.5844af612e22",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:obligation-owner-transferred"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.9aef07e205d0",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:outcome-proposed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.65135158eb81",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:process-registered"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.9d31c0057ed6",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:process-signal"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.66ca4d26e684",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:process-exit"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.45bc9098cd42",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:process-reaped"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.dec87c47fe47",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:approval-requested"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.7048d0cea396",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:approval-decided"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.1e21fbac163b",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:effect-intent"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.7bc7f3713953",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:effect-claim"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.e622494d0017",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:effect-dispatch-started"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.eeff6d5bc06c",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:local-dispatch-result"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.888d48f9ccba",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:external-receipt"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.8a1a8ce29e5d",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:post-final-conflict"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.67ea68ef0cc2",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:reconciliation-claim"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.fbce644be52b",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:reconciliation-observation"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.f1178904f2a3",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:external-outcome"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.6314ea295788",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:launch-attestation"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.52b77fbc1601",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:launch-attestation-invalidated"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.d69d56b1acc4",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:command-result"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.1f60da4d5d56",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:mutation-authority-registered"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.a2aeae0bcb95",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:mutation-authority-revoked"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.6c157e71080f",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:registration-closed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.7b58f8508a73",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:target-authority-closed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.875953a189d2",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:recovery-session"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.bd7f82ab7d93",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:recovery-qualification"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.2300e9dfd9d0",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:recovery-operation-discovered"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.afff28e1d543",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:recovery-operation-claim"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.e32a5714ae05",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:recovery-operation-outcome"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.1e820c3503e5",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:recovery-post-final-conflict"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.be42a7fc5ff1",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:recovery-agent-binding-conflict"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.c96a2ba2df2e",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:recovery-binding-invalidated"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.1643f6dc48c2",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:binding-certificate"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.sourceFact.457ac6e1fc06",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:sourceFact:activation-permit-evidence"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.activationState.d1022618b99a",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:activationState:inactive"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.activationState.0bb09d80600e",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:activationState:shadow"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.activationState.96879611650f",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:activationState:active"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.activationState.65c10ef38a2f",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:activationState:draining"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.activationState.c3ecfc91e8f0",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:activationState:quarantined"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runState.52563f898870",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runState:admitted"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runState.c071cf5f5ed6",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runState:running"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runState.80cfa3e7f28d",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runState:waiting"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runState.0a0dcac59526",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runState:settling"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runState.4ddb3e96801a",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runState:completed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runState.5d28a90f4498",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runState:failed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runState.8b47045eb7b8",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runState:cancelled"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runAttemptState.406effb1e9c5",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runAttemptState:created"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runAttemptState.59dbf36d9930",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runAttemptState:starting"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runAttemptState.c071cf5f5ed6",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runAttemptState:running"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runAttemptState.181c5d977bc7",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runAttemptState:quiescing"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runAttemptState.b03e5ef82c5c",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runAttemptState:checkpointed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runAttemptState.5dceaeceb6d8",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runAttemptState:succeeded"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runAttemptState.5d28a90f4498",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runAttemptState:failed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.runAttemptState.8b47045eb7b8",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:runAttemptState:cancelled"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.approvalState.62a2fed3d6e0",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:approvalState:pending"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.approvalState.0e449aae8fb8",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:approvalState:deciding"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.approvalState.2687f86ed678",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:approvalState:approved"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.approvalState.20cd938a2ea6",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:approvalState:rejected"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.approvalState.fa64ea1e82e1",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:approvalState:expired"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.approvalState.444bd9c51d51",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:approvalState:superseded"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.effectState.5fb90dc793ce",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:effectState:intent-recorded"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.effectState.ce73ae3ce675",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:effectState:approval-pending"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.effectState.04dd9c7e9464",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:effectState:authorized"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.effectState.d79d3458a588",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:effectState:claimed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.effectState.1e856375cd58",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:effectState:dispatch-started"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.effectState.b23a6a8439c0",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:effectState:unknown"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.effectState.cc962289af28",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:effectState:committed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.effectState.cc56f3c4ecb0",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:effectState:not-committed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.effectState.34a337336ba9",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:effectState:conflicted"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.reconciliationState.62a2fed3d6e0",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:reconciliationState:pending"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.reconciliationState.d79d3458a588",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:reconciliationState:claimed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.reconciliationState.f414e3b4d3da",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:reconciliationState:resolved-committed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.reconciliationState.2044b43c6b42",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:reconciliationState:resolved-not-committed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.reconciliationState.27a888c9d5e6",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:reconciliationState:unresolved"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoverySessionState.62a2fed3d6e0",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoverySessionState:pending"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoverySessionState.ef2bf420b02f",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoverySessionState:initializing-awaiting-local"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoverySessionState.19559f1ac8c2",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoverySessionState:initialized"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoverySessionState.02238771235c",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoverySessionState:retiring-awaiting-local"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoverySessionState.5b720147b691",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoverySessionState:retired"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryQualificationState.c3ecfc91e8f0",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryQualificationState:quarantined"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryQualificationState.7b661370c9ae",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryQualificationState:fencing"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryQualificationState.c896cb9009c8",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryQualificationState:enumerating"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryQualificationState.0e6f425a12b3",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryQualificationState:reconciling"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryQualificationState.b24d6d33736e",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryQualificationState:ready"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryQualificationState.9205e48e25b0",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryQualificationState:invalidating"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryQualificationState.a2d1c681df8f",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryQualificationState:aborted"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryQualificationState.40caeb2d30d3",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryQualificationState:qualified"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryQualificationState.988244c0157c",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryQualificationState:invalidated"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryAgentAttemptState.62a2fed3d6e0",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryAgentAttemptState:pending"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryAgentAttemptState.4d27f25c0e9c",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryAgentAttemptState:executing"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryAgentAttemptState.da0b9885af85",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryAgentAttemptState:aborted-awaiting-local"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryAgentAttemptState.a2d1c681df8f",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryAgentAttemptState:aborted"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryAgentAttemptState.5e1cf42878df",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryAgentAttemptState:bound"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryAgentAttemptState.5aa817a96965",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryAgentAttemptState:binding-invalidated-awaiting-local"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryAgentAttemptState.8082d8aa6940",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryAgentAttemptState:consumed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryAgentAttemptState.988244c0157c",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryAgentAttemptState:invalidated"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryOperationState.0b823cb985a6",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryOperationState:unknown-pending"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryOperationState.c5022d850996",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryOperationState:unknown-claimed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryOperationState.fe2a12c8114d",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryOperationState:committed-resolved"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryOperationState.0795410c0dd0",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryOperationState:not-committed-resolved"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.recoveryOperationState.8379ac21bcd9",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:recoveryOperationState:conflicted-unresolved"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.bindingCertificateState.5e1cf42878df",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:bindingCertificateState:bound"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.bindingCertificateState.5aa817a96965",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:bindingCertificateState:binding-invalidated-awaiting-local"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.bindingCertificateState.8082d8aa6940",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:bindingCertificateState:consumed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.bindingCertificateState.988244c0157c",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:bindingCertificateState:invalidated"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.activationPermitState.c91a3cc769f8",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:activationPermitState:issued"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.activationPermitState.444bd9c51d51",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:activationPermitState:superseded"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.activationPermitState.fa64ea1e82e1",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:activationPermitState:expired"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.activationPermitState.8082d8aa6940",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:activationPermitState:consumed"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.activationPermitState.4bb47f186df2",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:activationPermitState:revoked"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.mutationAuthorityType.5d4f28f42aaa",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:mutationAuthorityType:admission-owner"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.mutationAuthorityType.13d1a7adec83",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:mutationAuthorityType:gateway-claim"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.mutationAuthorityType.21e5164fb37c",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:mutationAuthorityType:connector-authority"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.mutationAuthorityType.308cb5666e99",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:mutationAuthorityType:direct-mutation-authority"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.mutationAuthorityType.e87bc58044ad",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:mutationAuthorityType:runtime-grant"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.mutationAuthorityType.d5463c2af9e2",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:mutationAuthorityType:control-submission-grant"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.mutationAuthorityType.6255f622ded2",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:mutationAuthorityType:restricted-child-authority"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.hostStatus.1c34f88707b5",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:hostStatus:verified"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.hostStatus.5e2dde9b9746",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:hostStatus:unverified-claim"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.hostStatus.60945d495353",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:hostStatus:unsupported"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.hostMode.7588ac382eb6",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:hostMode:production-control"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.hostMode.b33daa4e083b",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:hostMode:production-child"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.hostMode.c8e951cc3064",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:hostMode:effect-dispatch"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.hostMode.3d1cac976bbf",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:hostMode:recovery-control"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.hostMode.5ee735ab0208",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:hostMode:mutation-disabled-evaluator"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.projectionFamily.d4f0bc5a29de",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:projectionFamily:agent"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.projectionFamily.a4d451ec2346",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:projectionFamily:release"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.projectionFamily.b15526c9c0e7",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:projectionFamily:activation"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.projectionFamily.acba25512100",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:projectionFamily:run"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.projectionFamily.c7ce66d0fb14",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:projectionFamily:attempt"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.projectionFamily.b8e1f80bd70a",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:projectionFamily:event"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.projectionFamily.9deb65b8788f",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:projectionFamily:approval"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.projectionFamily.dcb576426a17",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:projectionFamily:effect"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.projectionFamily.62484e22a6a5",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:projectionFamily:health"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.projectionFamily.8c585378513f",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:projectionFamily:recovery"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "dimension.projectionFamily.d69d56b1acc4",
+      "type": "closed-dimension-definition",
+      "members": [
+        "dimension:projectionFamily:command-result"
+      ],
+      "dependsOn": [
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-recorded.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-recorded.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-recorded.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-recorded.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-recorded.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-recorded.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-recorded.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-recorded.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-init-cas.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-init-cas.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-init-cas.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-init-cas.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-init-cas.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-init-cas.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-init-cas.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-init-cas.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-abort-cas.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-abort-cas.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-abort-cas.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-abort-cas.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-abort-cas.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-abort-cas.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-abort-cas.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-abort-cas.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-local-init.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-local-init.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-local-init.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-local-init.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-local-init.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-local-init.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-local-init.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-local-init.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-local-retire.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-local-retire.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-local-retire.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-local-retire.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-local-retire.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-local-retire.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-local-retire.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-local-retire.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-abort-cas.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-abort-cas.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-abort-cas.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-abort-cas.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-abort-cas.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-abort-cas.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-abort-cas.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-abort-cas.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-local-abort.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-local-abort.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-local-abort.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-local-abort.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-local-abort.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-local-abort.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-local-abort.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-local-abort.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.prebind-finalization.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.prebind-finalization.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.prebind-finalization.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.prebind-finalization.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.prebind-finalization.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.prebind-finalization.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.prebind-finalization.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.prebind-finalization.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.binding-cas.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.binding-cas.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.binding-cas.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.binding-cas.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.binding-cas.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.binding-cas.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.binding-cas.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.binding-cas.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.recovery-conflict-fact.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.recovery-conflict-fact.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.recovery-conflict-fact.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.recovery-conflict-fact.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.recovery-conflict-fact.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.recovery-conflict-fact.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.recovery-conflict-fact.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.recovery-conflict-fact.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.binding-invalidation-cas.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.binding-invalidation-cas.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.binding-invalidation-cas.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.binding-invalidation-cas.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.binding-invalidation-cas.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.binding-invalidation-cas.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.binding-invalidation-cas.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.binding-invalidation-cas.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.binding-invalidation-local.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.binding-invalidation-local.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.binding-invalidation-local.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.binding-invalidation-local.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.binding-invalidation-local.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.binding-invalidation-local.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.binding-invalidation-local.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.binding-invalidation-local.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.activation-success-cas.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.activation-success-cas.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.activation-success-cas.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.activation-success-cas.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.activation-success-cas.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.activation-success-cas.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.activation-success-cas.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.activation-success-cas.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-init-local-ack.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-init-local-ack.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-init-local-ack.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-init-local-ack.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-init-local-ack.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-init-local-ack.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-init-local-ack.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-init-local-ack.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-retire-local-ack.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-retire-local-ack.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-retire-local-ack.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-retire-local-ack.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-retire-local-ack.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-retire-local-ack.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.session-retire-local-ack.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.session-retire-local-ack.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-abort-local-ack.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-abort-local-ack.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-abort-local-ack.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-abort-local-ack.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-abort-local-ack.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-abort-local-ack.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-abort-local-ack.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-abort-local-ack.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.activation-success-local-ack.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.activation-success-local-ack.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.activation-success-local-ack.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.activation-success-local-ack.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.activation-success-local-ack.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.activation-success-local-ack.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.activation-success-local-ack.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.activation-success-local-ack.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.binding-invalidation-local-ack.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.binding-invalidation-local-ack.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.binding-invalidation-local-ack.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.binding-invalidation-local-ack.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.binding-invalidation-local-ack.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.binding-invalidation-local-ack.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.binding-invalidation-local-ack.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.binding-invalidation-local-ack.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-binding-conflict-target-ack.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-binding-conflict-target-ack.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-binding-conflict-target-ack.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-binding-conflict-target-ack.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-binding-conflict-target-ack.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-binding-conflict-target-ack.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-binding-conflict-target-ack.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-binding-conflict-target-ack.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.target-authority-close-cas.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.target-authority-close-cas.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.target-authority-close-cas.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.target-authority-close-cas.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.target-authority-close-cas.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.target-authority-close-cas.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.target-authority-close-cas.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.target-authority-close-cas.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.target-authority-closed-proof.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.target-authority-closed-proof.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.target-authority-closed-proof.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.target-authority-closed-proof.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.target-authority-closed-proof.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.target-authority-closed-proof.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.target-authority-closed-proof.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.target-authority-closed-proof.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-binding-conflict.crash-before",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-binding-conflict.crash-before"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-binding-conflict.crash-after",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-binding-conflict.crash-after"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-binding-conflict.response-loss",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-binding-conflict.response-loss"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    },
+    {
+      "id": "gate.recovery-race.agent-binding-conflict.competing-command",
+      "type": "recovery-race-definition",
+      "members": [
+        "recovery-race:recovery-race.agent-binding-conflict.competing-command"
+      ],
+      "dependsOn": [
+        "local.fault-matrix",
+        "local.contracts"
+      ]
+    }
+  ],
+  "requiredMemberDigest": "0bb2bab6987ea605c12f82606c56fe396011ca96e6f32d1d9c794277dc2a2126",
+  "gateOrderDigest": "940e5d4807517a42c69aacec300db52168af32e768ce85ecc6c693f3d4105f30",
+  "aggregateOwner": "all",
+  "completePassToken": "M0 advisory: READY",
+  "scope": "advisory-only",
+  "frozenDenominator": {
+    "requirements": 41,
+    "scenarios": 244,
+    "closedDimensionMembers": 233,
+    "recoveryRaceCells": 88,
+    "scenarioDimensionRaceMembers": 565,
+    "definitionGates": 606,
+    "localGates": 11,
+    "externalGates": 1,
+    "aggregateGates": 618
+  }
+}

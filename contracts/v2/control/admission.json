@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "v2-admission-v1",
+  "requirementIds": ["v2c.activation", "v2c.run"],
+  "profiles": [
+    {
+      "id": "production",
+      "activationState": "active",
+      "admissionKinds": ["manual", "intent"],
+      "requiredAttestationMode": "production-control",
+      "bindLatestGenerationInInitialFact": true,
+      "mutationDisabled": false
+    },
+    {
+      "id": "shadow",
+      "activationState": "shadow",
+      "admissionKinds": ["evaluator"],
+      "requiredAttestationMode": "mutation-disabled-evaluator",
+      "bindLatestGenerationInInitialFact": true,
+      "mutationDisabled": true
+    }
+  ],
+  "unsupportedAdmissionKinds": ["scheduled", "cron", "misfire", "catch-up"],
+  "scheduledErrorKind": "unsupported_schedule",
+  "productionCommitSet": [
+    "Run",
+    "initialRunEvent",
+    "commandResult",
+    "projection",
+    "releaseId",
+    "activationEpoch",
+    "productionControlAttestationId",
+    "productionControlAttestationDigest",
+    "productionControlAttestationGeneration"
+  ],
+  "productionCasCompares": [
+    "singleProductionOwner",
+    "releaseId",
+    "activationEpoch",
+    "attestationMode",
+    "attestationGeneration",
+    "attestationExpiry"
+  ],
+  "zeroRowResult": "stale_generation",
+  "recovery": {
+    "ordinaryPromotionAllowedWhileUnqualified": false,
+    "activationCommandKind": "recover-activate",
+    "ownerRequirementId": "v2s.restore",
+    "clientPermitArgument": false
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "m0-cutover-v1",
+  "requirementId": "m0o.cutover",
+  "phases": [
+    "mutation-disabled-shadow",
+    "close-old-admission",
+    "drain-runs-and-approvals",
+    "reconcile-effects",
+    "record-old-final-epoch",
+    "promote-higher-epoch",
+    "canary",
+    "higher-epoch-rollback"
+  ],
+  "barriers": ["cron", "manual", "intent"],
+  "cases": [
+    { "caseId": "cutover.enabled-false-only", "input": { "cronClosed": true, "manualClosed": false, "intentClosed": false }, "expected": "contract_failure" },
+    { "caseId": "cutover.crash-before-promotion", "input": { "oldOwnerFenced": true, "newOwnerActive": false }, "expectedProductionOwners": 0 },
+    { "caseId": "cutover.unknown-effect", "input": { "outcome": "unknown", "reconciliation": "pending" }, "expected": "promotion-blocked" },
+    { "caseId": "cutover.stale-epoch", "input": { "commandEpoch": 4, "currentEpoch": 5 }, "expected": "stale_epoch" },
+    { "caseId": "cutover.rollback", "input": { "failedEpoch": 5, "rollbackEpoch": 6 }, "expected": "single-owner" }
+  ],
+  "dualReadAllowed": true,
+  "dualWriteAllowed": false,
+  "dualAdmissionAllowed": false
+}

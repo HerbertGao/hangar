@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "v2-direct-effects-v1",
+  "requirementId": "v2c.direct-effect",
+  "productionProfilesRequiringEmptyList": ["m0", "m1"],
+  "exceptionIdentity": [
+    "inventoryRef",
+    "sink",
+    "operation",
+    "authorizationCapability",
+    "justification"
+  ],
+  "enforcementLevel": "operation",
+  "mutationCapableReadAuthorization": "treat-as-mutation-capable",
+  "unenforceableOperationBoundary": "reject",
+  "permittedNonProductionUses": ["pinned-read-only-inventory", "mutation-disabled-fixture"],
+  "forbiddenQualifications": ["production", "production-restore", "mutation-grant"],
+  "shadowRemoves": [
+    "gateway-grant",
+    "direct-exception",
+    "mutation-capable-credential",
+    "mutation-capable-child-access"
+  ],
+  "onboarding": {
+    "beforeRevisionRequired": true,
+    "afterRevisionRequired": true,
+    "afterCountMayExceedBefore": false
+  },
+  "productionExceptions": []
+}

@@ -1,0 +1,53 @@
+{
+  "schemaVersion": "m0-prerequisites-v1",
+  "requirements": [
+    {
+      "id": "node",
+      "access": "PATH",
+      "command": "node",
+      "versionArgs": [
+        "--version"
+      ],
+      "versionPrefix": "v",
+      "supportedVersion": {
+        "minInclusive": "22.0.0",
+        "maxExclusive": "25.0.0"
+      }
+    },
+    {
+      "id": "sqlite3",
+      "access": "PATH",
+      "command": "sqlite3",
+      "versionArgs": [
+        "--version"
+      ],
+      "versionPrefix": "",
+      "supportedVersion": {
+        "minInclusive": "3.45.0",
+        "maxExclusive": "4.0.0"
+      }
+    },
+    {
+      "id": "git",
+      "access": "PATH",
+      "command": "git",
+      "versionArgs": [
+        "--version"
+      ],
+      "versionPrefix": "git version ",
+      "supportedVersion": {
+        "minInclusive": "2.39.0",
+        "maxExclusive": "3.0.0"
+      }
+    }
+  ],
+  "revisionAccess": {
+    "commandId": "git",
+    "method": "git-cat-file",
+    "probeArgs": [
+      "cat-file",
+      "-e",
+      "HEAD^{commit}"
+    ]
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "schemaVersion": "v2-harness-session-v1",
+  "requirementIds": ["v2c.harness-session", "v2c.run-attempt"],
+  "session": {
+    "identity": ["runId", "attempt", "harnessSessionId"],
+    "uniquePerRunAttempt": true,
+    "projectionAuthority": false,
+    "mayCreateRun": false,
+    "mayCreateRunAttempt": false,
+    "maySubmitTerminal": false
+  },
+  "actionRegistration": {
+    "commandKind": "register-action",
+    "identity": ["runId", "actionId"],
+    "binding": ["originRunAttempt", "actionKind", "parentActionId", "inputArtifactDigest", "commandIdentity"],
+    "parentMustExist": true,
+    "parentMustPrecedeChild": true,
+    "exactReplay": "existing-action",
+    "conflictingReplay": "idempotency_conflict",
+    "actionKinds": ["tool", "subagent", "provider", "effect-origin"]
+  },
+  "actionEvents": {
+    "kinds": [
+      "action-started",
+      "action-progress",
+      "inner-retry",
+      "tool-result",
+      "subagent-result",
+      "action-succeeded",
+      "action-failed",
+      "action-skipped"
+    ],
+    "requiredBindings": [
+      "runId",
+      "attempt",
+      "actionId",
+      "actualIdentityDigest",
+      "effectiveGrantDigest",
+      "artifactRefs"
+    ],
+    "innerRetryOrdinalRequiredFor": ["inner-retry"]
+  },
+  "checkpoint": {
+    "commandKind": "append-checkpoint",
+    "identity": ["runId", "checkpointId"],
+    "allowedBoundaryKinds": ["human", "effect", "external-input"],
+    "requiredFields": [
+      "checkpointId",
+      "releaseId",
+      "runId",
+      "producerAttempt",
+      "producerActionId",
+      "checkpointSchemaId",
+      "checkpointSchemaVersion",
+      "artifactRef",
+      "artifactDigest",
+      "boundaryKind",
+      "outstandingObligations"
+    ],
+    "artifactRefOnly": true,
+    "resumeCreatesNewAttempt": true,
+    "sameAttemptResume": "invalid_state"
+  },
+  "obligations": {
+    "kinds": [
+      {
+        "kind": "effect",
+        "requiredFields": [
+          "kind",
+          "subjectId",
+          "subjectGeneration",
+          "ownerKind",
+          "ownerGeneration",
+          "effectId",
+          "intentGeneration"
+        ]
+      },
+      {
+        "kind": "human",
+        "requiredFields": ["kind", "subjectId", "subjectGeneration", "ownerKind", "ownerGeneration"]
+      },
+      {
+        "kind": "external-input",
+        "requiredFields": ["kind", "subjectId", "subjectGeneration", "ownerKind", "ownerGeneration"]
+      }
+    ],
+    "ownerKinds": ["control", "effect-gateway", "reconciliation"],
+    "canonicalOrder": ["kind", "subjectId", "subjectGeneration", "ownerKind", "ownerGeneration"],
+    "collisionKey": ["kind", "subjectId", "subjectGeneration"],
+    "mustExistBeforeCheckpoint": true,
+    "resumeStates": ["resolved-committed", "resolved-not-committed", "satisfied"]
+  },
+  "ownerTransfer": {
+    "factKind": "ObligationOwnerTransferred",
+    "identity": [
+      "runId",
+      "kind",
+      "subjectId",
+      "subjectGeneration",
+      "fromOwnerKind",
+      "fromOwnerGeneration"
+    ],
+    "requiredFields": [
+      "toOwnerKind",
+      "toOwnerGeneration",
+      "transferAuthorityDigest"
+    ],
+    "singleSuccessor": true,
+    "forbidGap": true,
+    "forbidBranch": true,
+    "forbidCycle": true,
+    "forbidSubjectGenerationChange": true
+  },
+  "attemptQuiescence": {
+    "factKind": "AttemptQuiesced",
+    "binding": [
+      "runId",
+      "attempt",
+      "harnessSessionId",
+      "containmentId",
+      "containmentGeneration",
+      "grantRevocationGeneration",
+      "obligationSetDigest",
+      "quiescenceGeneration"
+    ],
+    "allocationCasCompares": [
+      "priorAttemptTerminal",
+      "currentAttemptNumber",
+      "containmentSealed",
+      "grantRevocationGeneration",
+      "obligationSetDigest",
+      "checkpointOwnerChainHead"
+    ],
+    "allocationConsumesFact": true,
+    "fencedAttemptInputs": [
+      "action-registration",
+      "harness-event",
+      "action-event",
+      "effect-intent",
+      "checkpoint",
+      "outcome-proposal",
+      "grant-use",
+      "child-registration",
+      "child-launch"
+    ],
+    "lateAllowlist": ["control-cleanup", "existing-obligation-receipt", "existing-obligation-reconciliation"],
+    "lateInputsScheduleWork": false
+  },
+  "rejectedIdentifiers": {
+    "prebuiltProtocols": ["workflow", "node-kind", "NodeAttempt", "ProcessSpec"],
+    "checkpointInlineFields": ["modelContext", "secretValue", "businessBody", "programCounter", "continuation"]
+  }
+}

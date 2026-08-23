@@ -1,0 +1,990 @@
+{
+  "schemaVersion": "m0-measurement-evidence-v1",
+  "requirementId": "m0o.measurements",
+  "environment": {
+    "environmentId": "darwin-arm64-local-2026-08-20",
+    "os": "darwin",
+    "architecture": "arm64",
+    "productionEligible": false
+  },
+  "sources": {
+    "sessionWindow": {
+      "sessionId": "01a01eb0-4c87-7d4d-97cc-48bcb8ad063a",
+      "startUtc": "2026-08-20T10:21:05.543Z",
+      "endUtc": "2026-08-20T18:39:36.072Z",
+      "durationMs": 29910529,
+      "interpretation": "conservative single-operator upper bound including planning, implementation, validation, and review"
+    },
+    "prerequisiteProbe": {
+      "command": "/usr/bin/time -l node scripts/validate-m0.mjs prerequisites",
+      "exitStatus": 0,
+      "resultKind": "pass",
+      "checks": 5,
+      "realMs": 240,
+      "maximumResidentSetBytes": 88801280,
+      "peakMemoryFootprintBytes": 16156736,
+      "peakProcessCount": 2,
+      "stdoutSha256": "95b2fc60f607dcb4ad8827211c82102d0e6f093fd919cc9b52cde37da7d3e001",
+      "quality": "local-provisional-not-clean-host"
+    },
+    "artifactInventory": {
+      "command": "find contracts/v2 oracles/m0 measurements scripts/validate-m0.mjs tests/m0 -type f plus byte/logical-line count",
+      "files": 161,
+      "bytes": 1809383,
+      "nonblankLogicalLines": 53211,
+      "capturedBeforeThisEvidenceFile": true
+    },
+    "zeroEnablement": {
+      "basis": "M0 contains no Agent-specific adapter, prompt, tenant configuration, or product runtime",
+      "agentSpecificPersonMs": 0,
+      "candidateSpecificGlueLoc": 0
+    },
+    "recurringCost": {
+      "currency": "CNY",
+      "twelveMonthIncrementalRecurring": "0.00",
+      "basis": "contract artifacts add no daemon, hosted service, dependency, or recurring storage allocation"
+    },
+    "e1ExecutionClosure": {
+      "sessionWindow": {
+        "startUtc": "2026-08-20T10:21:05.543Z",
+        "endUtc": "2026-08-21T02:07:12.708Z",
+        "durationMs": 56767165,
+        "interpretation": "conservative single-operator upper bound through E1 closure"
+      },
+      "aggregatePerformance": {
+        "command": "/usr/bin/time -l node scripts/validate-m0.mjs all",
+        "quality": "local-provisional-fresh-process-not-certified-production-host",
+        "runs": [
+          {
+            "run": 1,
+            "exitStatus": 0,
+            "elapsedMs": 75746,
+            "maximumResidentSetBytes": 113459200,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 2,
+            "exitStatus": 0,
+            "elapsedMs": 74991,
+            "maximumResidentSetBytes": 111329280,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 3,
+            "exitStatus": 0,
+            "elapsedMs": 75224,
+            "maximumResidentSetBytes": 112574464,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          }
+        ],
+        "p95ElapsedMs": 75746,
+        "stopLossMs": 120000,
+        "stopLossExceeded": false
+      },
+      "artifactInventory": {
+        "command": "scoped recursive byte and nonblank-line count",
+        "files": 168,
+        "bytes": 2974924,
+        "nonblankLogicalLines": 80079,
+        "capturedBeforeEvidenceUpdate": true
+      },
+      "processCount": {
+        "steady": 0,
+        "peakUpperBound": 6,
+        "basis": "validate parent + fixture runner + two competing actors + two sqlite children"
+      },
+      "impact": {
+        "dependenciesAdded": 0,
+        "daemonsAdded": 0,
+        "agentSpecificPersonMs": 0,
+        "candidateSpecificGlueLoc": 0,
+        "twelveMonthIncrementalRecurring": "0.00"
+      }
+    },
+    "e1BoundedWitnessClosure": {
+      "sessionWindow": {
+        "startUtc": "2026-08-20T10:21:05.543Z",
+        "endUtc": "2026-08-21T03:36:06.104Z",
+        "durationMs": 62100561,
+        "interpretation": "conservative single-operator upper bound through bounded-witness E1 closure"
+      },
+      "aggregatePerformance": {
+        "command": "/usr/bin/time -l node scripts/validate-m0.mjs all",
+        "quality": "local-provisional-fresh-process-not-certified-production-host",
+        "runs": [
+          {
+            "run": 1,
+            "exitStatus": 0,
+            "elapsedMs": 85360,
+            "maximumResidentSetBytes": 161923072,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 2,
+            "exitStatus": 0,
+            "elapsedMs": 115072,
+            "maximumResidentSetBytes": 166854656,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 3,
+            "exitStatus": 0,
+            "elapsedMs": 97593,
+            "maximumResidentSetBytes": 165052416,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          }
+        ],
+        "p95ElapsedMs": 115072,
+        "stopLossMs": 120000,
+        "stopLossExceeded": false
+      },
+      "artifactInventory": {
+        "command": "scoped recursive byte and nonblank-line count",
+        "files": 168,
+        "bytes": 3128587,
+        "nonblankLogicalLines": 83192,
+        "capturedBeforeEvidenceUpdate": true
+      },
+      "processCount": {
+        "steady": 0,
+        "peakUpperBound": 6,
+        "basis": "validate parent + exact fixture child + two competing actors + sqlite children"
+      },
+      "impact": {
+        "dependenciesAdded": 0,
+        "daemonsAdded": 0,
+        "agentSpecificPersonMs": 0,
+        "candidateSpecificGlueLoc": 0,
+        "twelveMonthIncrementalRecurring": "0.00"
+      }
+    },
+    "e1AssertionOwnerClosure": {
+      "sessionWindow": {
+        "startUtc": "2026-08-20T10:21:05.543Z",
+        "endUtc": "2026-08-21T04:55:03.032Z",
+        "durationMs": 66837489,
+        "interpretation": "conservative single-operator upper bound through assertion-owner E1 closure"
+      },
+      "aggregatePerformance": {
+        "command": "/usr/bin/time -l node scripts/validate-m0.mjs all",
+        "quality": "local-provisional-fresh-process-not-certified-production-host",
+        "runs": [
+          {
+            "run": 1,
+            "exitStatus": 0,
+            "elapsedMs": 100366,
+            "maximumResidentSetBytes": 166232064,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 2,
+            "exitStatus": 0,
+            "elapsedMs": 99446,
+            "maximumResidentSetBytes": 168411136,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 3,
+            "exitStatus": 0,
+            "elapsedMs": 103821,
+            "maximumResidentSetBytes": 165298176,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          }
+        ],
+        "p95ElapsedMs": 103821,
+        "stopLossMs": 120000,
+        "stopLossExceeded": false
+      },
+      "artifactInventory": {
+        "command": "scoped recursive byte and nonblank-line count",
+        "files": 169,
+        "bytes": 3220245,
+        "nonblankLogicalLines": 85061,
+        "capturedBeforeEvidenceUpdate": true
+      },
+      "processCount": {
+        "steady": 0,
+        "peakUpperBound": 6,
+        "basis": "validate parent + assertion-owner test children + two competing actors + sqlite children"
+      },
+      "impact": {
+        "dependenciesAdded": 0,
+        "daemonsAdded": 0,
+        "agentSpecificPersonMs": 0,
+        "candidateSpecificGlueLoc": 0,
+        "twelveMonthIncrementalRecurring": "0.00"
+      }
+    },
+    "e1ParentDirectGateClosure": {
+      "sessionWindow": {
+        "startUtc": "2026-08-20T10:21:05.543Z",
+        "endUtc": "2026-08-21T07:33:58.680Z",
+        "durationMs": 76373137,
+        "interpretation": "conservative single-operator upper bound through Q3 parent-direct-gate closure"
+      },
+      "admissionAudit": {
+        "reviewArtifact": "measurements/scenario-assertion-authority-summary.json",
+        "reviewedScenarios": 244,
+        "reviewedAssertionBodies": 147,
+        "unresolvedMappings": 53,
+        "stopLossThreshold": 25,
+        "disposition": "I1-stopped-Q3-selected",
+        "originalDetailArtifactSha256": "ca96dc5cf760e766b3b6d4c80ef7b2ae31c694a5115c752e50c48056f5f035fa",
+        "originalDetailArtifactRemoved": true
+      },
+      "gateClosure": {
+        "scenarioGates": 244,
+        "gateModules": 5,
+        "closedDimensions": 233,
+        "recoveryRaceCells": 88,
+        "operationBindings": 565,
+        "parentDirectExecution": true,
+        "ownerTestReporterIsEvidence": false
+      },
+      "aggregatePerformance": {
+        "command": "/usr/bin/time -l node scripts/validate-m0.mjs all",
+        "quality": "local-provisional-fresh-process-not-certified-production-host",
+        "runs": [
+          {
+            "run": 1,
+            "exitStatus": 0,
+            "elapsedMs": 60764,
+            "maximumResidentSetBytes": 167952384,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 2,
+            "exitStatus": 0,
+            "elapsedMs": 62480,
+            "maximumResidentSetBytes": 169361408,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 3,
+            "exitStatus": 0,
+            "elapsedMs": 72321,
+            "maximumResidentSetBytes": 171589632,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          }
+        ],
+        "p95ElapsedMs": 72321,
+        "warningMs": 110000,
+        "stopLossMs": 120000,
+        "warningExceeded": false,
+        "stopLossExceeded": false
+      },
+      "artifactInventory": {
+        "command": "scoped recursive byte and nonblank-line count",
+        "files": 178,
+        "bytes": 4052599,
+        "nonblankLogicalLines": 98674,
+        "capturedBeforeEvidenceUpdate": true
+      },
+      "processCount": {
+        "steady": 0,
+        "peakUpperBound": 6,
+        "basis": "validate parent + parent-direct scenario gates + two competing actors + sqlite/process children"
+      },
+      "impact": {
+        "dependenciesAdded": 0,
+        "daemonsAdded": 0,
+        "agentSpecificPersonMs": 0,
+        "candidateSpecificGlueLoc": 0,
+        "twelveMonthIncrementalRecurring": "0.00"
+      },
+      "finalSessionWindow": {
+        "startUtc": "2026-08-20T10:21:05.543Z",
+        "endUtc": "2026-08-21T08:59:21.813Z",
+        "durationMs": 81496270,
+        "interpretation": "conservative single-operator upper bound through post-escalation Q3 validation"
+      },
+      "finalAggregatePerformance": {
+        "command": "/usr/bin/time -l node scripts/validate-m0.mjs all",
+        "quality": "post-escalation-final-byte-local-provisional-not-certified-production-host",
+        "runs": [
+          {
+            "run": 1,
+            "exitStatus": 0,
+            "elapsedMs": 65879,
+            "maximumResidentSetBytes": 234094592,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 2,
+            "exitStatus": 0,
+            "elapsedMs": 77358,
+            "maximumResidentSetBytes": 236978176,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 3,
+            "exitStatus": 0,
+            "elapsedMs": 83347,
+            "maximumResidentSetBytes": 208453632,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          }
+        ],
+        "p95ElapsedMs": 83347,
+        "warningMs": 110000,
+        "stopLossMs": 120000,
+        "warningExceeded": false,
+        "stopLossExceeded": false
+      },
+      "finalArtifactInventory": {
+        "command": "scoped recursive byte and nonblank-line count",
+        "files": 178,
+        "bytes": 4132594,
+        "nonblankLogicalLines": 100680,
+        "capturedBeforeFinalEvidenceUpdate": true
+      },
+      "policyClosure": {
+        "digest": "21fececde8d805305c54b68c87c514a6d2708d9b306027ffb2b321c94de6515b",
+        "files": 11,
+        "generatorMayUpdate": false,
+        "verifiedBeforeAndAfterImport": true
+      },
+      "postEscalationSessionWindow": {
+        "startUtc": "2026-08-20T10:21:05.543Z",
+        "endUtc": "2026-08-21T09:07:54.296Z",
+        "durationMs": 82008753,
+        "interpretation": "conservative single-operator upper bound through post-escalation Q3 review freeze"
+      },
+      "postEscalationAggregatePerformance": {
+        "command": "/usr/bin/time -l node scripts/validate-m0.mjs all",
+        "quality": "post-escalation-R3-freeze-local-provisional-not-certified-production-host",
+        "runs": [
+          {
+            "run": 1,
+            "exitStatus": 0,
+            "elapsedMs": 65216,
+            "maximumResidentSetBytes": 241205248,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 2,
+            "exitStatus": 0,
+            "elapsedMs": 74303,
+            "maximumResidentSetBytes": 235175936,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 3,
+            "exitStatus": 0,
+            "elapsedMs": 85793,
+            "maximumResidentSetBytes": 240730112,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          }
+        ],
+        "p95ElapsedMs": 85793,
+        "warningMs": 110000,
+        "stopLossMs": 120000,
+        "warningExceeded": false,
+        "stopLossExceeded": false
+      },
+      "postEscalationArtifactInventory": {
+        "command": "scoped recursive byte and nonblank-line count",
+        "files": 178,
+        "bytes": 4142943,
+        "nonblankLogicalLines": 100889,
+        "capturedBeforePostEscalationEvidenceUpdate": true
+      },
+      "reviewLoop": {
+        "rootCauseEscalationUsed": true,
+        "stableBlockerId": "E1-SCENARIO-GATE-AUTHORITY",
+        "postEscalationR3": "changes-requested",
+        "terminal": "NOT-CONVERGED"
+      },
+      "compositeRemediation": {
+        "decisionRecordSha256": "684b3a850defc247fb60664f881b76b7416331d1355cc9a8152d90afa9f586a3",
+        "assurance": "advisory",
+        "disposition": "replace-with-COMBINE-Q3-BOUNDED-SEAM-M1",
+        "status": "superseded-by-definition-bundle",
+        "boundedProducers": [
+          "runAdmissionCrash",
+          "recoveryTargetInitializeCrash",
+          "recoveryDiscoveryCrash",
+          "effectIdentityCrash"
+        ],
+        "identicalRerunIsSemanticEvidence": false
+      },
+      "compositeSessionWindow": {
+        "startUtc": "2026-08-20T10:21:05.543Z",
+        "endUtc": "2026-08-21T10:43:21.866Z",
+        "durationMs": 87736323,
+        "interpretation": "conservative single-operator upper bound through bounded-seam composite acceptance"
+      },
+      "compositeAggregatePerformance": {
+        "command": "/usr/bin/time -l node scripts/validate-m0.mjs all",
+        "quality": "composite-final-byte-local-provisional-not-certified-production-host",
+        "runs": [
+          {
+            "run": 1,
+            "exitStatus": 0,
+            "elapsedMs": 66902,
+            "maximumResidentSetBytes": 250560512,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 2,
+            "exitStatus": 0,
+            "elapsedMs": 67250,
+            "maximumResidentSetBytes": 255213568,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 3,
+            "exitStatus": 0,
+            "elapsedMs": 66356,
+            "maximumResidentSetBytes": 249954304,
+            "stdoutBytes": 19,
+            "stdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+            "applicationStderrBytes": 0
+          }
+        ],
+        "p95ElapsedMs": 67250,
+        "warningMs": 110000,
+        "stopLossMs": 120000,
+        "warningExceeded": false,
+        "stopLossExceeded": false,
+        "semanticEvidenceUse": false
+      },
+      "compositeArtifactInventory": {
+        "command": "scoped recursive byte and nonblank-line count",
+        "files": 178,
+        "bytes": 4210576,
+        "nonblankLogicalLines": 106175,
+        "capturedBeforeCompositeEvidenceUpdate": true
+      },
+      "compositeSemanticAcceptance": {
+        "fullSuiteTests": 245,
+        "fullSuitePassed": 245,
+        "aggregateExitStatus": 0,
+        "aggregateStdoutBytes": 19,
+        "aggregateStderrBytes": 0,
+        "aggregateStdoutSha256": "409035e3d5fdb1fd545fa19d1c4e423b6830dc5565e2b7013beca64164a36224",
+        "policyDigest": "21fececde8d805305c54b68c87c514a6d2708d9b306027ffb2b321c94de6515b",
+        "durableMemberMutants": 4,
+        "identicalPerformanceRunsCountAsSemanticEvidence": false
+      },
+      "authorityStatus": "superseded-historical-only",
+      "runtimeConsumed": false
+    },
+    "m0DefinitionBundle": {
+      "authorityStatus": "superseded-by-m0-advisory",
+      "candidateSemanticAuthority": false,
+      "supersedesSource": "e1ParentDirectGateClosure",
+      "decision": "move-candidate-semantic-authority-to-m1-runtime",
+      "definitionDenominator": {
+        "requirements": 41,
+        "scenarios": 244,
+        "closedDimensionMembers": 233,
+        "recoveryRaceCells": 88,
+        "scenarioDimensionRaceMembers": 565,
+        "definitionGates": 606,
+        "aggregateGates": 618
+      },
+      "coverageDistribution": {
+        "neutral-control-storage": 186,
+        "evaluator-self-test": 28,
+        "named-process-host": 27,
+        "named-tenant": 3
+      },
+      "resultBases": [
+        "local",
+        "external",
+        "definition",
+        "aggregate"
+      ],
+      "completePassToken": "M0 advisory: READY",
+      "oldPassTokenValid": false,
+      "fixturePlanPresent": false,
+      "m0ExecutesCandidate": false,
+      "candidateExecutionOwner": "m1+",
+      "performancePending": false,
+      "impact": {
+        "dependenciesAdded": 0,
+        "daemonsAdded": 0,
+        "productPackagesAdded": 0,
+        "agentSpecificPersonMs": 0,
+        "candidateSpecificGlueLoc": 0,
+        "twelveMonthIncrementalRecurring": "0.00"
+      },
+      "sessionWindow": {
+        "startUtc": "2026-08-20T10:21:05.543Z",
+        "endUtc": "2026-08-21T13:03:19.054Z",
+        "durationMs": 96133511,
+        "interpretation": "conservative single-operator upper bound through M0 definition-bundle migration"
+      },
+      "bundleAggregatePerformance": {
+        "command": "/usr/bin/time -l node scripts/validate-m0.mjs all",
+        "quality": "bundle-final-byte-local-provisional-not-certified-production-host",
+        "runs": [
+          {
+            "run": 1,
+            "exitStatus": 0,
+            "elapsedMs": 14432,
+            "maximumResidentSetBytes": 101597184,
+            "stdoutBytes": 16,
+            "stdoutSha256": "22564345c19e0d229da2af614bb283e57665024e6185fecb53905d80c5268713",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 2,
+            "exitStatus": 0,
+            "elapsedMs": 15829,
+            "maximumResidentSetBytes": 101875712,
+            "stdoutBytes": 16,
+            "stdoutSha256": "22564345c19e0d229da2af614bb283e57665024e6185fecb53905d80c5268713",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 3,
+            "exitStatus": 0,
+            "elapsedMs": 18327,
+            "maximumResidentSetBytes": 99418112,
+            "stdoutBytes": 16,
+            "stdoutSha256": "22564345c19e0d229da2af614bb283e57665024e6185fecb53905d80c5268713",
+            "applicationStderrBytes": 0
+          }
+        ],
+        "p95ElapsedMs": 18327,
+        "warningMs": 110000,
+        "stopLossMs": 120000,
+        "warningExceeded": false,
+        "stopLossExceeded": false
+      },
+      "artifactInventory": {
+        "command": "scoped recursive byte and nonblank-line count",
+        "files": 167,
+        "bytes": 2566154,
+        "nonblankLogicalLines": 65920,
+        "capturedBeforeBundleEvidenceUpdate": true
+      },
+      "bundleAcceptance": {
+        "fullSuiteTests": 222,
+        "fullSuitePassed": 222,
+        "aggregateExitStatus": 0,
+        "aggregateStdoutBytes": 16,
+        "aggregateStderrBytes": 0,
+        "aggregateStdoutSha256": "22564345c19e0d229da2af614bb283e57665024e6185fecb53905d80c5268713",
+        "localGates": 11,
+        "externalGates": 1,
+        "definitionGates": 606,
+        "candidateExecutions": 0,
+        "supersededBy": "bundleR2Acceptance"
+      },
+      "processCount": {
+        "steady": 0,
+        "peakUpperBound": 6,
+        "basis": "validator parent + external validator + bounded local check children"
+      },
+      "activeAcceptance": "bundleR3Acceptance",
+      "activePerformance": "bundleR3AggregatePerformance",
+      "bundleR2SessionWindow": {
+        "startUtc": "2026-08-20T10:21:05.543Z",
+        "endUtc": "2026-08-21T14:32:03.727Z",
+        "durationMs": 101458184,
+        "interpretation": "conservative single-operator upper bound through verifier-constitution R2 fixes"
+      },
+      "bundleR2AggregatePerformance": {
+        "command": "/usr/bin/time -l node scripts/validate-m0.mjs all",
+        "quality": "bundle-r2-final-byte-local-provisional-not-certified-production-host",
+        "runs": [
+          {
+            "run": 1,
+            "exitStatus": 0,
+            "elapsedMs": 23785,
+            "maximumResidentSetBytes": 99762176,
+            "stdoutBytes": 16,
+            "stdoutSha256": "22564345c19e0d229da2af614bb283e57665024e6185fecb53905d80c5268713",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 2,
+            "exitStatus": 0,
+            "elapsedMs": 21916,
+            "maximumResidentSetBytes": 101187584,
+            "stdoutBytes": 16,
+            "stdoutSha256": "22564345c19e0d229da2af614bb283e57665024e6185fecb53905d80c5268713",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 3,
+            "exitStatus": 0,
+            "elapsedMs": 21680,
+            "maximumResidentSetBytes": 100335616,
+            "stdoutBytes": 16,
+            "stdoutSha256": "22564345c19e0d229da2af614bb283e57665024e6185fecb53905d80c5268713",
+            "applicationStderrBytes": 0
+          }
+        ],
+        "p95ElapsedMs": 23785,
+        "warningMs": 110000,
+        "stopLossMs": 120000,
+        "warningExceeded": false,
+        "stopLossExceeded": false
+      },
+      "bundleR2ArtifactInventory": {
+        "command": "scoped recursive byte and nonblank-line count",
+        "files": 167,
+        "bytes": 2604959,
+        "nonblankLogicalLines": 66989,
+        "capturedBeforeBundleR2EvidenceUpdate": true
+      },
+      "bundleR2Acceptance": {
+        "fullSuiteTests": 225,
+        "fullSuitePassed": 225,
+        "aggregateExitStatus": 0,
+        "aggregateStdoutBytes": 16,
+        "aggregateStderrBytes": 0,
+        "aggregateStdoutSha256": "22564345c19e0d229da2af614bb283e57665024e6185fecb53905d80c5268713",
+        "localGates": 11,
+        "externalGates": 1,
+        "definitionGates": 606,
+        "candidateExecutions": 0,
+        "supersededBy": "bundleR3Acceptance"
+      },
+      "bundleR3SessionWindow": {
+        "startUtc": "2026-08-20T10:21:05.543Z",
+        "endUtc": "2026-08-21T14:40:49.484Z",
+        "durationMs": 101983941,
+        "interpretation": "conservative single-operator upper bound through verifier-constitution final validation"
+      },
+      "bundleR3AggregatePerformance": {
+        "command": "/usr/bin/time -l node scripts/validate-m0.mjs all",
+        "quality": "bundle-r3-final-byte-local-provisional-not-certified-production-host",
+        "runs": [
+          {
+            "run": 1,
+            "exitStatus": 0,
+            "elapsedMs": 20614,
+            "maximumResidentSetBytes": 100679680,
+            "stdoutBytes": 16,
+            "stdoutSha256": "22564345c19e0d229da2af614bb283e57665024e6185fecb53905d80c5268713",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 2,
+            "exitStatus": 0,
+            "elapsedMs": 22055,
+            "maximumResidentSetBytes": 100024320,
+            "stdoutBytes": 16,
+            "stdoutSha256": "22564345c19e0d229da2af614bb283e57665024e6185fecb53905d80c5268713",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 3,
+            "exitStatus": 0,
+            "elapsedMs": 24419,
+            "maximumResidentSetBytes": 101761024,
+            "stdoutBytes": 16,
+            "stdoutSha256": "22564345c19e0d229da2af614bb283e57665024e6185fecb53905d80c5268713",
+            "applicationStderrBytes": 0
+          }
+        ],
+        "p95ElapsedMs": 24419,
+        "warningMs": 110000,
+        "stopLossMs": 120000,
+        "warningExceeded": false,
+        "stopLossExceeded": false
+      },
+      "bundleR3ArtifactInventory": {
+        "command": "scoped recursive byte and nonblank-line count",
+        "files": 167,
+        "bytes": 2616242,
+        "nonblankLogicalLines": 67226,
+        "capturedBeforeBundleR3EvidenceUpdate": true
+      },
+      "bundleR3Acceptance": {
+        "fullSuiteTests": 225,
+        "fullSuitePassed": 225,
+        "aggregateExitStatus": 0,
+        "aggregateStdoutBytes": 16,
+        "aggregateStderrBytes": 0,
+        "aggregateStdoutSha256": "22564345c19e0d229da2af614bb283e57665024e6185fecb53905d80c5268713",
+        "localGates": 11,
+        "externalGates": 1,
+        "definitionGates": 606,
+        "candidateExecutions": 0,
+        "supersededBy": "m0AdvisoryHandoff/advisoryAcceptance"
+      }
+    },
+    "m0AdvisoryHandoff": {
+      "authorityStatus": "active-non-authorizing-advisory",
+      "candidateQualification": false,
+      "token": "M0 advisory: READY",
+      "tokenMeaning": "diagnostics-readable-only",
+      "tokenConsumers": 0,
+      "historicalPassTokensValid": false,
+      "entryChange": "openspec/changes/implement-m1-heartbeat-v2",
+      "entryStatus": "passed",
+      "capturedBeforeM1Implementation": true,
+      "knownGaps": [
+        {
+          "id": "M0-ADV-001",
+          "subject": "output-test-planning-path-confinement",
+          "disposition": "advisory-only",
+          "dispositionOwner": "M0 Advisory Maintainer",
+          "approvalRef": "USER-ADVISORY-ENTRY-2026-08-22"
+        },
+        {
+          "id": "M0-ADV-002",
+          "subject": "measurement-typing-reference-closure",
+          "disposition": "advisory-only",
+          "dispositionOwner": "M0 Advisory Maintainer",
+          "approvalRef": "USER-ADVISORY-ENTRY-2026-08-22"
+        },
+        {
+          "id": "M0-ADV-003",
+          "subject": "formatter-intrinsic-binding",
+          "disposition": "advisory-only",
+          "dispositionOwner": "M0 Advisory Maintainer",
+          "approvalRef": "USER-ADVISORY-ENTRY-2026-08-22"
+        },
+        {
+          "id": "M0-ADV-004",
+          "subject": "dynamic-test-discovery",
+          "disposition": "advisory-only",
+          "dispositionOwner": "M0 Advisory Maintainer",
+          "approvalRef": "USER-ADVISORY-ENTRY-2026-08-22"
+        },
+        {
+          "id": "M1-ENTRY-001",
+          "subject": "product-packages-not-yet-created",
+          "disposition": "implementation-authorized-not-started",
+          "dispositionOwner": "M1 Change Owner",
+          "approvalRef": "USER-M1-AUTH-2026-08-22"
+        },
+        {
+          "id": "HOST-001",
+          "subject": "darwin-whole-tree-production-qualification",
+          "disposition": "non-production-only",
+          "dispositionOwner": "Host Qualification Owner",
+          "approvalRef": "SOT-HOST-LOCAL-ONLY"
+        }
+      ],
+      "ownerMatrix": {
+        "responsibilities": 7,
+        "duplicateOwners": 0,
+        "unassignedOwners": 0
+      },
+      "budget": {
+        "activeDeveloperDayPersonHours": 8,
+        "m0WallClockUpperBoundMs": 148290920,
+        "m0ActiveDeveloperDaysUpperBound": 6,
+        "entryMaximumDays": 1,
+        "m1MaximumRemainingDays": 8,
+        "day3ObservationCheckpoint": true,
+        "day15AbstractionCutTrigger": true
+      },
+      "advisoryAcceptance": {
+        "fullSuiteTests": 225,
+        "fullSuitePassed": 225,
+        "aggregateExitStatus": 0,
+        "aggregateStdoutBytes": 19,
+        "aggregateStderrBytes": 0,
+        "aggregateStdoutSha256": "a953782bfb7cd4b3c11d4ba0328128f4c8bc8a7d1e02779d3322aa042ade585b",
+        "candidateExecutions": 0,
+        "supersededBy": "cleanupAcceptance"
+      },
+      "sessionWindow": {
+        "startUtc": "2026-08-20T10:21:05.543Z",
+        "endUtc": "2026-08-22T03:32:36.463Z",
+        "durationMs": 148290920,
+        "interpretation": "conservative single-operator wall-clock upper bound through M0 advisory handoff"
+      },
+      "aggregatePerformance": {
+        "command": "/usr/bin/time -l node scripts/validate-m0.mjs all",
+        "quality": "advisory-final-byte-local-provisional-not-certified-production-host",
+        "runs": [
+          {
+            "run": 1,
+            "exitStatus": 0,
+            "elapsedMs": 21528,
+            "maximumResidentSetBytes": 102400000,
+            "stdoutBytes": 19,
+            "stdoutSha256": "a953782bfb7cd4b3c11d4ba0328128f4c8bc8a7d1e02779d3322aa042ade585b",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 2,
+            "exitStatus": 0,
+            "elapsedMs": 22312,
+            "maximumResidentSetBytes": 102318080,
+            "stdoutBytes": 19,
+            "stdoutSha256": "a953782bfb7cd4b3c11d4ba0328128f4c8bc8a7d1e02779d3322aa042ade585b",
+            "applicationStderrBytes": 0
+          },
+          {
+            "run": 3,
+            "exitStatus": 0,
+            "elapsedMs": 28290,
+            "maximumResidentSetBytes": 102547456,
+            "stdoutBytes": 19,
+            "stdoutSha256": "a953782bfb7cd4b3c11d4ba0328128f4c8bc8a7d1e02779d3322aa042ade585b",
+            "applicationStderrBytes": 0
+          }
+        ],
+        "p95ElapsedMs": 28290,
+        "warningMs": 110000,
+        "stopLossMs": 120000,
+        "warningExceeded": false,
+        "stopLossExceeded": false
+      },
+      "artifactInventory": {
+        "files": 167,
+        "bytes": 2627508,
+        "nonblankLogicalLines": 67430,
+        "capturedBeforeAdvisoryEvidenceUpdate": true
+      },
+      "processCount": {
+        "steady": 0,
+        "peakUpperBound": 6,
+        "basis": "validator parent + external validator + bounded local check children"
+      },
+      "impact": {
+        "dependenciesAdded": 0,
+        "daemonsAdded": 0,
+        "productPackagesAdded": 0,
+        "agentSpecificPersonMs": 0,
+        "candidateSpecificGlueLoc": 0,
+        "twelveMonthIncrementalRecurring": "0.00"
+      },
+      "approvalRegister": {
+        "USER-ADVISORY-ENTRY-2026-08-22": {
+          "owner": "Product Decision Owner",
+          "scope": "entry-artifacts"
+        },
+        "SOT-HOST-LOCAL-ONLY": {
+          "owner": "Host Qualification Owner",
+          "scope": "disposable-local-evidence-only",
+          "productionQualification": false
+        },
+        "USER-M1-AUTH-2026-08-22": {
+          "owner": "Product Decision Owner",
+          "scope": "post-entry-m1-heartbeat",
+          "cleanupAuthorized": [
+            "D1",
+            "D2",
+            "D3"
+          ],
+          "entryPassRequired": true,
+          "m1ImplementationAuthorizationGranted": true
+        }
+      },
+      "cleanup": {
+        "reportPath": "/private/tmp/claude-501/-Users-herbertgao-VSCodeProject-hangar/7a7734fe-1660-4fbb-b5dd-c94af764813c/scratchpad/m0-over-engineering-report.md",
+        "reportSha256": "ca7bc13537b0a77b50e695bf0f04c78bd9084a4e2057dd6bda752eedf507c7dc",
+        "scope": [
+          "D1",
+          "D2",
+          "D3"
+        ],
+        "originalAssertionDetailSha256": "ca96dc5cf760e766b3b6d4c80ef7b2ae31c694a5115c752e50c48056f5f035fa",
+        "frozenDenominatorOwner": "oracles/m0/aggregate-gates.json#/frozenDenominator",
+        "restoresM0Authority": false,
+        "completed": true,
+        "before": {
+          "jsonLines": 52347,
+          "testLines": 11163,
+          "validatorLines": 3577,
+          "sha256Literals": 3506,
+          "testPathLiterals": 589
+        },
+        "after": {
+          "jsonLines": 42703,
+          "testLines": 11163,
+          "validatorLines": 3513,
+          "sha256Literals": 815,
+          "testPathLiterals": 101,
+          "capturedBeforeCleanupEvidenceUpdate": true
+        },
+        "removed": {
+          "jsonLines": 9644,
+          "validatorLines": 64,
+          "sha256Literals": 2691,
+          "testPathLiterals": 488,
+          "assertionDetailLines": 7770
+        },
+        "openSpecBoundary": "external-process-only",
+        "productPathsCreated": 0
+      },
+      "activeAcceptance": "cleanupAcceptance",
+      "cleanupAcceptance": {
+        "fullSuiteTests": 226,
+        "fullSuitePassed": 226,
+        "aggregateExitStatus": 0,
+        "aggregateStdoutBytes": 19,
+        "aggregateStderrBytes": 0,
+        "aggregateStdoutSha256": "a953782bfb7cd4b3c11d4ba0328128f4c8bc8a7d1e02779d3322aa042ade585b",
+        "candidateExecutions": 0
+      },
+      "externalValidatorEnvironment": {
+        "observedOpenSpecCnVersion": "1.10.0",
+        "supportedRange": ">=1.10.0 <2.0.0",
+        "source": "user-confirmed-upgrade",
+        "access": "PATH"
+      },
+      "m1AuthorizationGranted": true,
+      "m1ImplementationAuthorizationEffective": true,
+      "authorizationCondition": "entry-review-pass-satisfied",
+      "entryReview": {
+        "round": "R5",
+        "codeReviewer": {
+          "agentId": "779b840e-33f4-42e",
+          "verdict": "APPROVE",
+          "blockerOrMajor": 0,
+          "minor": 1,
+          "minorDisposition": "fixed"
+        },
+        "realityChecker": {
+          "agentId": "c858d619-423b-4ef",
+          "verdict": "APPROVE",
+          "blockerOrMajor": 0
+        },
+        "productPathsCreated": 0,
+        "entryIsConformance": false
+      }
+    }
+  }
+}

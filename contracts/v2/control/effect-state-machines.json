@@ -1,0 +1,1574 @@
+{
+  "schemaVersion": "v2-effect-state-machines-v1",
+  "machines": [
+    {
+      "id": "Approval",
+      "requirementId": "v2c.approval",
+      "states": [
+        "pending",
+        "deciding",
+        "approved",
+        "rejected",
+        "expired",
+        "superseded"
+      ],
+      "events": [
+        "claim-decision",
+        "approve",
+        "reject",
+        "expire",
+        "supersede",
+        "duplicate-decision",
+        "recover",
+        "cleanup"
+      ],
+      "terminalStates": [
+        "approved",
+        "rejected",
+        "expired",
+        "superseded"
+      ],
+      "table": [
+        {
+          "state": "pending",
+          "event": "claim-decision",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "deciding",
+            "conditions": [
+              "current-authority",
+              "current-policy",
+              "unexpired"
+            ]
+          }
+        },
+        {
+          "state": "pending",
+          "event": "approve",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "pending",
+          "event": "reject",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "pending",
+          "event": "expire",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "expired"
+          }
+        },
+        {
+          "state": "pending",
+          "event": "supersede",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "superseded"
+          }
+        },
+        {
+          "state": "pending",
+          "event": "duplicate-decision",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "pending",
+          "event": "recover",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "pending"
+          }
+        },
+        {
+          "state": "pending",
+          "event": "cleanup",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "pending"
+          }
+        },
+        {
+          "state": "deciding",
+          "event": "claim-decision",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "deciding"
+          }
+        },
+        {
+          "state": "deciding",
+          "event": "approve",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "approved"
+          }
+        },
+        {
+          "state": "deciding",
+          "event": "reject",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "rejected"
+          }
+        },
+        {
+          "state": "deciding",
+          "event": "expire",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "expired"
+          }
+        },
+        {
+          "state": "deciding",
+          "event": "supersede",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "superseded"
+          }
+        },
+        {
+          "state": "deciding",
+          "event": "duplicate-decision",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "deciding",
+          "event": "recover",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "deciding"
+          }
+        },
+        {
+          "state": "deciding",
+          "event": "cleanup",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "deciding"
+          }
+        },
+        {
+          "state": "approved",
+          "event": "claim-decision",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "approved",
+          "event": "approve",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "approved"
+          }
+        },
+        {
+          "state": "approved",
+          "event": "reject",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "approved",
+          "event": "expire",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "approved",
+          "event": "supersede",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "superseded"
+          }
+        },
+        {
+          "state": "approved",
+          "event": "duplicate-decision",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "approved"
+          }
+        },
+        {
+          "state": "approved",
+          "event": "recover",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "approved",
+          "event": "cleanup",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "approved"
+          }
+        },
+        {
+          "state": "rejected",
+          "event": "claim-decision",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "rejected",
+          "event": "approve",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "rejected",
+          "event": "reject",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "rejected"
+          }
+        },
+        {
+          "state": "rejected",
+          "event": "expire",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "rejected",
+          "event": "supersede",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "rejected",
+          "event": "duplicate-decision",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "rejected"
+          }
+        },
+        {
+          "state": "rejected",
+          "event": "recover",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "rejected",
+          "event": "cleanup",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "rejected"
+          }
+        },
+        {
+          "state": "expired",
+          "event": "claim-decision",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "expired",
+          "event": "approve",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "expired",
+          "event": "reject",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "expired",
+          "event": "expire",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "expired"
+          }
+        },
+        {
+          "state": "expired",
+          "event": "supersede",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "expired",
+          "event": "duplicate-decision",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "expired"
+          }
+        },
+        {
+          "state": "expired",
+          "event": "recover",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "expired",
+          "event": "cleanup",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "expired"
+          }
+        },
+        {
+          "state": "superseded",
+          "event": "claim-decision",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "superseded",
+          "event": "approve",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "superseded",
+          "event": "reject",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "superseded",
+          "event": "expire",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "superseded",
+          "event": "supersede",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "superseded"
+          }
+        },
+        {
+          "state": "superseded",
+          "event": "duplicate-decision",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "superseded"
+          }
+        },
+        {
+          "state": "superseded",
+          "event": "recover",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "superseded",
+          "event": "cleanup",
+          "outcome": {
+            "kind": "allow",
+            "nextState": "superseded"
+          }
+        }
+      ]
+    },
+    {
+      "id": "Effect",
+      "requirementId": "v2c.effect",
+      "states": [
+        "intent-recorded",
+        "approval-pending",
+        "authorized",
+        "claimed",
+        "dispatch-started",
+        "unknown",
+        "committed",
+        "not-committed",
+        "conflicted"
+      ],
+      "events": [
+        "accept-intent",
+        "require-approval",
+        "authorize",
+        "claim",
+        "start-dispatch",
+        "local-not-started",
+        "dispatch-ambiguous",
+        "receipt-committed",
+        "receipt-not-committed",
+        "reconcile-committed",
+        "reconcile-not-committed",
+        "conflicting-evidence",
+        "resolve-conflict-committed",
+        "resolve-conflict-not-committed",
+        "post-final-conflict"
+      ],
+      "terminalStates": [
+        "committed",
+        "not-committed"
+      ],
+      "safetyReopenState": "conflicted",
+      "table": [
+        {
+          "state": "intent-recorded",
+          "event": "accept-intent",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "intent-recorded"
+          }
+        },
+        {
+          "state": "intent-recorded",
+          "event": "require-approval",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "approval-pending"
+          }
+        },
+        {
+          "state": "intent-recorded",
+          "event": "authorize",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "authorized",
+            "conditions": [
+              "current-authority",
+              "current-policy"
+            ]
+          }
+        },
+        {
+          "state": "intent-recorded",
+          "event": "claim",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "intent-recorded",
+          "event": "start-dispatch",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "intent-recorded",
+          "event": "local-not-started",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "intent-recorded",
+          "event": "dispatch-ambiguous",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "intent-recorded",
+          "event": "receipt-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "intent-recorded",
+          "event": "receipt-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "intent-recorded",
+          "event": "reconcile-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "intent-recorded",
+          "event": "reconcile-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "intent-recorded",
+          "event": "conflicting-evidence",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "intent-recorded",
+          "event": "resolve-conflict-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "intent-recorded",
+          "event": "resolve-conflict-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "intent-recorded",
+          "event": "post-final-conflict",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "approval-pending",
+          "event": "accept-intent",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "approval-pending"
+          }
+        },
+        {
+          "state": "approval-pending",
+          "event": "require-approval",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "approval-pending"
+          }
+        },
+        {
+          "state": "approval-pending",
+          "event": "authorize",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "authorized",
+            "conditions": [
+              "current-authority",
+              "current-policy"
+            ]
+          }
+        },
+        {
+          "state": "approval-pending",
+          "event": "claim",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "approval-pending",
+          "event": "start-dispatch",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "approval-pending",
+          "event": "local-not-started",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "approval-pending",
+          "event": "dispatch-ambiguous",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "approval-pending",
+          "event": "receipt-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "approval-pending",
+          "event": "receipt-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "approval-pending",
+          "event": "reconcile-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "approval-pending",
+          "event": "reconcile-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "approval-pending",
+          "event": "conflicting-evidence",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "approval-pending",
+          "event": "resolve-conflict-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "approval-pending",
+          "event": "resolve-conflict-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "approval-pending",
+          "event": "post-final-conflict",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "authorized",
+          "event": "accept-intent",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "authorized"
+          }
+        },
+        {
+          "state": "authorized",
+          "event": "require-approval",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "authorized",
+          "event": "authorize",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "authorized"
+          }
+        },
+        {
+          "state": "authorized",
+          "event": "claim",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "claimed"
+          }
+        },
+        {
+          "state": "authorized",
+          "event": "start-dispatch",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "authorized",
+          "event": "local-not-started",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "authorized",
+          "event": "dispatch-ambiguous",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "authorized",
+          "event": "receipt-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "authorized",
+          "event": "receipt-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "authorized",
+          "event": "reconcile-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "authorized",
+          "event": "reconcile-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "authorized",
+          "event": "conflicting-evidence",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "authorized",
+          "event": "resolve-conflict-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "authorized",
+          "event": "resolve-conflict-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "authorized",
+          "event": "post-final-conflict",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "claimed",
+          "event": "accept-intent",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "claimed"
+          }
+        },
+        {
+          "state": "claimed",
+          "event": "require-approval",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "claimed",
+          "event": "authorize",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "claimed",
+          "event": "claim",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "claimed"
+          }
+        },
+        {
+          "state": "claimed",
+          "event": "start-dispatch",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "dispatch-started",
+            "conditions": [
+              "single-use-claim",
+              "current-effect-dispatch-attestation"
+            ]
+          }
+        },
+        {
+          "state": "claimed",
+          "event": "local-not-started",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "not-committed"
+          }
+        },
+        {
+          "state": "claimed",
+          "event": "dispatch-ambiguous",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "claimed",
+          "event": "receipt-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "claimed",
+          "event": "receipt-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "claimed",
+          "event": "reconcile-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "claimed",
+          "event": "reconcile-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "claimed",
+          "event": "conflicting-evidence",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "claimed",
+          "event": "resolve-conflict-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "claimed",
+          "event": "resolve-conflict-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "claimed",
+          "event": "post-final-conflict",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "dispatch-started",
+          "event": "accept-intent",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "dispatch-started"
+          }
+        },
+        {
+          "state": "dispatch-started",
+          "event": "require-approval",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "dispatch-started",
+          "event": "authorize",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "dispatch-started",
+          "event": "claim",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "dispatch-started",
+          "event": "start-dispatch",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "dispatch-started"
+          }
+        },
+        {
+          "state": "dispatch-started",
+          "event": "local-not-started",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "dispatch-started",
+          "event": "dispatch-ambiguous",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "unknown",
+            "automaticRedispatch": false
+          }
+        },
+        {
+          "state": "dispatch-started",
+          "event": "receipt-committed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "committed"
+          }
+        },
+        {
+          "state": "dispatch-started",
+          "event": "receipt-not-committed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "not-committed"
+          }
+        },
+        {
+          "state": "dispatch-started",
+          "event": "reconcile-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "dispatch-started",
+          "event": "reconcile-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "dispatch-started",
+          "event": "conflicting-evidence",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "conflicted"
+          }
+        },
+        {
+          "state": "dispatch-started",
+          "event": "resolve-conflict-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "dispatch-started",
+          "event": "resolve-conflict-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "dispatch-started",
+          "event": "post-final-conflict",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "unknown",
+          "event": "accept-intent",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "unknown"
+          }
+        },
+        {
+          "state": "unknown",
+          "event": "require-approval",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "unknown",
+          "event": "authorize",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "unknown",
+          "event": "claim",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "unknown",
+          "event": "start-dispatch",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "unknown",
+          "event": "local-not-started",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "unknown",
+          "event": "dispatch-ambiguous",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "unknown"
+          }
+        },
+        {
+          "state": "unknown",
+          "event": "receipt-committed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "committed"
+          }
+        },
+        {
+          "state": "unknown",
+          "event": "receipt-not-committed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "not-committed"
+          }
+        },
+        {
+          "state": "unknown",
+          "event": "reconcile-committed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "committed"
+          }
+        },
+        {
+          "state": "unknown",
+          "event": "reconcile-not-committed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "not-committed"
+          }
+        },
+        {
+          "state": "unknown",
+          "event": "conflicting-evidence",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "conflicted"
+          }
+        },
+        {
+          "state": "unknown",
+          "event": "resolve-conflict-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "unknown",
+          "event": "resolve-conflict-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "unknown",
+          "event": "post-final-conflict",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "committed",
+          "event": "accept-intent",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "committed"
+          }
+        },
+        {
+          "state": "committed",
+          "event": "require-approval",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "committed",
+          "event": "authorize",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "committed",
+          "event": "claim",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "committed",
+          "event": "start-dispatch",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "committed",
+          "event": "local-not-started",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "committed",
+          "event": "dispatch-ambiguous",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "committed",
+          "event": "receipt-committed",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "committed"
+          }
+        },
+        {
+          "state": "committed",
+          "event": "receipt-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "committed",
+          "event": "reconcile-committed",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "committed"
+          }
+        },
+        {
+          "state": "committed",
+          "event": "reconcile-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "committed",
+          "event": "conflicting-evidence",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "committed",
+          "event": "resolve-conflict-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "committed",
+          "event": "resolve-conflict-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "committed",
+          "event": "post-final-conflict",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "conflicted",
+            "conditions": [
+              "authenticated-contradictory-evidence",
+              "quarantine-activation",
+              "revoke-mutation-authority"
+            ]
+          }
+        },
+        {
+          "state": "not-committed",
+          "event": "accept-intent",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "not-committed"
+          }
+        },
+        {
+          "state": "not-committed",
+          "event": "require-approval",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "not-committed",
+          "event": "authorize",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "not-committed",
+          "event": "claim",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "not-committed",
+          "event": "start-dispatch",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "not-committed",
+          "event": "local-not-started",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "not-committed"
+          }
+        },
+        {
+          "state": "not-committed",
+          "event": "dispatch-ambiguous",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "not-committed",
+          "event": "receipt-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "not-committed",
+          "event": "receipt-not-committed",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "not-committed"
+          }
+        },
+        {
+          "state": "not-committed",
+          "event": "reconcile-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "not-committed",
+          "event": "reconcile-not-committed",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "not-committed"
+          }
+        },
+        {
+          "state": "not-committed",
+          "event": "conflicting-evidence",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "not-committed",
+          "event": "resolve-conflict-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "not-committed",
+          "event": "resolve-conflict-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "not-committed",
+          "event": "post-final-conflict",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "conflicted",
+            "conditions": [
+              "authenticated-contradictory-evidence",
+              "quarantine-activation",
+              "revoke-mutation-authority"
+            ]
+          }
+        },
+        {
+          "state": "conflicted",
+          "event": "accept-intent",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "conflicted"
+          }
+        },
+        {
+          "state": "conflicted",
+          "event": "require-approval",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "conflicted",
+          "event": "authorize",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "conflicted",
+          "event": "claim",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "conflicted",
+          "event": "start-dispatch",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "conflicted",
+          "event": "local-not-started",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "conflicted",
+          "event": "dispatch-ambiguous",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "conflicted",
+          "event": "receipt-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "conflicted",
+          "event": "receipt-not-committed",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        },
+        {
+          "state": "conflicted",
+          "event": "reconcile-committed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "committed"
+          }
+        },
+        {
+          "state": "conflicted",
+          "event": "reconcile-not-committed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "not-committed"
+          }
+        },
+        {
+          "state": "conflicted",
+          "event": "conflicting-evidence",
+          "outcome": {
+            "kind": "idempotent",
+            "nextState": "conflicted"
+          }
+        },
+        {
+          "state": "conflicted",
+          "event": "resolve-conflict-committed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "committed",
+            "conditions": [
+              "complete-conflict-evidence-set",
+              "conflict-resolution-authority"
+            ]
+          }
+        },
+        {
+          "state": "conflicted",
+          "event": "resolve-conflict-not-committed",
+          "outcome": {
+            "kind": "transition",
+            "nextState": "not-committed",
+            "conditions": [
+              "complete-conflict-evidence-set",
+              "conflict-resolution-authority"
+            ]
+          }
+        },
+        {
+          "state": "conflicted",
+          "event": "post-final-conflict",
+          "outcome": {
+            "kind": "reject",
+            "errorKind": "invalid_state"
+          }
+        }
+      ]
+    }
+  ]
+}

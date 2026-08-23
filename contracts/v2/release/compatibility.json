@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "v2-release-compatibility-v1",
+  "requirementId": "v2c.release-compatibility",
+  "supportedTuples": [
+    {
+      "schemaVersion": "agent-release-v1",
+      "canonicalizationVersion": "canonical-json-v1",
+      "hashAlgorithm": "sha256"
+    }
+  ],
+  "unknownFieldPolicy": "reject",
+  "implicitMinorCompatibility": false,
+  "activationRequiresFrozenVectors": true
+}

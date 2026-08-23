@@ -1,0 +1,112 @@
+{
+  "schemaVersion": "v2-runtime-boundary-v1",
+  "requirementId": "v2c.runtime-boundary",
+  "harnessRequest": {
+    "closed": true,
+    "requiredFields": [
+      "releaseId",
+      "activationEpoch",
+      "runId",
+      "attempt",
+      "harnessSessionId",
+      "goalInput",
+      "contextArtifacts",
+      "checkpointRef",
+      "budget",
+      "deadlineUtcMs",
+      "abortSignalId",
+      "runtimeGrants"
+    ]
+  },
+  "grant": {
+    "closed": true,
+    "binding": [
+      "releaseId",
+      "activationEpoch",
+      "runId",
+      "attempt",
+      "harnessSessionId",
+      "purpose",
+      "operation",
+      "audience",
+      "issuedAtUtcMs",
+      "expiresAtUtcMs",
+      "revocationGeneration",
+      "requestBudget",
+      "byteBudget"
+    ],
+    "useRequires": [
+      "registeredActionId",
+      "effectiveGrantDigest",
+      "currentTimeEvidence",
+      "currentRevocationGeneration",
+      "remainingRequestBudget",
+      "remainingByteBudget"
+    ],
+    "useValidation": [
+      "issued-before-use",
+      "not-expired",
+      "revocation-generation-current",
+      "action-registered-in-same-run",
+      "effective-digest-matches",
+      "request-budget-not-exceeded",
+      "byte-budget-not-exceeded"
+    ],
+    "crossContextReplay": "capability_denied",
+    "singleUseKinds": ["effect-dispatch-claim"]
+  },
+  "toolDescriptor": {
+    "closed": true,
+    "fields": ["descriptorId", "providerId", "providerRevision", "resourceRef", "operation"]
+  },
+  "launch": {
+    "outsideServerProcess": true,
+    "environmentBase": "empty",
+    "environmentAllowlist": ["LANG", "LC_ALL", "PATH"],
+    "resolvedSecretsInEnvironment": false,
+    "executable": "absolute-verified-closure-member",
+    "workDirectory": "fixed-profile-directory",
+    "descriptorPolicy": "close-all-except-declared",
+    "allowedDescriptors": ["stdin", "stdout", "stderr", "broker"],
+    "controlDatabaseReachable": false,
+    "controlSocketReachable": false,
+    "gatewayAuthorityReachable": false,
+    "hostStoreReachable": false,
+    "undeclaredExecutableReachable": false,
+    "containmentBeforeEntrypoint": true
+  },
+  "actualIdentityFact": [
+    "harnessExecutableDigest",
+    "runtimeExecutableDigest",
+    "adapterId",
+    "adapterVersion",
+    "runtimeId",
+    "runtimeVersion",
+    "modelId",
+    "modelVersion",
+    "hostProfileId",
+    "containmentId",
+    "executionClosureId",
+    "launchAttestationId"
+  ],
+  "positiveProbeControls": [
+    "environment-allowlist",
+    "descriptor-close-all",
+    "control-plane-isolation",
+    "grant-operation-enforcement",
+    "egress-operation-enforcement",
+    "execution-closure-enforcement",
+    "whole-tree-containment"
+  ],
+  "rejectedIdentifiers": {
+    "launchInputs": [
+      "inherited-host-environment",
+      "resolved-secret-environment-value",
+      "control-database-path",
+      "admin-socket",
+      "gateway-connector-credential",
+      "undeclared-loader",
+      "undeclared-subprocess"
+    ]
+  }
+}

@@ -1,0 +1,350 @@
+{
+  "schemaVersion": "v2-execution-closure-v1",
+  "requirementId": "v2c.release-identity",
+  "executionModes": [
+    "model-harness",
+    "deterministic-harness",
+    "legacy-process"
+  ],
+  "memberKinds": [
+    "module",
+    "package",
+    "native-artifact",
+    "loader",
+    "runtime",
+    "child-executable"
+  ],
+  "resolutionTable": [
+    {
+      "edgeType": "static-module",
+      "requiresPinnedTarget": true,
+      "requiresDeclaration": false
+    },
+    {
+      "edgeType": "package",
+      "requiresPinnedTarget": true,
+      "requiresDeclaration": false
+    },
+    {
+      "edgeType": "native-artifact",
+      "requiresPinnedTarget": true,
+      "requiresDeclaration": false
+    },
+    {
+      "edgeType": "dynamic-import",
+      "requiresPinnedTarget": true,
+      "requiresDeclaration": true
+    },
+    {
+      "edgeType": "dynamic-require",
+      "requiresPinnedTarget": true,
+      "requiresDeclaration": true
+    },
+    {
+      "edgeType": "plugin",
+      "requiresPinnedTarget": true,
+      "requiresDeclaration": true
+    },
+    {
+      "edgeType": "loader",
+      "requiresPinnedTarget": true,
+      "requiresDeclaration": true
+    },
+    {
+      "edgeType": "subprocess",
+      "requiresPinnedTarget": true,
+      "requiresDeclaration": true
+    }
+  ],
+  "rejectedIdentifiers": {
+    "resolutionModes": [
+      "optional-at-runtime",
+      "path-based",
+      "tag-based",
+      "host-global"
+    ]
+  },
+  "vectors": [
+    {
+      "id": "static-transitive",
+      "graph": {
+        "entryId": "entry",
+        "members": [
+          {
+            "id": "entry",
+            "mode": "deterministic-harness",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "dependencies": [
+              {
+                "type": "static-module",
+                "target": "module",
+                "resolution": "pinned",
+                "expectedDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+              }
+            ]
+          },
+          {
+            "id": "module",
+            "mode": "module",
+            "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "dependencies": [
+              {
+                "type": "package",
+                "target": "runtime",
+                "resolution": "pinned",
+                "expectedDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+              }
+            ]
+          },
+          {
+            "id": "runtime",
+            "mode": "runtime",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "dependencies": []
+          }
+        ]
+      },
+      "expected": "accepted",
+      "expectedClosure": {
+        "members": [
+          {
+            "id": "entry",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "mode": "deterministic-harness"
+          },
+          {
+            "id": "module",
+            "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mode": "module"
+          },
+          {
+            "id": "runtime",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mode": "runtime"
+          }
+        ],
+        "digest": "938adc6f47035a40573d58aeeb5fa9be1caf2854e2f5a0ce3926de8945e66a0b"
+      }
+    },
+    {
+      "id": "declared-dynamic-import",
+      "graph": {
+        "entryId": "entry",
+        "members": [
+          {
+            "id": "entry",
+            "mode": "model-harness",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "dependencies": [
+              {
+                "type": "dynamic-import",
+                "target": "plugin",
+                "resolution": "pinned",
+                "expectedDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "declared": true
+              }
+            ]
+          },
+          {
+            "id": "plugin",
+            "mode": "module",
+            "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "dependencies": []
+          }
+        ]
+      },
+      "expected": "accepted",
+      "expectedClosure": {
+        "members": [
+          {
+            "id": "entry",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "mode": "model-harness"
+          },
+          {
+            "id": "plugin",
+            "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mode": "module"
+          }
+        ],
+        "digest": "2ac65da07036edcb730c137eb4a488e04838206882adc3bf13be6ecc78eca24b"
+      }
+    },
+    {
+      "id": "undeclared-dynamic-import",
+      "graph": {
+        "entryId": "entry",
+        "members": [
+          {
+            "id": "entry",
+            "mode": "model-harness",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "dependencies": [
+              {
+                "type": "dynamic-import",
+                "target": "plugin",
+                "resolution": "pinned",
+                "expectedDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "declared": false
+              }
+            ]
+          },
+          {
+            "id": "plugin",
+            "mode": "module",
+            "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "dependencies": []
+          }
+        ]
+      },
+      "expected": "rejected",
+      "expectedError": "undeclared_dynamic_execution"
+    },
+    {
+      "id": "optional-runtime-member",
+      "graph": {
+        "entryId": "entry",
+        "members": [
+          {
+            "id": "entry",
+            "mode": "legacy-process",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "dependencies": [
+              {
+                "type": "static-module",
+                "target": "module",
+                "resolution": "pinned",
+                "expectedDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "optionalAtRuntime": true
+              }
+            ]
+          },
+          {
+            "id": "module",
+            "mode": "module",
+            "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "dependencies": []
+          }
+        ]
+      },
+      "expected": "rejected",
+      "expectedError": "closure_member_unresolved"
+    },
+    {
+      "id": "host-global-resolution",
+      "graph": {
+        "entryId": "entry",
+        "members": [
+          {
+            "id": "entry",
+            "mode": "legacy-process",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "dependencies": [
+              {
+                "type": "package",
+                "target": "module",
+                "resolution": "host-global",
+                "expectedDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+              }
+            ]
+          },
+          {
+            "id": "module",
+            "mode": "module",
+            "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "dependencies": []
+          }
+        ]
+      },
+      "expected": "rejected",
+      "expectedError": "closure_member_unresolved"
+    },
+    {
+      "id": "missing-member",
+      "graph": {
+        "entryId": "entry",
+        "members": [
+          {
+            "id": "entry",
+            "mode": "legacy-process",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "dependencies": [
+              {
+                "type": "static-module",
+                "target": "missing",
+                "resolution": "pinned",
+                "expectedDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+              }
+            ]
+          }
+        ]
+      },
+      "expected": "rejected",
+      "expectedError": "closure_member_unresolved"
+    },
+    {
+      "id": "digest-mismatch",
+      "graph": {
+        "entryId": "entry",
+        "members": [
+          {
+            "id": "entry",
+            "mode": "legacy-process",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "dependencies": [
+              {
+                "type": "loader",
+                "target": "loader",
+                "resolution": "pinned",
+                "expectedDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "declared": true
+              }
+            ]
+          },
+          {
+            "id": "loader",
+            "mode": "loader",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "dependencies": []
+          }
+        ]
+      },
+      "expected": "rejected",
+      "expectedError": "closure_digest_mismatch"
+    },
+    {
+      "id": "undeclared-subprocess",
+      "graph": {
+        "entryId": "entry",
+        "members": [
+          {
+            "id": "entry",
+            "mode": "legacy-process",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "dependencies": [
+              {
+                "type": "subprocess",
+                "target": "child",
+                "resolution": "pinned",
+                "expectedDigest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+              }
+            ]
+          },
+          {
+            "id": "child",
+            "mode": "child-executable",
+            "digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "dependencies": []
+          }
+        ]
+      },
+      "expected": "rejected",
+      "expectedError": "undeclared_dynamic_execution"
+    }
+  ],
+  "byteDriftVector": {
+    "expectedDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "observedDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "expected": "closure_digest_mismatch"
+  }
+}

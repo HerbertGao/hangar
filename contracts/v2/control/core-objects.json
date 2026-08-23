@@ -1,0 +1,2484 @@
+{
+  "schemaVersion": "v2-core-objects-v1",
+  "requirementIds": [
+    "v2c.core-objects",
+    "v2c.durable-data"
+  ],
+  "knownDomainTerms": {
+    "version": "known-domain-terms-v1",
+    "tokens": [
+      "email",
+      "mail",
+      "mailbox",
+      "inbox",
+      "repository",
+      "repo",
+      "slide",
+      "slides",
+      "news",
+      "price",
+      "pricing"
+    ],
+    "compactForms": [
+      "emailmessage",
+      "mailmessage",
+      "slidedeck",
+      "newsitem",
+      "pricerecord"
+    ],
+    "digest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2"
+  },
+  "rationaleRegistry": {
+    "harness-control-contract": "Required by the Harness-first control contract; no tenant model is encoded."
+  },
+  "objectSchemas": [
+    {
+      "id": "AgentSpec",
+      "closed": true,
+      "fields": [
+        {
+          "id": "schemaVersion",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "agentId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "normalizedSpecDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "goalArtifact",
+          "dataClass": "artifact-ref"
+        },
+        {
+          "id": "harnessEntryId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "releaseDeclarationDigest",
+          "dataClass": "control-metadata"
+        }
+      ]
+    },
+    {
+      "id": "AgentRelease",
+      "closed": true,
+      "fields": [
+        {
+          "id": "schemaVersion",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "canonicalizationVersion",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "hashAlgorithm",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "compilerVersion",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "agentId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "normalizedSpecDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "goalArtifact",
+          "dataClass": "artifact-ref"
+        },
+        {
+          "id": "instructionArtifact",
+          "dataClass": "artifact-ref"
+        },
+        {
+          "id": "harnessEntryId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "executionClosureDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "promptDigests",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "policyDigests",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "approvedSkillDigests",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "fixtureDigests",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "executableDigests",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "resourceDigests",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "harnessConstraintDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "runtimeConstraintDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "modelConstraintDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "entitlementConstraintDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "checkpointSchemaDigests",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "durableBoundaryKinds",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "effectDeclarationDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "healthDeclarationDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "evalDeclarationDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "knowledgeDescriptorDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "requiredCapabilities",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "requiredOperations",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "trustedDirectEffects",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "hostDeclarationDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "secretRefs",
+          "dataClass": "secret-ref"
+        }
+      ]
+    },
+    {
+      "id": "Activation",
+      "closed": true,
+      "fields": [
+        {
+          "id": "activationId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "agentId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "releaseId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "epoch",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "state",
+          "dataClass": "control-metadata"
+        }
+      ]
+    },
+    {
+      "id": "Run",
+      "closed": true,
+      "fields": [
+        {
+          "id": "runId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "agentId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "releaseId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "activationId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "activationEpoch",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "triggerKind",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "triggerId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "triggerInputDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "authorityContextDigest",
+          "dataClass": "control-metadata"
+        }
+      ]
+    },
+    {
+      "id": "RunAttempt",
+      "closed": true,
+      "fields": [
+        {
+          "id": "runId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "attempt",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "harnessSessionId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "runtimeIdentityDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "deadlineUtcMs",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "inputCheckpointId",
+          "dataClass": "control-metadata"
+        }
+      ]
+    },
+    {
+      "id": "HarnessRequest",
+      "closed": true,
+      "fields": [
+        {
+          "id": "releaseId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "activationEpoch",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "runId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "attempt",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "harnessSessionId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "runtimeInput",
+          "dataClass": "runtime-only"
+        },
+        {
+          "id": "contextArtifacts",
+          "dataClass": "artifact-ref"
+        },
+        {
+          "id": "checkpointRef",
+          "dataClass": "artifact-ref"
+        },
+        {
+          "id": "budget",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "deadlineUtcMs",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "abortSignalId",
+          "dataClass": "runtime-only"
+        },
+        {
+          "id": "runtimeGrants",
+          "dataClass": "runtime-only"
+        }
+      ]
+    },
+    {
+      "id": "HarnessEvent",
+      "closed": true,
+      "fields": [
+        {
+          "id": "schemaVersion",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "eventType",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "runId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "attempt",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "harnessSessionId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "payloadDigest",
+          "dataClass": "control-metadata"
+        }
+      ]
+    },
+    {
+      "id": "ActionEvent",
+      "closed": true,
+      "fields": [
+        {
+          "id": "schemaVersion",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "eventType",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "runId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "attempt",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "actionId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "parentActionId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "innerRetryOrdinal",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "actualIdentityDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "effectiveGrantDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "artifactRefs",
+          "dataClass": "artifact-ref"
+        }
+      ]
+    },
+    {
+      "id": "CheckpointRef",
+      "closed": true,
+      "fields": [
+        {
+          "id": "checkpointId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "releaseId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "runId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "producerAttempt",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "producerActionId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "checkpointSchemaId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "checkpointSchemaVersion",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "boundaryKind",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "artifactRef",
+          "dataClass": "artifact-ref"
+        },
+        {
+          "id": "artifactDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "outstandingObligations",
+          "dataClass": "control-metadata"
+        }
+      ]
+    },
+    {
+      "id": "RunEvent",
+      "closed": true,
+      "fields": [
+        {
+          "id": "runId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "runSeq",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "eventType",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "factRef",
+          "dataClass": "control-metadata"
+        }
+      ]
+    },
+    {
+      "id": "Approval",
+      "closed": true,
+      "fields": [
+        {
+          "id": "approvalId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "effectId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "subjectDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "policyVersion",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "authorityContextDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "state",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "expiresAtUtcMs",
+          "dataClass": "control-metadata"
+        }
+      ]
+    },
+    {
+      "id": "Effect",
+      "closed": true,
+      "fields": [
+        {
+          "id": "effectId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "runId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "intentKey",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "intentGeneration",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "operation",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "intentDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "firstOriginActionId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "firstOriginAttempt",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "state",
+          "dataClass": "control-metadata"
+        }
+      ]
+    },
+    {
+      "id": "HealthFact",
+      "closed": true,
+      "fields": [
+        {
+          "id": "subjectId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "healthKind",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "count",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "reason",
+          "dataClass": "safe-text"
+        },
+        {
+          "id": "errorKind",
+          "dataClass": "control-metadata"
+        }
+      ]
+    },
+    {
+      "id": "AuthorityEvidence",
+      "closed": true,
+      "fields": [
+        {
+          "id": "issuerNamespaceId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "issuerVersion",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "principalId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "representedSubjectId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "authenticatedMethod",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "actorSubjectId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "audience",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "delegationChainDigest",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "effectiveScope",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "effectiveOperation",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "issuedAtUtcMs",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "expiresAtUtcMs",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "revocationVersion",
+          "dataClass": "control-metadata"
+        }
+      ]
+    },
+    {
+      "id": "ErrorEnvelope",
+      "closed": true,
+      "fields": [
+        {
+          "id": "errorKind",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "messageTemplateId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "detailSchemaId",
+          "dataClass": "control-metadata"
+        },
+        {
+          "id": "details",
+          "dataClass": "safe-text"
+        },
+        {
+          "id": "retryability",
+          "dataClass": "control-metadata"
+        }
+      ]
+    }
+  ],
+  "enums": [
+    {
+      "id": "ActivationState",
+      "values": [
+        "inactive",
+        "shadow",
+        "active",
+        "draining",
+        "quarantined"
+      ]
+    },
+    {
+      "id": "DurableBoundaryKind",
+      "values": [
+        "human",
+        "effect",
+        "external-input"
+      ]
+    },
+    {
+      "id": "HealthKind",
+      "values": [
+        "invoked",
+        "produced",
+        "skipped",
+        "degraded",
+        "failed"
+      ]
+    },
+    {
+      "id": "DataClass",
+      "values": [
+        "control-metadata",
+        "safe-text",
+        "artifact-ref",
+        "secret-ref",
+        "runtime-only"
+      ]
+    }
+  ],
+  "identifierAttestations": [
+    {
+      "schemaPath": "objectSchemas.AgentSpec",
+      "identifier": "AgentSpec",
+      "kind": "type",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentSpec.fields.schemaVersion",
+      "identifier": "schemaVersion",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentSpec.fields.agentId",
+      "identifier": "agentId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentSpec.fields.normalizedSpecDigest",
+      "identifier": "normalizedSpecDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentSpec.fields.goalArtifact",
+      "identifier": "goalArtifact",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentSpec.fields.harnessEntryId",
+      "identifier": "harnessEntryId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentSpec.fields.releaseDeclarationDigest",
+      "identifier": "releaseDeclarationDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease",
+      "identifier": "AgentRelease",
+      "kind": "type",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.schemaVersion",
+      "identifier": "schemaVersion",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.canonicalizationVersion",
+      "identifier": "canonicalizationVersion",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.hashAlgorithm",
+      "identifier": "hashAlgorithm",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.compilerVersion",
+      "identifier": "compilerVersion",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.agentId",
+      "identifier": "agentId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.normalizedSpecDigest",
+      "identifier": "normalizedSpecDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.goalArtifact",
+      "identifier": "goalArtifact",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.instructionArtifact",
+      "identifier": "instructionArtifact",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.harnessEntryId",
+      "identifier": "harnessEntryId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.executionClosureDigest",
+      "identifier": "executionClosureDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.promptDigests",
+      "identifier": "promptDigests",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.policyDigests",
+      "identifier": "policyDigests",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.approvedSkillDigests",
+      "identifier": "approvedSkillDigests",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.fixtureDigests",
+      "identifier": "fixtureDigests",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.executableDigests",
+      "identifier": "executableDigests",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.resourceDigests",
+      "identifier": "resourceDigests",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.harnessConstraintDigest",
+      "identifier": "harnessConstraintDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.runtimeConstraintDigest",
+      "identifier": "runtimeConstraintDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.modelConstraintDigest",
+      "identifier": "modelConstraintDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.entitlementConstraintDigest",
+      "identifier": "entitlementConstraintDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.checkpointSchemaDigests",
+      "identifier": "checkpointSchemaDigests",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.durableBoundaryKinds",
+      "identifier": "durableBoundaryKinds",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.effectDeclarationDigest",
+      "identifier": "effectDeclarationDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.healthDeclarationDigest",
+      "identifier": "healthDeclarationDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.evalDeclarationDigest",
+      "identifier": "evalDeclarationDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.knowledgeDescriptorDigest",
+      "identifier": "knowledgeDescriptorDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.requiredCapabilities",
+      "identifier": "requiredCapabilities",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.requiredOperations",
+      "identifier": "requiredOperations",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.trustedDirectEffects",
+      "identifier": "trustedDirectEffects",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.hostDeclarationDigest",
+      "identifier": "hostDeclarationDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AgentRelease.fields.secretRefs",
+      "identifier": "secretRefs",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Activation",
+      "identifier": "Activation",
+      "kind": "type",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Activation.fields.activationId",
+      "identifier": "activationId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Activation.fields.agentId",
+      "identifier": "agentId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Activation.fields.releaseId",
+      "identifier": "releaseId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Activation.fields.epoch",
+      "identifier": "epoch",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Activation.fields.state",
+      "identifier": "state",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Run",
+      "identifier": "Run",
+      "kind": "type",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Run.fields.runId",
+      "identifier": "runId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Run.fields.agentId",
+      "identifier": "agentId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Run.fields.releaseId",
+      "identifier": "releaseId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Run.fields.activationId",
+      "identifier": "activationId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Run.fields.activationEpoch",
+      "identifier": "activationEpoch",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Run.fields.triggerKind",
+      "identifier": "triggerKind",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Run.fields.triggerId",
+      "identifier": "triggerId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Run.fields.triggerInputDigest",
+      "identifier": "triggerInputDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Run.fields.authorityContextDigest",
+      "identifier": "authorityContextDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.RunAttempt",
+      "identifier": "RunAttempt",
+      "kind": "type",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.RunAttempt.fields.runId",
+      "identifier": "runId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.RunAttempt.fields.attempt",
+      "identifier": "attempt",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.RunAttempt.fields.harnessSessionId",
+      "identifier": "harnessSessionId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.RunAttempt.fields.runtimeIdentityDigest",
+      "identifier": "runtimeIdentityDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.RunAttempt.fields.deadlineUtcMs",
+      "identifier": "deadlineUtcMs",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.RunAttempt.fields.inputCheckpointId",
+      "identifier": "inputCheckpointId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessRequest",
+      "identifier": "HarnessRequest",
+      "kind": "type",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessRequest.fields.releaseId",
+      "identifier": "releaseId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessRequest.fields.activationEpoch",
+      "identifier": "activationEpoch",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessRequest.fields.runId",
+      "identifier": "runId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessRequest.fields.attempt",
+      "identifier": "attempt",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessRequest.fields.harnessSessionId",
+      "identifier": "harnessSessionId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessRequest.fields.runtimeInput",
+      "identifier": "runtimeInput",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessRequest.fields.contextArtifacts",
+      "identifier": "contextArtifacts",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessRequest.fields.checkpointRef",
+      "identifier": "checkpointRef",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessRequest.fields.budget",
+      "identifier": "budget",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessRequest.fields.deadlineUtcMs",
+      "identifier": "deadlineUtcMs",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessRequest.fields.abortSignalId",
+      "identifier": "abortSignalId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessRequest.fields.runtimeGrants",
+      "identifier": "runtimeGrants",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessEvent",
+      "identifier": "HarnessEvent",
+      "kind": "type",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessEvent.fields.schemaVersion",
+      "identifier": "schemaVersion",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessEvent.fields.eventType",
+      "identifier": "eventType",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessEvent.fields.runId",
+      "identifier": "runId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessEvent.fields.attempt",
+      "identifier": "attempt",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessEvent.fields.harnessSessionId",
+      "identifier": "harnessSessionId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HarnessEvent.fields.payloadDigest",
+      "identifier": "payloadDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.ActionEvent",
+      "identifier": "ActionEvent",
+      "kind": "type",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.ActionEvent.fields.schemaVersion",
+      "identifier": "schemaVersion",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.ActionEvent.fields.eventType",
+      "identifier": "eventType",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.ActionEvent.fields.runId",
+      "identifier": "runId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.ActionEvent.fields.attempt",
+      "identifier": "attempt",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.ActionEvent.fields.actionId",
+      "identifier": "actionId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.ActionEvent.fields.parentActionId",
+      "identifier": "parentActionId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.ActionEvent.fields.innerRetryOrdinal",
+      "identifier": "innerRetryOrdinal",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.ActionEvent.fields.actualIdentityDigest",
+      "identifier": "actualIdentityDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.ActionEvent.fields.effectiveGrantDigest",
+      "identifier": "effectiveGrantDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.ActionEvent.fields.artifactRefs",
+      "identifier": "artifactRefs",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.CheckpointRef",
+      "identifier": "CheckpointRef",
+      "kind": "type",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.CheckpointRef.fields.checkpointId",
+      "identifier": "checkpointId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.CheckpointRef.fields.releaseId",
+      "identifier": "releaseId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.CheckpointRef.fields.runId",
+      "identifier": "runId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.CheckpointRef.fields.producerAttempt",
+      "identifier": "producerAttempt",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.CheckpointRef.fields.producerActionId",
+      "identifier": "producerActionId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.CheckpointRef.fields.checkpointSchemaId",
+      "identifier": "checkpointSchemaId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.CheckpointRef.fields.checkpointSchemaVersion",
+      "identifier": "checkpointSchemaVersion",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.CheckpointRef.fields.boundaryKind",
+      "identifier": "boundaryKind",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.CheckpointRef.fields.artifactRef",
+      "identifier": "artifactRef",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.CheckpointRef.fields.artifactDigest",
+      "identifier": "artifactDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.CheckpointRef.fields.outstandingObligations",
+      "identifier": "outstandingObligations",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.RunEvent",
+      "identifier": "RunEvent",
+      "kind": "type",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.RunEvent.fields.runId",
+      "identifier": "runId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.RunEvent.fields.runSeq",
+      "identifier": "runSeq",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.RunEvent.fields.eventType",
+      "identifier": "eventType",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.RunEvent.fields.factRef",
+      "identifier": "factRef",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Approval",
+      "identifier": "Approval",
+      "kind": "type",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Approval.fields.approvalId",
+      "identifier": "approvalId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Approval.fields.effectId",
+      "identifier": "effectId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Approval.fields.subjectDigest",
+      "identifier": "subjectDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Approval.fields.policyVersion",
+      "identifier": "policyVersion",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Approval.fields.authorityContextDigest",
+      "identifier": "authorityContextDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Approval.fields.state",
+      "identifier": "state",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Approval.fields.expiresAtUtcMs",
+      "identifier": "expiresAtUtcMs",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Effect",
+      "identifier": "Effect",
+      "kind": "type",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Effect.fields.effectId",
+      "identifier": "effectId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Effect.fields.runId",
+      "identifier": "runId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Effect.fields.intentKey",
+      "identifier": "intentKey",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Effect.fields.intentGeneration",
+      "identifier": "intentGeneration",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Effect.fields.operation",
+      "identifier": "operation",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Effect.fields.intentDigest",
+      "identifier": "intentDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Effect.fields.firstOriginActionId",
+      "identifier": "firstOriginActionId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Effect.fields.firstOriginAttempt",
+      "identifier": "firstOriginAttempt",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.Effect.fields.state",
+      "identifier": "state",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HealthFact",
+      "identifier": "HealthFact",
+      "kind": "type",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HealthFact.fields.subjectId",
+      "identifier": "subjectId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HealthFact.fields.healthKind",
+      "identifier": "healthKind",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HealthFact.fields.count",
+      "identifier": "count",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HealthFact.fields.reason",
+      "identifier": "reason",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.HealthFact.fields.errorKind",
+      "identifier": "errorKind",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AuthorityEvidence",
+      "identifier": "AuthorityEvidence",
+      "kind": "type",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AuthorityEvidence.fields.issuerNamespaceId",
+      "identifier": "issuerNamespaceId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AuthorityEvidence.fields.issuerVersion",
+      "identifier": "issuerVersion",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AuthorityEvidence.fields.principalId",
+      "identifier": "principalId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AuthorityEvidence.fields.representedSubjectId",
+      "identifier": "representedSubjectId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AuthorityEvidence.fields.authenticatedMethod",
+      "identifier": "authenticatedMethod",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AuthorityEvidence.fields.actorSubjectId",
+      "identifier": "actorSubjectId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AuthorityEvidence.fields.audience",
+      "identifier": "audience",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AuthorityEvidence.fields.delegationChainDigest",
+      "identifier": "delegationChainDigest",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AuthorityEvidence.fields.effectiveScope",
+      "identifier": "effectiveScope",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AuthorityEvidence.fields.effectiveOperation",
+      "identifier": "effectiveOperation",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AuthorityEvidence.fields.issuedAtUtcMs",
+      "identifier": "issuedAtUtcMs",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AuthorityEvidence.fields.expiresAtUtcMs",
+      "identifier": "expiresAtUtcMs",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.AuthorityEvidence.fields.revocationVersion",
+      "identifier": "revocationVersion",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.ErrorEnvelope",
+      "identifier": "ErrorEnvelope",
+      "kind": "type",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.ErrorEnvelope.fields.errorKind",
+      "identifier": "errorKind",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.ErrorEnvelope.fields.messageTemplateId",
+      "identifier": "messageTemplateId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.ErrorEnvelope.fields.detailSchemaId",
+      "identifier": "detailSchemaId",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.ErrorEnvelope.fields.details",
+      "identifier": "details",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "objectSchemas.ErrorEnvelope.fields.retryability",
+      "identifier": "retryability",
+      "kind": "field",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.ActivationState",
+      "identifier": "ActivationState",
+      "kind": "enum",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.ActivationState.inactive",
+      "identifier": "inactive",
+      "kind": "enum-value",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.ActivationState.shadow",
+      "identifier": "shadow",
+      "kind": "enum-value",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.ActivationState.active",
+      "identifier": "active",
+      "kind": "enum-value",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.ActivationState.draining",
+      "identifier": "draining",
+      "kind": "enum-value",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.ActivationState.quarantined",
+      "identifier": "quarantined",
+      "kind": "enum-value",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.DurableBoundaryKind",
+      "identifier": "DurableBoundaryKind",
+      "kind": "enum",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.DurableBoundaryKind.human",
+      "identifier": "human",
+      "kind": "enum-value",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.DurableBoundaryKind.effect",
+      "identifier": "effect",
+      "kind": "enum-value",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.DurableBoundaryKind.external-input",
+      "identifier": "external-input",
+      "kind": "enum-value",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.HealthKind",
+      "identifier": "HealthKind",
+      "kind": "enum",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.HealthKind.invoked",
+      "identifier": "invoked",
+      "kind": "enum-value",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.HealthKind.produced",
+      "identifier": "produced",
+      "kind": "enum-value",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.HealthKind.skipped",
+      "identifier": "skipped",
+      "kind": "enum-value",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.HealthKind.degraded",
+      "identifier": "degraded",
+      "kind": "enum-value",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.HealthKind.failed",
+      "identifier": "failed",
+      "kind": "enum-value",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.DataClass",
+      "identifier": "DataClass",
+      "kind": "enum",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.DataClass.control-metadata",
+      "identifier": "control-metadata",
+      "kind": "enum-value",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.DataClass.safe-text",
+      "identifier": "safe-text",
+      "kind": "enum-value",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.DataClass.artifact-ref",
+      "identifier": "artifact-ref",
+      "kind": "enum-value",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.DataClass.secret-ref",
+      "identifier": "secret-ref",
+      "kind": "enum-value",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    },
+    {
+      "schemaPath": "enums.DataClass.runtime-only",
+      "identifier": "runtime-only",
+      "kind": "enum-value",
+      "manifestVersion": "known-domain-terms-v1",
+      "manifestDigest": "3e0c3722f2af91bbb5819f7a00b482b84e2e27e4258529e31be9830604c0f1d2",
+      "owner": "hangar-owner",
+      "decision": "domain-neutral",
+      "rationaleCode": "harness-control-contract"
+    }
+  ]
+}

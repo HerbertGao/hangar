@@ -1,0 +1,51 @@
+{
+  "schemaVersion": "m0-oracle-schema-v1",
+  "requirementId": "m0o.format",
+  "typedExpectationManifests": [
+    "oracles/m0/scenario-expectations.json",
+    "oracles/m0/recovery-race-contracts.json"
+  ],
+  "sourceTitleAttestationFields": [
+    "kind",
+    "ownerScenarioId",
+    "outcomeDigest"
+  ],
+  "caseRequiredFields": [
+    "caseId",
+    "requirementId",
+    "scenarioId",
+    "inputFixtureId",
+    "observationSchemaId",
+    "expected",
+    "applicabilityPredicateId",
+    "qualificationProfiles",
+    "exclusionCodes",
+    "coverageClass"
+  ],
+  "dispositions": [
+    "applicable",
+    "excluded-with-owner-reason"
+  ],
+  "coverageClasses": [
+    "neutral-control-storage",
+    "evaluator-self-test",
+    "named-tenant",
+    "named-process-host"
+  ],
+  "closedExclusionCodes": [
+    "profile-mismatch",
+    "host-not-selected",
+    "tenant-not-selected"
+  ],
+  "requiredClassesNeverExcluded": [
+    "neutral-control-storage",
+    "evaluator-self-test"
+  ],
+  "executionResults": [
+    "observation",
+    "evidence-failure"
+  ],
+  "candidateMaySetDisposition": false,
+  "postExecutionExclusion": false,
+  "importCandidateInternals": false
+}

@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "v2-read-only-v1",
+  "requirementId": "v2s.read-only",
+  "sqliteOpen": {
+    "mode": "read-only",
+    "queryOnly": true,
+    "immutableWhenSnapshot": true,
+    "createIfMissing": false
+  },
+  "forbiddenOutputs": ["database", "wal", "shm", "journal", "sidecar"],
+  "beforeAfterEvidence": ["directoryEntries", "fileSize", "modifiedTimeNs", "contentDigest"],
+  "sourceRepositories": {
+    "access": "git-object",
+    "workingTreeWrites": false
+  }
+}

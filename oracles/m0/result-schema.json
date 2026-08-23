@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "m0-result-schema-v2",
+  "requirementId": "m0o.reproducibility",
+  "resultKinds": [
+    "pass",
+    "contract_failure",
+    "evidence_failure",
+    "prerequisite_missing",
+    "missing_source",
+    "invalid_invocation"
+  ],
+  "kindPrecedence": [
+    "invalid_invocation",
+    "prerequisite_missing",
+    "missing_source",
+    "contract_failure",
+    "evidence_failure",
+    "pass"
+  ],
+  "localEnvelopeFields": [
+    "schemaVersion",
+    "subcommand",
+    "executed",
+    "kind",
+    "checks",
+    "findings"
+  ],
+  "gateResultFields": [
+    "gateId",
+    "executed",
+    "kind",
+    "basis",
+    "execution",
+    "findings",
+    "blockedBy"
+  ],
+  "gateResultBases": [
+    "local",
+    "external",
+    "definition",
+    "aggregate"
+  ],
+  "aggregateFields": [
+    "primaryKind",
+    "findings"
+  ],
+  "passRequiresExecuted": true,
+  "unrunRequiresBlockedBy": true,
+  "aggregateOwner": "all",
+  "exitCodes": {
+    "pass": 0,
+    "contract_failure": 1,
+    "evidence_failure": 1,
+    "prerequisite_missing": 2,
+    "missing_source": 2,
+    "invalid_invocation": 2
+  },
+  "completePassToken": "M0 advisory: READY",
+  "scope": "advisory-only",
+  "gateResultExactFields": {
+    "local": [
+      "gateId",
+      "executed",
+      "kind",
+      "basis",
+      "findings"
+    ],
+    "external": [
+      "gateId",
+      "executed",
+      "kind",
+      "basis",
+      "execution",
+      "findings"
+    ],
+    "definition": [
+      "gateId",
+      "executed",
+      "kind",
+      "basis",
+      "findings"
+    ],
+    "unexecuted": [
+      "gateId",
+      "executed",
+      "kind",
+      "findings",
+      "blockedBy"
+    ]
+  },
+  "externalExecutionFields": [
+    "exitStatus",
+    "signal",
+    "stdoutDigest",
+    "stderrDigest"
+  ],
+  "candidateFieldsAllowed": false
+}

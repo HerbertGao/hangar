@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "v2-projection-rebuild-v1",
+  "requirementId": "v2s.projection-rebuild",
+  "source": "source_facts",
+  "order": "factSeq-ascending",
+  "start": "database-genesis",
+  "verifyBeforePublish": [
+    "schemaVersion",
+    "factKind",
+    "factSeqContinuity",
+    "previousFactHash",
+    "factHash",
+    "runSeqContinuity",
+    "actionParent",
+    "checkpointProducer",
+    "obligationOwnerSuccessorChain",
+    "effectFirstOrigin"
+  ],
+  "projectionFamilies": [
+    "run",
+    "attempt",
+    "action-graph",
+    "checkpoint",
+    "obligation-owner",
+    "health",
+    "effect",
+    "recovery-session",
+    "recovery-qualification",
+    "recovery-binding",
+    "recovery-operation"
+  ],
+  "failurePolicy": {
+    "unknownFactKind": "stop-no-publish",
+    "unknownFactVersion": "stop-no-publish",
+    "hashGap": "stop-no-publish",
+    "sequenceGap": "stop-no-publish",
+    "danglingParent": "stop-no-publish",
+    "ownerChainBranch": "stop-no-publish",
+    "firstOriginConflict": "stop-no-publish"
+  },
+  "receiptAndReconciliation": {
+    "mayUpdate": ["effect", "recovery-operation", "obligation-owner"],
+    "mayRewriteRunTerminal": false,
+    "mayScheduleHarness": false
+  },
+  "projectionAuthority": false
+}

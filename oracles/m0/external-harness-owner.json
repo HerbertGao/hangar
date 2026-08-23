@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "m0-external-harness-owner-v1",
+  "requirementIds": ["m0o.process-fixture", "m0o.harness-attribution"],
+  "modes": [
+    {
+      "id": "hangar-adapter",
+      "hangarOuterLifecycleOwner": true,
+      "externalOuterLifecycleOwner": false,
+      "externalInnerProgressOwner": true,
+      "privateStoreQualifiesAsPublicEvidence": false
+    },
+    {
+      "id": "replacement-platform",
+      "hangarOuterLifecycleOwner": false,
+      "externalOuterLifecycleOwner": true,
+      "externalInnerProgressOwner": true,
+      "privateStoreQualifiesAsPublicEvidence": false
+    }
+  ],
+  "overlappingOuterOwners": "contract_failure",
+  "unknownOrCommittedEffectRetryByHarness": "contract_failure",
+  "tenantSupervisorCleanupCountsAsHangarContainment": false
+}

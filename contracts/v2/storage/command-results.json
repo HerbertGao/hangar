@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "v2-command-results-v1",
+  "requirementId": "v2s.command-results",
+  "identity": ["actorSubjectId", "commandKind", "targetAggregateId", "idempotencyKey"],
+  "storedDigestTuple": ["commandSchemaVersion", "canonicalizationVersion", "hashAlgorithm"],
+  "storedBindings": [
+    "firstAuthorityContextDigest",
+    "payloadDigest",
+    "preconditionDigest",
+    "preflightTimeEvidenceDigest"
+  ],
+  "states": ["pending-coordination", "completed"],
+  "pendingAllowedCommandKinds": ["restore-init", "abort-recovery", "recover-activate"],
+  "pendingRules": {
+    "beforeExternalAuthorityCas": true,
+    "targetMutationFact": false,
+    "safeClientStatus": "pending",
+    "clientCapability": false
+  },
+  "restoreInitCoordinationMetadata": [
+    "recoverySessionId",
+    "proposedTargetControlInstanceId",
+    "backupDigest",
+    "agentSetDigest"
+  ],
+  "completionAtomicWith": ["aggregateSourceFacts", "projection"],
+  "winnerCompletesLoserResults": true,
+  "replay": {
+    "storedTuple": true,
+    "currentTupleReinterpretation": false,
+    "currentDisclosureAuthorization": true,
+    "mutationReexecution": false,
+    "payloadConflict": "idempotency_conflict",
+    "preconditionConflict": "idempotency_conflict"
+  },
+  "retention": "database-archival",
+  "reusableGrantInResult": false
+}

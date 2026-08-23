@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "v2-transactions-v1",
+  "requirementId": "v2s.transactions",
+  "operations": [
+    { "id": "database-genesis", "members": ["storageIdentity", "controlInstance", "genesisSourceFact"] },
+    { "id": "authenticated-evidence-admission", "members": ["authenticatedEnvelope", "expectedContextDigest", "currentStateDigest", "evidenceSourceFact"] },
+    { "id": "authenticated-evidence-consumption", "members": ["evidenceConsumption", "consumerStateChange", "consumptionSourceFact"] },
+    { "id": "control-instance-resume", "members": ["authenticatedEvidenceConsumption", "resumeSourceFact", "resumeResult"] },
+    { "id": "restore-init-pending", "members": ["pendingCommand", "preflightTimeFact", "recoverySession", "proposedTarget", "agentSetDigest"] },
+    { "id": "recovery-target-initialize", "members": ["sessionTarget", "controlInstanceFact", "allAgentQualifications", "quarantinedActivations", "completedCommand"] },
+    { "id": "release-publish", "members": ["release", "releaseSourceFact", "commandResult"] },
+    { "id": "activation-change", "members": ["activation", "activationSourceFact", "commandResult"] },
+    { "id": "run-admission", "members": ["Run", "initialRunEvent", "hostEvidenceBinding", "commandResult", "projection"] },
+    { "id": "attempt-quiesced", "members": ["AttemptQuiesced", "quiescenceSourceFact"] },
+    { "id": "run-attempt-allocation", "members": ["quiescenceConsumption", "RunAttempt", "checkpointInput", "initialAttemptFact", "commandResult", "projection"] },
+    { "id": "action-registration", "members": ["action", "actionSourceFact", "commandResult", "projection"] },
+    { "id": "action-event-append", "members": ["ActionEvent", "actionEventSourceFact", "projection"] },
+    { "id": "checkpoint-append", "members": ["CheckpointRef", "obligationRefs", "checkpointSourceFact", "projection"] },
+    { "id": "obligation-owner-transfer", "members": ["ownerTransfer", "ownerTransferSourceFact", "projection"] },
+    { "id": "process-registration", "members": ["processOwnership", "authenticatedProductionChildEvidence", "authenticatedEvidenceConsumption", "launchSourceFact"] },
+    { "id": "terminal-choke-point", "members": ["terminalSourceFact", "runProjection", "attemptCleanup", "approvalCleanup"] },
+    { "id": "approval-decision", "members": ["approvalDecision", "authorityEvidence", "approvalSourceFact", "commandResult"] },
+    { "id": "effect-identity", "members": ["Effect", "firstOrigin", "effectSourceFact"] },
+    { "id": "effect-claim", "members": ["claim", "claimSourceFact"] },
+    { "id": "dispatch-start", "members": ["claimConsumption", "dispatchIdentity", "hostEvidenceBinding", "dispatchSourceFact"] },
+    { "id": "receipt-admission", "members": ["receipt", "producerProof", "connectorAuthorityVersionBinding", "receiptSourceFact", "outcomeProjection"] },
+    { "id": "reconciliation-update", "members": ["ownerCas", "producerProof", "reconciliationSourceFact", "outcomeProjection"] },
+    { "id": "recovery-operation-discovery", "members": ["RecoveryDiscoveredOperation", "attemptMembership", "producerProof", "recoverySourceFact", "obligationProjection"] },
+    { "id": "recovery-operation-outcome", "members": ["operationOwnerCas", "producerProof", "recoveryOutcomeFact", "obligationProjection"] },
+    { "id": "post-final-conflict", "members": ["conflictFact", "unresolvedObligation", "activationQuarantine", "mutationAuthorityRevocation"] },
+    { "id": "recovery-binding", "members": ["artifactEvidenceConsumption", "authorityHeadCas", "bindingCertificate", "agentAttemptBound", "sourceFact"] },
+    { "id": "activation-permit-issue", "members": ["permitEvidenceConsumption", "authorityHeadCas", "activationPermit", "sourceFact"] },
+    { "id": "recovery-binding-invalidation", "members": ["bindingConflictEvidence", "conflictEvidenceConsumption", "artifactInvalidation", "permitRevocation", "qualificationTerminal", "activationQuarantine", "mutationAuthorityRevocation", "commandResult", "sourceFact"] },
+    { "id": "target-authority-close", "members": ["registrationClosure", "authorityRevocations", "attestationInvalidation", "expiryEvidence", "obligationDigest", "closureFact"] },
+    { "id": "recovery-abort", "members": ["qualificationTerminal", "artifactRevocation", "grantRevocation", "winnerCommandResult", "loserCommandResults", "sourceFact"] },
+    { "id": "recovery-activation", "members": ["artifactConsumption", "permitConsumption", "authorityHeadCas", "qualifiedState", "activeActivation", "reservedEpoch", "commandResult", "sourceFacts"] }
+  ],
+  "crashOutcomes": ["none-visible", "complete-set-visible"],
+  "externalCallPolicy": {
+    "insideSqliteTransaction": false,
+    "dispatchStartedCrashOutcome": "unknown",
+    "automaticRedispatch": false
+  },
+  "attemptDerivedGuard": {
+    "compares": ["runId", "attempt", "harnessSessionId", "quiescenceGeneration"],
+    "afterQuiescence": "stale_attempt",
+    "lateAllowlist": ["control-cleanup", "existing-obligation-receipt", "existing-obligation-reconciliation"]
+  },
+  "runAttemptAllocationCas": {
+    "consumes": "AttemptQuiesced",
+    "compares": [
+      "priorAttemptTerminal",
+      "currentAttemptNumber",
+      "containmentGeneration",
+      "grantRevocationGeneration",
+      "obligationSetDigest",
+      "checkpointOwnerChainHead"
+    ],
+    "zeroRowSuccess": false
+  },
+  "fencedCas": [
+    { "id": "activation", "zeroRowKinds": ["stale_epoch", "stale_generation", "invalid_state"] },
+    { "id": "admission", "zeroRowKinds": ["stale_epoch", "stale_generation", "terminal_conflict"] },
+    { "id": "child-release", "zeroRowKinds": ["stale_generation", "invalid_state"] },
+    { "id": "effect-claim", "zeroRowKinds": ["stale_epoch", "stale_generation", "invalid_state"] },
+    { "id": "dispatch", "zeroRowKinds": ["stale_epoch", "stale_generation", "invalid_state"] },
+    { "id": "owner-handoff", "zeroRowKinds": ["stale_generation", "conflict"] },
+    { "id": "restore-initialize", "zeroRowKinds": ["stale_generation", "target_mismatch", "recovery_in_progress"] },
+    { "id": "recovery-activate", "zeroRowKinds": ["stale_generation", "stale_authority", "target_mismatch", "recovery_evidence_conflict"] }
+  ],
+  "zeroRowMaySucceed": false,
+  "producerProofPersisted": true
+}

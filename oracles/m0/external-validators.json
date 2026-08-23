@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "m0-external-validators-v1",
+  "requirementId": "m0o.reproducibility",
+  "validators": [
+    {
+      "id": "openspec-strict",
+      "command": "openspec-cn",
+      "args": ["validate", "--specs", "--strict", "--json"],
+      "timeoutMs": 30000,
+      "success": {
+        "exitStatus": 0,
+        "jsonPath": ["summary", "totals", "failed"],
+        "equals": 0
+      },
+      "failureKind": "contract_failure",
+      "spawnFailureKind": "prerequisite_missing",
+      "timeoutKind": "evidence_failure",
+      "malformedOutputKind": "invalid_invocation",
+      "suppressRawSuccessText": true
+    }
+  ]
+}

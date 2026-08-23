@@ -1,0 +1,221 @@
+{
+  "schemaVersion": "v2-restore-v1",
+  "requirementId": "v2s.restore",
+  "backupMetadata": [
+    "databaseIdentity",
+    "sourceControlInstanceId",
+    "lineageControlInstanceSet",
+    "schemaVersion",
+    "canonicalizationVersion",
+    "maxFactSeq",
+    "sourceFactChainHead",
+    "perRunMaxRunSeq",
+    "terminalAndEffectIdentities",
+    "executionClosureDigests",
+    "agentActivationSetDigest",
+    "mutationAuthorityWatermarks",
+    "sinkDiscoveryWatermarks",
+    "backupDigest",
+    "recoveryAuthorityEpoch"
+  ],
+  "session": {
+    "identityInput": ["databaseIdentity", "sourceControlInstanceId", "backupDigest"],
+    "states": ["pending", "initializing-awaiting-local", "initialized", "retiring-awaiting-local", "retired"],
+    "localStates": ["pending-target", "initialized", "retired"],
+    "singleOpenPerDatabaseFile": true,
+    "singleSharedTarget": true,
+    "frozenAgentSet": true,
+    "initAndAbortCompareSameGeneration": true,
+    "winnerCompletesLoserCommands": true
+  },
+  "evidenceProfileRegistry": "contracts/v2/runtime/evidence-profiles.json",
+  "recoveryAuthorityEvidence": {
+    "centralVerifierRequired": true,
+    "callerOwnedExpectedContextRequired": true,
+    "currentAuthoritySnapshotRequired": true,
+    "profiles": {
+      "cleanRestart": "clean-restart",
+      "recoveryArtifact": "recovery-artifact",
+      "activationPermit": "activation-permit",
+      "boundConflict": "bound-conflict",
+      "targetAuthorityClosed": "target-authority-closed"
+    }
+  },
+  "qualification": {
+    "states": [
+      "quarantined",
+      "fencing",
+      "enumerating",
+      "reconciling",
+      "ready",
+      "invalidating",
+      "aborted",
+      "qualified",
+      "invalidated"
+    ],
+    "terminalStates": ["aborted", "invalidated"],
+    "qualifiedSafetyTransition": "invalidated",
+    "singleOpenPerSessionAgent": true,
+    "productionBeforeQualified": false,
+    "readyGrantsProduction": false
+  },
+  "agentAttempt": {
+    "states": [
+      "pending",
+      "executing",
+      "aborted-awaiting-local",
+      "aborted",
+      "bound",
+      "binding-invalidated-awaiting-local",
+      "consumed",
+      "invalidated"
+    ],
+    "terminalStates": ["aborted", "consumed", "invalidated"],
+    "singleUnfinishedPerQualification": true,
+    "abortAndBindCompareSameGeneration": true
+  },
+  "bindingCertificate": {
+    "states": ["bound", "binding-invalidated-awaiting-local", "consumed", "invalidated"],
+    "clientVisible": false,
+    "dispatchAuthority": false,
+    "ordinaryAuthorityChangeAfterBindRewritesDecision": false
+  },
+  "activationPermit": {
+    "states": ["issued", "superseded", "expired", "consumed", "revoked"],
+    "rawPersisted": false,
+    "clientVisible": false,
+    "singleIssuedGeneration": true,
+    "resignSameBindingOnly": true,
+    "signedAuthorityEvidenceRequired": true,
+    "currentHostAndTimeGenerationRequired": true,
+    "resignTriggers": ["permit-expiry", "executor-restart", "host-generation-change"]
+  },
+  "timeEvidenceStages": ["command-preflight", "recovery-session", "recovery-agent-attempt"],
+  "mutationAuthorityTypes": [
+    "admission-owner",
+    "gateway-claim",
+    "connector-authority",
+    "direct-mutation-authority",
+    "runtime-grant",
+    "control-submission-grant",
+    "restricted-child-authority"
+  ],
+  "registrationClosure": {
+    "externalLinearization": true,
+    "newMemberAfterClosure": "stale_authority",
+    "memberBeforeClosureIncluded": true,
+    "targetProductionRegistrationBeforeQualified": false
+  },
+  "dispatchDenominator": {
+    "setOperation": "union",
+    "inputs": ["restoredDispatchFacts", "sinkEnumeratedOperations", "recoveryDiscoveredOperations"],
+    "finiteAuthenticatedWatermarkRequired": true,
+    "unknownBlocks": true,
+    "conflictBlocks": true,
+    "receiptRequired": false,
+    "finalOutcomes": ["committed", "not-committed"]
+  },
+  "recoveryArtifactBindings": [
+    "artifactId",
+    "authorityId",
+    "authorityVersion",
+    "authorityGeneration",
+    "recoverySessionId",
+    "agentAttemptId",
+    "agentId",
+    "qualificationGeneration",
+    "releaseId",
+    "activationId",
+    "databaseIdentity",
+    "sourceControlInstanceId",
+    "targetControlInstanceId",
+    "agentSetDigest",
+    "lineageSetDigest",
+    "authoritySetDigest",
+    "backupDigest",
+    "sourceFactHead",
+    "executionClosureDigest",
+    "timeEvidenceDigest",
+    "hostAttestationDigest",
+    "registrationClosureDigest",
+    "dispatchDenominatorDigest",
+    "finalOutcomeDigest",
+    "reservedEpoch",
+    "expiresAtUtcMs"
+  ],
+  "bindingCasCompares": [
+    "expectedContextDigest",
+    "authorityScopeId",
+    "authorityGeneration",
+    "hostAttestationId",
+    "hostAttestationDigest",
+    "hostGeneration",
+    "timeEvidenceId",
+    "timeEvidenceDigest",
+    "timeGeneration",
+    "artifactState",
+    "agentAttemptGeneration"
+  ],
+  "prebindFinalization": {
+    "artifactExpired": "recovery_artifact_expired",
+    "authorityStale": "stale_authority",
+    "recoveryConflict": "recovery_evidence_conflict",
+    "deterministicPreconditionFailure": "invalid_state",
+    "ambiguousAuthorityResponse": "remain-pending-same-cas"
+  },
+  "boundConflict": {
+    "allowedKinds": ["RecoveryPostFinalConflict", "RecoveryAgentBindingConflict"],
+    "signedAuthorityEvidenceRequired": true,
+    "exactAttemptBindingRequired": true,
+    "externalState": "binding-invalidated-awaiting-local",
+    "localQualificationState": "invalidated",
+    "authenticatedEvidenceTable": "binding_conflict_evidence",
+    "permitState": "revoked",
+    "commandResult": "recovery_evidence_conflict",
+    "oldTargetProductionForAgent": false
+  },
+  "activationCasCompares": [
+    "authorityScopeId",
+    "authorityGeneration",
+    "bootId",
+    "startupCycleId",
+    "hostAttestationId",
+    "hostGeneration",
+    "timeEvidenceId",
+    "timeGeneration",
+    "artifactState",
+    "permitState",
+    "qualificationGeneration",
+    "reservedEpoch"
+  ],
+  "activationTransaction": [
+    "artifactConsumption",
+    "permitConsumption",
+    "qualificationQualified",
+    "activationActive",
+    "reservedEpoch",
+    "sourceFacts",
+    "commandResult",
+    "loserAbortResult"
+  ],
+  "targetAuthorityClosed": {
+    "irreversible": true,
+    "signedAuthorityEvidenceRequired": true,
+    "requiredProof": [
+      "registrationClosureWatermark",
+      "continuationClosureWatermark",
+      "revokedMemberSetDigest",
+      "invalidatedAttestationDigest",
+      "maxGrantExpiryUtcMs",
+      "observedAtUtcMs",
+      "timeEvidenceDigest",
+      "dispatchObligationDigest",
+      "discoveryObligationDigest",
+      "obligationDigest",
+      "targetRetired"
+    ],
+    "replacesLocalAck": true,
+    "targetProductionEverAgain": false
+  },
+  "directExceptionsAllowed": false
+}

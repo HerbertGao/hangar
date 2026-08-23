@@ -4,6 +4,11 @@
 > canonical 架构与次序现见仓根 `DESIGN.md`、`ROADMAP.md` 与 `openspec/config.yaml`。本文的透明控制硬门、
 > 外部候选 benchmark 与成本模型继续有效，但 `ControlResult` 条件分支不再阻塞 M0/M1 启动。
 >
+> **2026-08 Harness-first 修订：**本文关于“显式 workflow/节点为 Agent 主抽象”、NodeAttempt、平台拥有内部推进、
+> 以及接管 Auto Developer supervisor 的方案均已被当前 SOT 取代，只保留为历史候选论证。当前方向是：持久 Agent
+> 身份 + 有限 RunAttempt；Harness 拥有 attempt 内 plan/context/tool/subagent 与内部 retry；Control 只拥有 durable、
+> 权限、Effect、terminal 与 whole-tree containment 边界。精确契约见 `define-v2-control-contracts` 中文 specs。
+>
 > **本文回答三个问题：**为什么不直接把 OpenClaw、LangGraph 或 LangSmith Fleet
 > 当成最终平台；Hangar 必须拥有什么才不是重复造轮子；如何用可验证的实验决定继续、
 > 重写或归档当前 Hangar。
@@ -249,7 +254,7 @@ provider，而不是重写它们。但长期 Agent 的定义、权限、运行�
 此处不预先批准当前 Hangar、重写 Hangar 或任何外部平台；唯一决策来自 §6 的结果与 §7 的实测。
 
 | 层 | 固定边界 |
-|---|---|
+| --- | --- |
 | 模型、tool calling、Pi、MCP、connector、embedding、向量检索 | Buy / integrate，不以重造生态竞争 |
 | 复杂 durable graph | Integrate；只在真实 Agent 需要时引入，不设为全局默认 |
 | Agent 定义、发布、显式流程、Run、权限、effect、health | Build 或 adopt external winner；但必须存在单一明确 owner |
@@ -502,7 +507,7 @@ Auto Developer 不是声明式 inbox 的放大版。当前生产围栏包含：
 和 scheduler ownership 是临时实现，不是要保护的架构。
 
 | 阶段 | 后代进程 signal/reap owner | candidate runtime 角色 | 出口条件 |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Baseline | Auto Developer | 只启动顶层 controller、传递 cancel；不 signal/reap 其后代 | 冻结 oracle 与 PID/事件证据 |
 | Shadow | Auto Developer | 观察进程树和事件，禁止控制后代 | silent/late child、TERM→KILL、父死、partial stream、spawn 中 cancel 均与 oracle 对齐 |
 | Atomic cutover（可选） | candidate runtime | 独占受管进程树生命周期 | process-fixture 与第二个 Agent 证明通用性；按 DeploymentActivation 提升 epoch 并删除/禁用旧路径 |
@@ -587,7 +592,7 @@ Builder 修改的是这些声明及其引用文件；发布动作面对的是可
 三者必须从第一天分开：
 
 | 类型 | 含义 | 典型内容 | 所有权 |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | Knowledge | 可检索语料 | 文档、代码、邮件、笔记 | Agent/resource provider |
 | Memory | 跨交互积累的经验 | 用户偏好、已确认事实、情节记忆 | Agent；有明确写入策略 |
 | Operational state | 保证处理正确性的进度 | cursor、dedup、高水位、outbox | Agent 领域存储 |

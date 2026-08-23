@@ -1,0 +1,3101 @@
+{
+  "schemaVersion": "m0-inbox-parity-v1",
+  "requirementId": "m0o.inbox",
+  "sources": [
+    {
+      "sourceId": "inbox.upstream.account-cli.r01",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/account-cli/spec.md",
+      "line": 6,
+      "title": "需求:统一 CLI 入口",
+      "headingDigest": "b67f181968f0034debfeee23fb90306f917f2d04503bcd9dd8b4c1ba51a117e4"
+    },
+    {
+      "sourceId": "inbox.upstream.account-cli.r02",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/account-cli/spec.md",
+      "line": 50,
+      "title": "需求:密钥输入安全",
+      "headingDigest": "d934c8867fb5c6e944a7f0f8407f110273d044acd4f4bcefc0a96500fe207d42"
+    },
+    {
+      "sourceId": "inbox.upstream.account-cli.r03",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/account-cli/spec.md",
+      "line": 82,
+      "title": "需求:口令文件权限强制",
+      "headingDigest": "98001138f9ff9467f42c5869cf437000c9ac0bcb33b1aeda0aa679cce5efa300"
+    },
+    {
+      "sourceId": "inbox.upstream.account-cli.r04",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/account-cli/spec.md",
+      "line": 90,
+      "title": "需求:account-id 校验",
+      "headingDigest": "4364de263b96b064219f053805886d9bb3c5085cda98e543656856e636daf56e"
+    },
+    {
+      "sourceId": "inbox.upstream.account-cli.r05",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/account-cli/spec.md",
+      "line": 122,
+      "title": "需求:机器可读输出",
+      "headingDigest": "70e5b58c4e3bfea8f70959461c0e9e59edf3562b1a966c6c126ac9dce543190d"
+    },
+    {
+      "sourceId": "inbox.upstream.account-cli.r06",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/account-cli/spec.md",
+      "line": 138,
+      "title": "需求:顺手的接入参数",
+      "headingDigest": "48fe16f9cad68ef6ba8b9c26de0d0b2b91b7961c4b7a8d3a3e59799ee945917b"
+    },
+    {
+      "sourceId": "inbox.upstream.account-cli.r07",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/account-cli/spec.md",
+      "line": 168,
+      "title": "需求:接入可选展示别名 --label",
+      "headingDigest": "c95e306698c49d5987a38fb8e1d343c4aa78fa012f374e5c8e17e9c838535e5d"
+    },
+    {
+      "sourceId": "inbox.upstream.account-cli.r08",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/account-cli/spec.md",
+      "line": 203,
+      "title": "需求:doctor 只读部署预检",
+      "headingDigest": "08f6e91eafdae8f95be054d2893749b9369642fe1195fa293110f1c2dd115d0f"
+    },
+    {
+      "sourceId": "inbox.upstream.account-registry.r01",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/account-registry/spec.md",
+      "line": 6,
+      "title": "需求:从注册表加载多账号",
+      "headingDigest": "d651d8f1b998807ed5c81068fd9788db41b3924ec3e4a544682c659a67e2c232"
+    },
+    {
+      "sourceId": "inbox.upstream.account-registry.r02",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/account-registry/spec.md",
+      "line": 25,
+      "title": "需求:accountId 与 MailAccount.id 同一且确定性生成",
+      "headingDigest": "a121304c3d216cdd23328de37a1f95665df69e2e98b093578a1c3db255d7b966"
+    },
+    {
+      "sourceId": "inbox.upstream.account-registry.r03",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/account-registry/spec.md",
+      "line": 47,
+      "title": "需求:统一 authJson 凭据模型与凭据不入日志",
+      "headingDigest": "9c7ddb75e52f09266227d061285f5dd08da3e2bc05e90b10dc033d2dff8d78f9"
+    },
+    {
+      "sourceId": "inbox.upstream.account-registry.r04",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/account-registry/spec.md",
+      "line": 69,
+      "title": "需求:Provider 抽象统一两种 provider",
+      "headingDigest": "dac07b7e96cddd1bb0a0717f31ec742a92aedc3f8ff19b172ea85bb1cffb1786"
+    },
+    {
+      "sourceId": "inbox.upstream.account-registry.r05",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/account-registry/spec.md",
+      "line": 88,
+      "title": "需求:per-account 调度与故障隔离",
+      "headingDigest": "b54c7871a37eecaf0b4b5925f6e171f5227ce77ee68ed3cba6ff4cee29032a18"
+    },
+    {
+      "sourceId": "inbox.upstream.account-registry.r06",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/account-registry/spec.md",
+      "line": 111,
+      "title": "需求:账号 onboarding CLI",
+      "headingDigest": "3ec07e412e6f7dfb9fcf0f06fd6349463a96cfe23ebb51a130c48550698d12c6"
+    },
+    {
+      "sourceId": "inbox.upstream.account-registry.r07",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/account-registry/spec.md",
+      "line": 132,
+      "title": "需求:账号可选展示别名 label",
+      "headingDigest": "3e5d9b9f653b8c9ed54aeb2f78a8d8d3011274a19bba44191e2b339f98a5a2d1"
+    },
+    {
+      "sourceId": "inbox.upstream.daily-digest.r01",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/daily-digest/spec.md",
+      "line": 6,
+      "title": "需求:每日定点构建并推送摘要",
+      "headingDigest": "a9b6a0ef5ff919a03aa7cd2da09358d265f9c3f1b81f52fcb1496f84ff539ff5"
+    },
+    {
+      "sourceId": "inbox.upstream.daily-digest.r02",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/daily-digest/spec.md",
+      "line": 51,
+      "title": "需求:候选邮件按确定性顺序，标识用行主键",
+      "headingDigest": "c5a93c5a7d265697227ee4bc5cf6e5edd9700858fa9b2f46e348e92509775024"
+    },
+    {
+      "sourceId": "inbox.upstream.daily-digest.r03",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/daily-digest/spec.md",
+      "line": 64,
+      "title": "需求:摘要内容按优先级分层",
+      "headingDigest": "2281afe2cddc78cbd4a64e09b047ffd059b910a85a5025883775042f492518fc"
+    },
+    {
+      "sourceId": "inbox.upstream.daily-digest.r04",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/daily-digest/spec.md",
+      "line": 77,
+      "title": "需求:摘要不泄露完整正文且绝不发送邮件",
+      "headingDigest": "e77c6579883ac3c998374d0e224d16eedcfd93a3eef16fc7ab30822771c8cd2c"
+    },
+    {
+      "sourceId": "inbox.upstream.daily-digest.r05",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/daily-digest/spec.md",
+      "line": 96,
+      "title": "需求:文案按 UTF-16 上限分段、单行截断、逐段提交",
+      "headingDigest": "491e47525b6fb1769f15d814fb02c5af528b0d5d3057fc487535d98595d0ed1f"
+    },
+    {
+      "sourceId": "inbox.upstream.daily-digest.r06",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/daily-digest/spec.md",
+      "line": 113,
+      "title": "需求:同封邮件不重复进摘要",
+      "headingDigest": "207beb0db5cb6b82a84375b4232c70e2b4dd43ee5412a50d59c9fe87696d80bc"
+    },
+    {
+      "sourceId": "inbox.upstream.daily-digest.r07",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/daily-digest/spec.md",
+      "line": 126,
+      "title": "需求:DIGEST_TIMES 配置解析与降级",
+      "headingDigest": "2c94b2e1b1ef1fcd66c108bf9b9b5aef02622a693d8e90aba0690d8f0829ac15"
+    },
+    {
+      "sourceId": "inbox.upstream.daily-digest.r08",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/daily-digest/spec.md",
+      "line": 154,
+      "title": "需求:摘要调度跨任务互斥、错误隔离、时区与构造期安全",
+      "headingDigest": "0788e793623879f46371fbde26a71a8de2cd88bc036346a441c3de0beeb17e03"
+    },
+    {
+      "sourceId": "inbox.upstream.daily-digest.r09",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/daily-digest/spec.md",
+      "line": 175,
+      "title": "需求:优雅关闭停止摘要调度",
+      "headingDigest": "089098c5ad68836ff2d7108874f215be57d648596bb6b51e500f3cd8c1135f37"
+    },
+    {
+      "sourceId": "inbox.upstream.daily-digest.r10",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/daily-digest/spec.md",
+      "line": 183,
+      "title": "需求:摘要列出高频发件人辅助降噪",
+      "headingDigest": "a44b4ecab3967e6d86ce41400990bccccbade492b42ba9cf6ffe7cf182d8c9d9"
+    },
+    {
+      "sourceId": "inbox.upstream.deployment.r01",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/deployment/spec.md",
+      "line": 7,
+      "title": "需求:配置生效语义与生效动作",
+      "headingDigest": "4358690692e201ef08638e9d927f9f5d65d56e9abe10eefe8f9c724f50deb86a"
+    },
+    {
+      "sourceId": "inbox.upstream.deployment.r02",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/deployment/spec.md",
+      "line": 41,
+      "title": "需求:Prisma 引擎的 libssl 可用性",
+      "headingDigest": "fd3d772b09e29f48c1c601808ec7bb2662014ca634681fc954fec9f0b834b115"
+    },
+    {
+      "sourceId": "inbox.upstream.deployment.r03",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/deployment/spec.md",
+      "line": 54,
+      "title": "需求:时区解析与回退可观测",
+      "headingDigest": "96ab8ed4a0351f2c9eb83ab4cc93e5ec636f9f86ca49c58867ff2d06bc70ad69"
+    },
+    {
+      "sourceId": "inbox.upstream.deployment.r04",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/deployment/spec.md",
+      "line": 75,
+      "title": "需求:rules.yaml 可达性",
+      "headingDigest": "03f97c810e8af751963e99e020367484e4ea905988909740066454c4915686f7"
+    },
+    {
+      "sourceId": "inbox.upstream.deployment.r05",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/deployment/spec.md",
+      "line": 93,
+      "title": "需求:数据库宿主机端口覆盖",
+      "headingDigest": "9e2436e75ae556cdfb7eccf2ec0ee08bc1c4f0ca0819c40a0e2f8aa2a1886fd6"
+    },
+    {
+      "sourceId": "inbox.upstream.durable-retry.r01",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/durable-retry/spec.md",
+      "line": 6,
+      "title": "需求:瞬时失败动作落 retrying 入队（取代终态 failed）",
+      "headingDigest": "5c70b0157be8969db0339c2a224f11037bec4014c6c4ccc175fe14776220646c"
+    },
+    {
+      "sourceId": "inbox.upstream.durable-retry.r02",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/durable-retry/spec.md",
+      "line": 29,
+      "title": "需求:重试 drain 折叠进 poll、复用连接与锁、每轮有界（条数 + 软 deadline）",
+      "headingDigest": "fb3872ef122476aa8f787b873ce39b7aad8f3fb848c5e3e45fbb940ad03ee5c4"
+    },
+    {
+      "sourceId": "inbox.upstream.durable-retry.r03",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/durable-retry/spec.md",
+      "line": 58,
+      "title": "需求:长程指数退避、重试上限耗尽进死信",
+      "headingDigest": "e94b2211a99963c95e28ed3d9e796ac9744ebd170d7bb6914b354506edadf2c2"
+    },
+    {
+      "sourceId": "inbox.upstream.durable-retry.r04",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/durable-retry/spec.md",
+      "line": 69,
+      "title": "需求:重试复用已存裁定、绝不重新分类、从 DB 重建输入",
+      "headingDigest": "700eecf951e358054abc057e7689c2f3fe1a82fb67448726d756b23e19cb23a7"
+    },
+    {
+      "sourceId": "inbox.upstream.durable-retry.r05",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/durable-retry/spec.md",
+      "line": 92,
+      "title": "需求:notify 重试幂等安全 + staleness 上界、死信可观测",
+      "headingDigest": "60ad37d072ce894f7de3d24da8eb073a5fadc9a6d0f5634f24303a1c1646f428"
+    },
+    {
+      "sourceId": "inbox.upstream.email-classification.r01",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/email-classification/spec.md",
+      "line": 6,
+      "title": "需求:OpenRouter 唯一入口与鉴权",
+      "headingDigest": "9d6a50320b8b062dede2c24086f033e7dd6ead6d16d32e16871ed038bc86ab39"
+    },
+    {
+      "sourceId": "inbox.upstream.email-classification.r02",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/email-classification/spec.md",
+      "line": 21,
+      "title": "需求:分类输出 Schema 校验",
+      "headingDigest": "b31f615a5b2b6ec487368c1d8a57a7364ad8e04550da82027f354a93d60240c3"
+    },
+    {
+      "sourceId": "inbox.upstream.email-classification.r03",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/email-classification/spec.md",
+      "line": 35,
+      "title": "需求:有界的两次调用重试状态机",
+      "headingDigest": "e196a45b241d46987aa0eb45061d42b65ac321c871510c3163be3faeb4c2d9a8"
+    },
+    {
+      "sourceId": "inbox.upstream.email-classification.r04",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/email-classification/spec.md",
+      "line": 68,
+      "title": "需求:传输失败重试前指数退避（不增调用次数、calls≤2 不变）",
+      "headingDigest": "68eedcfcbe370c8ca95b46899a6cc602928aa9d4cf0584cd7d06c939e74fca41"
+    },
+    {
+      "sourceId": "inbox.upstream.email-classification.r05",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/email-classification/spec.md",
+      "line": 92,
+      "title": "需求:最小化送模型输入，不外泄正文",
+      "headingDigest": "cd91d2ff049657828de1eb2cec5ba92d8f226bb9db6e46fe918b560ed3f3653e"
+    },
+    {
+      "sourceId": "inbox.upstream.email-classification.r06",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/email-classification/spec.md",
+      "line": 107,
+      "title": "需求:彻底失败的安全默认",
+      "headingDigest": "2978da213e019715dbfbcfeb4d487a5784217e3ae245e026dc1801113675b052"
+    },
+    {
+      "sourceId": "inbox.upstream.email-classification.r07",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/email-classification/spec.md",
+      "line": 130,
+      "title": "需求:分类 Prompt 安全约束",
+      "headingDigest": "d4fdd51faec58f7d4cae87d1462937fb3de61f92349fe51f9b495282971945c0"
+    },
+    {
+      "sourceId": "inbox.upstream.email-classification.r08",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/email-classification/spec.md",
+      "line": 154,
+      "title": "需求:Prompt 校准的双向回归守门",
+      "headingDigest": "d79b54aa5cb88e078acc5ca27e655f1ba94265802b8a9d5d0022324dc93699f3"
+    },
+    {
+      "sourceId": "inbox.upstream.email-model.r01",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/email-model/spec.md",
+      "line": 6,
+      "title": "需求:统一邮件模型契约",
+      "headingDigest": "10ca0e79dc7c247e4b311a7f8942df6f5b07fed386f0d951f93e9f9658c0d69f"
+    },
+    {
+      "sourceId": "inbox.upstream.email-model.r02",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/email-model/spec.md",
+      "line": 21,
+      "title": "需求:结构化不变量与失败隔离",
+      "headingDigest": "2067d093f83b552a4836544ce957cb596e7b5e62911438608dfb051a70ed441b"
+    },
+    {
+      "sourceId": "inbox.upstream.email-model.r03",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/email-model/spec.md",
+      "line": 32,
+      "title": "需求:必填字段默认与归一",
+      "headingDigest": "46cbf71d2ea36e0a4498cf5bee19d6c7f0e3f95e2853a9072d41f5170b0fb75b"
+    },
+    {
+      "sourceId": "inbox.upstream.gmail-integration.r01",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/gmail-integration/spec.md",
+      "line": 6,
+      "title": "需求:Gmail OAuth 授权与 token 持久化",
+      "headingDigest": "dc26ffa74aae4e973a2d5ee947a9344de660c206d29513bbc9e23b2516e1ad4f"
+    },
+    {
+      "sourceId": "inbox.upstream.gmail-integration.r02",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/gmail-integration/spec.md",
+      "line": 48,
+      "title": "需求:Gmail 轮询并收敛为 NormalizedEmail",
+      "headingDigest": "9a11fa46384952c28c1b2b8c470516a74200cc40e0b8ecd6f6580a21ac8f1c42"
+    },
+    {
+      "sourceId": "inbox.upstream.gmail-integration.r03",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/gmail-integration/spec.md",
+      "line": 85,
+      "title": "需求:Gmail 按规则裁定执行动作（AI 标签 + 去 UNREAD）",
+      "headingDigest": "829507178c8bcb6fda08eb0c0ffd42b6de176336c5939d59e7cb9539f0b57245"
+    },
+    {
+      "sourceId": "inbox.upstream.imap-integration.r01",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/imap-integration/spec.md",
+      "line": 6,
+      "title": "需求:IMAP 账号加载与持久化锚定",
+      "headingDigest": "ac0f6069f158a992bf969acefb34164db433809a7498c3ae9d7b97fac19c54ef"
+    },
+    {
+      "sourceId": "inbox.upstream.imap-integration.r02",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/imap-integration/spec.md",
+      "line": 31,
+      "title": "需求:轮询并收敛为 NormalizedEmail",
+      "headingDigest": "9c11de991b28f6fbb5d032ed9916d8c91123a0054f88e31e87b8bb4f28048f54"
+    },
+    {
+      "sourceId": "inbox.upstream.imap-integration.r03",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/imap-integration/spec.md",
+      "line": 46,
+      "title": "需求:增量 UID 游标避免重复 FETCH",
+      "headingDigest": "a0c07034236e6b74a733264df18027a1fb36b197f5c045ca30a5dbd7af498099"
+    },
+    {
+      "sourceId": "inbox.upstream.imap-integration.r04",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/imap-integration/spec.md",
+      "line": 77,
+      "title": "需求:经规则引擎裁定执行真实标已读",
+      "headingDigest": "607ce2aaaf2612cca3effed37aa900739a3dccc8cd2f99ac2c75842ec0780fab"
+    },
+    {
+      "sourceId": "inbox.upstream.imap-integration.r05",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/imap-integration/spec.md",
+      "line": 96,
+      "title": "需求:单封失败隔离与重启不重复",
+      "headingDigest": "ed1e3396f5e6f6721fcac891d49d893b63310448b5244af320dcf4e85606a942"
+    },
+    {
+      "sourceId": "inbox.upstream.notifications.r01",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/notifications/spec.md",
+      "line": 6,
+      "title": "需求:P0/P4 即时推送",
+      "headingDigest": "be460b9ec7cecda3b402c1fa4214810d4b5faba44c489d6e73c9350125051116"
+    },
+    {
+      "sourceId": "inbox.upstream.notifications.r02",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/notifications/spec.md",
+      "line": 17,
+      "title": "需求:通知不泄露完整正文",
+      "headingDigest": "2481e73a957b08c110b2224f1427d981c67e4a0d674d73b97473627f652fb9c9"
+    },
+    {
+      "sourceId": "inbox.upstream.notifications.r03",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/notifications/spec.md",
+      "line": 53,
+      "title": "需求:仅推送通知，绝不发送邮件",
+      "headingDigest": "0fbba005f2e868cf21e74c19bd33f53e2d2b9939095670cc3b668c1b35daa00a"
+    },
+    {
+      "sourceId": "inbox.upstream.notifications.r04",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/notifications/spec.md",
+      "line": 60,
+      "title": "需求:渠道缺失时降级不崩",
+      "headingDigest": "6328f8d6842b708e4219632a05979f25282241713b772a2bb508a6d370a70f78"
+    },
+    {
+      "sourceId": "inbox.upstream.notifications.r05",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/notifications/spec.md",
+      "line": 67,
+      "title": "需求:通知密钥只从配置读、不入日志",
+      "headingDigest": "12271420eebc412aef9556d513fd38e4e035f1c60d0fc4bf11aba930b84bc8e2"
+    },
+    {
+      "sourceId": "inbox.upstream.onboarding-watermark.r01",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/onboarding-watermark/spec.md",
+      "line": 6,
+      "title": "需求:per-account 起算日期水位线（UTC）",
+      "headingDigest": "e2da67834c40be3d41195f47f79bcb176c8b976072f77467b56500979c78209a"
+    },
+    {
+      "sourceId": "inbox.upstream.onboarding-watermark.r02",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/onboarding-watermark/spec.md",
+      "line": 19,
+      "title": "需求:processFrom 从 DB 穿透到 poller 内部",
+      "headingDigest": "53726e37468135b1c2ed1b2e1751722327e324dc5996e88e5b26bfb23e1f3aa9"
+    },
+    {
+      "sourceId": "inbox.upstream.onboarding-watermark.r03",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/onboarding-watermark/spec.md",
+      "line": 30,
+      "title": "需求:播种在所有行创建路径，re-auth 必须保留",
+      "headingDigest": "b91fa3ae94c68d061a9240e2dec43936dc755cb684841329902544bd8114ed29"
+    },
+    {
+      "sourceId": "inbox.upstream.onboarding-watermark.r04",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/onboarding-watermark/spec.md",
+      "line": 57,
+      "title": "需求:IMAP 摄入粗粒度日期下界（退化轮、一次性）",
+      "headingDigest": "8a32ae38d208ff19d4989a97b5853228e618dbd43cbd50dcf8f8b5ba78108508"
+    },
+    {
+      "sourceId": "inbox.upstream.onboarding-watermark.r05",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/onboarding-watermark/spec.md",
+      "line": 76,
+      "title": "需求:退化轮空集仍安全推进游标，禁止无界重扫",
+      "headingDigest": "72e676cda5765cfdec7424d196a22e353179f27563f8cb1ad8fe0f239b1b4a6b"
+    },
+    {
+      "sourceId": "inbox.upstream.onboarding-watermark.r06",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/onboarding-watermark/spec.md",
+      "line": 97,
+      "title": "需求:Gmail 摄入日期下界",
+      "headingDigest": "3e7fa7162b96c3424c47b007346f90ba1ff1b126f7c22fa5277af1c0a48e9216"
+    },
+    {
+      "sourceId": "inbox.upstream.onboarding-watermark.r07",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/onboarding-watermark/spec.md",
+      "line": 108,
+      "title": "需求:运维可调整存量账号的水位线",
+      "headingDigest": "3d65c91a2368d2dddfceb71405f73315b82420ceec908b1f8777f50a40c128e9"
+    },
+    {
+      "sourceId": "inbox.upstream.processing-pipeline.r01",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/processing-pipeline/spec.md",
+      "line": 6,
+      "title": "需求:去重幂等、重启不重复",
+      "headingDigest": "5695bb87d47ab3282abf6aebf7b29aca7675f437f940e7fb7727a0b359029015"
+    },
+    {
+      "sourceId": "inbox.upstream.processing-pipeline.r02",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/processing-pipeline/spec.md",
+      "line": 17,
+      "title": "需求:流水线顺序与重启安全",
+      "headingDigest": "8c0f80b229e82447a1ffa2bb8eeb1e46ef93945fe6b79efa8ac8432ad9ecdc40"
+    },
+    {
+      "sourceId": "inbox.upstream.processing-pipeline.r03",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/processing-pipeline/spec.md",
+      "line": 24,
+      "title": "需求:executeActions 按 FinalDecision 分发并落 mail_actions",
+      "headingDigest": "117cc26a2c900bd102de3e393030491c6c466ce09dbac98133624d60dda76ddb"
+    },
+    {
+      "sourceId": "inbox.upstream.processing-pipeline.r04",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/processing-pipeline/spec.md",
+      "line": 51,
+      "title": "需求:落库处理记录",
+      "headingDigest": "87e82754540f766990cb48d3a52f6194027f94b038808d581e304f926c055362"
+    },
+    {
+      "sourceId": "inbox.upstream.processing-pipeline.r05",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/processing-pipeline/spec.md",
+      "line": 58,
+      "title": "需求:动作 I/O 经可注入 seam（本期假 provider）",
+      "headingDigest": "66d2a9b2872ca25583aa299bb6e1e177a06aed5c34431e62b454d90f85af5c65"
+    },
+    {
+      "sourceId": "inbox.upstream.rules-config.r01",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/rules-config/spec.md",
+      "line": 8,
+      "title": "需求:从 rules.yaml 加载可配置名单并校验",
+      "headingDigest": "a1c9ff47a73ddb289fce31b3fcd2ef0d801bc0610cc7ae2bbe3a175addb69746"
+    },
+    {
+      "sourceId": "inbox.upstream.rules-config.r02",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/rules-config/spec.md",
+      "line": 35,
+      "title": "需求:security_keywords 与整个内置常量并集（只能增不能减）",
+      "headingDigest": "2c08b0ad2588cdbca382efdf4c585cc65310d20d3d4e1450fc7df203f6035116"
+    },
+    {
+      "sourceId": "inbox.upstream.rules-config.r03",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/rules-config/spec.md",
+      "line": 44,
+      "title": "需求:缺失/非法/不可读 YAML 逐项回落且绝不崩、不泄露、护栏不失效",
+      "headingDigest": "c9808265344be3a534528ca3ecf4821db0dce29b316f3e830d6d6a61d07d214b"
+    },
+    {
+      "sourceId": "inbox.upstream.rules-config.r04",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/rules-config/spec.md",
+      "line": 75,
+      "title": "需求:有效快照同步初始化（含 security 整集）、sync 访问器、构建后原子发布",
+      "headingDigest": "e7456a7d35b7c6267d4cf7e82aa63dc3e09d12583da3a671de2abec36ff4885d"
+    },
+    {
+      "sourceId": "inbox.upstream.rules-config.r05",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/rules-config/spec.md",
+      "line": 91,
+      "title": "需求:rules.yaml 热重载（改即生效）、carry-forward 上一次有效值、poll tick 自愈",
+      "headingDigest": "1f7788e902a8a2d0ceeff801fbf0e35f257653058abe23fd1898c6e06e1a71b5"
+    },
+    {
+      "sourceId": "inbox.upstream.safety-rules.r01",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/safety-rules/spec.md",
+      "line": 6,
+      "title": "需求:规则引擎为最终动作的唯一权威",
+      "headingDigest": "27e29bff38680860fccd012aecba992fb3d5ed094ddafc09fd9f1a55964d486a"
+    },
+    {
+      "sourceId": "inbox.upstream.safety-rules.r02",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/safety-rules/spec.md",
+      "line": 17,
+      "title": "需求:优先级强制裁定",
+      "headingDigest": "e31330df3faf12cfe03b5a77bd6d004573647b44c0b3f1e5367167a7cc8bc393"
+    },
+    {
+      "sourceId": "inbox.upstream.safety-rules.r03",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/safety-rules/spec.md",
+      "line": 32,
+      "title": "需求:强制不标已读护栏",
+      "headingDigest": "22eb02e2188a7f02a1d0524daf96e3e3306d11a69d05a94520c49b6033f7934a"
+    },
+    {
+      "sourceId": "inbox.upstream.safety-rules.r04",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/safety-rules/spec.md",
+      "line": 66,
+      "title": "需求:可配置轴的有序管线、floor-only、绝不下调固定优先级或翻回标已读",
+      "headingDigest": "79599d55e056d7f679e21b33e841f1fc4bb2b35a431381f9a7ddc174b2c02be1"
+    },
+    {
+      "sourceId": "inbox.upstream.safety-rules.r05",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/safety-rules/spec.md",
+      "line": 119,
+      "title": "需求:按最终优先级派生默认动作",
+      "headingDigest": "ae89941c9ab92658b87bf70b2e11f6c8f62713bf158ba835a550fa3709b64b13"
+    },
+    {
+      "sourceId": "inbox.upstream.safety-rules.r06",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/safety-rules/spec.md",
+      "line": 130,
+      "title": "需求:名单从 rules-config 加载，内置 SECURITY_PAYMENT_KEYWORDS 整集并集、内置默认作 fallback",
+      "headingDigest": "11a9d505c0d502ddd468b9d40186c30a4f231bab06b3d1f3e5b020d05b6b6e93"
+    },
+    {
+      "sourceId": "inbox.upstream.service-bootstrap.r01",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/service-bootstrap/spec.md",
+      "line": 6,
+      "title": "需求:环境配置校验",
+      "headingDigest": "8a1323574b357da30fd039d840c483857b99027da1c49bf543bf5dc4dc2c7623"
+    },
+    {
+      "sourceId": "inbox.upstream.service-bootstrap.r02",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/service-bootstrap/spec.md",
+      "line": 29,
+      "title": "需求:数据库连接与迁移",
+      "headingDigest": "28dcde4e7433aba3eac627cfc75c0f23463f549dcab2dafc4d246abc52364f73"
+    },
+    {
+      "sourceId": "inbox.upstream.service-bootstrap.r03",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/service-bootstrap/spec.md",
+      "line": 40,
+      "title": "需求:结构化日志",
+      "headingDigest": "00c014991f714b509ba5cf6c8180aa21478e656729474ea8f583d05c83fc1a5b"
+    },
+    {
+      "sourceId": "inbox.upstream.service-bootstrap.r04",
+      "repositoryId": "inbox-upstream",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "path": "openspec/specs/service-bootstrap/spec.md",
+      "line": 51,
+      "title": "需求:运行载体与迁移前置",
+      "headingDigest": "48df6b2b5d0d923b7e0cba4ddcfaea42762518b6c93d72f0a75a57b085faf348"
+    },
+    {
+      "sourceId": "inbox.main.inbox-app.r01",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 6,
+      "title": "需求:inbox 以 pipeline executor + cron 触发作为 app 运行",
+      "headingDigest": "fdb3502e81f83364daf398a757fd12d8a033de8bae1575f3bac44e26ffd463eb"
+    },
+    {
+      "sourceId": "inbox.main.inbox-app.r02",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 20,
+      "title": "需求:自动动作在 run() 内直接编排,不经 gateway/propose",
+      "headingDigest": "3d6ca2d45ce403710a12817e454955b612bea74e7906ec2aba02a8659333d12f"
+    },
+    {
+      "sourceId": "inbox.main.inbox-app.r03",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 46,
+      "title": "需求:notify 耗尽走 coarse re-poll,依赖不变量并有死信终态",
+      "headingDigest": "6b07e2f44606b474869d6f48b10b6e2a95b50b35101ff80c6e5823160df9997a"
+    },
+    {
+      "sourceId": "inbox.main.inbox-app.r04",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 65,
+      "title": "需求:fetch 编排复刻两级读错误模型与成本上界",
+      "headingDigest": "c04ca7a5570696d6e5cf3e1e306ada8a3e19429bf4af7086ec7846324d75d0bc"
+    },
+    {
+      "sourceId": "inbox.main.inbox-app.r05",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 81,
+      "title": "需求:每 email 超时 + 每 run 兜底,机制必须安全(取消尽力 + 吞拒绝 + fence)",
+      "headingDigest": "88dc637ddffef0d4a1d16c0773589661f3bbe5a9bd9014a177bfd4973c152687"
+    },
+    {
+      "sourceId": "inbox.main.inbox-app.r06",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 95,
+      "title": "需求:in-process pilot 模块加载安全(顶层禁 process.exit/throw)",
+      "headingDigest": "8e5d7a085b9f5dac800c307d0177d4b83e61086e641ccbdea5051db6d5d5a438"
+    },
+    {
+      "sourceId": "inbox.main.inbox-app.r07",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 104,
+      "title": "需求:域库与脊柱库并存,脊柱零域概念",
+      "headingDigest": "05b17b58f356fba64d1eab5dd699292ed55d6ebbda7547dc163cf342bba3dccb"
+    },
+    {
+      "sourceId": "inbox.main.inbox-app.r08",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 113,
+      "title": "需求:Phase 1 不引入 approval 动作",
+      "headingDigest": "f0de36ae68154e904b7ff0efda4ad6cf2b37525537ecfa693d222fd2e69181fd"
+    },
+    {
+      "sourceId": "inbox.main.inbox-app.r09",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 122,
+      "title": "需求:每日摘要作为 digest 触发器",
+      "headingDigest": "a3fa65176441f20039c6cd85488d3e279858d4bb28eb782404533f713b5e37dc"
+    },
+    {
+      "sourceId": "inbox.main.inbox-app.r10",
+      "repositoryId": "hangar-main-v0",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "path": "openspec/specs/inbox-app/spec.md",
+      "line": 141,
+      "title": "需求:DIGEST_TIMES 环境变量退役",
+      "headingDigest": "ea11efc25c1361ba1cc1fab3fd0a5c84df6d2089d14c6e1f9ede5e7f7a68f66e"
+    }
+  ],
+  "sourceDenominatorDigest": "3b74fc1ac523229fcf32feb265e49ad6c7e8d3ffc3ae09b3056b3f42733f28ad",
+  "normalizedRequirements": [
+    {
+      "normalizedId": "inbox.hard.credentials-no-leak",
+      "sourceIds": [
+        "inbox.upstream.account-cli.r02",
+        "inbox.upstream.account-registry.r03",
+        "inbox.upstream.notifications.r05"
+      ],
+      "category": "security",
+      "weight": 10,
+      "hardGate": true,
+      "expected": "zero resolved credential disclosure",
+      "title": "凭据只以引用使用且不得进入日志或输出"
+    },
+    {
+      "normalizedId": "inbox.hard.dedup-no-duplicate-effect",
+      "sourceIds": [
+        "inbox.upstream.processing-pipeline.r01",
+        "inbox.upstream.imap-integration.r05"
+      ],
+      "category": "correctness",
+      "weight": 10,
+      "hardGate": true,
+      "expected": "at most one allowed operation per logical item",
+      "title": "去重与重启不得产生重复副作用"
+    },
+    {
+      "normalizedId": "inbox.hard.low-confidence-safe-default",
+      "sourceIds": [
+        "inbox.upstream.email-classification.r06"
+      ],
+      "category": "safety",
+      "weight": 10,
+      "hardGate": true,
+      "expected": "safe conservative decision",
+      "title": "低置信度或分类失败采用保守默认"
+    },
+    {
+      "normalizedId": "inbox.hard.no-auto-send",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r04",
+        "inbox.upstream.notifications.r03"
+      ],
+      "category": "safety",
+      "weight": 10,
+      "hardGate": true,
+      "expected": "no outbound email operation",
+      "title": "绝不自动发送邮件"
+    },
+    {
+      "normalizedId": "inbox.hard.no-sensitive-auto-read",
+      "sourceIds": [
+        "inbox.upstream.safety-rules.r03"
+      ],
+      "category": "safety",
+      "weight": 10,
+      "hardGate": true,
+      "expected": "mark-read denied for protected final decision",
+      "title": "P4 与敏感邮件绝不自动标已读"
+    },
+    {
+      "normalizedId": "normalized.inbox.main.inbox-app.r01",
+      "sourceIds": [
+        "inbox.main.inbox-app.r01"
+      ],
+      "category": "inbox-app",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:inbox 以 pipeline executor + cron 触发作为 app 运行"
+    },
+    {
+      "normalizedId": "normalized.inbox.main.inbox-app.r02",
+      "sourceIds": [
+        "inbox.main.inbox-app.r02"
+      ],
+      "category": "inbox-app",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:自动动作在 run() 内直接编排,不经 gateway/propose"
+    },
+    {
+      "normalizedId": "normalized.inbox.main.inbox-app.r03",
+      "sourceIds": [
+        "inbox.main.inbox-app.r03"
+      ],
+      "category": "inbox-app",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:notify 耗尽走 coarse re-poll,依赖不变量并有死信终态"
+    },
+    {
+      "normalizedId": "normalized.inbox.main.inbox-app.r04",
+      "sourceIds": [
+        "inbox.main.inbox-app.r04"
+      ],
+      "category": "inbox-app",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:fetch 编排复刻两级读错误模型与成本上界"
+    },
+    {
+      "normalizedId": "normalized.inbox.main.inbox-app.r05",
+      "sourceIds": [
+        "inbox.main.inbox-app.r05"
+      ],
+      "category": "inbox-app",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:每 email 超时 + 每 run 兜底,机制必须安全(取消尽力 + 吞拒绝 + fence)"
+    },
+    {
+      "normalizedId": "normalized.inbox.main.inbox-app.r06",
+      "sourceIds": [
+        "inbox.main.inbox-app.r06"
+      ],
+      "category": "inbox-app",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:in-process pilot 模块加载安全(顶层禁 process.exit/throw)"
+    },
+    {
+      "normalizedId": "normalized.inbox.main.inbox-app.r07",
+      "sourceIds": [
+        "inbox.main.inbox-app.r07"
+      ],
+      "category": "inbox-app",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:域库与脊柱库并存,脊柱零域概念"
+    },
+    {
+      "normalizedId": "normalized.inbox.main.inbox-app.r08",
+      "sourceIds": [
+        "inbox.main.inbox-app.r08"
+      ],
+      "category": "inbox-app",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:Phase 1 不引入 approval 动作"
+    },
+    {
+      "normalizedId": "normalized.inbox.main.inbox-app.r09",
+      "sourceIds": [
+        "inbox.main.inbox-app.r09"
+      ],
+      "category": "inbox-app",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:每日摘要作为 digest 触发器"
+    },
+    {
+      "normalizedId": "normalized.inbox.main.inbox-app.r10",
+      "sourceIds": [
+        "inbox.main.inbox-app.r10"
+      ],
+      "category": "inbox-app",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:DIGEST_TIMES 环境变量退役"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.account-cli.r01",
+      "sourceIds": [
+        "inbox.upstream.account-cli.r01"
+      ],
+      "category": "account-cli",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:统一 CLI 入口"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.account-cli.r03",
+      "sourceIds": [
+        "inbox.upstream.account-cli.r03"
+      ],
+      "category": "account-cli",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:口令文件权限强制"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.account-cli.r04",
+      "sourceIds": [
+        "inbox.upstream.account-cli.r04"
+      ],
+      "category": "account-cli",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:account-id 校验"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.account-cli.r05",
+      "sourceIds": [
+        "inbox.upstream.account-cli.r05"
+      ],
+      "category": "account-cli",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:机器可读输出"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.account-cli.r06",
+      "sourceIds": [
+        "inbox.upstream.account-cli.r06"
+      ],
+      "category": "account-cli",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:顺手的接入参数"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.account-cli.r07",
+      "sourceIds": [
+        "inbox.upstream.account-cli.r07"
+      ],
+      "category": "account-cli",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:接入可选展示别名 --label"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.account-cli.r08",
+      "sourceIds": [
+        "inbox.upstream.account-cli.r08"
+      ],
+      "category": "account-cli",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:doctor 只读部署预检"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.account-registry.r01",
+      "sourceIds": [
+        "inbox.upstream.account-registry.r01"
+      ],
+      "category": "account-registry",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:从注册表加载多账号"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.account-registry.r02",
+      "sourceIds": [
+        "inbox.upstream.account-registry.r02"
+      ],
+      "category": "account-registry",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:accountId 与 MailAccount.id 同一且确定性生成"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.account-registry.r04",
+      "sourceIds": [
+        "inbox.upstream.account-registry.r04"
+      ],
+      "category": "account-registry",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:Provider 抽象统一两种 provider"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.account-registry.r05",
+      "sourceIds": [
+        "inbox.upstream.account-registry.r05"
+      ],
+      "category": "account-registry",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:per-account 调度与故障隔离"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.account-registry.r06",
+      "sourceIds": [
+        "inbox.upstream.account-registry.r06"
+      ],
+      "category": "account-registry",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:账号 onboarding CLI"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.account-registry.r07",
+      "sourceIds": [
+        "inbox.upstream.account-registry.r07"
+      ],
+      "category": "account-registry",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:账号可选展示别名 label"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.daily-digest.r01",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r01"
+      ],
+      "category": "daily-digest",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:每日定点构建并推送摘要"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.daily-digest.r02",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r02"
+      ],
+      "category": "daily-digest",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:候选邮件按确定性顺序，标识用行主键"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.daily-digest.r03",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r03"
+      ],
+      "category": "daily-digest",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:摘要内容按优先级分层"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.daily-digest.r05",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r05"
+      ],
+      "category": "daily-digest",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:文案按 UTF-16 上限分段、单行截断、逐段提交"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.daily-digest.r06",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r06"
+      ],
+      "category": "daily-digest",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:同封邮件不重复进摘要"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.daily-digest.r07",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r07"
+      ],
+      "category": "daily-digest",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:DIGEST_TIMES 配置解析与降级"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.daily-digest.r08",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r08"
+      ],
+      "category": "daily-digest",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:摘要调度跨任务互斥、错误隔离、时区与构造期安全"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.daily-digest.r09",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r09"
+      ],
+      "category": "daily-digest",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:优雅关闭停止摘要调度"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.daily-digest.r10",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r10"
+      ],
+      "category": "daily-digest",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:摘要列出高频发件人辅助降噪"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.deployment.r01",
+      "sourceIds": [
+        "inbox.upstream.deployment.r01"
+      ],
+      "category": "deployment",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:配置生效语义与生效动作"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.deployment.r02",
+      "sourceIds": [
+        "inbox.upstream.deployment.r02"
+      ],
+      "category": "deployment",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:Prisma 引擎的 libssl 可用性"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.deployment.r03",
+      "sourceIds": [
+        "inbox.upstream.deployment.r03"
+      ],
+      "category": "deployment",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:时区解析与回退可观测"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.deployment.r04",
+      "sourceIds": [
+        "inbox.upstream.deployment.r04"
+      ],
+      "category": "deployment",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:rules.yaml 可达性"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.deployment.r05",
+      "sourceIds": [
+        "inbox.upstream.deployment.r05"
+      ],
+      "category": "deployment",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:数据库宿主机端口覆盖"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.durable-retry.r01",
+      "sourceIds": [
+        "inbox.upstream.durable-retry.r01"
+      ],
+      "category": "durable-retry",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:瞬时失败动作落 retrying 入队（取代终态 failed）"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.durable-retry.r02",
+      "sourceIds": [
+        "inbox.upstream.durable-retry.r02"
+      ],
+      "category": "durable-retry",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:重试 drain 折叠进 poll、复用连接与锁、每轮有界（条数 + 软 deadline）"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.durable-retry.r03",
+      "sourceIds": [
+        "inbox.upstream.durable-retry.r03"
+      ],
+      "category": "durable-retry",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:长程指数退避、重试上限耗尽进死信"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.durable-retry.r04",
+      "sourceIds": [
+        "inbox.upstream.durable-retry.r04"
+      ],
+      "category": "durable-retry",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:重试复用已存裁定、绝不重新分类、从 DB 重建输入"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.durable-retry.r05",
+      "sourceIds": [
+        "inbox.upstream.durable-retry.r05"
+      ],
+      "category": "durable-retry",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:notify 重试幂等安全 + staleness 上界、死信可观测"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.email-classification.r01",
+      "sourceIds": [
+        "inbox.upstream.email-classification.r01"
+      ],
+      "category": "email-classification",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:OpenRouter 唯一入口与鉴权"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.email-classification.r02",
+      "sourceIds": [
+        "inbox.upstream.email-classification.r02"
+      ],
+      "category": "email-classification",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:分类输出 Schema 校验"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.email-classification.r03",
+      "sourceIds": [
+        "inbox.upstream.email-classification.r03"
+      ],
+      "category": "email-classification",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:有界的两次调用重试状态机"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.email-classification.r04",
+      "sourceIds": [
+        "inbox.upstream.email-classification.r04"
+      ],
+      "category": "email-classification",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:传输失败重试前指数退避（不增调用次数、calls≤2 不变）"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.email-classification.r05",
+      "sourceIds": [
+        "inbox.upstream.email-classification.r05"
+      ],
+      "category": "email-classification",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:最小化送模型输入，不外泄正文"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.email-classification.r07",
+      "sourceIds": [
+        "inbox.upstream.email-classification.r07"
+      ],
+      "category": "email-classification",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:分类 Prompt 安全约束"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.email-classification.r08",
+      "sourceIds": [
+        "inbox.upstream.email-classification.r08"
+      ],
+      "category": "email-classification",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:Prompt 校准的双向回归守门"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.email-model.r01",
+      "sourceIds": [
+        "inbox.upstream.email-model.r01"
+      ],
+      "category": "email-model",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:统一邮件模型契约"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.email-model.r02",
+      "sourceIds": [
+        "inbox.upstream.email-model.r02"
+      ],
+      "category": "email-model",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:结构化不变量与失败隔离"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.email-model.r03",
+      "sourceIds": [
+        "inbox.upstream.email-model.r03"
+      ],
+      "category": "email-model",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:必填字段默认与归一"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.gmail-integration.r01",
+      "sourceIds": [
+        "inbox.upstream.gmail-integration.r01"
+      ],
+      "category": "gmail-integration",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:Gmail OAuth 授权与 token 持久化"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.gmail-integration.r02",
+      "sourceIds": [
+        "inbox.upstream.gmail-integration.r02"
+      ],
+      "category": "gmail-integration",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:Gmail 轮询并收敛为 NormalizedEmail"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.gmail-integration.r03",
+      "sourceIds": [
+        "inbox.upstream.gmail-integration.r03"
+      ],
+      "category": "gmail-integration",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:Gmail 按规则裁定执行动作（AI 标签 + 去 UNREAD）"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.imap-integration.r01",
+      "sourceIds": [
+        "inbox.upstream.imap-integration.r01"
+      ],
+      "category": "imap-integration",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:IMAP 账号加载与持久化锚定"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.imap-integration.r02",
+      "sourceIds": [
+        "inbox.upstream.imap-integration.r02"
+      ],
+      "category": "imap-integration",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:轮询并收敛为 NormalizedEmail"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.imap-integration.r03",
+      "sourceIds": [
+        "inbox.upstream.imap-integration.r03"
+      ],
+      "category": "imap-integration",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:增量 UID 游标避免重复 FETCH"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.imap-integration.r04",
+      "sourceIds": [
+        "inbox.upstream.imap-integration.r04"
+      ],
+      "category": "imap-integration",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:经规则引擎裁定执行真实标已读"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.notifications.r01",
+      "sourceIds": [
+        "inbox.upstream.notifications.r01"
+      ],
+      "category": "notifications",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:P0/P4 即时推送"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.notifications.r02",
+      "sourceIds": [
+        "inbox.upstream.notifications.r02"
+      ],
+      "category": "notifications",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:通知不泄露完整正文"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.notifications.r04",
+      "sourceIds": [
+        "inbox.upstream.notifications.r04"
+      ],
+      "category": "notifications",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:渠道缺失时降级不崩"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.onboarding-watermark.r01",
+      "sourceIds": [
+        "inbox.upstream.onboarding-watermark.r01"
+      ],
+      "category": "onboarding-watermark",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:per-account 起算日期水位线（UTC）"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.onboarding-watermark.r02",
+      "sourceIds": [
+        "inbox.upstream.onboarding-watermark.r02"
+      ],
+      "category": "onboarding-watermark",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:processFrom 从 DB 穿透到 poller 内部"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.onboarding-watermark.r03",
+      "sourceIds": [
+        "inbox.upstream.onboarding-watermark.r03"
+      ],
+      "category": "onboarding-watermark",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:播种在所有行创建路径，re-auth 必须保留"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.onboarding-watermark.r04",
+      "sourceIds": [
+        "inbox.upstream.onboarding-watermark.r04"
+      ],
+      "category": "onboarding-watermark",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:IMAP 摄入粗粒度日期下界（退化轮、一次性）"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.onboarding-watermark.r05",
+      "sourceIds": [
+        "inbox.upstream.onboarding-watermark.r05"
+      ],
+      "category": "onboarding-watermark",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:退化轮空集仍安全推进游标，禁止无界重扫"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.onboarding-watermark.r06",
+      "sourceIds": [
+        "inbox.upstream.onboarding-watermark.r06"
+      ],
+      "category": "onboarding-watermark",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:Gmail 摄入日期下界"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.onboarding-watermark.r07",
+      "sourceIds": [
+        "inbox.upstream.onboarding-watermark.r07"
+      ],
+      "category": "onboarding-watermark",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:运维可调整存量账号的水位线"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.processing-pipeline.r02",
+      "sourceIds": [
+        "inbox.upstream.processing-pipeline.r02"
+      ],
+      "category": "processing-pipeline",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:流水线顺序与重启安全"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.processing-pipeline.r03",
+      "sourceIds": [
+        "inbox.upstream.processing-pipeline.r03"
+      ],
+      "category": "processing-pipeline",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:executeActions 按 FinalDecision 分发并落 mail_actions"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.processing-pipeline.r04",
+      "sourceIds": [
+        "inbox.upstream.processing-pipeline.r04"
+      ],
+      "category": "processing-pipeline",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:落库处理记录"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.processing-pipeline.r05",
+      "sourceIds": [
+        "inbox.upstream.processing-pipeline.r05"
+      ],
+      "category": "processing-pipeline",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:动作 I/O 经可注入 seam（本期假 provider）"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.rules-config.r01",
+      "sourceIds": [
+        "inbox.upstream.rules-config.r01"
+      ],
+      "category": "rules-config",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:从 rules.yaml 加载可配置名单并校验"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.rules-config.r02",
+      "sourceIds": [
+        "inbox.upstream.rules-config.r02"
+      ],
+      "category": "rules-config",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:security_keywords 与整个内置常量并集（只能增不能减）"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.rules-config.r03",
+      "sourceIds": [
+        "inbox.upstream.rules-config.r03"
+      ],
+      "category": "rules-config",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:缺失/非法/不可读 YAML 逐项回落且绝不崩、不泄露、护栏不失效"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.rules-config.r04",
+      "sourceIds": [
+        "inbox.upstream.rules-config.r04"
+      ],
+      "category": "rules-config",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:有效快照同步初始化（含 security 整集）、sync 访问器、构建后原子发布"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.rules-config.r05",
+      "sourceIds": [
+        "inbox.upstream.rules-config.r05"
+      ],
+      "category": "rules-config",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:rules.yaml 热重载（改即生效）、carry-forward 上一次有效值、poll tick 自愈"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.safety-rules.r01",
+      "sourceIds": [
+        "inbox.upstream.safety-rules.r01"
+      ],
+      "category": "safety-rules",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:规则引擎为最终动作的唯一权威"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.safety-rules.r02",
+      "sourceIds": [
+        "inbox.upstream.safety-rules.r02"
+      ],
+      "category": "safety-rules",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:优先级强制裁定"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.safety-rules.r04",
+      "sourceIds": [
+        "inbox.upstream.safety-rules.r04"
+      ],
+      "category": "safety-rules",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:可配置轴的有序管线、floor-only、绝不下调固定优先级或翻回标已读"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.safety-rules.r05",
+      "sourceIds": [
+        "inbox.upstream.safety-rules.r05"
+      ],
+      "category": "safety-rules",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:按最终优先级派生默认动作"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.safety-rules.r06",
+      "sourceIds": [
+        "inbox.upstream.safety-rules.r06"
+      ],
+      "category": "safety-rules",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:名单从 rules-config 加载，内置 SECURITY_PAYMENT_KEYWORDS 整集并集、内置默认作 fallback"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.service-bootstrap.r01",
+      "sourceIds": [
+        "inbox.upstream.service-bootstrap.r01"
+      ],
+      "category": "service-bootstrap",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:环境配置校验"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.service-bootstrap.r02",
+      "sourceIds": [
+        "inbox.upstream.service-bootstrap.r02"
+      ],
+      "category": "service-bootstrap",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:数据库连接与迁移"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.service-bootstrap.r03",
+      "sourceIds": [
+        "inbox.upstream.service-bootstrap.r03"
+      ],
+      "category": "service-bootstrap",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:结构化日志"
+    },
+    {
+      "normalizedId": "normalized.inbox.upstream.service-bootstrap.r04",
+      "sourceIds": [
+        "inbox.upstream.service-bootstrap.r04"
+      ],
+      "category": "service-bootstrap",
+      "weight": 1,
+      "hardGate": false,
+      "expected": "preserve owner-approved source behavior",
+      "title": "需求:运行载体与迁移前置"
+    }
+  ],
+  "normalizedDenominatorDigest": "66ce2590d261c8cf97f436134682022ca91df030e20a5ba2341ce1678267e230",
+  "ownerDecisions": [
+    {
+      "decisionId": "decision.inbox.hard.credentials-no-leak",
+      "kind": "merge",
+      "sourceIds": [
+        "inbox.upstream.account-cli.r02",
+        "inbox.upstream.account-registry.r03",
+        "inbox.upstream.notifications.r05"
+      ],
+      "normalizedIds": [
+        "inbox.hard.credentials-no-leak"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Merged only where source requirements express the same non-weakenable safety invariant."
+    },
+    {
+      "decisionId": "decision.inbox.hard.dedup-no-duplicate-effect",
+      "kind": "merge",
+      "sourceIds": [
+        "inbox.upstream.processing-pipeline.r01",
+        "inbox.upstream.imap-integration.r05"
+      ],
+      "normalizedIds": [
+        "inbox.hard.dedup-no-duplicate-effect"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Merged only where source requirements express the same non-weakenable safety invariant."
+    },
+    {
+      "decisionId": "decision.inbox.hard.low-confidence-safe-default",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.email-classification.r06"
+      ],
+      "normalizedIds": [
+        "inbox.hard.low-confidence-safe-default"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Merged only where source requirements express the same non-weakenable safety invariant."
+    },
+    {
+      "decisionId": "decision.inbox.hard.no-auto-send",
+      "kind": "merge",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r04",
+        "inbox.upstream.notifications.r03"
+      ],
+      "normalizedIds": [
+        "inbox.hard.no-auto-send"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Merged only where source requirements express the same non-weakenable safety invariant."
+    },
+    {
+      "decisionId": "decision.inbox.hard.no-sensitive-auto-read",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.safety-rules.r03"
+      ],
+      "normalizedIds": [
+        "inbox.hard.no-sensitive-auto-read"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Merged only where source requirements express the same non-weakenable safety invariant."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.main.inbox-app.r01",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.main.inbox-app.r01"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.main.inbox-app.r01"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.main.inbox-app.r02",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.main.inbox-app.r02"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.main.inbox-app.r02"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.main.inbox-app.r03",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.main.inbox-app.r03"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.main.inbox-app.r03"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.main.inbox-app.r04",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.main.inbox-app.r04"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.main.inbox-app.r04"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.main.inbox-app.r05",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.main.inbox-app.r05"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.main.inbox-app.r05"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.main.inbox-app.r06",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.main.inbox-app.r06"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.main.inbox-app.r06"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.main.inbox-app.r07",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.main.inbox-app.r07"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.main.inbox-app.r07"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.main.inbox-app.r08",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.main.inbox-app.r08"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.main.inbox-app.r08"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.main.inbox-app.r09",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.main.inbox-app.r09"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.main.inbox-app.r09"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.main.inbox-app.r10",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.main.inbox-app.r10"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.main.inbox-app.r10"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.account-cli.r01",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.account-cli.r01"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.account-cli.r01"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.account-cli.r03",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.account-cli.r03"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.account-cli.r03"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.account-cli.r04",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.account-cli.r04"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.account-cli.r04"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.account-cli.r05",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.account-cli.r05"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.account-cli.r05"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.account-cli.r06",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.account-cli.r06"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.account-cli.r06"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.account-cli.r07",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.account-cli.r07"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.account-cli.r07"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.account-cli.r08",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.account-cli.r08"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.account-cli.r08"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.account-registry.r01",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.account-registry.r01"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.account-registry.r01"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.account-registry.r02",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.account-registry.r02"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.account-registry.r02"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.account-registry.r04",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.account-registry.r04"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.account-registry.r04"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.account-registry.r05",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.account-registry.r05"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.account-registry.r05"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.account-registry.r06",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.account-registry.r06"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.account-registry.r06"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.account-registry.r07",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.account-registry.r07"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.account-registry.r07"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.daily-digest.r01",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r01"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.daily-digest.r01"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.daily-digest.r02",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r02"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.daily-digest.r02"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.daily-digest.r03",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r03"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.daily-digest.r03"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.daily-digest.r05",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r05"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.daily-digest.r05"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.daily-digest.r06",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r06"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.daily-digest.r06"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.daily-digest.r07",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r07"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.daily-digest.r07"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.daily-digest.r08",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r08"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.daily-digest.r08"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.daily-digest.r09",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r09"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.daily-digest.r09"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.daily-digest.r10",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.daily-digest.r10"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.daily-digest.r10"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.deployment.r01",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.deployment.r01"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.deployment.r01"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.deployment.r02",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.deployment.r02"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.deployment.r02"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.deployment.r03",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.deployment.r03"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.deployment.r03"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.deployment.r04",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.deployment.r04"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.deployment.r04"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.deployment.r05",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.deployment.r05"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.deployment.r05"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.durable-retry.r01",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.durable-retry.r01"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.durable-retry.r01"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.durable-retry.r02",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.durable-retry.r02"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.durable-retry.r02"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.durable-retry.r03",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.durable-retry.r03"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.durable-retry.r03"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.durable-retry.r04",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.durable-retry.r04"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.durable-retry.r04"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.durable-retry.r05",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.durable-retry.r05"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.durable-retry.r05"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.email-classification.r01",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.email-classification.r01"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.email-classification.r01"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.email-classification.r02",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.email-classification.r02"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.email-classification.r02"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.email-classification.r03",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.email-classification.r03"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.email-classification.r03"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.email-classification.r04",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.email-classification.r04"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.email-classification.r04"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.email-classification.r05",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.email-classification.r05"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.email-classification.r05"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.email-classification.r07",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.email-classification.r07"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.email-classification.r07"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.email-classification.r08",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.email-classification.r08"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.email-classification.r08"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.email-model.r01",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.email-model.r01"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.email-model.r01"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.email-model.r02",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.email-model.r02"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.email-model.r02"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.email-model.r03",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.email-model.r03"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.email-model.r03"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.gmail-integration.r01",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.gmail-integration.r01"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.gmail-integration.r01"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.gmail-integration.r02",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.gmail-integration.r02"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.gmail-integration.r02"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.gmail-integration.r03",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.gmail-integration.r03"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.gmail-integration.r03"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.imap-integration.r01",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.imap-integration.r01"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.imap-integration.r01"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.imap-integration.r02",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.imap-integration.r02"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.imap-integration.r02"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.imap-integration.r03",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.imap-integration.r03"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.imap-integration.r03"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.imap-integration.r04",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.imap-integration.r04"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.imap-integration.r04"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.notifications.r01",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.notifications.r01"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.notifications.r01"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.notifications.r02",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.notifications.r02"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.notifications.r02"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.notifications.r04",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.notifications.r04"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.notifications.r04"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.onboarding-watermark.r01",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.onboarding-watermark.r01"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.onboarding-watermark.r01"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.onboarding-watermark.r02",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.onboarding-watermark.r02"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.onboarding-watermark.r02"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.onboarding-watermark.r03",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.onboarding-watermark.r03"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.onboarding-watermark.r03"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.onboarding-watermark.r04",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.onboarding-watermark.r04"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.onboarding-watermark.r04"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.onboarding-watermark.r05",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.onboarding-watermark.r05"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.onboarding-watermark.r05"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.onboarding-watermark.r06",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.onboarding-watermark.r06"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.onboarding-watermark.r06"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.onboarding-watermark.r07",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.onboarding-watermark.r07"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.onboarding-watermark.r07"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.processing-pipeline.r02",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.processing-pipeline.r02"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.processing-pipeline.r02"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.processing-pipeline.r03",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.processing-pipeline.r03"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.processing-pipeline.r03"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.processing-pipeline.r04",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.processing-pipeline.r04"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.processing-pipeline.r04"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.processing-pipeline.r05",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.processing-pipeline.r05"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.processing-pipeline.r05"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.rules-config.r01",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.rules-config.r01"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.rules-config.r01"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.rules-config.r02",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.rules-config.r02"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.rules-config.r02"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.rules-config.r03",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.rules-config.r03"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.rules-config.r03"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.rules-config.r04",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.rules-config.r04"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.rules-config.r04"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.rules-config.r05",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.rules-config.r05"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.rules-config.r05"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.safety-rules.r01",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.safety-rules.r01"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.safety-rules.r01"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.safety-rules.r02",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.safety-rules.r02"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.safety-rules.r02"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.safety-rules.r04",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.safety-rules.r04"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.safety-rules.r04"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.safety-rules.r05",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.safety-rules.r05"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.safety-rules.r05"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.safety-rules.r06",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.safety-rules.r06"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.safety-rules.r06"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.service-bootstrap.r01",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.service-bootstrap.r01"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.service-bootstrap.r01"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.service-bootstrap.r02",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.service-bootstrap.r02"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.service-bootstrap.r02"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.service-bootstrap.r03",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.service-bootstrap.r03"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.service-bootstrap.r03"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    },
+    {
+      "decisionId": "decision.normalized.inbox.upstream.service-bootstrap.r04",
+      "kind": "one-to-one",
+      "sourceIds": [
+        "inbox.upstream.service-bootstrap.r04"
+      ],
+      "normalizedIds": [
+        "normalized.inbox.upstream.service-bootstrap.r04"
+      ],
+      "owner": "inbox-owner",
+      "result": "approved",
+      "reason": "Source behavior remains one-to-one; no automatic semantic merge."
+    }
+  ],
+  "ownerDecisionDigest": "a7cc011628f0b01100d06663511338e4a2cd7b25ad283865e59f2c750f05011c",
+  "hardGateIds": [
+    "inbox.hard.no-auto-send",
+    "inbox.hard.no-sensitive-auto-read",
+    "inbox.hard.low-confidence-safe-default",
+    "inbox.hard.dedup-no-duplicate-effect",
+    "inbox.hard.credentials-no-leak"
+  ],
+  "unresolvedConflicts": []
+}

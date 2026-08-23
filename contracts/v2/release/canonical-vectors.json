@@ -1,0 +1,163 @@
+{
+  "schemaVersion": "v2-release-vectors-v1",
+  "requirementId": "v2c.release-identity",
+  "vectors": [
+    {
+      "id": "nested-key-order",
+      "kind": "equivalent",
+      "sources": [
+        "{\"b\":2,\"a\":{\"z\":0,\"y\":[3,2,1]}}",
+        " { \"a\" : { \"y\" : [3,2,1], \"z\" : -0 }, \"b\" : 2.0 } "
+      ],
+      "expectedCanonicals": [
+        "{\"a\":{\"y\":[3,2,1],\"z\":0},\"b\":2}",
+        "{\"a\":{\"y\":[3,2,1],\"z\":0},\"b\":2}"
+      ],
+      "expectedDigests": [
+        "bc52d36ea9cdd2ec0bc1a95364a3ddbdc56920a53a7d3ecad58a42f0c4d299c3",
+        "bc52d36ea9cdd2ec0bc1a95364a3ddbdc56920a53a7d3ecad58a42f0c4d299c3"
+      ]
+    },
+    {
+      "id": "string-escaping",
+      "kind": "canonical",
+      "sources": [
+        "{\"s\":\"quote\\\" slash/ backslash\\\\ \\b\\f\\n\\r\\t\\u0000\"}"
+      ],
+      "expectedCanonicals": [
+        "{\"s\":\"quote\\\" slash/ backslash\\\\ \\b\\f\\n\\r\\t\\u0000\"}"
+      ],
+      "expectedDigests": [
+        "508985453281f4ca2b3e35e1f0bb0c7df54f82eac400fc23063f1317174c8329"
+      ]
+    },
+    {
+      "id": "astral-key-order",
+      "kind": "canonical",
+      "sources": [
+        "{\"�\":\"replacement\",\"😀\":\"astral\"}"
+      ],
+      "expectedCanonicals": [
+        "{\"😀\":\"astral\",\"�\":\"replacement\"}"
+      ],
+      "expectedDigests": [
+        "dd07d3515dd8cbcda96da62908f9012a76dd7fce46523344b313379fecf2149d"
+      ]
+    },
+    {
+      "id": "unicode-no-normalization",
+      "kind": "distinct",
+      "sources": [
+        "{\"s\":\"é\"}",
+        "{\"s\":\"é\"}"
+      ],
+      "expectedCanonicals": [
+        "{\"s\":\"é\"}",
+        "{\"s\":\"é\"}"
+      ],
+      "expectedDigests": [
+        "86028b41ba792eaf82aa26a45b218f6734f7f1096a86f1746c8296e088a0ccb4",
+        "1fc0bd7cc93fca8092a2041d7d01842876422aa7e2838acf42c14578e9f2be05"
+      ]
+    },
+    {
+      "id": "binary64-equivalent-spelling",
+      "kind": "equivalent",
+      "sources": [
+        "{\"n\":1.0}",
+        "{\"n\":1e0}"
+      ],
+      "expectedCanonicals": [
+        "{\"n\":1}",
+        "{\"n\":1}"
+      ],
+      "expectedDigests": [
+        "2bfd14f43d17fc7cea24e0917a8879b4b2f880b8baeec1b9d90fbaad655e71bd",
+        "2bfd14f43d17fc7cea24e0917a8879b4b2f880b8baeec1b9d90fbaad655e71bd"
+      ]
+    },
+    {
+      "id": "binary64-edge-shortest",
+      "kind": "canonical",
+      "sources": [
+        "{\"n\":333333333.33333329}"
+      ],
+      "expectedCanonicals": [
+        "{\"n\":333333333.3333333}"
+      ],
+      "expectedDigests": [
+        "8e1aa496328ac7acbd045b34464ae11d72d8b525c355b85099382ffcb499143b"
+      ]
+    },
+    {
+      "id": "negative-zero",
+      "kind": "canonical",
+      "sources": [
+        "{\"n\":-0}"
+      ],
+      "expectedCanonicals": [
+        "{\"n\":0}"
+      ],
+      "expectedDigests": [
+        "f3013f933b9fb80ab6d995e7ad9da36f683837ba1d81e950c943d40111eac2f0"
+      ]
+    },
+    {
+      "id": "array-order",
+      "kind": "distinct",
+      "sources": [
+        "{\"a\":[1,2]}",
+        "{\"a\":[2,1]}"
+      ],
+      "expectedCanonicals": [
+        "{\"a\":[1,2]}",
+        "{\"a\":[2,1]}"
+      ],
+      "expectedDigests": [
+        "01530d164d479cf08e26d3b1ad9bdba927120d97e2d057a6d792db778780d720",
+        "439e3fbf35fa867d156db2626f94efbd435852a97bbe16660ee529d9bda0e502"
+      ]
+    },
+    {
+      "id": "duplicate-key",
+      "kind": "reject",
+      "sources": [
+        "{\"a\":1,\"a\":2}"
+      ],
+      "expectedError": "duplicate_key"
+    },
+    {
+      "id": "lone-surrogate",
+      "kind": "reject",
+      "sources": [
+        "{\"s\":\"\\ud800\"}"
+      ],
+      "expectedError": "lone_surrogate"
+    },
+    {
+      "id": "non-finite-number",
+      "kind": "reject",
+      "sources": [
+        "{\"n\":1e400}"
+      ],
+      "expectedError": "non_finite_number"
+    },
+    {
+      "id": "unsafe-integer",
+      "kind": "unsafe-integer",
+      "value": {
+        "limit": 9007199254740992
+      },
+      "safeIntegerFields": [
+        "limit"
+      ],
+      "expectedError": "unsafe_integer"
+    },
+    {
+      "id": "malformed-utf8",
+      "kind": "malformed-utf8",
+      "bytesBase64": "/w==",
+      "expectedError": "malformed_utf8"
+    }
+  ]
+}

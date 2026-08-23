@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "v2-host-attestation-v1",
+  "requirementId": "v2c.host-attestation",
+  "evidenceProfileRegistry": "contracts/v2/runtime/evidence-profiles.json",
+  "modeEvidenceProfiles": {
+    "production-child": "production-child"
+  },
+  "controls": [
+    "credential-stripping",
+    "outbound-default-deny",
+    "secret-default-deny",
+    "explicit-capability-grants"
+  ],
+  "modes": [
+    "production-control",
+    "production-child",
+    "effect-dispatch",
+    "recovery-control",
+    "mutation-disabled-evaluator"
+  ],
+  "statuses": ["verified", "unverified-claim", "unsupported"],
+  "staticDeclarationFields": [
+    "hostProfileId",
+    "hostProfileDigest",
+    "requiredControlIds",
+    "controlMechanisms",
+    "positiveProbeDefinitions",
+    "supportedModes"
+  ],
+  "launchAttempt": {
+    "identity": "launchAttemptId",
+    "challenge": "unpredictable-one-time",
+    "binding": [
+      "hostIdentityMeasurement",
+      "osName",
+      "osArchitecture",
+      "osVersion",
+      "bootId",
+      "startupCycleId",
+      "enforcementProfileDigest",
+      "mode"
+    ],
+    "childBinding": ["releaseId", "activationEpoch", "runId", "attempt", "containmentId", "containmentGeneration"]
+  },
+  "verifiedEvidence": {
+    "centralVerifierRequired": true,
+    "callerOwnedExpectedContextRequired": true,
+    "currentAuthoritySnapshotRequired": true,
+    "signatureAlgorithm": "Ed25519",
+    "appendOnlySourceFactRequired": true,
+    "generationScope": ["hostId", "hostProfileId", "mode", "startupCycleId"],
+    "generationMonotonic": true,
+    "timeFields": ["issuedAtUtcMs", "expiresAtUtcMs", "timeGeneration"],
+    "allApplicableControlsRequired": true
+  },
+  "invalidation": {
+    "newGeneration": true,
+    "causes": ["probe-failure", "profile-drift", "control-drift", "containment-drift", "unsupported-observation"]
+  },
+  "criticalBindings": {
+    "production": "production-control",
+    "child": "production-child",
+    "effect": "effect-dispatch",
+    "recovery": "recovery-control"
+  },
+  "mutationDisabledEvaluator": {
+    "allowedStatus": "unverified-claim",
+    "mutationAuthorityPresent": false,
+    "markerRequired": true
+  },
+  "unknownModePolicy": "reject",
+  "staleGenerationPolicy": "reject",
+  "consumedChallengePolicy": "reject"
+}

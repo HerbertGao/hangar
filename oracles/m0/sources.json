@@ -1,0 +1,243 @@
+{
+  "schemaVersion": "m0-sources-v1",
+  "digestAlgorithm": "sha256",
+  "memberDigestFormat": "sha256(canonical-json([{path,sha256}]))",
+  "v2SotFiles": [
+    {
+      "path": "CLAUDE.md",
+      "sha256": "820d4900275eab7aa89a6bfcb0cef40cd530a5df7cb30d67059876435738040f"
+    },
+    {
+      "path": "DESIGN.md",
+      "sha256": "1216706c1a470cb8e6cf01371eeceea4f37be555b17cb7fa02c158d5d452d5dc"
+    },
+    {
+      "path": "ROADMAP.md",
+      "sha256": "eaaf75426ab089ea27a4e06cbeda9a7e8470ba39fcc1e96d910434f8a69d41a5"
+    }
+  ],
+  "repositories": [
+    {
+      "id": "hangar-main-v0",
+      "checkoutPath": ".",
+      "remote": "https://github.com/HerbertGao/hangar.git",
+      "revision": "955b6a9a268437b70d04fa08abc25cb61e0e73ce",
+      "tree": "c8ff1cd822f48a34da3b970afc7e60399aabe055",
+      "memberSets": [
+        {
+          "id": "v0-runtime-source",
+          "selector": {
+            "prefixes": [
+              "apps/",
+              "deploy/",
+              "packages/",
+              "scripts/"
+            ]
+          },
+          "memberCount": 65,
+          "contentDigest": "2ac1ecd6fa56f04f0cd23800c75d23b5e6acb62f58a36f150a25b236188ae85b"
+        },
+        {
+          "id": "v0-tests",
+          "selector": {
+            "prefixes": [
+              "apps/",
+              "packages/",
+              "scripts/"
+            ],
+            "suffixes": [
+              ".test.ts",
+              ".test.js",
+              ".test.mjs",
+              ".test.sh"
+            ]
+          },
+          "memberCount": 17,
+          "contentDigest": "d11310c4176c4335361c129342cab8dcabc445c86dd593ec19049258d82cd699"
+        },
+        {
+          "id": "v0-specs",
+          "selector": {
+            "prefixes": [
+              "openspec/specs/"
+            ],
+            "files": [
+              "SKILL.md"
+            ]
+          },
+          "memberCount": 10,
+          "contentDigest": "1c0eca1fba8fa04fa57c68b214c21d6cc5f31030a19ddb931d2ef9bfa0995d2b"
+        },
+        {
+          "id": "v0-entrypoints",
+          "selector": {
+            "files": [
+              "apps/heartbeat/pipeline.ts",
+              "apps/heartbeat/tools.ts",
+              "packages/core/src/cli.ts",
+              "packages/core/src/index.ts",
+              "packages/hangar-view/src/server.js",
+              "packages/hangar-view/deploy/hangar-view.sh",
+              "packages/notify/src/cli.ts",
+              "packages/pgconfig/src/cli.ts"
+            ]
+          },
+          "memberCount": 8,
+          "contentDigest": "2c054e2d691f858a001206649612d11c00ed8db770e1a925e5a4e5d35e91a6ad"
+        },
+        {
+          "id": "v0-app-heartbeat",
+          "selector": {
+            "prefixes": [
+              "apps/heartbeat/"
+            ]
+          },
+          "memberCount": 5,
+          "contentDigest": "7d9dbb4a7179aff51ba9f3d1dcdbf0d91356adbc6160316a2c0eb2661a291980"
+        }
+      ]
+    },
+    {
+      "id": "inbox-upstream",
+      "checkoutPath": "../inbox-pilot",
+      "remote": "https://github.com/HerbertGao/inbox-pilot.git",
+      "revision": "2b501595430a733dd0a13e0bf115433907fcfe90",
+      "tree": "5b585cad542021e7ebfc4172c0a45ecb8d68a730",
+      "memberSets": [
+        {
+          "id": "inbox-runtime-source",
+          "selector": {
+            "prefixes": [
+              "src/",
+              "prisma/",
+              "rules/"
+            ],
+            "files": [
+              "app.yaml",
+              "docker-compose.yml",
+              "package.json",
+              "tsconfig.json"
+            ]
+          },
+          "memberCount": 88,
+          "contentDigest": "9bcd1401d08ac8fdb8b345ad125d5ebd1597ea46c3d0a8cafc69495afa4a3ef7"
+        },
+        {
+          "id": "inbox-tests",
+          "selector": {
+            "prefixes": [
+              "src/"
+            ],
+            "suffixes": [
+              ".test.ts"
+            ]
+          },
+          "memberCount": 29,
+          "contentDigest": "88376c39c3943c77466202984ba5b82b3b4c04004f5773801a1275c01909fb13"
+        },
+        {
+          "id": "inbox-specs",
+          "selector": {
+            "prefixes": [
+              "openspec/specs/"
+            ]
+          },
+          "memberCount": 15,
+          "contentDigest": "cbdb4efa54a31e87553b3abaf6feb8a3c542a32074eabceb5ff863bbac48d075"
+        },
+        {
+          "id": "inbox-entrypoints",
+          "selector": {
+            "files": [
+              "app.yaml",
+              "src/pipeline.ts",
+              "src/cli/inbox-pilot.ts",
+              "src/cli/account.ts",
+              "src/classifier/eval/run.ts"
+            ]
+          },
+          "memberCount": 5,
+          "contentDigest": "f17dd1c0da038b58dd4fbe83eef0682b1dbe70755f0a729e362452c7a8dcb897"
+        }
+      ]
+    },
+    {
+      "id": "auto-developer-upstream",
+      "checkoutPath": "../auto-developer",
+      "remote": "https://github.com/HerbertGao/auto-developer.git",
+      "revision": "c024b924c3337de441104f6104af8ee9803ba03f",
+      "tree": "6e1ec0d26cf494b47e70395ee0e4a87a6f452ec6",
+      "memberSets": [
+        {
+          "id": "auto-developer-runtime-source",
+          "selector": {
+            "prefixes": [
+              "orchestrator/src/"
+            ],
+            "files": [
+              "orchestrator/package.json",
+              "orchestrator/hangar-compatibility.json"
+            ]
+          },
+          "memberCount": 69,
+          "contentDigest": "9f7354cba7ed7e9087d1bf0f8c19bc764ef5c72c1f21cd82b43427b4f8596511"
+        },
+        {
+          "id": "auto-developer-tests",
+          "selector": {
+            "prefixes": [
+              "orchestrator/test/"
+            ]
+          },
+          "memberCount": 131,
+          "contentDigest": "92f7e7620ea4f62fa15b52c2b8ca7d7eaaaa79942fcb9f08d5936bad8afc3c78"
+        },
+        {
+          "id": "auto-developer-harness-evidence",
+          "selector": {
+            "files": [
+              "ARCHITECTURE.md",
+              "CLAUDE.md",
+              "docs/agentization-and-runtime-migration.md",
+              "orchestrator/hangar-compatibility.json",
+              "orchestrator/src/agent-runtime/contract.ts",
+              "orchestrator/src/agent-runtime/process.ts",
+              "orchestrator/src/agent-runtime/run-via-handle.ts",
+              "orchestrator/src/daily-pipeline.ts",
+              "orchestrator/src/pipeline.ts",
+              "orchestrator/src/process-supervisor.ts"
+            ]
+          },
+          "memberCount": 10,
+          "contentDigest": "2d6a4a78d9873d2dadc51ce4ad753d12becacf57d7b715cc83aaa257654f70b8"
+        },
+        {
+          "id": "auto-developer-entrypoints",
+          "selector": {
+            "files": [
+              "orchestrator/src/main.ts",
+              "orchestrator/src/manual-idea.ts"
+            ]
+          },
+          "memberCount": 2,
+          "contentDigest": "58b0c5e50fdafbbafe97c2a4947e11bf1496992cbd4e3e9fe7c0041f5b9b2e97"
+        }
+      ]
+    }
+  ],
+  "runtimeAppSetDigest": "31cc65689df2b5073113b4e9fe7c38f5f1b0885768879f6f5d41a66803464230",
+  "runtimeApps": [
+    {
+      "id": "heartbeat",
+      "repositoryId": "hangar-main-v0",
+      "sourceSetId": "v0-app-heartbeat",
+      "entrypointSetId": "v0-entrypoints"
+    },
+    {
+      "id": "inbox",
+      "repositoryId": "inbox-upstream",
+      "sourceSetId": "inbox-runtime-source",
+      "entrypointSetId": "inbox-entrypoints"
+    }
+  ]
+}
