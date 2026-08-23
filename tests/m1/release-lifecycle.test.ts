@@ -29,6 +29,7 @@ const spec: AgentSpec = {
   checkpointSchema: "heartbeat-checkpoint-v1",
   capabilities: ["tool.read", "artifact.write"],
   effectOperations: ["fixture.commit"],
+  intentDescriptors: [],
 };
 const value = <T>(result: Result<T>): T => {
   if (!result.ok) throw new Error(result.error);

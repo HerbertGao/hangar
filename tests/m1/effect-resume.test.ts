@@ -80,6 +80,7 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
         checkpointSchema: "checkpoint-v1",
         capabilities: ["tool.read"],
         effectOperations: ["fixture.commit"],
+        intentDescriptors: [],
       },
       heartbeatExecutionClosure(),
     );

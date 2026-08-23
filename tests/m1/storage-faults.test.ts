@@ -45,6 +45,7 @@ const faultRelease = (): AgentRelease =>
       checkpointSchema: "checkpoint-v1",
       capabilities: ["tool.read"],
       effectOperations: [],
+        intentDescriptors: [],
     },
     {
       entryId: "fault-worker",
@@ -173,7 +174,8 @@ test("restart rebuilds a complete lifecycle projection from facts", async () => 
         harnessKind: "fake",
         checkpointSchema: "checkpoint-v1",
         capabilities: ["tool.read"],
-        effectOperations: ["fixture.commit"],
+                effectOperations: ["fixture.commit"],
+        intentDescriptors: [],
       },
       {
         entryId: "rebuild",

@@ -52,7 +52,16 @@ const childPath = (): string => appPath("child.ts");
 const digestCache = new Map<string, { fingerprint: string; digest: string }>();
 const fileDigest = (path: string): string => {
   const stat = statSync(path, { bigint: true });
-  const fingerprint = `${stat.dev}:${stat.ino}:${stat.size}:${stat.mtimeNs}`;
+  // SAFETY: Node 22 BigIntStats always carries size/mtimeNs at runtime; some
+  // hoisted @types/node resolutions narrow the bigint overload, so pin the
+  // observed shape without changing behavior.
+  const fp = stat as unknown as {
+    dev: bigint;
+    ino: bigint;
+    size: bigint;
+    mtimeNs: bigint;
+  };
+  const fingerprint = `${fp.dev}:${fp.ino}:${fp.size}:${fp.mtimeNs}`;
   const cached = digestCache.get(path);
   if (cached?.fingerprint === fingerprint) return cached.digest;
   const digest = createHash("sha256").update(readFileSync(path)).digest("hex");

@@ -27,6 +27,21 @@ export const fail = <T = never>(error: ErrorKind): Result<T> => ({
   error,
 });
 
+export interface SchemaRef {
+  readonly id: string;
+  readonly version: string;
+  readonly digest: string;
+}
+
+export interface IntentDescriptor {
+  readonly intentId: string;
+  readonly descriptorVersion: number;
+  readonly inputSchema: SchemaRef;
+  readonly scope: string;
+  readonly policyId: string;
+  readonly resultSchema: SchemaRef;
+}
+
 export interface AgentSpec {
   readonly agentId: string;
   readonly goal: string;
@@ -34,6 +49,7 @@ export interface AgentSpec {
   readonly checkpointSchema: string;
   readonly capabilities: readonly string[];
   readonly effectOperations: readonly string[];
+  readonly intentDescriptors: readonly IntentDescriptor[];
 }
 
 export interface ExecutionClosureMember {
@@ -49,7 +65,7 @@ export interface ExecutionClosure {
 }
 
 export interface AgentRelease {
-  readonly schemaVersion: "agent-release-v1";
+  readonly schemaVersion: "agent-release-v1" | "agent-release-v2";
   readonly canonicalizationVersion: "json-safe-v1";
   readonly hashAlgorithm: "sha256";
   readonly releaseId: string;
@@ -224,6 +240,106 @@ function assertStringList(
     throw new TypeError(`invalid_${subject}`);
 }
 
+export const CONTROL_METADATA_KEYS = ["executionClass", "trigger"] as const;
+
+export type ExecutionClass = "shadow-evaluator" | "production";
+const EXECUTION_CLASSES: readonly ExecutionClass[] = [
+  "shadow-evaluator",
+  "production",
+];
+
+const ASCII_ID = /^[A-Za-z0-9_-]+$/;
+
+/**
+ * Validates an intent input against the closed control-metadata contract:
+ * exactly the declared keys, scalar values only, so inputs stay atomically
+ * persistable with admission facts and can never carry bodies, secrets,
+ * artifact payloads, or runtime-only data.
+ */
+export function validateControlMetadataInput(
+  value: unknown,
+): Result<
+  Readonly<Record<(typeof CONTROL_METADATA_KEYS)[number], JsonPrimitive>>
+> {
+  const failInput = (): Result<
+    Readonly<Record<(typeof CONTROL_METADATA_KEYS)[number], JsonPrimitive>>
+  > => fail("invalid_input");
+  if (
+    value === null ||
+    typeof value !== "object" ||
+    Array.isArray(value) ||
+    Object.getPrototypeOf(value) !== Object.prototype
+  )
+    return failInput();
+  const record = value as Record<string, unknown>;
+  if (
+    Object.keys(record).sort().join("\0") !==
+    [...CONTROL_METADATA_KEYS].sort().join("\0")
+  )
+    return failInput();
+  const executionClass = record.executionClass;
+  if (
+    typeof executionClass !== "string" ||
+    !EXECUTION_CLASSES.includes(executionClass as ExecutionClass)
+  )
+    return failInput();
+  const trigger = record.trigger;
+  if (typeof trigger !== "string" || !ASCII_ID.test(trigger))
+    return failInput();
+  return ok({
+    executionClass: executionClass as ExecutionClass,
+    trigger,
+  });
+}
+
+function assertSchemaRef(
+  input: unknown,
+  subject: string,
+): asserts input is SchemaRef {
+  assertRecord(input, ["id", "version", "digest"], subject);
+  // SAFETY: assertRecord just verified the exact {id,version,digest} key set,
+  // so each member holds the SchemaRef-declared primitive types.
+  const ref = input as unknown as SchemaRef;
+  if (!ASCII_ID.test(ref.id)) throw new TypeError(`invalid_${subject}_id`);
+  if (!ASCII_ID.test(ref.version))
+    throw new TypeError(`invalid_${subject}_version`);
+  if (!HEX_64.test(ref.digest))
+    throw new TypeError(`invalid_${subject}_digest`);
+}
+
+function assertIntentDescriptor(
+  input: unknown,
+): asserts input is IntentDescriptor {
+  assertRecord(
+    input,
+    [
+      "intentId",
+      "descriptorVersion",
+      "inputSchema",
+      "scope",
+      "policyId",
+      "resultSchema",
+    ],
+    "intent_descriptor",
+  );
+  // SAFETY: assertRecord just verified the exact IntentDescriptor key set;
+  // field-level checks below enforce the declared primitive shapes.
+  const descriptor = input as unknown as IntentDescriptor;
+  if (!ASCII_ID.test(descriptor.intentId))
+    throw new TypeError("invalid_intent_id");
+  if (
+    !Number.isSafeInteger(descriptor.descriptorVersion) ||
+    descriptor.descriptorVersion < 1
+  )
+    throw new TypeError("invalid_descriptor_version");
+  if (!ASCII_ID.test(descriptor.scope))
+    throw new TypeError("invalid_intent_scope");
+  if (!ASCII_ID.test(descriptor.policyId))
+    throw new TypeError("invalid_intent_policy_id");
+  assertSchemaRef(descriptor.inputSchema, "input_schema");
+  assertSchemaRef(descriptor.resultSchema, "result_schema");
+}
+
 export function canonicalJson(value: unknown): string {
   const seen = new WeakSet<object>();
   const encode = (entry: unknown): string => {
@@ -279,6 +395,7 @@ export function compileRelease(
       "checkpointSchema",
       "capabilities",
       "effectOperations",
+      "intentDescriptors",
     ],
     "agent_spec",
   );
@@ -289,6 +406,15 @@ export function compileRelease(
   assertString(inputSpec.checkpointSchema, "checkpoint_schema");
   assertStringList(inputSpec.capabilities, "capabilities");
   assertStringList(inputSpec.effectOperations, "effect_operations");
+  if (!Array.isArray(inputSpec.intentDescriptors))
+    throw new TypeError("invalid_intent_descriptors");
+  for (const descriptor of inputSpec.intentDescriptors)
+    assertIntentDescriptor(descriptor);
+  if (
+    new Set(inputSpec.intentDescriptors.map(({ intentId }) => intentId))
+      .size !== inputSpec.intentDescriptors.length
+  )
+    throw new TypeError("duplicate_intent_descriptor");
 
   assertRecord(
     inputClosure as unknown,
@@ -320,6 +446,9 @@ export function compileRelease(
     checkpointSchema: inputSpec.checkpointSchema,
     capabilities: [...inputSpec.capabilities].sort(),
     effectOperations: [...inputSpec.effectOperations].sort(),
+    intentDescriptors: [...inputSpec.intentDescriptors]
+      .map((descriptor) => ({ ...descriptor }))
+      .sort((left, right) => left.intentId.localeCompare(right.intentId)),
   };
   const closure: ExecutionClosure = {
     entryId: inputClosure.entryId,
@@ -330,7 +459,7 @@ export function compileRelease(
       .sort((left, right) => left.id.localeCompare(right.id)),
   };
   const unsigned = {
-    schemaVersion: "agent-release-v1" as const,
+    schemaVersion: "agent-release-v2" as const,
     canonicalizationVersion: "json-safe-v1" as const,
     hashAlgorithm: "sha256" as const,
     spec,
@@ -340,32 +469,96 @@ export function compileRelease(
   return deepFreeze({ ...unsigned, releaseId: digestJson(unsigned) });
 }
 
+/**
+ * Verifies agent-release-v1 bytes under v1-only rules: the spec member must
+ * have exactly the six v1 fields, so a v1 artifact is never reinterpreted by
+ * the v2 compiler (e.g. no implied intent descriptors).
+ */
+function verifyV1Release(release: AgentRelease): boolean {
+  // SAFETY: v1 spec member is only accessed after assertRecord below verifies
+  // the exact six-field v1 key set; values stay as canonical JSON inputs.
+  const v1Spec = release.spec as unknown as {
+    readonly [key: string]: unknown;
+  };
+  assertRecord(
+    release as unknown,
+    [
+      "schemaVersion",
+      "canonicalizationVersion",
+      "hashAlgorithm",
+      "releaseId",
+      "spec",
+      "closure",
+      "trustedDirectEffects",
+    ],
+    "agent_release",
+  );
+  if (
+    release.canonicalizationVersion !== "json-safe-v1" ||
+    release.hashAlgorithm !== "sha256" ||
+    !HEX_64.test(release.releaseId) ||
+    !Array.isArray(release.trustedDirectEffects) ||
+    release.trustedDirectEffects.length !== 0
+  )
+    return false;
+  assertRecord(
+    v1Spec,
+    [
+      "agentId",
+      "goal",
+      "harnessKind",
+      "checkpointSchema",
+      "capabilities",
+      "effectOperations",
+    ],
+    "agent_spec_v1",
+  );
+  assertRecord(
+    release.closure as unknown,
+    ["entryId", "executable", "executableDigest", "members"],
+    "execution_closure",
+  );
+  const unsigned = {
+    schemaVersion: "agent-release-v1" as const,
+    canonicalizationVersion: "json-safe-v1" as const,
+    hashAlgorithm: "sha256" as const,
+    spec: v1Spec,
+    closure: release.closure,
+    trustedDirectEffects: release.trustedDirectEffects,
+  };
+  return digestJson(unsigned) === release.releaseId;
+}
+
 export function verifyRelease(release: AgentRelease): boolean {
   try {
-    assertRecord(
-      release as unknown,
-      [
-        "schemaVersion",
-        "canonicalizationVersion",
-        "hashAlgorithm",
-        "releaseId",
-        "spec",
-        "closure",
-        "trustedDirectEffects",
-      ],
-      "agent_release",
-    );
-    if (
-      release.schemaVersion !== "agent-release-v1" ||
-      release.canonicalizationVersion !== "json-safe-v1" ||
-      release.hashAlgorithm !== "sha256" ||
-      !HEX_64.test(release.releaseId) ||
-      !Array.isArray(release.trustedDirectEffects) ||
-      release.trustedDirectEffects.length !== 0
-    )
-      return false;
-    const compiled = compileRelease(release.spec, release.closure);
-    return canonicalJson(release) === canonicalJson(compiled);
+    if (release.schemaVersion === "agent-release-v2") {
+      assertRecord(
+        release as unknown,
+        [
+          "schemaVersion",
+          "canonicalizationVersion",
+          "hashAlgorithm",
+          "releaseId",
+          "spec",
+          "closure",
+          "trustedDirectEffects",
+        ],
+        "agent_release",
+      );
+      if (
+        release.canonicalizationVersion !== "json-safe-v1" ||
+        release.hashAlgorithm !== "sha256" ||
+        !HEX_64.test(release.releaseId) ||
+        !Array.isArray(release.trustedDirectEffects) ||
+        release.trustedDirectEffects.length !== 0
+      )
+        return false;
+      const compiled = compileRelease(release.spec, release.closure);
+      return canonicalJson(release) === canonicalJson(compiled);
+    }
+    if (release.schemaVersion === "agent-release-v1")
+      return verifyV1Release(release);
+    return false;
   } catch {
     return false;
   }

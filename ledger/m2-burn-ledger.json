@@ -119,6 +119,40 @@
       "closureRemaining": 8,
       "evidenceRef": "/tmp/hangar-m2-ws-preflight/PREFLIGHT.md",
       "recordHash": "58fc351390d549c0c6aeac3e56c54c020cde2da6934f442aa035ed2975f3d9ec"
+    },
+    {
+      "recordId": "m2br-0008",
+      "previousRecordHash": "58fc351390d549c0c6aeac3e56c54c020cde2da6934f442aa035ed2975f3d9ec",
+      "kind": "reserve",
+      "bucket": "product",
+      "reservationId": "m2r-0004",
+      "taskGroup": "task-1.2-contracts-extension",
+      "actor": "herbertgao",
+      "start": "2026-08-23T14:49:15.000Z",
+      "end": null,
+      "reservedPersonHours": 3,
+      "actualPersonHours": null,
+      "productRemaining": 56.5,
+      "closureRemaining": 8,
+      "evidenceRef": null,
+      "recordHash": "73d158458451cc3748b38bb07b8c3a2db4ad821ba5c0a30d7937331144946bb0"
+    },
+    {
+      "recordId": "m2br-0009",
+      "previousRecordHash": "73d158458451cc3748b38bb07b8c3a2db4ad821ba5c0a30d7937331144946bb0",
+      "kind": "actual",
+      "bucket": "product",
+      "reservationId": "m2r-0004",
+      "taskGroup": "task-1.2-contracts-extension",
+      "actor": "herbertgao",
+      "start": "2026-08-23T14:45:00.000Z",
+      "end": "2026-08-23T15:28:25.000Z",
+      "reservedPersonHours": null,
+      "actualPersonHours": 1.5,
+      "productRemaining": 58,
+      "closureRemaining": 8,
+      "evidenceRef": "tests/m2/intent-descriptors.test.ts",
+      "recordHash": "f2adf7d7cb1500f117f74d2a24c3f5630694af44b434e18c32bce8ebe8b48eee"
     }
   ]
 }

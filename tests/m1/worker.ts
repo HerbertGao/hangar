@@ -36,6 +36,7 @@ if (["precommit", "postcommit"].includes(mode)) {
       checkpointSchema: "checkpoint-v1",
       capabilities: ["tool.read"],
       effectOperations: [],
+        intentDescriptors: [],
     },
     {
       entryId: "fault-worker",

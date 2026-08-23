@@ -138,18 +138,23 @@ function tampered(file, mutate) {
 // Scenario: real ledger + independent recomputation
 // ---------------------------------------------------------------------------
 
-test("real genesis ledger validates; independent lib hash matches the one-shot output", () => {
+test("real ledger validates; genesis record immutable; lib hash matches one-shot", () => {
   const result = validateLedgerText(readFileSync(REAL_LEDGER, "utf8"));
   assert.equal(result.ok, true, result.errors.join("; "));
   assert.equal(result.state, "product");
-  assert.equal(result.head, REAL_HEAD);
   const records = result.records;
-  assert.equal(records.length, 1);
+  // The live ledger is append-only: the head moves with every reservation,
+  // so the frozen invariants are the GENESIS record and chain integrity.
+  assert.ok(records.length >= 1);
   const genesis = records[0];
+  assert.equal(genesis.recordId, "m2br-0001");
+  assert.equal(genesis.previousRecordHash, ZERO_HASH);
   assert.equal(genesis.kind, "planning-backfill");
   assert.equal(genesis.actualPersonHours, 8.25);
   assert.equal(genesis.productRemaining, 63.75);
   assert.equal(genesis.closureRemaining, 8);
+  // Head is always the last record's own hash (chain closure).
+  assert.equal(result.head, records.at(-1).recordHash);
   // Independent recomputation: the lib re-derives every hash with its own
   // canonical encoder and the fixed domain tag, so agreement with the
   // bootstrap one-shot pins the domain tag against drift in either copy.

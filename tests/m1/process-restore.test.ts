@@ -78,6 +78,7 @@ async function fixture(
       checkpointSchema: "checkpoint-v1",
       capabilities: ["tool.read"],
       effectOperations: ["fixture.commit"],
+        intentDescriptors: [],
     },
     { ...closure, entryId, executable },
   );
