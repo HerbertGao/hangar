@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "m2-burn-ledger-evidence-v1",
+  "bootstrap": {
+    "command": "node scripts/bootstrap-m2-burn-ledger.mjs",
+    "nodeVersion": "v22.23.1",
+    "scriptSha256": "a236ad1248565d022b5d5ae44a7c1bea0d9581cbb75d675019f12473a20b9ad0",
+    "executedAtUtc": "2026-08-23T09:36:15.887Z",
+    "oneShotGuard": "refuses when ledger/m2-burn-ledger.json already exists"
+  },
+  "backfillDecision": {
+    "ownerDecision": "B = wall-clock window from M2 planning change creation to bootstrap execution, rounded up to the next quarter hour (conservative upper bound); covers all M2 planning, review-loop, and this bootstrap one-shot effort",
+    "planningStartUtc": "2026-08-23T01:35:19.587Z",
+    "bootstrapEndUtc": "2026-08-23T09:36:15.887Z",
+    "wallClockHours": 8.02,
+    "backfilledPersonHours": 8.25,
+    "productBudgetHours": 72,
+    "totalBudgetHours": 80,
+    "productRemaining": 63.75,
+    "closureRemaining": 8,
+    "state": "product"
+  },
+  "sources": [
+    {
+      "kind": "git-commit",
+      "ref": "4b7b459c5223564fbb92df4373257a5204e73431",
+      "observed": "2026-08-23T01:27:36Z",
+      "note": "M1 completion commit immediately preceding M2 planning"
+    },
+    {
+      "kind": "file-mtime",
+      "path": "openspec/changes/implement-m2-pi-control-slice/.openspec.yaml",
+      "observed": "2026-08-23T01:35:19.587Z",
+      "note": "M2 planning change creation — planning window start"
+    },
+    {
+      "kind": "file-mtime",
+      "path": "openspec/changes/implement-m2-pi-control-slice/tasks.md",
+      "observed": "2026-08-23T07:35:47.460Z",
+      "note": "last M2 planning artifact edit (design 07:29, specs 07:38)"
+    },
+    {
+      "kind": "session-files",
+      "path": "*-pi-automode.jsonl (ignored; 78 files)",
+      "observed": "2026-08-23T01:41:24Z..2026-08-23T07:38:20Z",
+      "note": "planning/review agent session activity window"
+    },
+    {
+      "kind": "review-loop",
+      "ref": "CR 0cf5a050-aa34-4b1 APPROVE + RC 2c473f6c-2af9-409 APPROVE",
+      "observed": "2026-08-23T07:38Z (final closure; no post-approval edits)",
+      "note": "final planning review state — planning/review complete before apply"
+    }
+  ]
+}

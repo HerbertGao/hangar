@@ -1,0 +1,12 @@
+{
+  "name": "hangar",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@earendil-works/pi-coding-agent": "0.84.2",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}
