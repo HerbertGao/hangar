@@ -158,9 +158,14 @@ declare module "node:http" {
     resume(): void;
   }
   export interface ServerResponse {
-    writeHead(status: number, headers?: Record<string, string>): void;
+    writeHead(
+      status: number,
+      headers?: Record<string, string | readonly string[]>,
+    ): void;
+    write(body: string): boolean;
     end(body?: string): void;
     destroy(): void;
+    on(event: "close", listener: () => void): void;
   }
   export interface Server {
     listen(port: number, callback?: () => void): Server;

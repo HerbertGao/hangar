@@ -35,12 +35,16 @@ export interface StoreOptions {
   readonly fence: WriteFence;
   readonly beforeCommit?: () => void;
   readonly afterCommitBeforeAck?: () => void;
+  /** Test/fault injection: commit remains durable while wake is dropped. */
+  readonly suppressCommitNotification?: () => boolean;
 }
 
 const ZERO_HASH = "0".repeat(64);
+const STORE_SCHEMA_VERSION = "m2-effect-subject-v1";
 const KNOWN_MAIN_SCHEMA_OBJECTS = new Set([
   "store_meta",
   "commands",
+  "effects",
   "source_facts",
   "projections",
 ]);
@@ -103,12 +107,103 @@ function factHash(
   });
 }
 
+function applyEffectProjection(db: DatabaseSync, draft: FactDraft): void {
+  const value = draft.payload;
+  const string = (field: string): string => {
+    const candidate = value[field];
+    if (typeof candidate !== "string") throw new Error("invalid_effect_fact");
+    return candidate;
+  };
+  const number = (field: string): number => {
+    const candidate = value[field];
+    if (!Number.isSafeInteger(candidate))
+      throw new Error("invalid_effect_fact");
+    return candidate as number;
+  };
+  if (draft.factKind === "effect-intent") {
+    const runId = string("runId");
+    const effectId = string("effectId");
+    db.prepare(
+      "INSERT INTO effects(" +
+        "effect_identity, effect_id, subject_kind, owner_id," +
+        "run_id, action_id, intent_key, intent_generation," +
+        "payload_digest, state" +
+        ") VALUES (?, ?, 'run-action', ?, ?, ?, ?, ?, ?, 'pending')",
+    ).run(
+      `run-action:${runId}:${effectId}`,
+      effectId,
+      runId,
+      runId,
+      string("actionId"),
+      string("intentKey"),
+      number("intentGeneration"),
+      string("payloadDigest"),
+    );
+    return;
+  }
+  if (draft.factKind === "control-command-effect-created") {
+    const effectId = string("effectId");
+    db.prepare(
+      "INSERT INTO effects(" +
+        "effect_identity, effect_id, subject_kind, owner_id," +
+        "control_interaction_identity, delivery_key, delivery_generation, mapping_version," +
+        "target, payload_base64url, payload_digest, state" +
+        ") VALUES (?, ?, 'control-command', ?, ?, ?, ?, ?, ?, ?, ?, 'approved')",
+    ).run(
+      `control-command:${effectId}`,
+      effectId,
+      string("controlInteractionIdentity"),
+      string("controlInteractionIdentity"),
+      string("deliveryKey"),
+      number("deliveryGeneration"),
+      number("mappingVersion"),
+      string("target"),
+      string("payloadBase64url"),
+      string("payloadDigest"),
+    );
+    return;
+  }
+  const runKinds: Readonly<Record<string, string>> = {
+    "effect-approved": "approved",
+    "effect-claimed": "claimed",
+    "effect-dispatch-started": "dispatch-started",
+    "effect-unknown": "unknown",
+  };
+  const controlKinds: Readonly<Record<string, string>> = {
+    "control-effect-claimed": "claimed",
+    "control-effect-dispatch-started": "dispatch-started",
+    "control-effect-unknown": "unknown",
+  };
+  let identity: string | undefined;
+  let nextState = runKinds[draft.factKind];
+  if (nextState)
+    identity = `run-action:${string("runId")}:${string("effectId")}`;
+  else if ((nextState = controlKinds[draft.factKind]))
+    identity = `control-command:${string("effectId")}`;
+  else if (draft.factKind === "effect-outcome") {
+    identity = `run-action:${string("runId")}:${string("effectId")}`;
+    nextState = string("outcome");
+  } else if (draft.factKind === "control-effect-outcome") {
+    identity = `control-command:${string("effectId")}`;
+    nextState = string("outcome");
+  } else if (draft.factKind === "local-dispatch-result") {
+    identity = `run-action:${string("runId")}:${string("effectId")}`;
+    nextState = "not-committed";
+  }
+  if (!identity) return;
+  const changed = db
+    .prepare("UPDATE effects SET state = ? WHERE effect_identity = ?")
+    .run(nextState, identity).changes;
+  if (changed !== 1) throw new Error("missing_effect_projection");
+}
+
 function createSchema(db: DatabaseSync): void {
   db.exec(`
     PRAGMA foreign_keys = ON;
     PRAGMA busy_timeout = 2000;
     CREATE TABLE IF NOT EXISTS store_meta (
       singleton INTEGER PRIMARY KEY CHECK (singleton = 1),
+      schema_version TEXT NOT NULL,
       database_identity TEXT NOT NULL,
       authority_identity TEXT NOT NULL,
       target_id TEXT NOT NULL,
@@ -129,6 +224,39 @@ function createSchema(db: DatabaseSync): void {
       precondition_digest TEXT NOT NULL,
       result_json TEXT NOT NULL,
       PRIMARY KEY (actor_subject_id, command_kind, target_id, idempotency_key)
+    );
+    CREATE TABLE IF NOT EXISTS effects (
+      effect_identity TEXT PRIMARY KEY,
+      effect_id TEXT NOT NULL,
+      subject_kind TEXT NOT NULL CHECK(subject_kind IN ('run-action', 'control-command')),
+      owner_id TEXT NOT NULL,
+      run_id TEXT,
+      action_id TEXT,
+      intent_key TEXT,
+      intent_generation INTEGER,
+      control_interaction_identity TEXT,
+      delivery_key TEXT,
+      delivery_generation INTEGER,
+      mapping_version INTEGER,
+      target TEXT,
+      payload_base64url TEXT,
+      payload_digest TEXT NOT NULL,
+      state TEXT NOT NULL,
+      CHECK(
+        (subject_kind = 'run-action' AND
+         run_id IS NOT NULL AND action_id IS NOT NULL AND intent_key IS NOT NULL AND
+         intent_generation IS NOT NULL AND control_interaction_identity IS NULL AND
+         delivery_key IS NULL AND delivery_generation IS NULL AND mapping_version IS NULL AND
+         target IS NULL AND payload_base64url IS NULL)
+        OR
+        (subject_kind = 'control-command' AND
+         run_id IS NULL AND action_id IS NULL AND intent_key IS NULL AND
+         intent_generation IS NULL AND control_interaction_identity IS NOT NULL AND
+         delivery_key IS NOT NULL AND delivery_generation IS NOT NULL AND mapping_version IS NOT NULL AND
+         target IS NOT NULL AND payload_base64url IS NOT NULL)
+      ),
+      UNIQUE(run_id, intent_key, intent_generation),
+      UNIQUE(control_interaction_identity, delivery_key, delivery_generation)
     );
     CREATE TABLE IF NOT EXISTS source_facts (
       fact_seq INTEGER PRIMARY KEY,
@@ -250,6 +378,7 @@ class SQLiteControlStore implements ControlStore {
   readonly #db: DatabaseSync;
   readonly #options: StoreOptions;
   readonly #physicalInstanceId: string;
+  readonly #commitListeners = new Set<() => void>();
 
   constructor(path: string, options: StoreOptions) {
     this.#options = options;
@@ -257,9 +386,7 @@ class SQLiteControlStore implements ControlStore {
     const file = statSync(path, { bigint: true });
     this.#physicalInstanceId = `${file.dev}:${file.ino}`;
     try {
-      this.#db.exec(
-        "PRAGMA busy_timeout = 2000; PRAGMA main.locking_mode = EXCLUSIVE",
-      );
+      this.#db.exec("PRAGMA busy_timeout = 2000");
       const existingObjects = this.#db
         .prepare(
           "SELECT type, name FROM sqlite_master WHERE name NOT LIKE 'sqlite_%' ORDER BY type, name",
@@ -268,6 +395,17 @@ class SQLiteControlStore implements ControlStore {
       const hasMeta = existingObjects.some(
         (row) => text(row, "name") === "store_meta",
       );
+      if (hasMeta) {
+        const columns = this.#db.prepare("PRAGMA table_info(store_meta)").all();
+        if (!columns.some((row) => text(row, "name") === "schema_version"))
+          throw new Error("migration_required");
+        const schema = this.#db
+          .prepare("SELECT schema_version FROM store_meta WHERE singleton = 1")
+          .get();
+        if (!schema || text(schema, "schema_version") !== STORE_SCHEMA_VERSION)
+          throw new Error("migration_required");
+      }
+      this.#db.exec("PRAGMA main.locking_mode = EXCLUSIVE");
       if (!hasMeta && existingObjects.length !== 0)
         throw new Error("missing_database_identity");
       if (
@@ -364,12 +502,13 @@ class SQLiteControlStore implements ControlStore {
         this.#db
           .prepare(
             `INSERT INTO store_meta(
-               singleton, database_identity, authority_identity, target_id,
-               authority_generation, physical_instance_id, revision,
+               singleton, schema_version, database_identity, authority_identity,
+               target_id, authority_generation, physical_instance_id, revision,
                head_seq, head_hash
-             ) VALUES (1, ?, ?, ?, ?, ?, 0, 0, ?)`,
+             ) VALUES (1, ?, ?, ?, ?, ?, ?, 0, 0, ?)`,
           )
           .run(
+            STORE_SCHEMA_VERSION,
             options.fence.databaseIdentity,
             authorityIdentity,
             options.fence.targetId,
@@ -453,6 +592,21 @@ class SQLiteControlStore implements ControlStore {
       facts,
       projections,
     };
+  }
+
+  subscribeCommits(listener: () => void): () => void {
+    this.#commitListeners.add(listener);
+    return () => this.#commitListeners.delete(listener);
+  }
+
+  #notifyCommit(): void {
+    if (this.#options.suppressCommitNotification?.()) return;
+    for (const listener of this.#commitListeners)
+      try {
+        listener();
+      } catch {
+        // Best-effort wake: durable facts/head remain authoritative.
+      }
   }
 
   readSnapshot(): Result<StoreSnapshot> {
@@ -612,6 +766,7 @@ class SQLiteControlStore implements ControlStore {
             JSON.stringify(draft.payload),
           );
         previousHash = hash;
+        applyEffectProjection(this.#db, draft);
       }
       this.#db
         .prepare(
@@ -640,6 +795,7 @@ class SQLiteControlStore implements ControlStore {
         );
       this.#options.beforeCommit?.();
       this.#db.exec("COMMIT");
+      if (decision.value.facts.length > 0) this.#notifyCommit();
       this.#options.afterCommitBeforeAck?.();
       return storedResult;
     } catch {
@@ -784,6 +940,62 @@ class SQLiteControlStore implements ControlStore {
 
   close(): void {
     this.#db.close();
+  }
+}
+
+export interface M2ControlRestorePreflight {
+  readonly connectorEnabled: false;
+  readonly finalControlDeliveries: number;
+}
+
+/**
+ * Read-only restore gate. It never creates/attaches an authority DB, mutates
+ * the backup, synthesizes ownerAgent membership, or enables the connector.
+ */
+export function preflightM2ControlRestore(
+  backupPath: string,
+): Result<M2ControlRestorePreflight> {
+  try {
+    statSync(backupPath, { bigint: true });
+    const db = new DatabaseSync(backupPath);
+    try {
+      const objects = db
+        .prepare(
+          "SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name",
+        )
+        .all()
+        .map((row) => text(row, "name"));
+      if (!objects.includes("store_meta") || !objects.includes("effects"))
+        return fail("migration_required");
+      const columns = db.prepare("PRAGMA table_info(store_meta)").all();
+      if (!columns.some((row) => text(row, "name") === "schema_version"))
+        return fail("migration_required");
+      const schema = db
+        .prepare("SELECT schema_version FROM store_meta WHERE singleton = 1")
+        .get();
+      if (!schema || text(schema, "schema_version") !== STORE_SCHEMA_VERSION)
+        return fail("migration_required");
+      const nonFinal = db
+        .prepare(
+          "SELECT effect_id FROM effects WHERE subject_kind = 'control-command' " +
+            "AND state NOT IN ('committed','not-committed') LIMIT 1",
+        )
+        .get();
+      if (nonFinal) return fail("unsupported_control_delivery_restore");
+      const count = db
+        .prepare(
+          "SELECT count(*) AS count FROM effects WHERE subject_kind = 'control-command'",
+        )
+        .get();
+      return ok({
+        connectorEnabled: false,
+        finalControlDeliveries: count ? integer(count, "count") : 0,
+      });
+    } finally {
+      db.close();
+    }
+  } catch {
+    return fail("invalid_state");
   }
 }
 

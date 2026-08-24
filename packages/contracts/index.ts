@@ -16,6 +16,10 @@ export type ErrorKind =
   | "stale_epoch"
   | "stale_authority"
   | "terminal_conflict"
+  | "expired"
+  | "migration_required"
+  | "unsupported_control_delivery_restore"
+  | "channel_evidence_conflict"
   | "cursor_unavailable"
   | "unknown_effect";
 
@@ -47,7 +51,7 @@ export interface IntentDescriptor {
 export interface AgentSpec {
   readonly agentId: string;
   readonly goal: string;
-  readonly harnessKind: "fake" | "legacy-process";
+  readonly harnessKind: "fake" | "legacy-process" | "pi-sdk";
   readonly checkpointSchema: string;
   readonly capabilities: readonly string[];
   readonly effectOperations: readonly string[];
@@ -123,6 +127,7 @@ export interface PendingApprovalSummary {
   readonly runId: string;
   readonly state: "pending";
   readonly operation: string;
+  readonly expiresAtUnixMs?: number;
 }
 
 export interface SanitizedRunSummary {
@@ -209,6 +214,8 @@ export type AttemptState =
   | "succeeded"
   | "failed"
   | "cancelled";
+export type EffectSubjectKind = "run-action" | "control-command";
+
 export type EffectState =
   | "pending"
   | "approved"
@@ -240,7 +247,7 @@ export interface ToolObservationInput {
 }
 
 export interface EffectApprovalInput {
-  readonly decision: "approved";
+  readonly decision: "approved" | "denied";
   readonly releaseId: string;
   readonly activationEpoch: number;
   readonly expiresAtUnixMs: number;
@@ -305,6 +312,77 @@ export interface RunView {
   readonly process?: ProcessIdentity;
   readonly containmentReaped: boolean;
   readonly grantRevoked: boolean;
+}
+
+export interface ControlCommandDeliveryInput {
+  readonly connectorInstanceId: string;
+  readonly serviceAuthorityId: string;
+  readonly updateId: string;
+  readonly updateOccurrenceKey: string;
+  readonly claimsDigest: string;
+  readonly rawUpdateDigest: string;
+  readonly controlInteractionIdentity: string;
+  readonly deliveryKey: string;
+  readonly deliveryGeneration: number;
+  readonly mappingVersion: number;
+  readonly target: string;
+  readonly deliveryOperation: string;
+  readonly responseKind: string;
+  readonly payloadBytes: Uint8Array;
+  readonly payloadDigest: string;
+}
+
+export type ControlCommandDeliveryResult =
+  | {
+      readonly status: "effect";
+      readonly effectId: string;
+      readonly state: EffectState;
+      readonly outcome: string | null;
+    }
+  | { readonly status: "denied"; readonly error: ErrorKind };
+
+export interface TelegramPolledUpdate {
+  readonly rawUpdate: Uint8Array;
+  readonly updateInteractionRef: string;
+}
+
+export interface TelegramDeliveryView {
+  readonly effectId: string;
+  readonly state: EffectState;
+  readonly sanitizedSummary: string | null;
+}
+
+export interface TelegramGatewayPort {
+  pollUpdates(input: {
+    readonly serviceAuthorityRef: string;
+    readonly cursor: string | null;
+    readonly limit: number;
+  }): Promise<{
+    readonly updates: readonly TelegramPolledUpdate[];
+    readonly nextCursor: string | null;
+  }>;
+  requestDelivery(input: {
+    readonly serviceAuthorityRef: string;
+    readonly updateInteractionRef: string;
+    readonly controlInteractionRef: string;
+    readonly responseKind: string;
+    readonly deliveryKey: string;
+    readonly deliveryOperation: string;
+    readonly payloadBytes: Uint8Array;
+    readonly payloadDigest: string;
+  }): Promise<
+    | {
+        readonly status: "effect";
+        readonly effectId: string;
+        readonly state: EffectState;
+        readonly outcome: string | null;
+      }
+    | { readonly status: "denied"; readonly error: ErrorKind }
+  >;
+  readDelivery(input: {
+    readonly serviceAuthorityRef: string;
+    readonly effectId: string;
+  }): Promise<TelegramDeliveryView>;
 }
 
 export interface SourceFact {
@@ -382,7 +460,12 @@ export function validateControlMetadataInput(
   )
     return failInput();
   const trigger = record.trigger;
-  if (typeof trigger !== "string" || !ASCII_ID.test(trigger))
+  if (
+    typeof trigger !== "string" ||
+    trigger.length === 0 ||
+    new TextEncoder().encode(trigger).byteLength > 128 ||
+    /[\u0000-\u001f\u007f]/.test(trigger)
+  )
     return failInput();
   return ok({ trigger });
 }
@@ -496,7 +579,7 @@ export function compileRelease(
   );
   assertString(inputSpec.agentId, "agent_id");
   assertString(inputSpec.goal, "goal");
-  if (!["fake", "legacy-process"].includes(inputSpec.harnessKind))
+  if (!["fake", "legacy-process", "pi-sdk"].includes(inputSpec.harnessKind))
     throw new TypeError("invalid_harness_kind");
   assertString(inputSpec.checkpointSchema, "checkpoint_schema");
   assertStringList(inputSpec.capabilities, "capabilities");

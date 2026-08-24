@@ -78,7 +78,7 @@ async function fixture(
       checkpointSchema: "checkpoint-v1",
       capabilities: ["tool.read"],
       effectOperations: ["fixture.commit"],
-        intentDescriptors: [],
+      intentDescriptors: [],
     },
     { ...closure, entryId, executable },
   );
@@ -572,7 +572,7 @@ test("independent restore authority fences source and competing target", async (
           authorityPath: current.authorityPath,
           fence: wrongDatabaseFence,
         }),
-      /database_identity_mismatch/,
+      /migration_required/,
     );
     const partialAfter = new DatabaseSync(partialPath);
     assert.deepEqual(

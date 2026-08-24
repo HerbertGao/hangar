@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { connect } from "node:net";
 import type { Server } from "node:http";
-import test from "../m0/scenario-owner.mjs";
+import test from "./scenario-test.ts";
 import {
   LIMITS,
   analyzeRequestHead,
@@ -439,6 +439,7 @@ const refSecret = "unit-test-ref-secret";
 const baseClaims = {
   schemaVersion: "telegram-update-ref-v1" as const,
   connectorInstanceId: "connector-1",
+  adapterInstanceId: "adapter-1",
   serviceAuthorityId: "authority-1",
   serviceCredentialGeneration: 1,
   updateId: "1001",

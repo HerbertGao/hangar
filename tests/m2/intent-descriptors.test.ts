@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "../m0/scenario-owner.mjs";
+import test from "./scenario-test.ts";
 import {
   compileRelease,
   digestJson,
@@ -111,8 +111,9 @@ test.scenarios(
       { trigger: { id: "t" } },
       // array-shaped body
       ["t"],
-      // invalid identifier characters
-      { trigger: "bad trigger!" },
+      // control characters and >128 UTF-8 bytes
+      { trigger: "bad\ntrigger" },
+      { trigger: "界".repeat(43) },
     ];
     for (const candidate of rejected)
       assert.equal(validateControlMetadataInput(candidate).ok, false);

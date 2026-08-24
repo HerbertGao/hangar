@@ -220,14 +220,26 @@ test("run query returns minimal committed projection with pending approvals", as
   try {
     const result = value(f.runtime.control.readRun(authority, "run-1"));
     assert.equal(result.value.run.runId, "run-1");
-    assert.deepEqual(result.value.pendingApprovals, [
+    assert.equal(result.value.pendingApprovals.length, 1);
+    const pending = result.value.pendingApprovals[0];
+    assert.deepEqual(
+      {
+        approvalId: pending.approvalId,
+        runId: pending.runId,
+        state: pending.state,
+        operation: pending.operation,
+      },
       {
         approvalId: "effect-1",
         runId: "run-1",
         state: "pending",
         operation: "fixture.commit",
       },
-    ]);
+    );
+    assert.ok(
+      Number.isSafeInteger(pending.expiresAtUnixMs) &&
+        pending.expiresAtUnixMs! > 0,
+    );
     const serialized = JSON.stringify(result);
     for (const forbidden of [
       "sessionId",

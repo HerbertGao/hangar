@@ -1,4 +1,5 @@
-import { randomUUID } from "node:crypto";
+import { Buffer } from "node:buffer";
+import { createHash, randomUUID } from "node:crypto";
 import { types as utilTypes } from "node:util";
 
 import {
@@ -15,6 +16,8 @@ import {
   type AttemptToken,
   type CheckpointInput,
   type CommandMeta,
+  type ControlCommandDeliveryInput,
+  type ControlCommandDeliveryResult,
   type EffectApprovalInput,
   type EffectIntentInput,
   type EffectState,
@@ -47,7 +50,7 @@ export interface FactDraft {
 }
 
 export interface ProjectionRow {
-  readonly family: "release" | "activation" | "run";
+  readonly family: "release" | "activation" | "run" | "effect";
   readonly entityId: string;
   readonly sourceFactSeq: number;
   readonly payload: JsonValue;
@@ -108,6 +111,19 @@ export interface ControlOptions {
     release: AgentRelease,
     agentId: string,
   ) => boolean;
+  readonly timeAuthority?: { nowUnixMs(): number };
+  readonly approvalTtlMs?: number;
+  readonly effectAuthorityValid?: (runId: string, effectId: string) => boolean;
+  /** Pre-Effect policy only: no pending Approval branch for control-command. */
+  readonly controlCommandPolicy?: (
+    input: ControlCommandDeliveryInput,
+  ) => "allow" | "deny";
+  readonly controlDeliveryFenceValid?: (input: {
+    connectorInstanceId: string;
+    serviceAuthorityId: string;
+    deliveryGeneration: number;
+    mappingVersion: number;
+  }) => boolean;
 }
 
 export interface OutcomeAcceptor {
@@ -128,6 +144,8 @@ export interface ControlStore {
     expectedHeadSeq: number,
     rows: readonly ProjectionRow[],
   ): Result<null>;
+  /** Best-effort wake only; subscribers must always reread durable head. */
+  subscribeCommits(listener: () => void): () => void;
   close(): void;
 }
 
@@ -138,14 +156,48 @@ interface InternalApproval extends EffectApprovalInput {
 interface InternalEffect {
   state: EffectState;
   approval?: InternalApproval;
+  approvalDecision?: "approved" | "denied";
+  approvalDisposition?: "expired";
+  approvalExpiresAtUnixMs?: number;
   approvalSuperseded?: boolean;
-  localDispatchResult?: "claim-revoked";
+  gatewayWake?: boolean;
+  localDispatchResult?:
+    | "denied"
+    | "claim-expired"
+    | "claim-revoked"
+    | "transport-not-started";
   operation: string;
   actionId: string;
   originAttempt: number;
   intentKey: string;
   intentGeneration: number;
   payloadDigest: string;
+}
+
+interface InternalControlEffect {
+  effectId: string;
+  state: EffectState;
+  connectorInstanceId: string;
+  serviceAuthorityId: string;
+  updateOccurrenceKey: string;
+  controlInteractionIdentity: string;
+  deliveryKey: string;
+  deliveryGeneration: number;
+  mappingVersion: number;
+  target: string;
+  payloadBase64url: string;
+  payloadDigest: string;
+  deliveryOperation: string;
+  responseKind: string;
+  claimsDigest: string;
+  rawUpdateDigest: string;
+  outcome?: "committed" | "not-committed";
+}
+
+interface TelegramOccurrence {
+  claimsDigest: string;
+  rawUpdateDigest: string;
+  quarantined: boolean;
 }
 
 interface InternalToolObservation extends ToolObservationInput {
@@ -208,12 +260,18 @@ interface ControlState {
     { releaseId: string; epoch: number; mode: "active" | "shadow" }
   >;
   runs: Map<string, InternalRun>;
+  controlEffects: Map<string, InternalControlEffect>;
+  telegramOccurrences: Map<string, TelegramOccurrence>;
 }
 
 const GATEWAY = Symbol("effect-gateway");
 const OUTCOME_OWNER = Symbol("domain-outcome-owner");
 const PROCESS_OWNER = Symbol("trusted-process-owner");
 const CANCEL_OWNER = Symbol("trusted-cancel-owner");
+const PI_CHILD_OWNER = Symbol("trusted-pi-child-owner");
+const SYSTEM_TIME_AUTHORITY = {
+  nowUnixMs: (): number => new Date().getTime(),
+};
 const HEX_64 = /^[0-9a-f]{64}$/;
 
 // SAFETY: the trusted store accepts fact drafts only from this module, and each
@@ -424,6 +482,49 @@ export const attemptPromptDigest = (
     release.closure.members,
   ]);
 
+export const controlDeliveryOccurrenceKey = (
+  connectorInstanceId: string,
+  serviceAuthorityId: string,
+  updateId: string,
+): string =>
+  digestJson([
+    "telegram-update-v1",
+    connectorInstanceId,
+    serviceAuthorityId,
+    updateId,
+  ]);
+
+export const controlDeliveryIdempotencyKey = (
+  updateOccurrenceKey: string,
+): string => digestJson(["telegram-control-v1", updateOccurrenceKey]);
+
+export function normalizeControlDeliveryInput(
+  input: ControlCommandDeliveryInput,
+): Readonly<Record<string, JsonValue>> {
+  if (
+    createHash("sha256").update(input.payloadBytes).digest("hex") !==
+    input.payloadDigest
+  )
+    throw new TypeError("invalid_payload_digest");
+  return asPayload({
+    connectorInstanceId: input.connectorInstanceId,
+    serviceAuthorityId: input.serviceAuthorityId,
+    updateId: input.updateId,
+    updateOccurrenceKey: input.updateOccurrenceKey,
+    claimsDigest: input.claimsDigest,
+    rawUpdateDigest: input.rawUpdateDigest,
+    controlInteractionIdentity: input.controlInteractionIdentity,
+    deliveryKey: input.deliveryKey,
+    deliveryGeneration: input.deliveryGeneration,
+    mappingVersion: input.mappingVersion,
+    target: input.target,
+    deliveryOperation: input.deliveryOperation,
+    responseKind: input.responseKind,
+    payloadBase64url: Buffer.from(input.payloadBytes).toString("base64url"),
+    payloadDigest: input.payloadDigest,
+  });
+}
+
 function attemptToken(runId: string, attempt: number): AttemptToken {
   return {
     runId,
@@ -438,6 +539,8 @@ function reduceFacts(facts: readonly SourceFact[]): ControlState {
     releases: new Map(),
     activations: new Map(),
     runs: new Map(),
+    controlEffects: new Map(),
+    telegramOccurrences: new Map(),
   };
   for (const fact of facts) {
     switch (fact.factKind) {
@@ -551,6 +654,57 @@ function reduceFacts(facts: readonly SourceFact[]): ControlState {
           });
         break;
       }
+      case "telegram-occurrence-bound": {
+        const value = payload<{
+          updateOccurrenceKey: string;
+          claimsDigest: string;
+          rawUpdateDigest: string;
+        }>(fact);
+        state.telegramOccurrences.set(value.updateOccurrenceKey, {
+          claimsDigest: value.claimsDigest,
+          rawUpdateDigest: value.rawUpdateDigest,
+          quarantined: false,
+        });
+        break;
+      }
+      case "telegram-occurrence-quarantined": {
+        const value = payload<{ updateOccurrenceKey: string }>(fact);
+        const occurrence = state.telegramOccurrences.get(
+          value.updateOccurrenceKey,
+        );
+        if (occurrence) occurrence.quarantined = true;
+        break;
+      }
+      case "control-command-effect-created": {
+        const value = payload<InternalControlEffect>(fact);
+        state.controlEffects.set(value.effectId, { ...value });
+        break;
+      }
+      case "control-effect-claimed": {
+        const value = payload<{ effectId: string }>(fact);
+        state.controlEffects.get(value.effectId)!.state = "claimed";
+        break;
+      }
+      case "control-effect-dispatch-started": {
+        const value = payload<{ effectId: string }>(fact);
+        state.controlEffects.get(value.effectId)!.state = "dispatch-started";
+        break;
+      }
+      case "control-effect-unknown": {
+        const value = payload<{ effectId: string }>(fact);
+        state.controlEffects.get(value.effectId)!.state = "unknown";
+        break;
+      }
+      case "control-effect-outcome": {
+        const value = payload<{
+          effectId: string;
+          outcome: "committed" | "not-committed";
+        }>(fact);
+        const effect = state.controlEffects.get(value.effectId)!;
+        effect.state = value.outcome;
+        effect.outcome = value.outcome;
+        break;
+      }
       case "effect-intent": {
         const value = payload<{
           runId: string;
@@ -586,6 +740,51 @@ function reduceFacts(facts: readonly SourceFact[]): ControlState {
         effect.approval = value.approval;
         break;
       }
+      case "approval-opened": {
+        const value = payload<{
+          runId: string;
+          effectId: string;
+          expiresAtUnixMs: number;
+        }>(fact);
+        state.runs
+          .get(value.runId)!
+          .effects.get(value.effectId)!.approvalExpiresAtUnixMs =
+          value.expiresAtUnixMs;
+        break;
+      }
+      case "approval-decided": {
+        const value = payload<{
+          runId: string;
+          effectId: string;
+          decision: "approved" | "denied";
+          disposition?: "expired";
+          approval?: InternalApproval;
+        }>(fact);
+        const effect = state.runs
+          .get(value.runId)!
+          .effects.get(value.effectId)!;
+        effect.approvalDecision = value.decision;
+        effect.approvalDisposition = value.disposition;
+        if (value.approval) {
+          effect.approval = value.approval;
+          effect.state = "approved";
+        }
+        break;
+      }
+      case "gateway-wake": {
+        const value = payload<{ runId: string; effectId: string }>(fact);
+        state.runs
+          .get(value.runId)!
+          .effects.get(value.effectId)!.gatewayWake = true;
+        break;
+      }
+      case "gateway-wake-consumed": {
+        const value = payload<{ runId: string; effectId: string }>(fact);
+        state.runs
+          .get(value.runId)!
+          .effects.get(value.effectId)!.gatewayWake = false;
+        break;
+      }
       case "approval-superseded": {
         const value = payload<{ runId: string; effectId: string }>(fact);
         const effect = state.runs
@@ -599,7 +798,11 @@ function reduceFacts(facts: readonly SourceFact[]): ControlState {
         const value = payload<{
           runId: string;
           effectId: string;
-          status: "claim-revoked";
+          status:
+            | "denied"
+            | "claim-expired"
+            | "claim-revoked"
+            | "transport-not-started";
         }>(fact);
         const effect = state.runs
           .get(value.runId)!
@@ -812,6 +1015,18 @@ function project(state: ControlState, sourceFactSeq: number): ProjectionRow[] {
       entityId: id,
       sourceFactSeq,
       payload: asJson(view(run)),
+    })),
+    ...[...state.controlEffects].map(([id, effect]) => ({
+      family: "effect" as const,
+      entityId: id,
+      sourceFactSeq,
+      payload: asJson({
+        effectId: effect.effectId,
+        subjectKind: "control-command",
+        state: effect.state,
+        target: effect.target,
+        payloadDigest: effect.payloadDigest,
+      }),
     })),
   ].sort(
     (left, right) =>
@@ -1026,6 +1241,15 @@ export class Control {
   constructor(store: ControlStore, options: ControlOptions = {}) {
     this.#store = store;
     this.#options = options;
+  }
+
+  #now(): number {
+    const value = (
+      this.#options.timeAuthority ?? SYSTEM_TIME_AUTHORITY
+    ).nowUnixMs();
+    if (!Number.isSafeInteger(value) || value < 0)
+      throw new TypeError("invalid_time_authority");
+    return value;
   }
 
   #queryAuthority(
@@ -1278,6 +1502,56 @@ export class Control {
         decoded,
       );
     });
+  }
+
+  admitIntentFromWire(
+    authorityInput: AuthorityContext,
+    idempotencyKey: string,
+    ifMatch: string,
+    input: IntentAdmissionInput,
+  ): Result<IntentAdmissionResult> {
+    const authority = decodeAuthorityContext(authorityInput);
+    if (!authority || !HEX_64.test(ifMatch)) return fail("invalid_input");
+    const snapshot = this.#store.readSnapshot();
+    if (!snapshot.ok) return snapshot;
+    try {
+      const state = reduceFacts(snapshot.value.facts);
+      const activation = state.activations.get(input.agentId);
+      const release = activation
+        ? state.releases.get(activation.releaseId)
+        : undefined;
+      const descriptor = release?.spec.intentDescriptors.find(
+        ({ intentId }) => intentId === input.intentId,
+      );
+      if (!activation || !release || !descriptor) return fail("not_found");
+      if (release.releaseId !== ifMatch) return fail("stale_epoch");
+      const actor = actorSubjectId(authority);
+      const runId = intentRunId(
+        actor,
+        input.agentId,
+        input.intentId,
+        idempotencyKey,
+      );
+      return this.admitIntent(
+        authority,
+        commandMeta(
+          actor,
+          "admit-intent",
+          runId,
+          idempotencyKey,
+          input,
+          {
+            releaseId: release.releaseId,
+            activationEpoch: activation.epoch,
+            inputSchemaDigest: descriptor.inputSchema.digest,
+          },
+          digestJson(authority),
+        ),
+        input,
+      );
+    } catch {
+      return fail("invalid_state");
+    }
   }
 
   admitIntent(
@@ -1767,15 +2041,28 @@ export class Control {
             : fail("idempotency_conflict");
         }
         if (sameIntent) return fail("idempotency_conflict");
-        drafts.push({
-          aggregateId: token.runId,
-          factKind: "effect-intent",
-          payload: asPayload({
-            runId: token.runId,
-            attempt: token.attempt,
-            ...decoded.effect,
-          }),
-        });
+        const expiresAtUnixMs =
+          this.#now() + (this.#options.approvalTtlMs ?? 60_000);
+        drafts.push(
+          {
+            aggregateId: token.runId,
+            factKind: "effect-intent",
+            payload: asPayload({
+              runId: token.runId,
+              attempt: token.attempt,
+              ...decoded.effect,
+            }),
+          },
+          {
+            aggregateId: token.runId,
+            factKind: "approval-opened",
+            payload: asPayload({
+              runId: token.runId,
+              effectId: decoded.effect.effectId,
+              expiresAtUnixMs,
+            }),
+          },
+        );
       } else if (decoded.type === "checkpoint") {
         if (decodedMeta.commandKind !== "checkpoint")
           return fail("invalid_input");
@@ -2296,6 +2583,106 @@ export class Control {
     });
   }
 
+  recordPiCleanup(
+    authority: symbol,
+    meta: CommandMeta,
+    token: AttemptToken,
+    cause: "succeeded" | "failed",
+    evidence: {
+      ipcDrained: boolean;
+      stdoutDrained: boolean;
+      stderrDrained: boolean;
+      wholeTreeReaped: boolean;
+      grantRevoked: boolean;
+      outcomeAccepted: boolean;
+    },
+  ): Result<{ runId: string; attempt: number; state: "succeeded" | "failed" }> {
+    if (authority !== PI_CHILD_OWNER) return fail("forbidden");
+    const input = { cause, evidence };
+    const decodedMeta = matchingCommandMeta(
+      meta,
+      "pi-cleanup",
+      token.runId,
+      input,
+      token,
+    );
+    if (!decodedMeta) return fail("invalid_input");
+    if (
+      !evidence.ipcDrained ||
+      !evidence.stdoutDrained ||
+      !evidence.stderrDrained ||
+      !evidence.wholeTreeReaped ||
+      !evidence.grantRevoked ||
+      (cause === "succeeded" && !evidence.outcomeAccepted)
+    )
+      return fail("invalid_state");
+    return this.#transact(decodedMeta, input, (snapshot) => {
+      const run = reduceFacts(snapshot.facts).runs.get(token.runId);
+      if (!run || !matchesStoredToken(run, token)) return fail("stale_attempt");
+      if (run.cancelRequested) return fail("terminal_conflict");
+      if (cause === "succeeded" && !run.acceptedOutcomes.has(token.attempt))
+        return fail("invalid_state");
+      const existing = run.attempts.get(token.attempt);
+      if (["succeeded", "failed"].includes(existing ?? ""))
+        return existing === cause
+          ? plan(snapshot, [], {
+              runId: token.runId,
+              attempt: token.attempt,
+              state: cause,
+            })
+          : fail("terminal_conflict");
+      return plan(
+        snapshot,
+        [
+          {
+            aggregateId: token.runId,
+            factKind: "attempt-settled",
+            payload: asPayload({
+              runId: token.runId,
+              attempt: token.attempt,
+              state: cause,
+            }),
+          },
+          {
+            aggregateId: token.runId,
+            factKind: "containment-reaped",
+            payload: asPayload({ runId: token.runId, attempt: token.attempt }),
+          },
+          {
+            aggregateId: token.runId,
+            factKind: "grant-revoked",
+            payload: asPayload({ runId: token.runId, attempt: token.attempt }),
+          },
+        ],
+        { runId: token.runId, attempt: token.attempt, state: cause },
+      );
+    });
+  }
+
+  cancelFromWire(
+    authority: AuthorityContext,
+    idempotencyKey: string,
+    ifMatch: string,
+    input: { runId: string; reasonCode: "user-requested" },
+  ) {
+    const current = this.readRun(authority, input.runId);
+    if (!current.ok) return current;
+    if (digestJson(current.value.value) !== ifMatch) return fail("stale_epoch");
+    const actor = actorSubjectId(authority);
+    return this.cancel(
+      commandMeta(
+        actor,
+        "cancel-run",
+        input.runId,
+        idempotencyKey,
+        input,
+        { expectedRunDigest: ifMatch },
+        digestJson(authority),
+      ),
+      input,
+    );
+  }
+
   cancel(
     meta: CommandMeta,
     input: { runId: string; reasonCode: "user-requested" },
@@ -2568,12 +2955,18 @@ export class Control {
           : {}),
       };
       const pendingApprovals = [...internal.effects]
-        .filter(([, effect]) => effect.state === "pending")
+        .filter(
+          ([, effect]) =>
+            effect.state === "pending" && effect.approvalDecision === undefined,
+        )
         .map(([approvalId, effect]) => ({
           approvalId,
           runId,
           state: "pending" as const,
           operation: effect.operation,
+          ...(effect.approvalExpiresAtUnixMs
+            ? { expiresAtUnixMs: effect.approvalExpiresAtUnixMs }
+            : {}),
         }))
         .sort((left, right) => left.approvalId.localeCompare(right.approvalId));
       return ok({
@@ -2655,6 +3048,28 @@ export class Control {
     }
   }
 
+  openRunEventCursor(
+    authority: AuthorityContext,
+    runId: string,
+    cursor: string | null = null,
+    options: EventCursorOptions = {},
+  ): Result<ControlEventCursor> {
+    const port = new ControlEventCursor(
+      this,
+      (listener: () => void) => this.#store.subscribeCommits(listener),
+      authority,
+      runId,
+      cursor,
+      options,
+    );
+    const initialized = port.initialize();
+    if (!initialized.ok) {
+      port.close();
+      return initialized;
+    }
+    return ok(port);
+  }
+
   release(releaseId: string): Result<AgentRelease> {
     const snapshot = this.#store.readSnapshot();
     if (!snapshot.ok) return snapshot;
@@ -2722,6 +3137,621 @@ export class Control {
     }
   }
 
+  requestControlCommandDelivery(
+    meta: CommandMeta,
+    input: ControlCommandDeliveryInput,
+  ): Result<ControlCommandDeliveryResult> {
+    const raw = exactRecord(input, [
+      "connectorInstanceId",
+      "serviceAuthorityId",
+      "updateId",
+      "updateOccurrenceKey",
+      "claimsDigest",
+      "rawUpdateDigest",
+      "controlInteractionIdentity",
+      "deliveryKey",
+      "deliveryGeneration",
+      "mappingVersion",
+      "target",
+      "deliveryOperation",
+      "responseKind",
+      "payloadBytes",
+      "payloadDigest",
+    ]);
+    const stringFields = [
+      "connectorInstanceId",
+      "serviceAuthorityId",
+      "updateId",
+      "updateOccurrenceKey",
+      "claimsDigest",
+      "rawUpdateDigest",
+      "controlInteractionIdentity",
+      "deliveryKey",
+      "target",
+      "deliveryOperation",
+      "responseKind",
+      "payloadDigest",
+    ] as const;
+    if (
+      !raw ||
+      stringFields.some(
+        (field) => typeof raw[field] !== "string" || raw[field].length === 0,
+      ) ||
+      !(raw.payloadBytes instanceof Uint8Array) ||
+      raw.payloadBytes.byteLength > 16_384 ||
+      !Number.isSafeInteger(raw.deliveryGeneration) ||
+      (raw.deliveryGeneration as number) < 0 ||
+      !Number.isSafeInteger(raw.mappingVersion) ||
+      (raw.mappingVersion as number) < 0
+    )
+      return fail("invalid_input");
+    const decoded = input;
+    if (
+      ![
+        decoded.updateOccurrenceKey,
+        decoded.claimsDigest,
+        decoded.rawUpdateDigest,
+        decoded.controlInteractionIdentity,
+        decoded.deliveryKey,
+        decoded.payloadDigest,
+      ].every((value) => HEX_64.test(value)) ||
+      decoded.updateOccurrenceKey !==
+        controlDeliveryOccurrenceKey(
+          decoded.connectorInstanceId,
+          decoded.serviceAuthorityId,
+          decoded.updateId,
+        )
+    )
+      return fail("invalid_input");
+    let normalized: Readonly<Record<string, JsonValue>>;
+    try {
+      normalized = normalizeControlDeliveryInput(decoded);
+    } catch {
+      return fail("invalid_input");
+    }
+    const decodedMeta = matchingCommandMeta(
+      meta,
+      "request-control-delivery",
+      decoded.controlInteractionIdentity,
+      normalized,
+    );
+    if (
+      !decodedMeta ||
+      decodedMeta.idempotencyKey !==
+        controlDeliveryIdempotencyKey(decoded.updateOccurrenceKey)
+    )
+      return fail("invalid_input");
+    return this.#transact<ControlCommandDeliveryResult>(
+      decodedMeta,
+      normalized,
+      (snapshot) => {
+        const state = reduceFacts(snapshot.facts);
+        const occurrence = state.telegramOccurrences.get(
+          decoded.updateOccurrenceKey,
+        );
+        if (
+          occurrence &&
+          (occurrence.claimsDigest !== decoded.claimsDigest ||
+            occurrence.rawUpdateDigest !== decoded.rawUpdateDigest)
+        ) {
+          const facts = occurrence.quarantined
+            ? []
+            : [
+                {
+                  aggregateId: decoded.updateOccurrenceKey,
+                  factKind: "telegram-occurrence-quarantined",
+                  payload: asPayload({
+                    updateOccurrenceKey: decoded.updateOccurrenceKey,
+                    observedClaimsDigest: decoded.claimsDigest,
+                    observedRawUpdateDigest: decoded.rawUpdateDigest,
+                  }),
+                },
+              ];
+          return plan(snapshot, facts, {
+            status: "denied" as const,
+            error: "channel_evidence_conflict" as const,
+          });
+        }
+        if (
+          this.#options.controlCommandPolicy?.(decoded) !== "allow" ||
+          this.#options.controlDeliveryFenceValid?.({
+            connectorInstanceId: decoded.connectorInstanceId,
+            serviceAuthorityId: decoded.serviceAuthorityId,
+            deliveryGeneration: decoded.deliveryGeneration,
+            mappingVersion: decoded.mappingVersion,
+          }) === false
+        )
+          return plan(snapshot, [], {
+            status: "denied" as const,
+            error: "forbidden" as const,
+          });
+        const effectId = digestJson([
+          "control-command-effect-v1",
+          decoded.controlInteractionIdentity,
+          decoded.deliveryKey,
+          decoded.deliveryGeneration,
+        ]);
+        const existing = state.controlEffects.get(effectId);
+        if (existing)
+          return plan(snapshot, [], {
+            status: "effect" as const,
+            effectId,
+            state: existing.state,
+            outcome: existing.outcome ?? null,
+          });
+        const facts: FactDraft[] = [];
+        if (!occurrence)
+          facts.push({
+            aggregateId: decoded.updateOccurrenceKey,
+            factKind: "telegram-occurrence-bound",
+            payload: asPayload({
+              updateOccurrenceKey: decoded.updateOccurrenceKey,
+              claimsDigest: decoded.claimsDigest,
+              rawUpdateDigest: decoded.rawUpdateDigest,
+            }),
+          });
+        const payloadBase64url = Buffer.from(decoded.payloadBytes).toString(
+          "base64url",
+        );
+        facts.push({
+          aggregateId: effectId,
+          factKind: "control-command-effect-created",
+          payload: asPayload({
+            effectId,
+            state: "approved",
+            connectorInstanceId: decoded.connectorInstanceId,
+            serviceAuthorityId: decoded.serviceAuthorityId,
+            updateOccurrenceKey: decoded.updateOccurrenceKey,
+            controlInteractionIdentity: decoded.controlInteractionIdentity,
+            deliveryKey: decoded.deliveryKey,
+            deliveryGeneration: decoded.deliveryGeneration,
+            mappingVersion: decoded.mappingVersion,
+            target: decoded.target,
+            payloadBase64url,
+            payloadDigest: decoded.payloadDigest,
+            deliveryOperation: decoded.deliveryOperation,
+            responseKind: decoded.responseKind,
+            claimsDigest: decoded.claimsDigest,
+            rawUpdateDigest: decoded.rawUpdateDigest,
+          }),
+        });
+        return plan(snapshot, facts, {
+          status: "effect" as const,
+          effectId,
+          state: "approved" as const,
+          outcome: null,
+        });
+      },
+    );
+  }
+
+  controlCommandDispatchInput(
+    authority: symbol,
+    effectId: string,
+  ): Result<{
+    target: string;
+    payloadBytes: Uint8Array;
+    payloadDigest: string;
+    deliveryOperation: string;
+    responseKind: string;
+  }> {
+    if (authority !== GATEWAY) return fail("forbidden");
+    const snapshot = this.#store.readSnapshot();
+    if (!snapshot.ok) return snapshot;
+    try {
+      const effect = reduceFacts(snapshot.value.facts).controlEffects.get(
+        effectId,
+      );
+      return effect
+        ? ok({
+            target: effect.target,
+            payloadBytes: Buffer.from(effect.payloadBase64url, "base64url"),
+            payloadDigest: effect.payloadDigest,
+            deliveryOperation: effect.deliveryOperation,
+            responseKind: effect.responseKind,
+          })
+        : fail("not_found");
+    } catch {
+      return fail("invalid_state");
+    }
+  }
+
+  readControlCommandDelivery(
+    effectId: string,
+  ): Result<ControlCommandDeliveryResult> {
+    const snapshot = this.#store.readSnapshot();
+    if (!snapshot.ok) return snapshot;
+    try {
+      const effect = reduceFacts(snapshot.value.facts).controlEffects.get(
+        effectId,
+      );
+      return effect
+        ? ok({
+            status: "effect",
+            effectId,
+            state: effect.state,
+            outcome: effect.outcome ?? null,
+          })
+        : fail("not_found");
+    } catch {
+      return fail("invalid_state");
+    }
+  }
+
+  pendingControlCommandDeliveries(
+    authority: symbol,
+  ): Result<readonly ControlCommandDeliveryResult[]> {
+    if (authority !== GATEWAY) return fail("forbidden");
+    const snapshot = this.#store.readSnapshot();
+    if (!snapshot.ok) return snapshot;
+    try {
+      return ok(
+        [...reduceFacts(snapshot.value.facts).controlEffects.values()]
+          .filter((effect) =>
+            ["approved", "claimed", "dispatch-started", "unknown"].includes(
+              effect.state,
+            ),
+          )
+          .map((effect) => ({
+            status: "effect" as const,
+            effectId: effect.effectId,
+            state: effect.state,
+            outcome: effect.outcome ?? null,
+          })),
+      );
+    } catch {
+      return fail("invalid_state");
+    }
+  }
+
+  beginControlCommandDispatch(
+    authority: symbol,
+    meta: CommandMeta,
+    effectId: string,
+  ): Result<"dispatch-started" | "fence-revoked"> {
+    if (authority !== GATEWAY) return fail("forbidden");
+    const input = { effectId };
+    const decodedMeta = matchingCommandMeta(
+      meta,
+      "dispatch-control-effect",
+      effectId,
+      input,
+    );
+    if (!decodedMeta) return fail("invalid_input");
+    return this.#transact(decodedMeta, input, (snapshot) => {
+      const effect = reduceFacts(snapshot.facts).controlEffects.get(effectId);
+      if (!effect) return fail("not_found");
+      if (effect.state !== "approved") return fail("invalid_state");
+      if (
+        this.#options.controlDeliveryFenceValid?.({
+          connectorInstanceId: effect.connectorInstanceId,
+          serviceAuthorityId: effect.serviceAuthorityId,
+          deliveryGeneration: effect.deliveryGeneration,
+          mappingVersion: effect.mappingVersion,
+        }) === false
+      )
+        return plan(
+          snapshot,
+          [
+            {
+              aggregateId: effectId,
+              factKind: "control-effect-outcome",
+              payload: asPayload({ effectId, outcome: "not-committed" }),
+            },
+          ],
+          "fence-revoked" as const,
+        );
+      return plan(
+        snapshot,
+        [
+          {
+            aggregateId: effectId,
+            factKind: "control-effect-claimed",
+            payload: asPayload({ effectId }),
+          },
+          {
+            aggregateId: effectId,
+            factKind: "control-effect-dispatch-started",
+            payload: asPayload({ effectId }),
+          },
+        ],
+        "dispatch-started" as const,
+      );
+    });
+  }
+
+  markControlCommandUnknown(
+    authority: symbol,
+    meta: CommandMeta,
+    effectId: string,
+  ): Result<null> {
+    if (authority !== GATEWAY) return fail("forbidden");
+    const input = { effectId };
+    const decodedMeta = matchingCommandMeta(
+      meta,
+      "mark-control-effect-unknown",
+      effectId,
+      input,
+    );
+    if (!decodedMeta) return fail("invalid_input");
+    return this.#transact(decodedMeta, input, (snapshot) => {
+      const effect = reduceFacts(snapshot.facts).controlEffects.get(effectId);
+      if (!effect || effect.state !== "dispatch-started")
+        return fail("invalid_state");
+      return plan(
+        snapshot,
+        [
+          {
+            aggregateId: effectId,
+            factKind: "control-effect-unknown",
+            payload: asPayload({ effectId }),
+          },
+        ],
+        null,
+      );
+    });
+  }
+
+  recordControlCommandOutcome(
+    authority: symbol,
+    meta: CommandMeta,
+    effectId: string,
+    outcome: "committed" | "not-committed",
+  ): Result<null> {
+    if (authority !== GATEWAY) return fail("forbidden");
+    const input = { effectId, outcome };
+    const decodedMeta = matchingCommandMeta(
+      meta,
+      "record-control-effect-outcome",
+      effectId,
+      input,
+    );
+    if (!decodedMeta) return fail("invalid_input");
+    return this.#transact(decodedMeta, input, (snapshot) => {
+      const effect = reduceFacts(snapshot.facts).controlEffects.get(effectId);
+      if (!effect || !["dispatch-started", "unknown"].includes(effect.state))
+        return fail("invalid_state");
+      return plan(
+        snapshot,
+        [
+          {
+            aggregateId: effectId,
+            factKind: "control-effect-outcome",
+            payload: asPayload({ effectId, outcome }),
+          },
+        ],
+        null,
+      );
+    });
+  }
+
+  decideApprovalByIdFromWire(
+    authority: AuthorityContext,
+    idempotencyKey: string,
+    ifMatch: string,
+    input: { approvalId: string; decision: "approved" | "denied" },
+  ) {
+    const snapshot = this.#store.readSnapshot();
+    if (!snapshot.ok) return snapshot;
+    try {
+      const run = [...reduceFacts(snapshot.value.facts).runs.values()].find(
+        (candidate) => candidate.effects.has(input.approvalId),
+      );
+      if (!run) return fail("not_found");
+      return this.decideApprovalFromWire(
+        authority,
+        idempotencyKey,
+        ifMatch,
+        { runId: run.runId, ...input },
+      );
+    } catch {
+      return fail("invalid_state");
+    }
+  }
+
+  decideApprovalFromWire(
+    authority: AuthorityContext,
+    idempotencyKey: string,
+    ifMatch: string,
+    input: {
+      runId: string;
+      approvalId: string;
+      decision: "approved" | "denied";
+    },
+  ) {
+    const current = this.readRun(authority, input.runId);
+    if (!current.ok) return current;
+    const approval = current.value.value.pendingApprovals.find(
+      ({ approvalId }) => approvalId === input.approvalId,
+    );
+    if (
+      approval &&
+      digestJson(current.value.value) !== ifMatch
+    )
+      return fail("stale_epoch");
+    const actor = actorSubjectId(authority);
+    return this.decideApproval(
+      commandMeta(
+        actor,
+        "decide-approval",
+        input.approvalId,
+        idempotencyKey,
+        input,
+        { expectedApprovalDigest: ifMatch },
+        digestJson(authority),
+      ),
+      input,
+    );
+  }
+
+  decideApproval(
+    meta: CommandMeta,
+    input: {
+      runId: string;
+      approvalId: string;
+      decision: "approved" | "denied";
+    },
+  ): Result<{
+    approvalId: string;
+    state: "approved" | "denied" | "expired";
+    result: "accepted" | "stored";
+  }> {
+    const value = exactRecord(input, ["runId", "approvalId", "decision"]);
+    if (
+      !value ||
+      typeof value.runId !== "string" ||
+      typeof value.approvalId !== "string" ||
+      !["approved", "denied"].includes(String(value.decision))
+    )
+      return fail("invalid_input");
+    const decoded = {
+      runId: value.runId,
+      approvalId: value.approvalId,
+      decision: value.decision as "approved" | "denied",
+    };
+    const decodedMeta = matchingCommandMeta(
+      meta,
+      "decide-approval",
+      decoded.approvalId,
+      decoded,
+    );
+    if (!decodedMeta) return fail("invalid_input");
+    return this.#transact(decodedMeta, decoded, (snapshot) => {
+      const state = reduceFacts(snapshot.facts);
+      const run = state.runs.get(decoded.runId);
+      const effect = run?.effects.get(decoded.approvalId);
+      if (!run || !effect) return fail("not_found");
+      if (run.cancelRequested) return fail("terminal_conflict");
+      if (effect.approvalDecision)
+        return plan(snapshot, [], {
+          approvalId: decoded.approvalId,
+          state: effect.approvalDisposition ?? effect.approvalDecision,
+          result: "stored" as const,
+        });
+      const expiresAtUnixMs = effect.approvalExpiresAtUnixMs;
+      if (!expiresAtUnixMs) return fail("invalid_state");
+      if (this.#now() >= expiresAtUnixMs) {
+        return plan(
+          snapshot,
+          [
+            {
+              aggregateId: decoded.runId,
+              factKind: "approval-decided",
+              payload: asPayload({
+                runId: decoded.runId,
+                effectId: decoded.approvalId,
+                decision: "denied",
+                disposition: "expired",
+              }),
+            },
+            {
+              aggregateId: decoded.runId,
+              factKind: "local-dispatch-result",
+              payload: asPayload({
+                runId: decoded.runId,
+                effectId: decoded.approvalId,
+                status: "claim-expired",
+              }),
+            },
+          ],
+          {
+            approvalId: decoded.approvalId,
+            state: "expired" as const,
+            result: "accepted" as const,
+          },
+        );
+      }
+      if (decoded.decision === "denied")
+        return plan(
+          snapshot,
+          [
+            {
+              aggregateId: decoded.runId,
+              factKind: "approval-decided",
+              payload: asPayload({
+                runId: decoded.runId,
+                effectId: decoded.approvalId,
+                decision: "denied",
+              }),
+            },
+            {
+              aggregateId: decoded.runId,
+              factKind: "local-dispatch-result",
+              payload: asPayload({
+                runId: decoded.runId,
+                effectId: decoded.approvalId,
+                status: "denied",
+              }),
+            },
+          ],
+          {
+            approvalId: decoded.approvalId,
+            state: "denied" as const,
+            result: "accepted" as const,
+          },
+        );
+      const approval: InternalApproval = {
+        decision: "approved",
+        releaseId: run.releaseId,
+        activationEpoch: run.activationEpoch,
+        expiresAtUnixMs,
+        actorSubjectId: decodedMeta.actorSubjectId,
+      };
+      return plan(
+        snapshot,
+        [
+          {
+            aggregateId: decoded.runId,
+            factKind: "approval-decided",
+            payload: asPayload({
+              runId: decoded.runId,
+              effectId: decoded.approvalId,
+              decision: "approved",
+              approval,
+            }),
+          },
+          {
+            aggregateId: decoded.runId,
+            factKind: "gateway-wake",
+            payload: asPayload({
+              runId: decoded.runId,
+              effectId: decoded.approvalId,
+            }),
+          },
+        ],
+        {
+          approvalId: decoded.approvalId,
+          state: "approved" as const,
+          result: "accepted" as const,
+        },
+      );
+    });
+  }
+
+  gatewayWakes(
+    authority: symbol,
+  ): Result<readonly { runId: string; effectId: string }[]> {
+    if (authority !== GATEWAY) return fail("forbidden");
+    const snapshot = this.#store.readSnapshot();
+    if (!snapshot.ok) return snapshot;
+    try {
+      const wakes: { runId: string; effectId: string }[] = [];
+      for (const run of reduceFacts(snapshot.value.facts).runs.values())
+        for (const [effectId, effect] of run.effects)
+          if (effect.gatewayWake && effect.state === "approved")
+            wakes.push({ runId: run.runId, effectId });
+      return ok(
+        wakes.sort((left, right) =>
+          `${left.runId}\0${left.effectId}`.localeCompare(
+            `${right.runId}\0${right.effectId}`,
+          ),
+        ),
+      );
+    } catch {
+      return fail("invalid_state");
+    }
+  }
+
   approveEffect(
     authority: symbol,
     meta: CommandMeta,
@@ -2767,10 +3797,11 @@ export class Control {
         if (run.cancelRequested) return fail("terminal_conflict");
         if (!currentActivation(state, run)) return fail("stale_epoch");
         if (
+          decoded.decision !== "approved" ||
           effect.state !== "pending" ||
           decoded.releaseId !== run.releaseId ||
           decoded.activationEpoch !== run.activationEpoch ||
-          decoded.expiresAtUnixMs <= Date.now()
+          decoded.expiresAtUnixMs <= this.#now()
         )
           return fail("invalid_state");
         const binding: InternalApproval = {
@@ -2797,7 +3828,7 @@ export class Control {
     meta: CommandMeta,
     runId: string,
     effectId: string,
-  ): Result<null> {
+  ): Result<"dispatch-started" | "claim-revoked" | "claim-expired"> {
     if (authority !== GATEWAY) return fail("invalid_input");
     const decodedMeta = matchingCommandMeta(meta, "dispatch-effect", runId, {
       runId,
@@ -2813,18 +3844,43 @@ export class Control {
         const effect = run?.effects.get(effectId);
         if (!run || !effect) return fail("not_found");
         if (run.cancelRequested) return fail("terminal_conflict");
-        if (!currentActivation(state, run)) return fail("stale_epoch");
-        if (
-          effect.state !== "approved" ||
-          !effect.approval ||
-          effect.approval.releaseId !== run.releaseId ||
-          effect.approval.activationEpoch !== run.activationEpoch ||
-          effect.approval.expiresAtUnixMs <= Date.now()
-        )
-          return fail("invalid_state");
+        if (effect.state !== "approved" || !effect.approval)
+          return currentActivation(state, run)
+            ? fail("invalid_state")
+            : fail("stale_epoch");
+        const expired = effect.approval.expiresAtUnixMs <= this.#now();
+        const authorityValid =
+          currentActivation(state, run) &&
+          effect.approval.releaseId === run.releaseId &&
+          effect.approval.activationEpoch === run.activationEpoch &&
+          this.#options.effectAuthorityValid?.(runId, effectId) !== false;
+        if (expired || !authorityValid) {
+          const status = expired ? "claim-expired" : "claim-revoked";
+          return plan(
+            snapshot,
+            [
+              {
+                aggregateId: runId,
+                factKind: "local-dispatch-result",
+                payload: asPayload({ runId, effectId, status }),
+              },
+              {
+                aggregateId: runId,
+                factKind: "gateway-wake-consumed",
+                payload: asPayload({ runId, effectId }),
+              },
+            ],
+            status,
+          );
+        }
         return plan(
           snapshot,
           [
+            {
+              aggregateId: runId,
+              factKind: "gateway-wake-consumed",
+              payload: asPayload({ runId, effectId }),
+            },
             {
               aggregateId: runId,
               factKind: "effect-claimed",
@@ -2836,7 +3892,7 @@ export class Control {
               payload: asPayload({ runId, effectId }),
             },
           ],
-          null,
+          "dispatch-started" as const,
         );
       },
       { rejectReplay: true },
@@ -2961,6 +4017,146 @@ export class Control {
   }
 }
 
+export interface EventCursorOptions {
+  readonly heartbeatMs?: number;
+  readonly maxPendingWakeups?: number;
+  readonly maxBatchBytes?: number;
+}
+
+/**
+ * Per-connection cursor: notifications only wake it; every batch rereads the
+ * committed head through Control, reauthorizes, then advances its serialized
+ * send cursor. No in-memory offset is authoritative.
+ */
+export class ControlEventCursor {
+  readonly #control: Control;
+  readonly #authority: AuthorityContext;
+  readonly #runId: string;
+  readonly #heartbeatMs: number;
+  readonly #maxPendingWakeups: number;
+  readonly #maxBatchBytes: number;
+  readonly #unsubscribe: () => void;
+  #cursor: string | null;
+  #ready?: QueryEnvelope<RunEventPage>;
+  #pendingWakeups = 0;
+  #waiter?: () => void;
+  #closed = false;
+  #overflow = false;
+  #reading = false;
+
+  constructor(
+    control: Control,
+    subscribe: (listener: () => void) => () => void,
+    authority: AuthorityContext,
+    runId: string,
+    cursor: string | null,
+    options: EventCursorOptions,
+  ) {
+    this.#control = control;
+    this.#authority = authority;
+    this.#runId = runId;
+    this.#cursor = cursor;
+    this.#heartbeatMs = options.heartbeatMs ?? 5_000;
+    this.#maxPendingWakeups = options.maxPendingWakeups ?? 256;
+    this.#maxBatchBytes = options.maxBatchBytes ?? 1024 * 1024;
+    this.#unsubscribe = subscribe(() => {
+      if (this.#closed) return;
+      this.#pendingWakeups += 1;
+      if (this.#pendingWakeups > this.#maxPendingWakeups) {
+        this.#overflow = true;
+        this.#closed = true;
+        this.#unsubscribe();
+      }
+      this.#waiter?.();
+    });
+  }
+
+  initialize(): Result<null> {
+    if (
+      !Number.isSafeInteger(this.#heartbeatMs) ||
+      this.#heartbeatMs < 1 ||
+      !Number.isSafeInteger(this.#maxPendingWakeups) ||
+      this.#maxPendingWakeups < 1 ||
+      !Number.isSafeInteger(this.#maxBatchBytes) ||
+      this.#maxBatchBytes < 1
+    )
+      return fail("invalid_input");
+    const initial = this.#control.readRunEvents(
+      this.#authority,
+      this.#runId,
+      this.#cursor,
+    );
+    if (!initial.ok) return initial;
+    this.#ready = initial.value;
+    return ok(null);
+  }
+
+  async next(): Promise<Result<QueryEnvelope<RunEventPage>>> {
+    if (this.#closed)
+      return fail(this.#overflow ? "invalid_state" : "invalid_state");
+    if (this.#reading) return fail("invalid_state");
+    this.#reading = true;
+    try {
+      if (this.#ready) {
+        const page = this.#ready;
+        this.#ready = undefined;
+        if (page.value.events.length > 0) return this.#deliver(page);
+      }
+      if (this.#pendingWakeups === 0) await this.#waitForWakeOrHeartbeat();
+      if (this.#overflow || this.#closed) return fail("invalid_state");
+      this.#pendingWakeups = 0;
+      const page = this.#control.readRunEvents(
+        this.#authority,
+        this.#runId,
+        this.#cursor,
+      );
+      if (!page.ok) {
+        this.close();
+        return page;
+      }
+      return this.#deliver(page.value);
+    } finally {
+      this.#reading = false;
+    }
+  }
+
+  #deliver(
+    page: QueryEnvelope<RunEventPage>,
+  ): Result<QueryEnvelope<RunEventPage>> {
+    if (JSON.stringify(page).length > this.#maxBatchBytes) {
+      this.#overflow = true;
+      this.close();
+      return fail("invalid_state");
+    }
+    this.#cursor = page.value.nextCursor;
+    return ok(page);
+  }
+
+  #waitForWakeOrHeartbeat(): Promise<void> {
+    return new Promise((resolve) => {
+      const timer = setTimeout(() => {
+        this.#waiter = undefined;
+        resolve();
+      }, this.#heartbeatMs);
+      this.#waiter = () => {
+        clearTimeout(timer);
+        this.#waiter = undefined;
+        resolve();
+      };
+      // Closes the check→wait race: a notification may have arrived after the
+      // caller checked pendingWakeups but before waiter assignment.
+      if (this.#pendingWakeups > 0 || this.#closed) this.#waiter();
+    });
+  }
+
+  close(): void {
+    if (this.#closed && !this.#waiter) return;
+    this.#closed = true;
+    this.#unsubscribe();
+    this.#waiter?.();
+  }
+}
+
 class TrustedOutcomeAcceptor implements OutcomeAcceptor {
   readonly #control: Control;
 
@@ -3052,6 +4248,47 @@ export const createTrustedProcessController = (
   control: Control,
 ): TrustedProcessController => new TrustedProcessController(control);
 
+export class TrustedPiCleanupController {
+  readonly #control: Control;
+
+  constructor(control: Control) {
+    this.#control = control;
+  }
+
+  commit(
+    meta: CommandMeta,
+    token: AttemptToken,
+    cause: "succeeded" | "failed",
+    evidence: {
+      ipcDrained: boolean;
+      stdoutDrained: boolean;
+      stderrDrained: boolean;
+      wholeTreeReaped: boolean;
+      grantRevoked: boolean;
+      outcomeAccepted: boolean;
+    },
+  ) {
+    return this.#control.recordPiCleanup(
+      PI_CHILD_OWNER,
+      meta,
+      token,
+      cause,
+      evidence,
+    );
+  }
+
+  terminalize(meta: CommandMeta, runId: string, cause: "succeeded" | "failed") {
+    return this.#control.terminalize(meta, {
+      runId,
+      state: cause === "succeeded" ? "completed" : "failed",
+    });
+  }
+}
+
+export const createTrustedPiCleanupController = (
+  control: Control,
+): TrustedPiCleanupController => new TrustedPiCleanupController(control);
+
 export class TrustedCancelController {
   readonly #control: Control;
 
@@ -3072,6 +4309,13 @@ export const createTrustedCancelController = (
 ): TrustedCancelController => new TrustedCancelController(control);
 
 export type Connector = () => Promise<"committed" | "not-committed">;
+export type ControlCommandConnector = (input: {
+  readonly target: string;
+  readonly payloadBytes: Uint8Array;
+  readonly payloadDigest: string;
+  readonly deliveryOperation: string;
+  readonly responseKind: string;
+}) => Promise<"committed" | "not-committed">;
 
 function gatewayMeta(
   meta: CommandMeta,
@@ -3088,6 +4332,73 @@ export class EffectGateway {
 
   constructor(control: Control) {
     this.#control = control;
+  }
+
+  requestControlDelivery(
+    meta: CommandMeta,
+    input: ControlCommandDeliveryInput,
+  ): Result<ControlCommandDeliveryResult> {
+    return this.#control.requestControlCommandDelivery(meta, input);
+  }
+
+  readControlDelivery(effectId: string): Result<ControlCommandDeliveryResult> {
+    return this.#control.readControlCommandDelivery(effectId);
+  }
+
+  pendingControlDeliveries(): Result<readonly ControlCommandDeliveryResult[]> {
+    return this.#control.pendingControlCommandDeliveries(GATEWAY);
+  }
+
+  async dispatchControl(
+    meta: { start: CommandMeta; outcome: CommandMeta; unknown: CommandMeta },
+    effectId: string,
+    connector: ControlCommandConnector,
+  ): Promise<Result<null>> {
+    const payload = this.#control.controlCommandDispatchInput(
+      GATEWAY,
+      effectId,
+    );
+    if (!payload.ok) return payload;
+    const started = this.#control.beginControlCommandDispatch(
+      GATEWAY,
+      meta.start,
+      effectId,
+    );
+    if (!started.ok) return started;
+    if (started.value !== "dispatch-started") return fail("forbidden");
+    try {
+      const outcome = await connector(payload.value);
+      return this.#control.recordControlCommandOutcome(
+        GATEWAY,
+        meta.outcome,
+        effectId,
+        outcome,
+      );
+    } catch {
+      const marked = this.#control.markControlCommandUnknown(
+        GATEWAY,
+        meta.unknown,
+        effectId,
+      );
+      return marked.ok ? fail("unknown_effect") : marked;
+    }
+  }
+
+  reconcileControl(
+    meta: CommandMeta,
+    effectId: string,
+    outcome: "committed" | "not-committed",
+  ): Result<null> {
+    return this.#control.recordControlCommandOutcome(
+      GATEWAY,
+      meta,
+      effectId,
+      outcome,
+    );
+  }
+
+  pendingWakes(): Result<readonly { runId: string; effectId: string }[]> {
+    return this.#control.gatewayWakes(GATEWAY);
   }
 
   approve(
@@ -3144,6 +4455,8 @@ export class EffectGateway {
       effectId,
     );
     if (!started.ok) return started;
+    if (started.value !== "dispatch-started")
+      return fail(started.value === "claim-expired" ? "expired" : "forbidden");
     try {
       const outcome = await connector();
       if (!["committed", "not-committed"].includes(outcome)) {

@@ -415,9 +415,10 @@ export function createGuardedServer(
     body: Buffer | null,
   ) => void,
   // Test-only knobs; production always runs at the fixed spec limits.
-  deadlines?: Partial<
-    Pick<typeof LIMITS, "bodyDeadlineMs" | "headersDeadlineMs">
-  >,
+  deadlines?: {
+    readonly bodyDeadlineMs?: number;
+    readonly headersDeadlineMs?: number;
+  },
 ): Server {
   const headersDeadline =
     deadlines?.headersDeadlineMs ?? LIMITS.headersDeadlineMs;
@@ -695,6 +696,36 @@ export const LAST_EVENT_ID_SCHEMA = z
 const EXECUTION_MODES = ["shadow-evaluator", "production"] as const;
 const JSON_PRIMITIVE = z.union([z.string(), z.number(), z.boolean(), z.null()]);
 
+const SCHEMA_REF_RESPONSE = z.strictObject({
+  id: z.string(),
+  version: z.string(),
+  digest: z.string().regex(/^[0-9a-f]{64}$/),
+});
+const INTENT_DESCRIPTOR_RESPONSE = z.strictObject({
+  intentId: z.string(),
+  descriptorVersion: z.number().int(),
+  inputSchema: SCHEMA_REF_RESPONSE,
+  scope: z.string(),
+  policyId: z.string(),
+  resultSchema: SCHEMA_REF_RESPONSE,
+});
+const RUN_STATE_RESPONSE = z.enum([
+  "running",
+  "waiting",
+  "cancel-requested",
+  "cancel-pending-reconciliation",
+  "completed",
+  "failed",
+  "cancelled",
+]);
+const ATTEMPT_STATE_RESPONSE = z.enum([
+  "running",
+  "checkpointed",
+  "succeeded",
+  "failed",
+  "cancelled",
+]);
+
 const INTENT_BODY = z.strictObject({
   descriptorVersion: z.number().int().min(1),
   executionMode: z.enum(EXECUTION_MODES),
@@ -714,12 +745,17 @@ export const TRANSPORT_HEADERS: Readonly<Record<string, number>> = {
   connection: 128,
   accept: 256,
   "accept-encoding": 256,
+  "accept-language": 256,
+  "content-length": 32,
+  "transfer-encoding": 64,
+  te: 64,
   "user-agent": 512,
   origin: 512,
   referer: 1024,
   "cache-control": 256,
+  pragma: 256,
 };
-const TRANSPORT_PREFIXES = ["sec-fetch-"] as const;
+const TRANSPORT_PREFIXES = ["sec-fetch-", "sec-ch-"] as const;
 
 /** Application headers every route may carry, with shapes and byte caps. */
 export const GLOBAL_APP_HEADER_SCHEMAS: Readonly<Record<string, z.ZodType>> = {
@@ -770,7 +806,12 @@ export const ROUTES: readonly RouteSpec[] = [
     authMode: "control",
     requiresBody: false,
     responseSchema: z.strictObject({
-      agents: z.array(z.record(z.string(), JSON_PRIMITIVE)),
+      agents: z.array(
+        z.strictObject({
+          agentId: z.string(),
+          releaseCount: z.number().int().min(0),
+        }),
+      ),
     }),
   },
   {
@@ -780,7 +821,15 @@ export const ROUTES: readonly RouteSpec[] = [
     authMode: "control",
     requiresBody: false,
     responseSchema: z.strictObject({
-      releases: z.array(z.record(z.string(), JSON_PRIMITIVE)),
+      releases: z.array(
+        z.strictObject({
+          agentId: z.string(),
+          releaseId: z.string().regex(/^[0-9a-f]{64}$/),
+          schemaVersion: z.enum(["agent-release-v1", "agent-release-v2"]),
+          intentDescriptors: z.array(INTENT_DESCRIPTOR_RESPONSE),
+          etag: ETAG_SCHEMA,
+        }),
+      ),
     }),
   },
   {
@@ -790,6 +839,17 @@ export const ROUTES: readonly RouteSpec[] = [
     authMode: "control",
     requiresBody: true,
     bodySchema: INTENT_BODY,
+    responseSchema: z.strictObject({
+      runId: z.string(),
+      result: z.strictObject({
+        runId: z.string(),
+        releaseId: z.string(),
+        activationEpoch: z.number().int(),
+        executionMode: z.enum(["shadow-evaluator", "production"]),
+        inputDigest: z.string().regex(/^[0-9a-f]{64}$/),
+        promptDigest: z.string().regex(/^[0-9a-f]{64}$/),
+      }),
+    }),
   },
   {
     routeId: "runs.read",
@@ -798,8 +858,27 @@ export const ROUTES: readonly RouteSpec[] = [
     authMode: "control",
     requiresBody: false,
     responseSchema: z.strictObject({
-      run: z.record(z.string(), JSON_PRIMITIVE),
-      pendingApprovals: z.array(z.record(z.string(), JSON_PRIMITIVE)),
+      run: z.strictObject({
+        runId: z.string(),
+        agentId: z.string(),
+        releaseId: z.string(),
+        activationEpoch: z.number().int().min(0),
+        state: RUN_STATE_RESPONSE,
+        currentAttempt: z.number().int().min(0),
+        attemptState: ATTEMPT_STATE_RESPONSE,
+        executionMode: z.enum(["shadow-evaluator", "production"]).optional(),
+        checkpointId: z.string().optional(),
+        outcomeArtifactDigest: z.string().optional(),
+      }),
+      pendingApprovals: z.array(
+        z.strictObject({
+          approvalId: z.string(),
+          runId: z.string(),
+          state: z.literal("pending"),
+          operation: z.string(),
+          expiresAtUnixMs: z.number().int().optional(),
+        }),
+      ),
     }),
   },
   {
@@ -816,6 +895,21 @@ export const ROUTES: readonly RouteSpec[] = [
     authMode: "control",
     requiresBody: true,
     bodySchema: CANCEL_BODY,
+    responseSchema: z.strictObject({
+      runId: z.string(),
+      cancelStatus: z.enum([
+        "cleanup-pending",
+        "cancel-pending-reconciliation",
+      ]),
+      result: z.strictObject({
+        runId: z.string(),
+        cancelStatus: z.enum([
+          "cleanup-pending",
+          "cancel-pending-reconciliation",
+        ]),
+        fenceGeneration: z.number().int().min(1),
+      }),
+    }),
   },
   {
     routeId: "approvals.decide",
@@ -824,6 +918,11 @@ export const ROUTES: readonly RouteSpec[] = [
     authMode: "control",
     requiresBody: true,
     bodySchema: DECISION_BODY,
+    responseSchema: z.strictObject({
+      approvalId: z.string(),
+      state: z.enum(["approved", "denied", "expired"]),
+      result: z.enum(["accepted", "stored"]),
+    }),
   },
   {
     routeId: "health.read",
@@ -832,7 +931,10 @@ export const ROUTES: readonly RouteSpec[] = [
     authMode: "control",
     requiresBody: false,
     responseSchema: z.strictObject({
-      health: z.record(z.string(), JSON_PRIMITIVE),
+      health: z.strictObject({
+        status: z.literal("healthy"),
+        headSeq: z.number().int().min(0),
+      }),
     }),
   },
   {
@@ -1033,6 +1135,7 @@ export type ControlOperation = (typeof CONTROL_OPERATIONS)[number];
 const UPDATE_CLAIMS_SCHEMA = z.strictObject({
   schemaVersion: z.literal("telegram-update-ref-v1"),
   connectorInstanceId: z.string().regex(ASCII_ID_RE).max(128),
+  adapterInstanceId: z.string().regex(ASCII_ID_RE).max(128),
   serviceAuthorityId: z.string().regex(ASCII_ID_RE).max(128),
   serviceCredentialGeneration: z.number().int().min(1),
   updateId: z.string().regex(DIGITS).max(19),
@@ -1248,7 +1351,9 @@ export const TELEGRAM_GATEWAY_PORT_SCHEMAS = {
     response: z.strictObject({
       updates: z.array(
         z.strictObject({
-          rawUpdate: z.string().max(65536),
+          rawUpdate: z
+            .instanceof(Uint8Array)
+            .refine((value) => value.byteLength <= 65536),
           updateInteractionRef: z.string().max(MAX_REF_BYTES),
         }),
       ),
@@ -1261,8 +1366,11 @@ export const TELEGRAM_GATEWAY_PORT_SCHEMAS = {
       updateInteractionRef: z.string().min(16).max(MAX_REF_BYTES),
       controlInteractionRef: z.string().min(16).max(MAX_REF_BYTES),
       responseKind: z.enum(RESPONSE_KINDS),
+      deliveryKey: z.string().regex(HEX64),
       deliveryOperation: z.enum(DELIVERY_OPERATIONS),
-      payloadBytes: z.number().int().min(0).max(16384),
+      payloadBytes: z
+        .instanceof(Uint8Array)
+        .refine((value) => value.byteLength <= 16384),
       payloadDigest: z.string().regex(HEX64),
     }),
     response: z.union([
