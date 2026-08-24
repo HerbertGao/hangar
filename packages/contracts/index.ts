@@ -240,13 +240,7 @@ function assertStringList(
     throw new TypeError(`invalid_${subject}`);
 }
 
-export const CONTROL_METADATA_KEYS = ["executionClass", "trigger"] as const;
-
-export type ExecutionClass = "shadow-evaluator" | "production";
-const EXECUTION_CLASSES: readonly ExecutionClass[] = [
-  "shadow-evaluator",
-  "production",
-];
+export const CONTROL_METADATA_KEYS = ["trigger"] as const;
 
 const ASCII_ID = /^[A-Za-z0-9_-]+$/;
 
@@ -254,7 +248,8 @@ const ASCII_ID = /^[A-Za-z0-9_-]+$/;
  * Validates an intent input against the closed control-metadata contract:
  * exactly the declared keys, scalar values only, so inputs stay atomically
  * persistable with admission facts and can never carry bodies, secrets,
- * artifact payloads, or runtime-only data.
+ * artifact payloads, or runtime-only data. Execution mode is selected by the
+ * dedicated wire field, never duplicated inside the metadata.
  */
 export function validateControlMetadataInput(
   value: unknown,
@@ -277,19 +272,10 @@ export function validateControlMetadataInput(
     [...CONTROL_METADATA_KEYS].sort().join("\0")
   )
     return failInput();
-  const executionClass = record.executionClass;
-  if (
-    typeof executionClass !== "string" ||
-    !EXECUTION_CLASSES.includes(executionClass as ExecutionClass)
-  )
-    return failInput();
   const trigger = record.trigger;
   if (typeof trigger !== "string" || !ASCII_ID.test(trigger))
     return failInput();
-  return ok({
-    executionClass: executionClass as ExecutionClass,
-    trigger,
-  });
+  return ok({ trigger });
 }
 
 function assertSchemaRef(

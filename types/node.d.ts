@@ -17,12 +17,29 @@ declare const process: {
   on(event: string, listener: (...args: unknown[]) => void): void;
 };
 
+declare function setTimeout(
+  callback: (...args: unknown[]) => void,
+  milliseconds: number,
+): unknown;
+declare function clearTimeout(handle: unknown): void;
+
+declare interface TextDecoderConstructor {
+  new (label?: string, options?: { fatal?: boolean }): TextDecoder;
+}
+declare interface TextDecoder {
+  decode(input?: Uint8Array): string;
+}
+declare var TextDecoder: TextDecoderConstructor;
+
 declare module "node:crypto" {
   interface Hash {
     update(value: string | Uint8Array): Hash;
-    digest(encoding: "hex"): string;
+    digest(encoding: "hex" | "base64url"): string;
+    digest(): Uint8Array;
   }
   export function createHash(algorithm: string): Hash;
+  export function createHmac(algorithm: string, key: string | Uint8Array): Hash;
+  export function timingSafeEqual(a: Uint8Array, b: Uint8Array): boolean;
   export function randomUUID(): string;
 }
 
@@ -86,6 +103,80 @@ declare module "node:fs" {
     path: string,
     options: { bigint: true },
   ): { dev: bigint; ino: bigint };
+}
+
+declare module "node:buffer" {
+  export class Buffer extends Uint8Array {
+    static from(
+      value: string | readonly number[] | Uint8Array | ArrayBuffer,
+      encoding?: string,
+    ): Buffer;
+    static byteLength(value: string | Uint8Array): number;
+    static concat(list: readonly Uint8Array[]): Buffer;
+    toString(encoding?: string): string;
+  }
+}
+
+declare module "node:net" {
+  export interface Socket {
+    write(data: string): boolean;
+    end(data?: string): void;
+    destroy(): void;
+    on(event: string, listener: (data?: Uint8Array | Error) => void): void;
+  }
+  export function connect(port: number, host?: string): Socket;
+}
+
+declare interface ResponseHeaders {
+  get(name: string): string | null;
+}
+declare interface FetchResponse {
+  status: number;
+  headers: ResponseHeaders;
+  text(): Promise<string>;
+}
+declare function fetch(
+  url: string,
+  init?: {
+    method?: string;
+    headers?: Record<string, string>;
+    body?: string;
+    signal?: unknown;
+  },
+): Promise<FetchResponse>;
+
+declare module "node:http" {
+  export interface IncomingMessage {
+    readonly method?: string;
+    readonly url?: string;
+    readonly rawHeaders: string[];
+    readonly socket: { destroy(): void };
+    on(event: "data", listener: (chunk: Uint8Array) => void): void;
+    on(event: "end", listener: () => void): void;
+    on(event: "error" | "aborted", listener: (error?: Error) => void): void;
+    destroy(error?: Error): void;
+    resume(): void;
+  }
+  export interface ServerResponse {
+    writeHead(status: number, headers?: Record<string, string>): void;
+    end(body?: string): void;
+    destroy(): void;
+  }
+  export interface Server {
+    listen(port: number, callback?: () => void): Server;
+    close(callback?: () => void): void;
+    address(): { port: number } | null;
+    on(
+      event: "connection",
+      listener: (socket: {
+        destroy(): void;
+        on(event: string, listener: () => void): void;
+      }) => void,
+    ): Server;
+  }
+  export function createServer(
+    handler?: (request: IncomingMessage, response: ServerResponse) => void,
+  ): Server;
 }
 
 declare module "node:fs/promises" {

@@ -153,6 +153,40 @@
       "closureRemaining": 8,
       "evidenceRef": "tests/m2/intent-descriptors.test.ts",
       "recordHash": "f2adf7d7cb1500f117f74d2a24c3f5630694af44b434e18c32bce8ebe8b48eee"
+    },
+    {
+      "recordId": "m2br-0010",
+      "previousRecordHash": "f2adf7d7cb1500f117f74d2a24c3f5630694af44b434e18c32bce8ebe8b48eee",
+      "kind": "reserve",
+      "bucket": "product",
+      "reservationId": "m2r-0005",
+      "taskGroup": "task-1.3-http-guards-route-registry",
+      "actor": "herbertgao",
+      "start": "2026-08-23T15:53:32.000Z",
+      "end": null,
+      "reservedPersonHours": 4,
+      "actualPersonHours": null,
+      "productRemaining": 54,
+      "closureRemaining": 8,
+      "evidenceRef": null,
+      "recordHash": "57e1b97f10b3bbbf6ac437a88656f8b1d63671e861945f21d248dcb02621a570"
+    },
+    {
+      "recordId": "m2br-0011",
+      "previousRecordHash": "57e1b97f10b3bbbf6ac437a88656f8b1d63671e861945f21d248dcb02621a570",
+      "kind": "actual",
+      "bucket": "product",
+      "reservationId": "m2r-0005",
+      "taskGroup": "task-1.3-http-guards-route-registry",
+      "actor": "herbertgao",
+      "start": "2026-08-23T15:30:00.000Z",
+      "end": "2026-08-23T23:49:12.000Z",
+      "reservedPersonHours": null,
+      "actualPersonHours": 3.5,
+      "productRemaining": 54.5,
+      "closureRemaining": 8,
+      "evidenceRef": "tests/m2/control-api-contracts.test.ts",
+      "recordHash": "0b49c33e7bb40c9ef89737da44ab3b76053d0b2f0f0b5c66c8b9850acad4b33e"
     }
   ]
 }

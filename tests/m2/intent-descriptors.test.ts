@@ -99,26 +99,20 @@ test.scenarios(
   ["m0o.reproducibility.case-4704830eebf87e0f"],
   "control-metadata input rejects bodies, secrets, and runtime-only fields",
   () => {
-    value(
-      validateControlMetadataInput({
-        executionClass: "shadow-evaluator",
-        trigger: "manual-run",
-      }),
-    );
+    value(validateControlMetadataInput({ trigger: "manual-run" }));
     const rejected: readonly unknown[] = [
       // extra body/runtime-only keys outside the closed set
-      { executionClass: "shadow-evaluator", trigger: "t", promptBody: "hi" },
-      { executionClass: "shadow-evaluator", trigger: "t", runtimeState: {} },
+      { trigger: "t", promptBody: "hi" },
+      { trigger: "t", runtimeState: {} },
+      { executionClass: "shadow-evaluator", trigger: "t" }, // mode never rides in metadata
       // missing required selection
-      { trigger: "t" },
+      {},
       // nested payload instead of scalar metadata
-      { executionClass: "shadow-evaluator", trigger: { id: "t" } },
+      { trigger: { id: "t" } },
       // array-shaped body
-      ["shadow-evaluator", "t"],
-      // unknown execution class
-      { executionClass: "yolo", trigger: "t" },
+      ["t"],
       // invalid identifier characters
-      { executionClass: "production", trigger: "bad trigger!" },
+      { trigger: "bad trigger!" },
     ];
     for (const candidate of rejected)
       assert.equal(validateControlMetadataInput(candidate).ok, false);
