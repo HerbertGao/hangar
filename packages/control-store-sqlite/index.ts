@@ -120,9 +120,11 @@ function createSchema(db: DatabaseSync): void {
     );
     CREATE TABLE IF NOT EXISTS commands (
       actor_subject_id TEXT NOT NULL,
+      authority_context_digest TEXT NOT NULL,
       command_kind TEXT NOT NULL,
       target_id TEXT NOT NULL,
       idempotency_key TEXT NOT NULL,
+      command_state TEXT NOT NULL DEFAULT 'completed' CHECK(command_state = 'completed'),
       payload_digest TEXT NOT NULL,
       precondition_digest TEXT NOT NULL,
       result_json TEXT NOT NULL,
@@ -510,6 +512,13 @@ class SQLiteControlStore implements ControlStore {
           this.#db.exec("ROLLBACK");
           return fail("stale_authority");
         }
+        const disclosure = options.authorizeStoredResult?.(
+          this.#readSnapshot(),
+        );
+        if (disclosure && !disclosure.ok) {
+          this.#db.exec("ROLLBACK");
+          return fail(disclosure.error);
+        }
         const exact =
           text(stored, "payload_digest") === meta.payloadDigest &&
           text(stored, "precondition_digest") === meta.preconditionDigest;
@@ -524,8 +533,37 @@ class SQLiteControlStore implements ControlStore {
       const snapshot = this.#readSnapshot();
       const decision = decide(snapshot);
       if (!decision.ok) {
-        this.#db.exec("ROLLBACK");
-        return decision;
+        if (!options.persistRejections?.includes(decision.error)) {
+          this.#db.exec("ROLLBACK");
+          return decision;
+        }
+        if (!this.#fence()) {
+          this.#db.exec("ROLLBACK");
+          return fail("stale_authority");
+        }
+        const storedRejection: Result<T> = fail(decision.error);
+        this.#db
+          .prepare(
+            `INSERT INTO commands(
+               actor_subject_id, authority_context_digest, command_kind,
+               target_id, idempotency_key, command_state,
+               payload_digest, precondition_digest, result_json
+             ) VALUES (?, ?, ?, ?, ?, 'completed', ?, ?, ?)`,
+          )
+          .run(
+            meta.actorSubjectId,
+            meta.authorityContextDigest,
+            meta.commandKind,
+            meta.targetId,
+            meta.idempotencyKey,
+            meta.payloadDigest,
+            meta.preconditionDigest,
+            JSON.stringify(storedRejection),
+          );
+        this.#options.beforeCommit?.();
+        this.#db.exec("COMMIT");
+        this.#options.afterCommitBeforeAck?.();
+        return storedRejection;
       }
       if (
         decision.value.expectedRevision !== snapshot.revision ||
@@ -585,12 +623,14 @@ class SQLiteControlStore implements ControlStore {
       this.#db
         .prepare(
           `INSERT INTO commands(
-             actor_subject_id, command_kind, target_id, idempotency_key,
+             actor_subject_id, authority_context_digest, command_kind,
+             target_id, idempotency_key, command_state,
              payload_digest, precondition_digest, result_json
-           ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+           ) VALUES (?, ?, ?, ?, ?, 'completed', ?, ?, ?)`,
         )
         .run(
           meta.actorSubjectId,
+          meta.authorityContextDigest,
           meta.commandKind,
           meta.targetId,
           meta.idempotencyKey,

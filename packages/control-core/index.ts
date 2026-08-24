@@ -5,9 +5,12 @@ import {
   digestJson,
   fail,
   ok,
+  validateControlMetadataInput,
   verifyRelease,
   type ActionInput,
   type AgentRelease,
+  type AgentSummary,
+  type AuthorityContext,
   type AttemptState,
   type AttemptToken,
   type CheckpointInput,
@@ -15,8 +18,19 @@ import {
   type EffectApprovalInput,
   type EffectIntentInput,
   type EffectState,
+  type ErrorKind,
+  type ExecutionMode,
   type HarnessInput,
+  type HealthSummary,
+  type IntentAdmissionInput,
+  type IntentAdmissionResult,
   type OutcomeProposalInput,
+  type PendingApprovalSummary,
+  type ProjectionFamily,
+  type QueryEnvelope,
+  type ReleaseSummary,
+  type RunEventPage,
+  type SanitizedRunSummary,
   type JsonValue,
   type ProcessIdentity,
   type Result,
@@ -55,6 +69,10 @@ export interface CommitPlan<T> {
 
 export interface TransactOptions {
   readonly rejectReplay?: boolean;
+  /** Only these decide-time failures are completed as safe stored results. */
+  readonly persistRejections?: readonly ErrorKind[];
+  /** Current read authorization gate before replay/conflict disclosure. */
+  readonly authorizeStoredResult?: (snapshot: StoreSnapshot) => Result<null>;
 }
 
 export interface OutcomeGateInput {
@@ -69,6 +87,27 @@ export type OutcomeGate = (input: OutcomeGateInput) => boolean;
 
 export interface ControlOptions {
   readonly outcomeGate?: OutcomeGate;
+  /** Authenticated admission gate; forbidden results are eligible to persist. */
+  readonly authorizeCommandAdmission?: (
+    meta: CommandMeta,
+    snapshot: StoreSnapshot,
+  ) => Result<null>;
+  /** Auth boundary hook; no stored result/conflict is disclosed before it. */
+  readonly authorizeCommandDisclosure?: (
+    meta: CommandMeta,
+    snapshot: StoreSnapshot,
+  ) => Result<null>;
+  /** Target visibility owner after the built-in family scope gate. */
+  readonly authorizeQuery?: (
+    authority: AuthorityContext,
+    family: ProjectionFamily,
+    entityId: string | null,
+  ) => boolean;
+  /** Trusted host-attestation owner for production admission. */
+  readonly productionEligible?: (
+    release: AgentRelease,
+    agentId: string,
+  ) => boolean;
 }
 
 export interface OutcomeAcceptor {
@@ -99,6 +138,8 @@ interface InternalApproval extends EffectApprovalInput {
 interface InternalEffect {
   state: EffectState;
   approval?: InternalApproval;
+  approvalSuperseded?: boolean;
+  localDispatchResult?: "claim-revoked";
   operation: string;
   actionId: string;
   originAttempt: number;
@@ -136,6 +177,14 @@ interface InternalRun {
   agentId: string;
   releaseId: string;
   activationEpoch: number;
+  executionMode?: ExecutionMode;
+  intentId?: string;
+  intentDescriptorVersion?: number;
+  inputDigest?: string;
+  promptDigest?: string;
+  cancelRequested: boolean;
+  cancelFenceGeneration: number;
+  reconciliationWake: Set<string>;
   state: RunState;
   currentAttempt: number;
   sessions: Map<number, AttemptToken>;
@@ -154,13 +203,17 @@ interface InternalRun {
 
 interface ControlState {
   releases: Map<string, AgentRelease>;
-  activations: Map<string, { releaseId: string; epoch: number }>;
+  activations: Map<
+    string,
+    { releaseId: string; epoch: number; mode: "active" | "shadow" }
+  >;
   runs: Map<string, InternalRun>;
 }
 
 const GATEWAY = Symbol("effect-gateway");
 const OUTCOME_OWNER = Symbol("domain-outcome-owner");
 const PROCESS_OWNER = Symbol("trusted-process-owner");
+const CANCEL_OWNER = Symbol("trusted-cancel-owner");
 const HEX_64 = /^[0-9a-f]{64}$/;
 
 // SAFETY: the trusted store accepts fact drafts only from this module, and each
@@ -206,6 +259,7 @@ function exactRecord(
 
 const COMMAND_META_KEYS = [
   "actorSubjectId",
+  "authorityContextDigest",
   "commandKind",
   "targetId",
   "idempotencyKey",
@@ -220,6 +274,8 @@ function decodeCommandMeta(meta: CommandMeta): CommandMeta | undefined {
     !value ||
     typeof value.actorSubjectId !== "string" ||
     value.actorSubjectId.length === 0 ||
+    typeof value.authorityContextDigest !== "string" ||
+    !HEX_64.test(value.authorityContextDigest) ||
     typeof value.commandKind !== "string" ||
     value.commandKind.length === 0 ||
     typeof value.targetId !== "string" ||
@@ -269,6 +325,105 @@ function matchingCommandMeta(
   return decoded;
 }
 
+const PROJECTION_SCOPES: Readonly<Record<ProjectionFamily, string>> = {
+  agent: "agent:read",
+  release: "release:read",
+  activation: "activation:read",
+  run: "run:read",
+  attempt: "run:read",
+  event: "event:read",
+  approval: "approval:read",
+  effect: "effect:read",
+  health: "health:read",
+  recovery: "recovery:read",
+  "command-result": "command:read",
+};
+
+export function requiredScopeForProjection(family: string): Result<string> {
+  if (!Object.hasOwn(PROJECTION_SCOPES, family)) return fail("invalid_input");
+  return ok(PROJECTION_SCOPES[family as ProjectionFamily]);
+}
+
+const AUTHORITY_CONTEXT_KEYS = [
+  "issuerNamespaceId",
+  "principalId",
+  "representedSubjectId",
+  "audience",
+  "issuerVersion",
+  "authenticatedMethod",
+  "delegationChainDigest",
+  "effectiveScope",
+  "effectiveOperation",
+  "issuedAtUtcMs",
+  "expiresAtUtcMs",
+  "revocationVersion",
+] as const;
+
+function decodeAuthorityContext(value: unknown): AuthorityContext | undefined {
+  const context = exactRecord(value, AUTHORITY_CONTEXT_KEYS);
+  if (!context) return undefined;
+  const strings = [
+    "issuerNamespaceId",
+    "principalId",
+    "representedSubjectId",
+    "audience",
+    "issuerVersion",
+    "authenticatedMethod",
+    "effectiveOperation",
+    "revocationVersion",
+  ] as const;
+  if (
+    strings.some(
+      (field) =>
+        typeof context[field] !== "string" || context[field].length === 0,
+    ) ||
+    typeof context.delegationChainDigest !== "string" ||
+    !HEX_64.test(context.delegationChainDigest) ||
+    !Array.isArray(context.effectiveScope) ||
+    context.effectiveScope.some(
+      (scope) => typeof scope !== "string" || scope.length === 0,
+    ) ||
+    new Set(context.effectiveScope).size !== context.effectiveScope.length ||
+    !Number.isSafeInteger(context.issuedAtUtcMs) ||
+    !Number.isSafeInteger(context.expiresAtUtcMs) ||
+    (context.issuedAtUtcMs as number) < 0 ||
+    (context.expiresAtUtcMs as number) <= (context.issuedAtUtcMs as number)
+  )
+    return undefined;
+  // SAFETY: exactRecord plus field checks above cover all contract members.
+  return context as unknown as AuthorityContext;
+}
+
+export const actorSubjectId = (authority: AuthorityContext): string =>
+  digestJson([
+    "actor-subject-v1",
+    authority.issuerNamespaceId,
+    authority.principalId,
+    authority.representedSubjectId,
+    authority.audience,
+  ]);
+
+export const intentRunId = (
+  actorId: string,
+  agentId: string,
+  intentId: string,
+  idempotencyKey: string,
+): string => digestJson(["run-v1", actorId, agentId, intentId, idempotencyKey]);
+
+export const attemptPromptDigest = (
+  release: AgentRelease,
+  input: IntentAdmissionInput,
+): string =>
+  digestJson([
+    "attempt-prompt-v1",
+    release.releaseId,
+    release.spec.goal,
+    input.intentId,
+    input.descriptorVersion,
+    input.input,
+    release.closure.members,
+  ]);
+
 function attemptToken(runId: string, attempt: number): AttemptToken {
   return {
     runId,
@@ -296,10 +451,12 @@ function reduceFacts(facts: readonly SourceFact[]): ControlState {
           agentId: string;
           releaseId: string;
           epoch: number;
+          mode?: "active" | "shadow";
         }>(fact);
         state.activations.set(value.agentId, {
           releaseId: value.releaseId,
           epoch: value.epoch,
+          mode: value.mode ?? "active",
         });
         break;
       }
@@ -310,12 +467,33 @@ function reduceFacts(facts: readonly SourceFact[]): ControlState {
           releaseId: string;
           activationEpoch: number;
           token: AttemptToken;
+          executionMode?: ExecutionMode;
+          intentId?: string;
+          intentDescriptorVersion?: number;
+          inputDigest?: string;
+          promptDigest?: string;
         }>(fact);
         state.runs.set(value.runId, {
           runId: value.runId,
           agentId: value.agentId,
           releaseId: value.releaseId,
           activationEpoch: value.activationEpoch,
+          ...(value.executionMode &&
+          value.intentId &&
+          value.intentDescriptorVersion !== undefined &&
+          value.inputDigest &&
+          value.promptDigest
+            ? {
+                executionMode: value.executionMode,
+                intentId: value.intentId,
+                intentDescriptorVersion: value.intentDescriptorVersion,
+                inputDigest: value.inputDigest,
+                promptDigest: value.promptDigest,
+              }
+            : {}),
+          cancelRequested: false,
+          cancelFenceGeneration: 0,
+          reconciliationWake: new Set(),
           state: "running",
           currentAttempt: 0,
           sessions: new Map([[0, value.token]]),
@@ -333,6 +511,10 @@ function reduceFacts(facts: readonly SourceFact[]): ControlState {
         });
         break;
       }
+      case "attempt-prompt-bound":
+        // Immutable digest is already carried by the run-admission payload;
+        // the separate fact closes the launch/audit boundary atomically.
+        break;
       case "attempt-allocated": {
         const value = payload<{
           runId: string;
@@ -402,6 +584,47 @@ function reduceFacts(facts: readonly SourceFact[]): ControlState {
           .effects.get(value.effectId)!;
         effect.state = "approved";
         effect.approval = value.approval;
+        break;
+      }
+      case "approval-superseded": {
+        const value = payload<{ runId: string; effectId: string }>(fact);
+        const effect = state.runs
+          .get(value.runId)!
+          .effects.get(value.effectId)!;
+        effect.approval = undefined;
+        effect.approvalSuperseded = true;
+        break;
+      }
+      case "local-dispatch-result": {
+        const value = payload<{
+          runId: string;
+          effectId: string;
+          status: "claim-revoked";
+        }>(fact);
+        const effect = state.runs
+          .get(value.runId)!
+          .effects.get(value.effectId)!;
+        effect.localDispatchResult = value.status;
+        effect.state = "not-committed";
+        break;
+      }
+      case "reconciliation-wake": {
+        const value = payload<{ runId: string; effectId: string }>(fact);
+        state.runs.get(value.runId)!.reconciliationWake.add(value.effectId);
+        break;
+      }
+      case "cancel-requested": {
+        const value = payload<{
+          runId: string;
+          fenceGeneration: number;
+          pendingReconciliation: boolean;
+        }>(fact);
+        const run = state.runs.get(value.runId)!;
+        run.cancelRequested = true;
+        run.cancelFenceGeneration = value.fenceGeneration;
+        run.state = value.pendingReconciliation
+          ? "cancel-pending-reconciliation"
+          : "cancel-requested";
         break;
       }
       case "effect-claimed": {
@@ -506,7 +729,9 @@ function reduceFacts(facts: readonly SourceFact[]): ControlState {
           obligationDigest: string;
           fenceDigest: string;
         }>(fact);
-        state.runs.get(value.runId)!.quiesced.set(value.attempt, {
+        const run = state.runs.get(value.runId)!;
+        run.state = "waiting";
+        run.quiesced.set(value.attempt, {
           checkpointId: value.checkpointId,
           sessionId: value.sessionId,
           containmentGeneration: value.containmentGeneration,
@@ -743,9 +968,14 @@ export function commandMeta(
   idempotencyKey: string,
   input: unknown,
   precondition: unknown = null,
+  authorityContextDigest = digestJson([
+    "m1-authority-context-v1",
+    actorSubjectId,
+  ]),
 ): CommandMeta {
   return {
     actorSubjectId,
+    authorityContextDigest,
     commandKind,
     targetId,
     idempotencyKey,
@@ -798,6 +1028,25 @@ export class Control {
     this.#options = options;
   }
 
+  #queryAuthority(
+    input: AuthorityContext,
+    family: ProjectionFamily,
+    entityId: string | null,
+  ): Result<AuthorityContext> {
+    const authority = decodeAuthorityContext(input);
+    if (!authority) return fail("invalid_input");
+    const requiredScope = requiredScopeForProjection(family);
+    if (!requiredScope.ok) return fail(requiredScope.error);
+    if (
+      authority.audience !== "hangar-control" ||
+      !authority.effectiveScope.includes(requiredScope.value)
+    )
+      return fail("forbidden");
+    if (this.#options.authorizeQuery?.(authority, family, entityId) === false)
+      return entityId === null ? fail("forbidden") : fail("not_found");
+    return ok(authority);
+  }
+
   #transact<T>(
     meta: CommandMeta,
     input: unknown,
@@ -822,6 +1071,7 @@ export class Control {
     return this.#store.transact(
       {
         actorSubjectId: value.actorSubjectId,
+        authorityContextDigest: value.authorityContextDigest,
         commandKind: value.commandKind,
         targetId: value.targetId,
         idempotencyKey: value.idempotencyKey,
@@ -829,8 +1079,31 @@ export class Control {
         precondition: value.precondition as JsonValue,
         preconditionDigest: canonicalPreconditionDigest,
       },
-      decide,
-      options,
+      (snapshot) => {
+        const admission = this.#options.authorizeCommandAdmission?.(
+          value,
+          snapshot,
+        );
+        if (admission && !admission.ok) return fail(admission.error);
+        return decide(snapshot);
+      },
+      {
+        ...options,
+        persistRejections:
+          options?.persistRejections ??
+          ([
+            "forbidden",
+            "invalid_state",
+            "stale_epoch",
+            "terminal_conflict",
+          ] as const),
+        authorizeStoredResult:
+          options?.authorizeStoredResult ??
+          (this.#options.authorizeCommandDisclosure
+            ? (snapshot) =>
+                this.#options.authorizeCommandDisclosure!(value, snapshot)
+            : undefined),
+      },
     );
   }
 
@@ -923,6 +1196,236 @@ export class Control {
           },
         ],
         decoded,
+      );
+    });
+  }
+
+  activateMode(
+    meta: CommandMeta,
+    input: {
+      agentId: string;
+      releaseId: string;
+      epoch: number;
+      activationMode: "active" | "shadow";
+    },
+  ): Result<{
+    agentId: string;
+    releaseId: string;
+    epoch: number;
+    activationMode: "active" | "shadow";
+  }> {
+    const value = exactRecord(input, [
+      "agentId",
+      "releaseId",
+      "epoch",
+      "activationMode",
+    ]);
+    if (
+      !value ||
+      typeof value.agentId !== "string" ||
+      typeof value.releaseId !== "string" ||
+      !Number.isSafeInteger(value.epoch) ||
+      (value.epoch as number) < 0 ||
+      !["active", "shadow"].includes(String(value.activationMode))
+    )
+      return fail("invalid_input");
+    const decoded = {
+      agentId: value.agentId,
+      releaseId: value.releaseId,
+      epoch: value.epoch as number,
+      activationMode: value.activationMode as "active" | "shadow",
+    };
+    const metaValue = matchingCommandMeta(
+      meta,
+      "activate-mode",
+      decoded.agentId,
+      decoded,
+    );
+    const precondition = exactRecord(metaValue?.precondition, [
+      "expectedCurrentEpoch",
+    ]);
+    if (!metaValue || !precondition) return fail("invalid_input");
+    const expectedCurrentEpoch = precondition.expectedCurrentEpoch;
+    if (
+      expectedCurrentEpoch !== null &&
+      (!Number.isSafeInteger(expectedCurrentEpoch) ||
+        (expectedCurrentEpoch as number) < 0)
+    )
+      return fail("invalid_input");
+    return this.#transact(metaValue, decoded, (snapshot) => {
+      const state = reduceFacts(snapshot.facts);
+      const release = state.releases.get(decoded.releaseId);
+      if (!release || release.spec.agentId !== decoded.agentId)
+        return fail("not_found");
+      const current = state.activations.get(decoded.agentId);
+      if ((current?.epoch ?? null) !== expectedCurrentEpoch)
+        return fail("stale_epoch");
+      if (current && decoded.epoch <= current.epoch) return fail("stale_epoch");
+      return plan(
+        snapshot,
+        [
+          {
+            aggregateId: decoded.agentId,
+            factKind: "activation-active",
+            payload: asPayload({
+              agentId: decoded.agentId,
+              releaseId: decoded.releaseId,
+              epoch: decoded.epoch,
+              mode: decoded.activationMode,
+            }),
+          },
+        ],
+        decoded,
+      );
+    });
+  }
+
+  admitIntent(
+    authorityInput: AuthorityContext,
+    meta: CommandMeta,
+    input: IntentAdmissionInput,
+  ): Result<IntentAdmissionResult> {
+    const raw = exactRecord(input, [
+      "agentId",
+      "intentId",
+      "descriptorVersion",
+      "executionMode",
+      "input",
+    ]);
+    const metadata = validateControlMetadataInput(raw?.input);
+    const authority = decodeAuthorityContext(authorityInput);
+    if (
+      !raw ||
+      !metadata.ok ||
+      !authority ||
+      authority.audience !== "hangar-control" ||
+      typeof raw.agentId !== "string" ||
+      raw.agentId.length === 0 ||
+      typeof raw.intentId !== "string" ||
+      raw.intentId.length === 0 ||
+      !Number.isSafeInteger(raw.descriptorVersion) ||
+      (raw.descriptorVersion as number) < 1 ||
+      !["shadow-evaluator", "production"].includes(String(raw.executionMode))
+    )
+      return fail("invalid_input");
+    const decoded: IntentAdmissionInput = {
+      agentId: raw.agentId,
+      intentId: raw.intentId,
+      descriptorVersion: raw.descriptorVersion as number,
+      executionMode: raw.executionMode as ExecutionMode,
+      input: metadata.value,
+    };
+    const expectedActor = actorSubjectId(authority);
+    const runId = intentRunId(
+      expectedActor,
+      decoded.agentId,
+      decoded.intentId,
+      meta?.idempotencyKey,
+    );
+    const metaValue = matchingCommandMeta(meta, "admit-intent", runId, decoded);
+    const precondition = exactRecord(metaValue?.precondition, [
+      "releaseId",
+      "activationEpoch",
+      "inputSchemaDigest",
+    ]);
+    if (
+      !metaValue ||
+      metaValue.actorSubjectId !== expectedActor ||
+      metaValue.authorityContextDigest !== digestJson(authority) ||
+      !precondition ||
+      typeof precondition.releaseId !== "string" ||
+      !Number.isSafeInteger(precondition.activationEpoch) ||
+      typeof precondition.inputSchemaDigest !== "string" ||
+      !HEX_64.test(precondition.inputSchemaDigest)
+    )
+      return fail("invalid_input");
+    return this.#transact(metaValue, decoded, (snapshot) => {
+      const state = reduceFacts(snapshot.facts);
+      const activation = state.activations.get(decoded.agentId);
+      const release = activation
+        ? state.releases.get(activation.releaseId)
+        : undefined;
+      if (!activation || !release) return fail("not_found");
+      if (
+        precondition.releaseId !== release.releaseId ||
+        precondition.activationEpoch !== activation.epoch
+      )
+        return fail("stale_epoch");
+      const descriptor = release.spec.intentDescriptors.find(
+        ({ intentId }) => intentId === decoded.intentId,
+      );
+      if (!descriptor) return fail("not_found");
+      if (
+        descriptor.descriptorVersion !== decoded.descriptorVersion ||
+        descriptor.inputSchema.digest !== precondition.inputSchemaDigest
+      )
+        return fail("invalid_state");
+      if (!authority.effectiveScope.includes(descriptor.scope))
+        return fail("forbidden");
+      const mutationGrant = [
+        ...release.spec.capabilities,
+        ...release.spec.effectOperations,
+      ].some(
+        (name) => name.startsWith("mutation.") || name.startsWith("external."),
+      );
+      if (decoded.executionMode === "shadow-evaluator") {
+        if (activation.mode !== "shadow" || mutationGrant)
+          return fail("forbidden");
+      } else if (
+        activation.mode !== "active" ||
+        this.#options.productionEligible?.(release, decoded.agentId) !== true
+      ) {
+        return fail("forbidden");
+      }
+      if (state.runs.has(runId)) return fail("idempotency_conflict");
+      const token = attemptToken(runId, 0);
+      const inputDigest = digestJson(decoded.input);
+      const promptDigest = attemptPromptDigest(release, decoded);
+      const result: IntentAdmissionResult = {
+        runId,
+        releaseId: release.releaseId,
+        activationEpoch: activation.epoch,
+        executionMode: decoded.executionMode,
+        inputDigest,
+        promptDigest,
+      };
+      return plan(
+        snapshot,
+        [
+          {
+            aggregateId: runId,
+            factKind: "run-admitted",
+            payload: asPayload({
+              runId,
+              agentId: decoded.agentId,
+              releaseId: release.releaseId,
+              activationEpoch: activation.epoch,
+              token,
+              actorSubjectId: expectedActor,
+              executionMode: decoded.executionMode,
+              intentId: decoded.intentId,
+              intentDescriptorVersion: descriptor.descriptorVersion,
+              inputSchemaId: descriptor.inputSchema.id,
+              inputSchemaVersion: descriptor.inputSchema.version,
+              inputSchemaDigest: descriptor.inputSchema.digest,
+              controlMetadata: decoded.input,
+              inputDigest,
+              promptDigest,
+            }),
+          },
+          {
+            aggregateId: runId,
+            factKind: "attempt-prompt-bound",
+            payload: asPayload({
+              runId,
+              attempt: 0,
+              releaseId: release.releaseId,
+              inputDigest,
+              promptDigest,
+            }),
+          },
+        ],
+        result,
       );
     });
   }
@@ -1178,6 +1681,7 @@ export class Control {
     return this.#transact(decodedMeta, decoded, (snapshot) => {
       const state = reduceFacts(snapshot.facts);
       const run = state.runs.get(token.runId);
+      if (run?.cancelRequested) return fail("terminal_conflict");
       if (!validToken(run, token)) return fail("stale_attempt");
       if (!currentActivation(state, run!)) return fail("stale_epoch");
       const drafts: FactDraft[] = [];
@@ -1372,6 +1876,7 @@ export class Control {
       const state = reduceFacts(snapshot.facts);
       const run = state.runs.get(decoded.runId);
       if (!run) return fail("not_found");
+      if (run.cancelRequested) return fail("terminal_conflict");
       const release = state.releases.get(run.releaseId);
       const observations = [...run.toolObservations.values()]
         .filter((observation) => observation.attempt === decoded.attempt)
@@ -1450,6 +1955,7 @@ export class Control {
     return this.#transact(decodedMeta, decoded, (snapshot) => {
       const state = reduceFacts(snapshot.facts);
       const run = state.runs.get(token.runId);
+      if (run?.cancelRequested) return fail("terminal_conflict");
       if (!validToken(run, token)) return fail("stale_attempt");
       if (!currentActivation(state, run!)) return fail("stale_epoch");
       if (!processExists(decoded.pid)) return fail("invalid_input");
@@ -1616,6 +2122,7 @@ export class Control {
     if (!decodedMeta) return fail("invalid_input");
     return this.#transact(decodedMeta, { checkpointId }, (snapshot) => {
       const run = reduceFacts(snapshot.facts).runs.get(token.runId);
+      if (run?.cancelRequested) return fail("terminal_conflict");
       if (!run || !matchesStoredToken(run, token)) return fail("stale_attempt");
       const checkpoint = run.checkpoints.get(token.attempt);
       const fence = attemptFence(run, token.attempt);
@@ -1683,7 +2190,8 @@ export class Control {
       (snapshot) => {
         const state = reduceFacts(snapshot.facts);
         const run = state.runs.get(decoded.runId);
-        if (!run || run.state !== "running") return fail("invalid_state");
+        if (!run || run.state !== "waiting") return fail("invalid_state");
+        if (run.cancelRequested) return fail("terminal_conflict");
         if (!currentActivation(state, run)) return fail("stale_epoch");
         const oldAttempt = run.currentAttempt;
         const quiescence = run.quiesced.get(oldAttempt);
@@ -1754,7 +2262,10 @@ export class Control {
       const state = reduceFacts(snapshot.facts);
       const run = state.runs.get(decoded.runId);
       if (!run) return fail("not_found");
-      if (["completed", "failed", "cancelled"].includes(run.state))
+      if (
+        run.cancelRequested ||
+        ["completed", "failed", "cancelled"].includes(run.state)
+      )
         return fail("terminal_conflict");
       const attemptState = run.attempts.get(run.currentAttempt) ?? "running";
       const effectsFinal = [...run.effects.values()].every((effect) =>
@@ -1785,18 +2296,360 @@ export class Control {
     });
   }
 
+  cancel(
+    meta: CommandMeta,
+    input: { runId: string; reasonCode: "user-requested" },
+  ): Result<{
+    runId: string;
+    cancelStatus: "cleanup-pending" | "cancel-pending-reconciliation";
+    fenceGeneration: number;
+  }> {
+    const value = exactRecord(input, ["runId", "reasonCode"]);
+    if (
+      !value ||
+      typeof value.runId !== "string" ||
+      value.reasonCode !== "user-requested"
+    )
+      return fail("invalid_input");
+    const decoded = {
+      runId: value.runId,
+      reasonCode: "user-requested" as const,
+    };
+    const decodedMeta = matchingCommandMeta(
+      meta,
+      "cancel-run",
+      decoded.runId,
+      decoded,
+    );
+    if (!decodedMeta) return fail("invalid_input");
+    return this.#transact(decodedMeta, decoded, (snapshot) => {
+      const run = reduceFacts(snapshot.facts).runs.get(decoded.runId);
+      if (!run) return fail("not_found");
+      if (["completed", "failed", "cancelled"].includes(run.state))
+        return fail("terminal_conflict");
+      if (run.cancelRequested) return fail("invalid_state");
+      const fenceGeneration = run.cancelFenceGeneration + 1;
+      const drafts: FactDraft[] = [];
+      let pendingReconciliation = false;
+      for (const [effectId, effect] of run.effects) {
+        if (effect.localDispatchResult) continue;
+        if (["pending", "approved", "claimed"].includes(effect.state)) {
+          if (["pending", "approved"].includes(effect.state))
+            drafts.push({
+              aggregateId: decoded.runId,
+              factKind: "approval-superseded",
+              payload: asPayload({
+                runId: decoded.runId,
+                effectId,
+                fenceGeneration,
+              }),
+            });
+          drafts.push({
+            aggregateId: decoded.runId,
+            factKind: "local-dispatch-result",
+            payload: asPayload({
+              runId: decoded.runId,
+              effectId,
+              status: "claim-revoked",
+              fenceGeneration,
+            }),
+          });
+        } else if (
+          effect.state === "dispatch-started" ||
+          effect.state === "unknown"
+        ) {
+          pendingReconciliation = true;
+          if (!run.reconciliationWake.has(effectId))
+            drafts.push({
+              aggregateId: decoded.runId,
+              factKind: "reconciliation-wake",
+              payload: asPayload({
+                runId: decoded.runId,
+                effectId,
+                fenceGeneration,
+              }),
+            });
+        }
+      }
+      drafts.unshift({
+        aggregateId: decoded.runId,
+        factKind: "cancel-requested",
+        payload: asPayload({
+          runId: decoded.runId,
+          currentAttempt: run.currentAttempt,
+          fenceGeneration,
+          pendingReconciliation,
+          reasonCode: decoded.reasonCode,
+        }),
+      });
+      const result = {
+        runId: decoded.runId,
+        cancelStatus: pendingReconciliation
+          ? ("cancel-pending-reconciliation" as const)
+          : ("cleanup-pending" as const),
+        fenceGeneration,
+      };
+      return plan(snapshot, drafts, result);
+    });
+  }
+
+  recordCancelCleanup(
+    authority: symbol,
+    meta: CommandMeta,
+    runId: string,
+  ): Result<{ runId: string; state: "cancelled" }> {
+    if (authority !== CANCEL_OWNER) return fail("forbidden");
+    const decodedMeta = matchingCommandMeta(meta, "cancel-cleanup", runId, {
+      runId,
+    });
+    if (!decodedMeta) return fail("invalid_input");
+    return this.#transact(decodedMeta, { runId }, (snapshot) => {
+      const run = reduceFacts(snapshot.facts).runs.get(runId);
+      if (!run) return fail("not_found");
+      if (!run.cancelRequested) return fail("invalid_state");
+      if (run.state === "cancelled")
+        return plan(snapshot, [], { runId, state: "cancelled" as const });
+      if (
+        [...run.effects.values()].some(
+          (effect) =>
+            effect.state === "dispatch-started" || effect.state === "unknown",
+        )
+      )
+        return fail("invalid_state");
+      const attempt = run.currentAttempt;
+      if (run.processes.has(attempt) && !run.reaped.has(attempt))
+        return fail("invalid_state");
+      const drafts: FactDraft[] = [];
+      if (run.attempts.get(attempt) === "running")
+        drafts.push({
+          aggregateId: runId,
+          factKind: "attempt-settled",
+          payload: asPayload({ runId, attempt, state: "cancelled" }),
+        });
+      if (!run.revoked.has(attempt))
+        drafts.push({
+          aggregateId: runId,
+          factKind: "grant-revoked",
+          payload: asPayload({ runId, attempt }),
+        });
+      drafts.push({
+        aggregateId: runId,
+        factKind: "run-terminal",
+        payload: asPayload({ runId, state: "cancelled" }),
+      });
+      return plan(snapshot, drafts, { runId, state: "cancelled" as const });
+    });
+  }
+
   authorizeLaunch(token: AttemptToken): Result<AgentRelease> {
     const snapshot = this.#store.readSnapshot();
     if (!snapshot.ok) return snapshot;
     try {
       const state = reduceFacts(snapshot.value.facts);
       const run = state.runs.get(token.runId);
+      if (run?.cancelRequested) return fail("terminal_conflict");
       if (!validToken(run, token)) return fail("stale_attempt");
       if (!currentActivation(state, run!)) return fail("stale_epoch");
       const release = state.releases.get(run!.releaseId);
       return release && verifyRelease(release)
         ? ok(release)
         : fail("not_found");
+    } catch {
+      return fail("invalid_state");
+    }
+  }
+
+  listAgents(
+    authorityInput: AuthorityContext,
+  ): Result<QueryEnvelope<readonly AgentSummary[]>> {
+    const authority = this.#queryAuthority(authorityInput, "agent", null);
+    if (!authority.ok) return authority;
+    const snapshot = this.#store.readSnapshot();
+    if (!snapshot.ok) return snapshot;
+    try {
+      const state = reduceFacts(snapshot.value.facts);
+      const counts = new Map<string, number>();
+      for (const release of state.releases.values())
+        if (
+          this.#options.authorizeQuery?.(
+            authority.value,
+            "agent",
+            release.spec.agentId,
+          ) !== false
+        )
+          counts.set(
+            release.spec.agentId,
+            (counts.get(release.spec.agentId) ?? 0) + 1,
+          );
+      const agents = [...counts]
+        .map(([agentId, releaseCount]) => ({ agentId, releaseCount }))
+        .sort((left, right) => left.agentId.localeCompare(right.agentId));
+      return ok({
+        policyVersion: authority.value.issuerVersion,
+        value: agents,
+      });
+    } catch {
+      return fail("invalid_state");
+    }
+  }
+
+  listReleases(
+    authorityInput: AuthorityContext,
+    agentId: string,
+  ): Result<QueryEnvelope<readonly ReleaseSummary[]>> {
+    const authority = this.#queryAuthority(authorityInput, "release", agentId);
+    if (!authority.ok) return authority;
+    const snapshot = this.#store.readSnapshot();
+    if (!snapshot.ok) return snapshot;
+    try {
+      const releases = [...reduceFacts(snapshot.value.facts).releases.values()]
+        .filter((release) => release.spec.agentId === agentId)
+        .map((release) => ({
+          agentId,
+          releaseId: release.releaseId,
+          schemaVersion: release.schemaVersion,
+          intentDescriptors: release.spec.intentDescriptors,
+          etag: `"${release.releaseId}"`,
+        }))
+        .sort((left, right) => left.releaseId.localeCompare(right.releaseId));
+      return releases.length === 0
+        ? fail("not_found")
+        : ok({ policyVersion: authority.value.issuerVersion, value: releases });
+    } catch {
+      return fail("invalid_state");
+    }
+  }
+
+  readRun(
+    authorityInput: AuthorityContext,
+    runId: string,
+  ): Result<
+    QueryEnvelope<{
+      readonly run: SanitizedRunSummary;
+      readonly pendingApprovals: readonly PendingApprovalSummary[];
+    }>
+  > {
+    const runAuthority = this.#queryAuthority(authorityInput, "run", runId);
+    if (!runAuthority.ok) return runAuthority;
+    const approvalAuthority = this.#queryAuthority(
+      authorityInput,
+      "approval",
+      runId,
+    );
+    if (!approvalAuthority.ok) return approvalAuthority;
+    const snapshot = this.#store.readSnapshot();
+    if (!snapshot.ok) return snapshot;
+    try {
+      const internal = reduceFacts(snapshot.value.facts).runs.get(runId);
+      if (!internal) return fail("not_found");
+      const currentAttempt = internal.currentAttempt;
+      const run: SanitizedRunSummary = {
+        runId: internal.runId,
+        agentId: internal.agentId,
+        releaseId: internal.releaseId,
+        activationEpoch: internal.activationEpoch,
+        state: internal.state,
+        currentAttempt,
+        attemptState: internal.attempts.get(currentAttempt) ?? "running",
+        ...(internal.executionMode
+          ? { executionMode: internal.executionMode }
+          : {}),
+        ...(internal.checkpoints.get(currentAttempt)
+          ? {
+              checkpointId:
+                internal.checkpoints.get(currentAttempt)!.checkpointId,
+            }
+          : {}),
+        ...(internal.acceptedOutcomes.get(currentAttempt)
+          ? {
+              outcomeArtifactDigest:
+                internal.acceptedOutcomes.get(currentAttempt),
+            }
+          : {}),
+      };
+      const pendingApprovals = [...internal.effects]
+        .filter(([, effect]) => effect.state === "pending")
+        .map(([approvalId, effect]) => ({
+          approvalId,
+          runId,
+          state: "pending" as const,
+          operation: effect.operation,
+        }))
+        .sort((left, right) => left.approvalId.localeCompare(right.approvalId));
+      return ok({
+        policyVersion: runAuthority.value.issuerVersion,
+        value: { run, pendingApprovals },
+      });
+    } catch {
+      return fail("invalid_state");
+    }
+  }
+
+  readHealth(
+    authorityInput: AuthorityContext,
+  ): Result<QueryEnvelope<HealthSummary>> {
+    const authority = this.#queryAuthority(authorityInput, "health", null);
+    if (!authority.ok) return authority;
+    const snapshot = this.#store.readSnapshot();
+    if (!snapshot.ok) return snapshot;
+    return ok({
+      policyVersion: authority.value.issuerVersion,
+      value: { status: "healthy", headSeq: snapshot.value.headSeq },
+    });
+  }
+
+  readRunEvents(
+    authorityInput: AuthorityContext,
+    runId: string,
+    cursor: string | null = null,
+  ): Result<QueryEnvelope<RunEventPage>> {
+    const authority = this.#queryAuthority(authorityInput, "event", runId);
+    if (!authority.ok)
+      return cursor === null || authority.error !== "not_found"
+        ? authority
+        : fail("cursor_unavailable");
+    let cursorSeq = 0;
+    if (cursor !== null) {
+      if (!/^[1-9][0-9]{0,15}$/.test(cursor)) return fail("invalid_input");
+      cursorSeq = Number(cursor);
+      if (
+        !Number.isSafeInteger(cursorSeq) ||
+        cursorSeq > Number.MAX_SAFE_INTEGER
+      )
+        return fail("invalid_input");
+    }
+    const snapshot = this.#store.readSnapshot();
+    if (!snapshot.ok) return snapshot;
+    try {
+      const state = reduceFacts(snapshot.value.facts);
+      if (!state.runs.has(runId))
+        return cursor === null ? fail("not_found") : fail("cursor_unavailable");
+      if (cursor !== null) {
+        const anchor = snapshot.value.facts.find(
+          ({ factSeq }) => factSeq === cursorSeq,
+        );
+        if (!anchor || anchor.aggregateId !== runId)
+          return fail("cursor_unavailable");
+      }
+      const events = snapshot.value.facts
+        .filter(
+          ({ aggregateId, factSeq }) =>
+            aggregateId === runId && factSeq > cursorSeq,
+        )
+        .slice(0, 128)
+        .map(({ factSeq, factKind }) => ({
+          id: String(factSeq),
+          runId,
+          eventKind: factKind,
+        }));
+      return ok({
+        policyVersion: authority.value.issuerVersion,
+        value: {
+          events,
+          nextCursor: events.at(-1)?.id ?? cursor,
+          durableHead: String(snapshot.value.headSeq),
+        },
+      });
     } catch {
       return fail("invalid_state");
     }
@@ -1911,6 +2764,7 @@ export class Control {
         const run = state.runs.get(runId);
         const effect = run?.effects.get(effectId);
         if (!run || !effect) return fail("not_found");
+        if (run.cancelRequested) return fail("terminal_conflict");
         if (!currentActivation(state, run)) return fail("stale_epoch");
         if (
           effect.state !== "pending" ||
@@ -1958,6 +2812,7 @@ export class Control {
         const run = state.runs.get(runId);
         const effect = run?.effects.get(effectId);
         if (!run || !effect) return fail("not_found");
+        if (run.cancelRequested) return fail("terminal_conflict");
         if (!currentActivation(state, run)) return fail("stale_epoch");
         if (
           effect.state !== "approved" ||
@@ -2196,6 +3051,25 @@ export class TrustedProcessController {
 export const createTrustedProcessController = (
   control: Control,
 ): TrustedProcessController => new TrustedProcessController(control);
+
+export class TrustedCancelController {
+  readonly #control: Control;
+
+  constructor(control: Control) {
+    this.#control = control;
+  }
+
+  settle(
+    meta: CommandMeta,
+    runId: string,
+  ): Result<{ runId: string; state: "cancelled" }> {
+    return this.#control.recordCancelCleanup(CANCEL_OWNER, meta, runId);
+  }
+}
+
+export const createTrustedCancelController = (
+  control: Control,
+): TrustedCancelController => new TrustedCancelController(control);
 
 export type Connector = () => Promise<"committed" | "not-committed">;
 

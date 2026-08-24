@@ -9,12 +9,14 @@ export type JsonValue =
 export type ErrorKind =
   | "invalid_input"
   | "not_found"
+  | "forbidden"
   | "invalid_state"
   | "idempotency_conflict"
   | "stale_attempt"
   | "stale_epoch"
   | "stale_authority"
   | "terminal_conflict"
+  | "cursor_unavailable"
   | "unknown_effect";
 
 export type Result<T> =
@@ -74,8 +76,117 @@ export interface AgentRelease {
   readonly trustedDirectEffects: readonly never[];
 }
 
+export type ProjectionFamily =
+  | "agent"
+  | "release"
+  | "activation"
+  | "run"
+  | "attempt"
+  | "event"
+  | "approval"
+  | "effect"
+  | "health"
+  | "recovery"
+  | "command-result";
+
+/** Trusted authentication-boundary output; clients never supply this object. */
+export interface AuthorityContext {
+  readonly issuerNamespaceId: string;
+  readonly principalId: string;
+  readonly representedSubjectId: string;
+  readonly audience: string;
+  readonly issuerVersion: string;
+  readonly authenticatedMethod: string;
+  readonly delegationChainDigest: string;
+  readonly effectiveScope: readonly string[];
+  readonly effectiveOperation: string;
+  readonly issuedAtUtcMs: number;
+  readonly expiresAtUtcMs: number;
+  readonly revocationVersion: string;
+}
+
+export interface AgentSummary {
+  readonly agentId: string;
+  readonly releaseCount: number;
+}
+
+export interface ReleaseSummary {
+  readonly agentId: string;
+  readonly releaseId: string;
+  readonly schemaVersion: AgentRelease["schemaVersion"];
+  readonly intentDescriptors: readonly IntentDescriptor[];
+  readonly etag: string;
+}
+
+export interface PendingApprovalSummary {
+  readonly approvalId: string;
+  readonly runId: string;
+  readonly state: "pending";
+  readonly operation: string;
+}
+
+export interface SanitizedRunSummary {
+  readonly runId: string;
+  readonly agentId: string;
+  readonly releaseId: string;
+  readonly activationEpoch: number;
+  readonly state: RunState;
+  readonly currentAttempt: number;
+  readonly attemptState: AttemptState;
+  readonly executionMode?: ExecutionMode;
+  readonly checkpointId?: string;
+  readonly outcomeArtifactDigest?: string;
+}
+
+export interface SanitizedRunEvent {
+  readonly id: string;
+  readonly runId: string;
+  readonly eventKind: string;
+}
+
+export type ExecutionMode = "shadow-evaluator" | "production";
+
+export interface ControlMetadataInput {
+  readonly trigger: string;
+}
+
+export interface IntentAdmissionInput {
+  readonly agentId: string;
+  readonly intentId: string;
+  readonly descriptorVersion: number;
+  readonly executionMode: ExecutionMode;
+  readonly input: ControlMetadataInput;
+}
+
+export interface IntentAdmissionResult {
+  readonly runId: string;
+  readonly releaseId: string;
+  readonly activationEpoch: number;
+  readonly executionMode: ExecutionMode;
+  readonly inputDigest: string;
+  readonly promptDigest: string;
+}
+
+export interface RunEventPage {
+  readonly events: readonly SanitizedRunEvent[];
+  readonly nextCursor: string | null;
+  readonly durableHead: string;
+}
+
+export interface HealthSummary {
+  readonly status: "healthy";
+  readonly headSeq: number;
+}
+
+export interface QueryEnvelope<T> {
+  readonly policyVersion: string;
+  readonly value: T;
+}
+
 export interface CommandMeta {
   readonly actorSubjectId: string;
+  /** Digest of the first authorized AuthorityContext evidence, never raw auth. */
+  readonly authorityContextDigest: string;
   readonly commandKind: string;
   readonly targetId: string;
   readonly idempotencyKey: string;
@@ -87,6 +198,8 @@ export interface CommandMeta {
 export type RunState =
   | "running"
   | "waiting"
+  | "cancel-requested"
+  | "cancel-pending-reconciliation"
   | "completed"
   | "failed"
   | "cancelled";
@@ -253,12 +366,8 @@ const ASCII_ID = /^[A-Za-z0-9_-]+$/;
  */
 export function validateControlMetadataInput(
   value: unknown,
-): Result<
-  Readonly<Record<(typeof CONTROL_METADATA_KEYS)[number], JsonPrimitive>>
-> {
-  const failInput = (): Result<
-    Readonly<Record<(typeof CONTROL_METADATA_KEYS)[number], JsonPrimitive>>
-  > => fail("invalid_input");
+): Result<ControlMetadataInput> {
+  const failInput = (): Result<ControlMetadataInput> => fail("invalid_input");
   if (
     value === null ||
     typeof value !== "object" ||
