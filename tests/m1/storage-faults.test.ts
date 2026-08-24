@@ -259,38 +259,28 @@ test("restart rebuilds a complete lifecycle projection from facts", async () => 
         },
       ),
     );
-    value(
+    const rebuildEffect = {
+      type: "effect-intent" as const,
+      effect: {
+        actionId: "rebuild-action",
+        intentKey: "commit",
+        intentGeneration: 0,
+        operation: "fixture.commit",
+        payloadDigest: digestJson({ payload: "rebuild" }),
+      },
+    };
+    const rebuildEffectId = value(
       control.harness(token).submit(
         meta(
           "effect-intent",
           token.runId,
           "effect",
-          {
-            type: "effect-intent",
-            effect: {
-              effectId: "rebuild-effect",
-              actionId: "rebuild-action",
-              intentKey: "commit",
-              intentGeneration: 0,
-              operation: "fixture.commit",
-              payloadDigest: digestJson({ payload: "rebuild" }),
-            },
-          },
+          rebuildEffect,
           token,
         ),
-        {
-          type: "effect-intent",
-          effect: {
-            effectId: "rebuild-effect",
-            actionId: "rebuild-action",
-            intentKey: "commit",
-            intentGeneration: 0,
-            operation: "fixture.commit",
-            payloadDigest: digestJson({ payload: "rebuild" }),
-          },
-        },
+        rebuildEffect,
       ),
-    );
+    ).effectId;
     const gateway = createEffectGateway(control);
     const rebuildApproval = {
       decision: "approved" as const,
@@ -302,11 +292,11 @@ test("restart rebuilds a complete lifecycle projection from facts", async () => 
       gateway.approve(
         meta("approve-effect", token.runId, "approve", {
           runId: token.runId,
-          effectId: "rebuild-effect",
+          effectId: rebuildEffectId,
           approval: rebuildApproval,
         }),
         token.runId,
-        "rebuild-effect",
+        rebuildEffectId,
         rebuildApproval,
       ),
     );
@@ -315,19 +305,19 @@ test("restart rebuilds a complete lifecycle projection from facts", async () => 
         {
           start: meta("dispatch-effect", token.runId, "dispatch", {
             runId: token.runId,
-            effectId: "rebuild-effect",
+            effectId: rebuildEffectId,
           }),
           outcome: meta("record-effect-outcome", token.runId, "outcome", {
             runId: token.runId,
-            effectId: "rebuild-effect",
+            effectId: rebuildEffectId,
           }),
           unknown: meta("mark-effect-unknown", token.runId, "unknown", {
             runId: token.runId,
-            effectId: "rebuild-effect",
+            effectId: rebuildEffectId,
           }),
         },
         token.runId,
-        "rebuild-effect",
+        rebuildEffectId,
         async () => "committed",
       ),
     );

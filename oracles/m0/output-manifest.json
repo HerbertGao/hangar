@@ -2,7 +2,7 @@
   "schemaVersion": "m0-output-manifest-v1",
   "requirementId": "m0o.reproducibility",
   "sourceManifestPath": "oracles/m0/sources.json",
-  "sourceManifestDigest": "e36488312a1c86ebea8a44f829025274d7b75443a389a88e56cd0e8d9bd911d9",
+  "sourceManifestDigest": "0392031d33436dc555eab248dfc83cdf1879ae3e66384bcc2061f428a3e3c3fa",
   "outputs": [
     {
       "path": "contracts/v2/control/admission.json",
@@ -182,12 +182,12 @@
     {
       "path": "measurements/evidence.json",
       "category": "measurement",
-      "sha256": "616c7f21bc6ce8f8e455eb81f6ce2358f3a10943f9672c48945a1d1b86ad74ca"
+      "sha256": "7400c4cfe7a9e17da559a14e37b8360c033d6c46c4250fd39abb9d2cf5970570"
     },
     {
       "path": "measurements/ledger.json",
       "category": "measurement",
-      "sha256": "f7088c62cfe995975c4b9a7ebacd35d6b16d3d0db53841f1888e2078b3aaaaa1"
+      "sha256": "c9a048b2b195f9415fd676aa21c9ca4953cab02d734dfb2fe843fe79fa084e91"
     },
     {
       "path": "measurements/manifest.json",
@@ -297,7 +297,7 @@
     {
       "path": "oracles/m0/sources.json",
       "category": "oracle",
-      "sha256": "e36488312a1c86ebea8a44f829025274d7b75443a389a88e56cd0e8d9bd911d9"
+      "sha256": "0392031d33436dc555eab248dfc83cdf1879ae3e66384bcc2061f428a3e3c3fa"
     },
     {
       "path": "oracles/m0/v0-ledger.json",
@@ -532,7 +532,7 @@
     {
       "path": "tests/m0/measurements.test.mjs",
       "category": "test",
-      "sha256": "363bb3568a72d8d862c96fb4473eaa994774a11ea96dc73c10c42e70cabcf8af"
+      "sha256": "55a9174da42f1219261d1d445b15c1326bedefabc6ceb92805745fc2810d8ae5"
     },
     {
       "path": "tests/m0/obligation-owner-chain.test.mjs",

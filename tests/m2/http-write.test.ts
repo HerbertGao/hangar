@@ -37,7 +37,9 @@ async function setup() {
   const directory = await mkdtemp(join(tmpdir(), "hangar-m2-http-write-"));
   const authorityPath = join(directory, "authority.sqlite");
   const owner = new RecoveryAuthority(authorityPath);
-  const fence = value(owner.initialize("database-http-write", "target-http-write"));
+  const fence = value(
+    owner.initialize("database-http-write", "target-http-write"),
+  );
   let now = 1_000;
   let crashAfter = false;
   const secrets = new Map([["key-ref-1", "secret-1"]]);
@@ -134,7 +136,13 @@ async function setup() {
   const control = composition.control.control;
   value(
     control.publish(
-      commandMeta("owner", "publish-release", release.releaseId, "publish", release),
+      commandMeta(
+        "owner",
+        "publish-release",
+        release.releaseId,
+        "publish",
+        release,
+      ),
       release,
     ),
   );
@@ -172,10 +180,17 @@ async function setup() {
   };
   const token = value(
     control.admit(
-      commandMeta("owner", "admit", approvalRunId, "admit-approval", admitInput, {
-        releaseId: release.releaseId,
-        activationEpoch: 1,
-      }),
+      commandMeta(
+        "owner",
+        "admit",
+        approvalRunId,
+        "admit-approval",
+        admitInput,
+        {
+          releaseId: release.releaseId,
+          activationEpoch: 1,
+        },
+      ),
       admitInput,
     ),
   );
@@ -188,15 +203,23 @@ async function setup() {
     },
   };
   value(
-    control.harness(token).submit(
-      commandMeta("owner", "register-action", approvalRunId, "approval-action", action, token),
-      action,
-    ),
+    control
+      .harness(token)
+      .submit(
+        commandMeta(
+          "owner",
+          "register-action",
+          approvalRunId,
+          "approval-action",
+          action,
+          token,
+        ),
+        action,
+      ),
   );
   const effect = {
     type: "effect-intent" as const,
     effect: {
-      effectId: "approval-http",
       actionId: "approval-action",
       intentKey: "approval-http",
       intentGeneration: 1,
@@ -204,12 +227,21 @@ async function setup() {
       payloadDigest: "d".repeat(64),
     },
   };
-  value(
-    control.harness(token).submit(
-      commandMeta("owner", "effect-intent", approvalRunId, "approval-effect", effect, token),
-      effect,
-    ),
-  );
+  const approvalId = value(
+    control
+      .harness(token)
+      .submit(
+        commandMeta(
+          "owner",
+          "effect-intent",
+          approvalRunId,
+          "approval-effect",
+          effect,
+          token,
+        ),
+        effect,
+      ),
+  ).effectId;
 
   const server = createHangarReadServer(composition, {
     heartbeatMs: 25,
@@ -226,6 +258,7 @@ async function setup() {
     port,
     release,
     approvalRunId,
+    approvalId,
     setNow: (value: number) => {
       now = value;
     },
@@ -248,7 +281,10 @@ const get = async (port: number, path: string) => {
   const response = await fetch(`http://127.0.0.1:${port}${path}`, {
     headers: { Authorization: bearer },
   });
-  return { response, body: JSON.parse(await response.text()) as Record<string, unknown> };
+  return {
+    response,
+    body: JSON.parse(await response.text()) as Record<string, unknown>,
+  };
 };
 
 const post = async (
@@ -270,7 +306,10 @@ const post = async (
     body: JSON.stringify(body),
   });
   const text = await response.text();
-  return { response, body: text ? (JSON.parse(text) as Record<string, unknown>) : {} };
+  return {
+    response,
+    body: text ? (JSON.parse(text) as Record<string, unknown>) : {},
+  };
 };
 
 const rawStatus = (
@@ -308,7 +347,8 @@ test("auth session route is bootstrap-only and emits one 204 cookie header block
         Authorization: "Bearer bootstrap-write",
         Origin: "http://127.0.0.1:8787",
         "X-Hangar-Session-Action": "establish",
-        Cookie: "hangar_session=ambient_old; hangar_csrf=ambient_old; hangar_session_hint=ambient_old",
+        Cookie:
+          "hangar_session=ambient_old; hangar_csrf=ambient_old; hangar_session_hint=ambient_old",
       },
     });
     assert.equal(response.status, 204);
@@ -407,7 +447,7 @@ test("intent and cancel routes enforce credential/idempotency/precondition and c
       412,
     );
 
-    const runId = (first.body.runId as string);
+    const runId = first.body.runId as string;
     const run = await get(f.port, `/v1/runs/${runId}`);
     const runEtag = run.response.headers.get("etag")!;
     const session = f.composition.auth.exchangeSession({
@@ -458,14 +498,14 @@ test("approval opposite decisions converge on one stored winner; same key payloa
     const [approved, denied] = await Promise.all([
       post(
         f.port,
-        "/v1/approvals/approval-http/decision",
+        `/v1/approvals/${f.approvalId}/decision`,
         { decision: "approved" },
         "decision-a",
         etag,
       ),
       post(
         f.port,
-        "/v1/approvals/approval-http/decision",
+        `/v1/approvals/${f.approvalId}/decision`,
         { decision: "denied" },
         "decision-b",
         etag,
@@ -474,12 +514,13 @@ test("approval opposite decisions converge on one stored winner; same key payloa
     assert.equal(approved.response.status, 200);
     assert.equal(denied.response.status, 200);
     assert.equal(approved.body.state, denied.body.state);
-    const loserDecision = approved.body.state === "approved" ? "denied" : "approved";
+    const loserDecision =
+      approved.body.state === "approved" ? "denied" : "approved";
     assert.equal(
       (
         await post(
           f.port,
-          "/v1/approvals/approval-http/decision",
+          `/v1/approvals/${f.approvalId}/decision`,
           { decision: loserDecision },
           approved.body.state === "approved" ? "decision-a" : "decision-b",
           etag,

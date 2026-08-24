@@ -117,7 +117,6 @@ async function setup() {
   const effect = {
     type: "effect-intent" as const,
     effect: {
-      effectId: "effect-1",
       actionId: "action-1",
       intentKey: "intent-1",
       intentGeneration: 1,
@@ -125,16 +124,17 @@ async function setup() {
       payloadDigest: "c".repeat(64),
     },
   };
-  value(
+  const effectId = value(
     runtime.control
       .harness(token)
       .submit(
         commandMeta("actor", "effect-intent", runId, "effect", effect, token),
         effect,
       ),
-  );
+  ).effectId;
   return {
     runtime,
+    effectId,
     owner,
     runId,
     token,
@@ -228,11 +228,11 @@ test("cancel atomically revokes predispatch obligation, fences late work, then c
       f.gateway.approve(
         commandMeta("gateway", "approve-effect", f.runId, "late-approval", {
           runId: f.runId,
-          effectId: "effect-1",
+          effectId: f.effectId,
           approval: lateApproval,
         }),
         f.runId,
-        "effect-1",
+        f.effectId,
         lateApproval,
       ),
       { ok: false, error: "terminal_conflict" },
@@ -259,7 +259,7 @@ test("cancel atomically revokes predispatch obligation, fences late work, then c
     });
     assert.equal(value(f.runtime.control.snapshot(f.runId)).state, "cancelled");
     assert.equal(
-      value(f.runtime.control.snapshot(f.runId)).effects["effect-1"],
+      value(f.runtime.control.snapshot(f.runId)).effects[f.effectId],
       "not-committed",
     );
     // Exact replay stays stored even after terminal; another cancel is conflict.
@@ -297,15 +297,15 @@ test("started unknown effect keeps Run pending until real reconciliation final",
       f.gateway.approve(
         commandMeta("gateway", "approve-effect", f.runId, "approve", {
           runId: f.runId,
-          effectId: "effect-1",
+          effectId: f.effectId,
           approval,
         }),
         f.runId,
-        "effect-1",
+        f.effectId,
         approval,
       ),
     );
-    const dispatchInput = { runId: f.runId, effectId: "effect-1" };
+    const dispatchInput = { runId: f.runId, effectId: f.effectId };
     assert.deepEqual(
       await f.gateway.dispatch(
         {
@@ -332,7 +332,7 @@ test("started unknown effect keeps Run pending until real reconciliation final",
           ),
         },
         f.runId,
-        "effect-1",
+        f.effectId,
         async () => {
           throw new Error("transport outcome lost");
         },
@@ -362,11 +362,11 @@ test("started unknown effect keeps Run pending until real reconciliation final",
       f.gateway.reconcile(
         commandMeta("gateway", "reconcile-effect", f.runId, "reconcile", {
           runId: f.runId,
-          effectId: "effect-1",
+          effectId: f.effectId,
           outcome: "not-committed",
         }),
         f.runId,
-        "effect-1",
+        f.effectId,
         "not-committed",
       ),
     );

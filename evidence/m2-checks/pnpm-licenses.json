@@ -1,0 +1,1654 @@
+{
+  "MIT": [
+    {
+      "name": "@anthropic-ai/sdk",
+      "versions": [
+        "0.91.1"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@anthropic-ai+sdk@0.91.1_zod@4.4.3/node_modules/@anthropic-ai/sdk"
+      ],
+      "license": "MIT",
+      "author": "Anthropic",
+      "homepage": "https://github.com/anthropics/anthropic-sdk-typescript#readme",
+      "description": "The official TypeScript library for the Anthropic API"
+    },
+    {
+      "name": "@babel/runtime",
+      "versions": [
+        "7.29.7"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@babel+runtime@7.29.7/node_modules/@babel/runtime"
+      ],
+      "license": "MIT",
+      "author": "The Babel Team",
+      "homepage": "https://babel.dev/docs/en/next/babel-runtime",
+      "description": "babel's modular runtime helpers"
+    },
+    {
+      "name": "@earendil-works/pi-agent-core",
+      "versions": [
+        "0.84.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@earendil-works+pi-agent-core@0.84.2_ws@8.21.3_zod@4.4.3/node_modules/@earendil-works/pi-agent-core"
+      ],
+      "license": "MIT",
+      "author": "Mario Zechner",
+      "homepage": "https://github.com/earendil-works/pi#readme",
+      "description": "General-purpose agent with transport abstraction, state management, and attachment support"
+    },
+    {
+      "name": "@earendil-works/pi-ai",
+      "versions": [
+        "0.84.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@earendil-works+pi-ai@0.84.2_ws@8.21.3_zod@4.4.3/node_modules/@earendil-works/pi-ai"
+      ],
+      "license": "MIT",
+      "author": "Mario Zechner",
+      "homepage": "https://github.com/earendil-works/pi#readme",
+      "description": "Unified LLM API with automatic model discovery and provider configuration"
+    },
+    {
+      "name": "@earendil-works/pi-client",
+      "versions": [
+        "0.84.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@earendil-works+pi-client@0.84.2/node_modules/@earendil-works/pi-client"
+      ],
+      "license": "MIT",
+      "author": "Earendil Works",
+      "homepage": "https://github.com/earendil-works/pi#readme",
+      "description": "Transport-neutral client for remote pi sessions over framed CBOR bytes"
+    },
+    {
+      "name": "@earendil-works/pi-coding-agent",
+      "versions": [
+        "0.84.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@earendil-works+pi-coding-agent@0.84.2_ws@8.21.3_zod@4.4.3/node_modules/@earendil-works/pi-coding-agent"
+      ],
+      "license": "MIT",
+      "author": "Mario Zechner",
+      "homepage": "https://github.com/earendil-works/pi#readme",
+      "description": "Coding agent CLI with read, bash, edit, write tools and session management"
+    },
+    {
+      "name": "@earendil-works/pi-protocol",
+      "versions": [
+        "0.84.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@earendil-works+pi-protocol@0.84.2/node_modules/@earendil-works/pi-protocol"
+      ],
+      "license": "MIT",
+      "author": "Earendil Works",
+      "homepage": "https://github.com/earendil-works/pi#readme",
+      "description": "Transport-neutral CBOR protocol for remote pi sessions"
+    },
+    {
+      "name": "@earendil-works/pi-telemetry",
+      "versions": [
+        "0.84.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@earendil-works+pi-telemetry@0.84.2/node_modules/@earendil-works/pi-telemetry"
+      ],
+      "license": "MIT",
+      "author": "Mario Zechner",
+      "homepage": "https://github.com/earendil-works/pi#readme",
+      "description": "Vendor-neutral telemetry contracts and typed schema utilities for pi"
+    },
+    {
+      "name": "@earendil-works/pi-tui",
+      "versions": [
+        "0.84.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@earendil-works+pi-tui@0.84.2/node_modules/@earendil-works/pi-tui"
+      ],
+      "license": "MIT",
+      "author": "Mario Zechner",
+      "homepage": "https://github.com/earendil-works/pi#readme",
+      "description": "Terminal User Interface library with differential rendering for efficient text-based applications"
+    },
+    {
+      "name": "@mariozechner/clipboard",
+      "versions": [
+        "0.3.9"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@mariozechner+clipboard@0.3.9/node_modules/@mariozechner/clipboard"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/badlogic/clipboard#readme"
+    },
+    {
+      "name": "@mariozechner/clipboard-darwin-arm64",
+      "versions": [
+        "0.3.9"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@mariozechner+clipboard-darwin-arm64@0.3.9/node_modules/@mariozechner/clipboard-darwin-arm64"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/badlogic/clipboard#readme"
+    },
+    {
+      "name": "@mariozechner/clipboard-darwin-universal",
+      "versions": [
+        "0.3.9"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@mariozechner+clipboard-darwin-universal@0.3.9/node_modules/@mariozechner/clipboard-darwin-universal"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/badlogic/clipboard#readme"
+    },
+    {
+      "name": "@types/node",
+      "versions": [
+        "26.2.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@types+node@26.2.0/node_modules/@types/node"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/node",
+      "description": "TypeScript definitions for node"
+    },
+    {
+      "name": "@types/retry",
+      "versions": [
+        "0.12.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@types+retry@0.12.0/node_modules/@types/retry"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped#readme",
+      "description": "TypeScript definitions for retry"
+    },
+    {
+      "name": "agent-base",
+      "versions": [
+        "7.1.4"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/agent-base@7.1.4/node_modules/agent-base"
+      ],
+      "license": "MIT",
+      "author": "Nathan Rajlich",
+      "homepage": "https://github.com/TooTallNate/proxy-agents#readme",
+      "description": "Turn a function into an `http.Agent` instance"
+    },
+    {
+      "name": "balanced-match",
+      "versions": [
+        "4.0.4"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/balanced-match@4.0.4/node_modules/balanced-match"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/juliangruber/balanced-match#readme",
+      "description": "Match balanced character pairs, like \"{\" and \"}\""
+    },
+    {
+      "name": "base64-js",
+      "versions": [
+        "1.5.1"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/base64-js@1.5.1/node_modules/base64-js"
+      ],
+      "license": "MIT",
+      "author": "T. Jameson Little",
+      "homepage": "https://github.com/beatgammit/base64-js",
+      "description": "Base64 encoding/decoding in pure JS"
+    },
+    {
+      "name": "bignumber.js",
+      "versions": [
+        "9.3.1"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/bignumber.js@9.3.1/node_modules/bignumber.js"
+      ],
+      "license": "MIT",
+      "author": "Michael Mclaughlin",
+      "homepage": "https://github.com/MikeMcl/bignumber.js#readme",
+      "description": "A library for arbitrary-precision decimal and non-decimal arithmetic"
+    },
+    {
+      "name": "bowser",
+      "versions": [
+        "2.14.1"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/bowser@2.14.1/node_modules/bowser"
+      ],
+      "license": "MIT",
+      "author": "Dustin Diaz",
+      "homepage": "https://github.com/bowser-js/bowser",
+      "description": "Lightweight browser detector"
+    },
+    {
+      "name": "brace-expansion",
+      "versions": [
+        "5.0.9"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/brace-expansion@5.0.9/node_modules/brace-expansion"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/juliangruber/brace-expansion#readme",
+      "description": "Brace expansion as known from sh/bash"
+    },
+    {
+      "name": "chalk",
+      "versions": [
+        "5.6.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/chalk@5.6.2/node_modules/chalk"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/chalk/chalk#readme",
+      "description": "Terminal string styling done right"
+    },
+    {
+      "name": "cross-spawn",
+      "versions": [
+        "7.0.6"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/cross-spawn@7.0.6/node_modules/cross-spawn"
+      ],
+      "license": "MIT",
+      "author": "André Cruz",
+      "homepage": "https://github.com/moxystudio/node-cross-spawn",
+      "description": "Cross platform child_process#spawn and child_process#spawnSync"
+    },
+    {
+      "name": "data-uri-to-buffer",
+      "versions": [
+        "4.0.1"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/data-uri-to-buffer@4.0.1/node_modules/data-uri-to-buffer"
+      ],
+      "license": "MIT",
+      "author": "Nathan Rajlich",
+      "homepage": "https://github.com/TooTallNate/node-data-uri-to-buffer",
+      "description": "Generate a Buffer instance from a Data URI string"
+    },
+    {
+      "name": "debug",
+      "versions": [
+        "4.4.3"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/debug@4.4.3/node_modules/debug"
+      ],
+      "license": "MIT",
+      "author": "Josh Junon",
+      "homepage": "https://github.com/debug-js/debug#readme",
+      "description": "Lightweight debugging utility for Node.js and the browser"
+    },
+    {
+      "name": "extend",
+      "versions": [
+        "3.0.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/extend@3.0.2/node_modules/extend"
+      ],
+      "license": "MIT",
+      "author": "Stefan Thomas",
+      "homepage": "https://github.com/justmoon/node-extend#readme",
+      "description": "Port of jQuery.extend for node.js and the browser"
+    },
+    {
+      "name": "fetch-blob",
+      "versions": [
+        "3.2.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/fetch-blob@3.2.0/node_modules/fetch-blob"
+      ],
+      "license": "MIT",
+      "author": "Jimmy Wärting",
+      "homepage": "https://github.com/node-fetch/fetch-blob#readme",
+      "description": "Blob & File implementation in Node.js, originally from node-fetch."
+    },
+    {
+      "name": "formdata-polyfill",
+      "versions": [
+        "4.0.10"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/formdata-polyfill@4.0.10/node_modules/formdata-polyfill"
+      ],
+      "license": "MIT",
+      "author": "Jimmy Wärting",
+      "homepage": "https://github.com/jimmywarting/FormData#readme",
+      "description": "HTML5 `FormData` for Browsers and Node."
+    },
+    {
+      "name": "fsevents",
+      "versions": [
+        "2.3.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/fsevents@2.3.2/node_modules/fsevents"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/fsevents/fsevents",
+      "description": "Native Access to MacOS FSEvents"
+    },
+    {
+      "name": "get-east-asian-width",
+      "versions": [
+        "1.6.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/get-east-asian-width@1.6.0/node_modules/get-east-asian-width"
+      ],
+      "license": "MIT",
+      "author": "Sindre Sorhus",
+      "homepage": "https://github.com/sindresorhus/get-east-asian-width#readme",
+      "description": "Determine the East Asian Width of a Unicode character"
+    },
+    {
+      "name": "http-proxy-agent",
+      "versions": [
+        "7.0.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/http-proxy-agent@7.0.2/node_modules/http-proxy-agent"
+      ],
+      "license": "MIT",
+      "author": "Nathan Rajlich",
+      "homepage": "https://github.com/TooTallNate/proxy-agents#readme",
+      "description": "An HTTP(s) proxy `http.Agent` implementation for HTTP"
+    },
+    {
+      "name": "https-proxy-agent",
+      "versions": [
+        "7.0.6"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/https-proxy-agent@7.0.6/node_modules/https-proxy-agent"
+      ],
+      "license": "MIT",
+      "author": "Nathan Rajlich",
+      "homepage": "https://github.com/TooTallNate/proxy-agents#readme",
+      "description": "An HTTP(s) proxy `http.Agent` implementation for HTTPS"
+    },
+    {
+      "name": "ignore",
+      "versions": [
+        "7.0.5"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/ignore@7.0.5/node_modules/ignore"
+      ],
+      "license": "MIT",
+      "author": "kael",
+      "homepage": "https://github.com/kaelzhang/node-ignore#readme",
+      "description": "Ignore is a manager and filter for .gitignore rules, the one used by eslint, gitbook and many others."
+    },
+    {
+      "name": "jiti",
+      "versions": [
+        "2.7.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/jiti@2.7.0/node_modules/jiti"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/unjs/jiti#readme",
+      "description": "Runtime typescript and ESM support for Node.js"
+    },
+    {
+      "name": "json-bigint",
+      "versions": [
+        "1.0.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/json-bigint@1.0.0/node_modules/json-bigint"
+      ],
+      "license": "MIT",
+      "author": "Andrey Sidorov",
+      "homepage": "https://github.com/sidorares/json-bigint#readme",
+      "description": "JSON.parse with bigints support"
+    },
+    {
+      "name": "json-schema-to-ts",
+      "versions": [
+        "3.1.1"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/json-schema-to-ts@3.1.1/node_modules/json-schema-to-ts"
+      ],
+      "license": "MIT",
+      "author": "Thomas Aribart",
+      "homepage": "https://github.com/ThomasAribart/json-schema-to-ts#readme",
+      "description": "Infer typescript types from your JSON schemas!"
+    },
+    {
+      "name": "jwa",
+      "versions": [
+        "2.0.1"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/jwa@2.0.1/node_modules/jwa"
+      ],
+      "license": "MIT",
+      "author": "Brian J. Brennan",
+      "homepage": "https://github.com/brianloveswords/node-jwa#readme",
+      "description": "JWA implementation (supports all JWS algorithms)"
+    },
+    {
+      "name": "jws",
+      "versions": [
+        "4.0.1"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/jws@4.0.1/node_modules/jws"
+      ],
+      "license": "MIT",
+      "author": "Brian J Brennan",
+      "homepage": "https://github.com/brianloveswords/node-jws#readme",
+      "description": "Implementation of JSON Web Signatures"
+    },
+    {
+      "name": "marked",
+      "versions": [
+        "18.0.5"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/marked@18.0.5/node_modules/marked"
+      ],
+      "license": "MIT",
+      "author": "Christopher Jeffrey",
+      "homepage": "https://marked.js.org",
+      "description": "A markdown parser built for speed"
+    },
+    {
+      "name": "ms",
+      "versions": [
+        "2.1.3"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/ms@2.1.3/node_modules/ms"
+      ],
+      "license": "MIT",
+      "homepage": "https://github.com/vercel/ms#readme",
+      "description": "Tiny millisecond conversion utility"
+    },
+    {
+      "name": "node-domexception",
+      "versions": [
+        "1.0.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/node-domexception@1.0.0/node_modules/node-domexception"
+      ],
+      "license": "MIT",
+      "author": "Jimmy Wärting",
+      "homepage": "https://github.com/jimmywarting/node-domexception#readme",
+      "description": "An implementation of the DOMException class from NodeJS"
+    },
+    {
+      "name": "node-fetch",
+      "versions": [
+        "3.3.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/node-fetch@3.3.2/node_modules/node-fetch"
+      ],
+      "license": "MIT",
+      "author": "David Frank",
+      "homepage": "https://github.com/node-fetch/node-fetch",
+      "description": "A light-weight module that brings Fetch API to node.js"
+    },
+    {
+      "name": "p-retry",
+      "versions": [
+        "4.6.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/p-retry@4.6.2/node_modules/p-retry"
+      ],
+      "license": "MIT",
+      "author": "Sindre Sorhus",
+      "homepage": "https://github.com/sindresorhus/p-retry#readme",
+      "description": "Retry a promise-returning or async function"
+    },
+    {
+      "name": "partial-json",
+      "versions": [
+        "0.1.7"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/partial-json@0.1.7/node_modules/partial-json"
+      ],
+      "license": "MIT",
+      "author": "Muspi Merol",
+      "homepage": "https://promplate.dev/partial-json-parser",
+      "description": "Parse partial JSON generated by LLM"
+    },
+    {
+      "name": "path-key",
+      "versions": [
+        "3.1.1"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/path-key@3.1.1/node_modules/path-key"
+      ],
+      "license": "MIT",
+      "author": "Sindre Sorhus",
+      "homepage": "https://github.com/sindresorhus/path-key#readme",
+      "description": "Get the PATH environment variable key cross-platform"
+    },
+    {
+      "name": "proper-lockfile",
+      "versions": [
+        "4.1.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/proper-lockfile@4.1.2/node_modules/proper-lockfile"
+      ],
+      "license": "MIT",
+      "author": "André Cruz",
+      "homepage": "https://github.com/moxystudio/node-proper-lockfile",
+      "description": "A inter-process and inter-machine lockfile utility that works on a local or network file system"
+    },
+    {
+      "name": "retry",
+      "versions": [
+        "0.12.0",
+        "0.13.1"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/retry@0.12.0/node_modules/retry",
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/retry@0.13.1/node_modules/retry"
+      ],
+      "license": "MIT",
+      "author": "Tim Koschützki",
+      "homepage": "https://github.com/tim-kos/node-retry",
+      "description": "Abstraction for exponential and custom retry strategies for failed operations."
+    },
+    {
+      "name": "safe-buffer",
+      "versions": [
+        "5.2.1"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/safe-buffer@5.2.1/node_modules/safe-buffer"
+      ],
+      "license": "MIT",
+      "author": "Feross Aboukhadijeh",
+      "homepage": "https://github.com/feross/safe-buffer",
+      "description": "Safer Node.js Buffer API"
+    },
+    {
+      "name": "shebang-command",
+      "versions": [
+        "2.0.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/shebang-command@2.0.0/node_modules/shebang-command"
+      ],
+      "license": "MIT",
+      "author": "Kevin Mårtensson",
+      "homepage": "https://github.com/kevva/shebang-command#readme",
+      "description": "Get the command from a shebang"
+    },
+    {
+      "name": "shebang-regex",
+      "versions": [
+        "3.0.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/shebang-regex@3.0.0/node_modules/shebang-regex"
+      ],
+      "license": "MIT",
+      "author": "Sindre Sorhus",
+      "homepage": "https://github.com/sindresorhus/shebang-regex#readme",
+      "description": "Regular expression for matching a shebang line"
+    },
+    {
+      "name": "ts-algebra",
+      "versions": [
+        "2.0.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/ts-algebra@2.0.0/node_modules/ts-algebra"
+      ],
+      "license": "MIT",
+      "author": "Thomas Aribart",
+      "homepage": "https://github.com/ThomasAribart/ts-algebra#readme",
+      "description": "Types on steroids 💊"
+    },
+    {
+      "name": "typebox",
+      "versions": [
+        "1.3.7"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/typebox@1.3.7/node_modules/typebox"
+      ],
+      "license": "MIT",
+      "author": "sinclairzx81",
+      "homepage": "https://github.com/sinclairzx81/typebox#readme",
+      "description": "Json Schema Type Builder with Static Type Resolution for TypeScript"
+    },
+    {
+      "name": "undici",
+      "versions": [
+        "8.9.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/undici@8.9.0/node_modules/undici"
+      ],
+      "license": "MIT",
+      "homepage": "https://undici.nodejs.org",
+      "description": "An HTTP/1.1 client, written from scratch for Node.js"
+    },
+    {
+      "name": "undici-types",
+      "versions": [
+        "8.3.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/undici-types@8.3.0/node_modules/undici-types"
+      ],
+      "license": "MIT",
+      "homepage": "https://undici.nodejs.org",
+      "description": "A stand-alone types package for Undici"
+    },
+    {
+      "name": "web-streams-polyfill",
+      "versions": [
+        "3.3.3"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/web-streams-polyfill@3.3.3/node_modules/web-streams-polyfill"
+      ],
+      "license": "MIT",
+      "author": "Mattias Buelens",
+      "homepage": "https://github.com/MattiasBuelens/web-streams-polyfill#readme",
+      "description": "Web Streams, based on the WHATWG spec reference implementation"
+    },
+    {
+      "name": "ws",
+      "versions": [
+        "8.21.3"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/ws@8.21.3/node_modules/ws"
+      ],
+      "license": "MIT",
+      "author": "Einar Otto Stangvik",
+      "homepage": "https://github.com/websockets/ws",
+      "description": "Simple to use, blazing fast and thoroughly tested websocket client and server for Node.js"
+    },
+    {
+      "name": "zod",
+      "versions": [
+        "4.4.3"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/zod@4.4.3/node_modules/zod"
+      ],
+      "license": "MIT",
+      "author": "Colin McDonnell",
+      "homepage": "https://zod.dev",
+      "description": "TypeScript-first schema declaration and validation library with static type inference"
+    }
+  ],
+  "Apache-2.0": [
+    {
+      "name": "@aws-crypto/sha256-browser",
+      "versions": [
+        "5.2.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-crypto+sha256-browser@5.2.0/node_modules/@aws-crypto/sha256-browser"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS Crypto Tools Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-crypto-helpers/tree/master/packages/sha256-browser"
+    },
+    {
+      "name": "@aws-crypto/sha256-js",
+      "versions": [
+        "5.2.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-crypto+sha256-js@5.2.0/node_modules/@aws-crypto/sha256-js"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS Crypto Tools Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-crypto-helpers/tree/master/packages/sha256-js"
+    },
+    {
+      "name": "@aws-crypto/supports-web-crypto",
+      "versions": [
+        "5.2.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-crypto+supports-web-crypto@5.2.0/node_modules/@aws-crypto/supports-web-crypto"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS Crypto Tools Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-crypto-helpers/tree/master/packages/supports-web-crypto",
+      "description": "Provides functions for detecting if the host environment supports the WebCrypto API"
+    },
+    {
+      "name": "@aws-crypto/util",
+      "versions": [
+        "5.2.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-crypto+util@5.2.0/node_modules/@aws-crypto/util"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS Crypto Tools Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-crypto-helpers/tree/master/packages/util"
+    },
+    {
+      "name": "@aws-sdk/client-bedrock-runtime",
+      "versions": [
+        "3.1048.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+client-bedrock-runtime@3.1048.0/node_modules/@aws-sdk/client-bedrock-runtime"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/clients/client-bedrock-runtime",
+      "description": "AWS SDK for JavaScript Bedrock Runtime Client for Node.js, Browser and React Native"
+    },
+    {
+      "name": "@aws-sdk/core",
+      "versions": [
+        "3.977.9"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+core@3.977.9/node_modules/@aws-sdk/core"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages-internal/core",
+      "description": "Core functions & classes shared by multiple AWS SDK clients."
+    },
+    {
+      "name": "@aws-sdk/credential-provider-env",
+      "versions": [
+        "3.972.70"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+credential-provider-env@3.972.70/node_modules/@aws-sdk/credential-provider-env"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages-internal/credential-provider-env",
+      "description": "AWS credential provider that sources credentials from known environment variables"
+    },
+    {
+      "name": "@aws-sdk/credential-provider-http",
+      "versions": [
+        "3.972.72"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+credential-provider-http@3.972.72/node_modules/@aws-sdk/credential-provider-http"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages-internal/credential-provider-http",
+      "description": "AWS credential provider for containers and HTTP sources"
+    },
+    {
+      "name": "@aws-sdk/credential-provider-ini",
+      "versions": [
+        "3.973.15"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+credential-provider-ini@3.973.15/node_modules/@aws-sdk/credential-provider-ini"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages-internal/credential-provider-ini",
+      "description": "AWS credential provider that sources credentials from ~/.aws/credentials and ~/.aws/config"
+    },
+    {
+      "name": "@aws-sdk/credential-provider-login",
+      "versions": [
+        "3.972.77"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+credential-provider-login@3.972.77/node_modules/@aws-sdk/credential-provider-login"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages-internal/credential-provider-login",
+      "description": "AWS credential provider that sources credentials from aws login cached tokens"
+    },
+    {
+      "name": "@aws-sdk/credential-provider-node",
+      "versions": [
+        "3.972.81"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+credential-provider-node@3.972.81/node_modules/@aws-sdk/credential-provider-node"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages-internal/credential-provider-node",
+      "description": "AWS credential provider that sources credentials from a Node.JS environment. "
+    },
+    {
+      "name": "@aws-sdk/credential-provider-process",
+      "versions": [
+        "3.972.70"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+credential-provider-process@3.972.70/node_modules/@aws-sdk/credential-provider-process"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages-internal/credential-provider-process",
+      "description": "AWS credential provider that sources credential_process from ~/.aws/credentials and ~/.aws/config"
+    },
+    {
+      "name": "@aws-sdk/credential-provider-sso",
+      "versions": [
+        "3.973.14"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+credential-provider-sso@3.973.14/node_modules/@aws-sdk/credential-provider-sso"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages-internal/credential-provider-sso",
+      "description": "AWS credential provider that exchanges a resolved SSO login token file for temporary AWS credentials"
+    },
+    {
+      "name": "@aws-sdk/credential-provider-web-identity",
+      "versions": [
+        "3.972.76"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+credential-provider-web-identity@3.972.76/node_modules/@aws-sdk/credential-provider-web-identity"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages-internal/credential-provider-web-identity",
+      "description": "AWS credential provider that calls STS assumeRole for temporary AWS credentials"
+    },
+    {
+      "name": "@aws-sdk/eventstream-handler-node",
+      "versions": [
+        "3.972.34"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+eventstream-handler-node@3.972.34/node_modules/@aws-sdk/eventstream-handler-node"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages-internal/eventstream-handler-node"
+    },
+    {
+      "name": "@aws-sdk/middleware-eventstream",
+      "versions": [
+        "3.972.29"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+middleware-eventstream@3.972.29/node_modules/@aws-sdk/middleware-eventstream"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages-internal/middleware-eventstream"
+    },
+    {
+      "name": "@aws-sdk/middleware-websocket",
+      "versions": [
+        "3.972.52"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+middleware-websocket@3.972.52/node_modules/@aws-sdk/middleware-websocket"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages-internal/middleware-websocket"
+    },
+    {
+      "name": "@aws-sdk/nested-clients",
+      "versions": [
+        "3.997.44"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+nested-clients@3.997.44/node_modules/@aws-sdk/nested-clients"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages/nested-clients",
+      "description": "Nested clients for AWS SDK packages."
+    },
+    {
+      "name": "@aws-sdk/signature-v4-multi-region",
+      "versions": [
+        "3.996.46"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+signature-v4-multi-region@3.996.46/node_modules/@aws-sdk/signature-v4-multi-region"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages/signature-v4-multi-region"
+    },
+    {
+      "name": "@aws-sdk/token-providers",
+      "versions": [
+        "3.1048.0",
+        "3.1116.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+token-providers@3.1048.0/node_modules/@aws-sdk/token-providers",
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+token-providers@3.1116.0/node_modules/@aws-sdk/token-providers"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages/token-providers",
+      "description": "A collection of token providers"
+    },
+    {
+      "name": "@aws-sdk/types",
+      "versions": [
+        "3.974.5"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+types@3.974.5/node_modules/@aws-sdk/types"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages-internal/types",
+      "description": "Types for the AWS SDK"
+    },
+    {
+      "name": "@aws-sdk/util-locate-window",
+      "versions": [
+        "3.965.10"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+util-locate-window@3.965.10/node_modules/@aws-sdk/util-locate-window"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages-internal/util-locate-window"
+    },
+    {
+      "name": "@aws-sdk/xml-builder",
+      "versions": [
+        "3.972.40"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws-sdk+xml-builder@3.972.40/node_modules/@aws-sdk/xml-builder"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/aws/aws-sdk-js-v3/tree/main/packages-internal/xml-builder",
+      "description": "XML utilities for the AWS SDK"
+    },
+    {
+      "name": "@aws/lambda-invoke-store",
+      "versions": [
+        "0.3.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@aws+lambda-invoke-store@0.3.0/node_modules/@aws/lambda-invoke-store"
+      ],
+      "license": "Apache-2.0",
+      "author": "Amazon Web Services",
+      "homepage": "https://github.com/awslabs/aws-lambda-invoke-store",
+      "description": "Invoke scoped data storage for AWS Lambda Node.js Runtime Environment"
+    },
+    {
+      "name": "@google/genai",
+      "versions": [
+        "1.52.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@google+genai@1.52.0/node_modules/@google/genai"
+      ],
+      "license": "Apache-2.0",
+      "author": "",
+      "homepage": "https://github.com/googleapis/js-genai#readme",
+      "description": ""
+    },
+    {
+      "name": "@opentelemetry/api",
+      "versions": [
+        "1.9.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@opentelemetry+api@1.9.0/node_modules/@opentelemetry/api"
+      ],
+      "license": "Apache-2.0",
+      "author": "OpenTelemetry Authors",
+      "homepage": "https://github.com/open-telemetry/opentelemetry-js/tree/main/api",
+      "description": "Public API for OpenTelemetry"
+    },
+    {
+      "name": "@silvia-odwyer/photon-node",
+      "versions": [
+        "0.3.4"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@silvia-odwyer+photon-node@0.3.4/node_modules/@silvia-odwyer/photon-node"
+      ],
+      "license": "Apache-2.0",
+      "homepage": "https://silvia-odwyer.github.io/photon/",
+      "description": "High-performance image processing library for native use and the web"
+    },
+    {
+      "name": "@smithy/core",
+      "versions": [
+        "3.33.3"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@smithy+core@3.33.3/node_modules/@smithy/core"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS Smithy Team",
+      "homepage": "https://github.com/smithy-lang/smithy-typescript/tree/main/packages/core"
+    },
+    {
+      "name": "@smithy/credential-provider-imds",
+      "versions": [
+        "4.5.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@smithy+credential-provider-imds@4.5.2/node_modules/@smithy/credential-provider-imds"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/smithy-lang/smithy-typescript/tree/main/packages/credential-provider-imds",
+      "description": "AWS credential provider that sources credentials from the EC2 instance metadata service and ECS container metadata service"
+    },
+    {
+      "name": "@smithy/fetch-http-handler",
+      "versions": [
+        "5.7.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@smithy+fetch-http-handler@5.7.2/node_modules/@smithy/fetch-http-handler"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/smithy-lang/smithy-typescript/tree/main/packages/fetch-http-handler",
+      "description": "Provides a way to make requests"
+    },
+    {
+      "name": "@smithy/is-array-buffer",
+      "versions": [
+        "2.2.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@smithy+is-array-buffer@2.2.0/node_modules/@smithy/is-array-buffer"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/awslabs/smithy-typescript/tree/main/packages/is-array-buffer",
+      "description": "Provides a function for detecting if an argument is an ArrayBuffer"
+    },
+    {
+      "name": "@smithy/node-http-handler",
+      "versions": [
+        "4.7.3",
+        "4.11.3"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@smithy+node-http-handler@4.7.3/node_modules/@smithy/node-http-handler",
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@smithy+node-http-handler@4.11.3/node_modules/@smithy/node-http-handler"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/smithy-lang/smithy-typescript/tree/main/packages/node-http-handler",
+      "description": "Provides a way to make requests"
+    },
+    {
+      "name": "@smithy/signature-v4",
+      "versions": [
+        "5.7.3"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@smithy+signature-v4@5.7.3/node_modules/@smithy/signature-v4"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/smithy-lang/smithy-typescript/tree/main/packages/signature-v4",
+      "description": "A standalone implementation of the AWS Signature V4 request signing algorithm"
+    },
+    {
+      "name": "@smithy/types",
+      "versions": [
+        "4.17.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@smithy+types@4.17.2/node_modules/@smithy/types"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS Smithy Team",
+      "homepage": "https://github.com/smithy-lang/smithy-typescript/tree/main/packages/types"
+    },
+    {
+      "name": "@smithy/util-buffer-from",
+      "versions": [
+        "2.2.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@smithy+util-buffer-from@2.2.0/node_modules/@smithy/util-buffer-from"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/awslabs/smithy-typescript/tree/main/packages/util-buffer-from"
+    },
+    {
+      "name": "@smithy/util-utf8",
+      "versions": [
+        "2.3.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@smithy+util-utf8@2.3.0/node_modules/@smithy/util-utf8"
+      ],
+      "license": "Apache-2.0",
+      "author": "AWS SDK for JavaScript Team",
+      "homepage": "https://github.com/awslabs/smithy-typescript/tree/main/packages/util-utf8",
+      "description": "A UTF-8 string <-> UInt8Array converter"
+    },
+    {
+      "name": "ecdsa-sig-formatter",
+      "versions": [
+        "1.0.11"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/ecdsa-sig-formatter@1.0.11/node_modules/ecdsa-sig-formatter"
+      ],
+      "license": "Apache-2.0",
+      "author": "D2L Corporation",
+      "homepage": "https://github.com/Brightspace/node-ecdsa-sig-formatter#readme",
+      "description": "Translate ECDSA signatures between ASN.1/DER and JOSE-style concatenation"
+    },
+    {
+      "name": "gaxios",
+      "versions": [
+        "7.3.1"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/gaxios@7.3.1/node_modules/gaxios"
+      ],
+      "license": "Apache-2.0",
+      "author": "Google, LLC",
+      "homepage": "https://github.com/googleapis/google-cloud-node/tree/main/core/packages/gaxios",
+      "description": "A simple common HTTP client specifically for Google APIs and services."
+    },
+    {
+      "name": "gcp-metadata",
+      "versions": [
+        "8.1.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/gcp-metadata@8.1.2/node_modules/gcp-metadata"
+      ],
+      "license": "Apache-2.0",
+      "author": "Google LLC",
+      "homepage": "https://github.com/googleapis/google-cloud-node-core/tree/main/packages/gcp-metadata",
+      "description": "Get the metadata from a Google Cloud Platform environment"
+    },
+    {
+      "name": "google-auth-library",
+      "versions": [
+        "10.9.1"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/google-auth-library@10.9.1/node_modules/google-auth-library"
+      ],
+      "license": "Apache-2.0",
+      "author": "Google Inc.",
+      "homepage": "https://github.com/googleapis/google-cloud-node/tree/main/core/packages/google-auth-library-nodejs",
+      "description": "Google APIs Authentication Client Library for Node.js"
+    },
+    {
+      "name": "google-logging-utils",
+      "versions": [
+        "1.1.3"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/google-logging-utils@1.1.3/node_modules/google-logging-utils"
+      ],
+      "license": "Apache-2.0",
+      "author": "Google API Authors",
+      "homepage": "https://github.com/googleapis/google-cloud-node-core/tree/main/dev-packages/logging-utils",
+      "description": "A debug logger package for other Google libraries"
+    },
+    {
+      "name": "grok-mermaid",
+      "versions": [
+        "0.2.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/grok-mermaid@0.2.2/node_modules/grok-mermaid"
+      ],
+      "license": "Apache-2.0",
+      "author": "Alexey Zaytsev",
+      "homepage": "https://github.com/xl0/grok-mermaid#readme",
+      "description": "Render Mermaid diagrams as Unicode box-drawing art for terminals"
+    },
+    {
+      "name": "long",
+      "versions": [
+        "5.3.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/long@5.3.2/node_modules/long"
+      ],
+      "license": "Apache-2.0",
+      "author": "Daniel Wirtz",
+      "homepage": "https://github.com/dcodeIO/long.js#readme",
+      "description": "A Long class for representing a 64-bit two's-complement integer value."
+    },
+    {
+      "name": "openai",
+      "versions": [
+        "6.40.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/openai@6.40.0_ws@8.21.3_zod@4.4.3/node_modules/openai"
+      ],
+      "license": "Apache-2.0",
+      "author": "OpenAI",
+      "homepage": "https://github.com/openai/openai-node#readme",
+      "description": "The official TypeScript library for the OpenAI API"
+    },
+    {
+      "name": "playwright",
+      "versions": [
+        "1.62.1"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/playwright@1.62.1/node_modules/playwright"
+      ],
+      "license": "Apache-2.0",
+      "author": "Microsoft Corporation",
+      "homepage": "https://playwright.dev",
+      "description": "A high-level API to automate web browsers"
+    },
+    {
+      "name": "playwright-core",
+      "versions": [
+        "1.62.1"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/playwright-core@1.62.1/node_modules/playwright-core"
+      ],
+      "license": "Apache-2.0",
+      "author": "Microsoft Corporation",
+      "homepage": "https://playwright.dev",
+      "description": "A high-level API to automate web browsers"
+    }
+  ],
+  "BSD-3-Clause": [
+    {
+      "name": "@protobufjs/aspromise",
+      "versions": [
+        "1.1.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@protobufjs+aspromise@1.1.2/node_modules/@protobufjs/aspromise"
+      ],
+      "license": "BSD-3-Clause",
+      "author": "Daniel Wirtz",
+      "homepage": "https://github.com/dcodeIO/protobuf.js#readme",
+      "description": "Returns a promise from a node-style callback function."
+    },
+    {
+      "name": "@protobufjs/base64",
+      "versions": [
+        "1.1.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@protobufjs+base64@1.1.2/node_modules/@protobufjs/base64"
+      ],
+      "license": "BSD-3-Clause",
+      "author": "Daniel Wirtz",
+      "homepage": "https://github.com/dcodeIO/protobuf.js#readme",
+      "description": "A minimal base64 implementation for number arrays."
+    },
+    {
+      "name": "@protobufjs/codegen",
+      "versions": [
+        "2.0.5"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@protobufjs+codegen@2.0.5/node_modules/@protobufjs/codegen"
+      ],
+      "license": "BSD-3-Clause",
+      "author": "Daniel Wirtz",
+      "homepage": "https://github.com/dcodeIO/protobuf.js#readme",
+      "description": "A minimalistic code generation utility."
+    },
+    {
+      "name": "@protobufjs/eventemitter",
+      "versions": [
+        "1.1.1"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@protobufjs+eventemitter@1.1.1/node_modules/@protobufjs/eventemitter"
+      ],
+      "license": "BSD-3-Clause",
+      "author": "Daniel Wirtz",
+      "homepage": "https://github.com/dcodeIO/protobuf.js#readme",
+      "description": "A minimal event emitter."
+    },
+    {
+      "name": "@protobufjs/fetch",
+      "versions": [
+        "1.1.1"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@protobufjs+fetch@1.1.1/node_modules/@protobufjs/fetch"
+      ],
+      "license": "BSD-3-Clause",
+      "author": "Daniel Wirtz",
+      "homepage": "https://github.com/dcodeIO/protobuf.js#readme",
+      "description": "Fetches the contents of a file accross node and browsers."
+    },
+    {
+      "name": "@protobufjs/float",
+      "versions": [
+        "1.0.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@protobufjs+float@1.0.2/node_modules/@protobufjs/float"
+      ],
+      "license": "BSD-3-Clause",
+      "author": "Daniel Wirtz",
+      "homepage": "https://github.com/dcodeIO/protobuf.js#readme",
+      "description": "Reads / writes floats / doubles from / to buffers in both modern and ancient browsers."
+    },
+    {
+      "name": "@protobufjs/path",
+      "versions": [
+        "1.1.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@protobufjs+path@1.1.2/node_modules/@protobufjs/path"
+      ],
+      "license": "BSD-3-Clause",
+      "author": "Daniel Wirtz",
+      "homepage": "https://github.com/dcodeIO/protobuf.js#readme",
+      "description": "A minimal path module to resolve Unix, Windows and URL paths alike."
+    },
+    {
+      "name": "@protobufjs/pool",
+      "versions": [
+        "1.1.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@protobufjs+pool@1.1.0/node_modules/@protobufjs/pool"
+      ],
+      "license": "BSD-3-Clause",
+      "author": "Daniel Wirtz",
+      "homepage": "https://github.com/dcodeIO/protobuf.js#readme",
+      "description": "A general purpose buffer pool."
+    },
+    {
+      "name": "@protobufjs/utf8",
+      "versions": [
+        "1.1.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/@protobufjs+utf8@1.1.2/node_modules/@protobufjs/utf8"
+      ],
+      "license": "BSD-3-Clause",
+      "author": "Daniel Wirtz",
+      "homepage": "https://github.com/protobufjs/protobuf.js#readme",
+      "description": "A minimal UTF8 implementation for number arrays."
+    },
+    {
+      "name": "buffer-equal-constant-time",
+      "versions": [
+        "1.0.1"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/buffer-equal-constant-time@1.0.1/node_modules/buffer-equal-constant-time"
+      ],
+      "license": "BSD-3-Clause",
+      "author": "GoInstant Inc., a salesforce.com company",
+      "homepage": "https://github.com/goinstant/buffer-equal-constant-time#readme",
+      "description": "Constant-time comparison of Buffers"
+    },
+    {
+      "name": "diff",
+      "versions": [
+        "8.0.4"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/diff@8.0.4/node_modules/diff"
+      ],
+      "license": "BSD-3-Clause",
+      "homepage": "https://github.com/kpdecker/jsdiff#readme",
+      "description": "A JavaScript text diff implementation."
+    },
+    {
+      "name": "highlight.js",
+      "versions": [
+        "10.7.3"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/highlight.js@10.7.3/node_modules/highlight.js"
+      ],
+      "license": "BSD-3-Clause",
+      "author": "Ivan Sagalaev",
+      "homepage": "https://highlightjs.org/",
+      "description": "Syntax highlighting with language autodetection."
+    },
+    {
+      "name": "protobufjs",
+      "versions": [
+        "7.6.5"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/protobufjs@7.6.5/node_modules/protobufjs"
+      ],
+      "license": "BSD-3-Clause",
+      "author": "Daniel Wirtz",
+      "homepage": "https://protobufjs.github.io/protobuf.js/",
+      "description": "Protocol Buffers for JavaScript (& TypeScript)."
+    }
+  ],
+  "BlueOak-1.0.0": [
+    {
+      "name": "glob",
+      "versions": [
+        "13.0.6"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/glob@13.0.6/node_modules/glob"
+      ],
+      "license": "BlueOak-1.0.0",
+      "author": "Isaac Z. Schlueter",
+      "homepage": "https://github.com/isaacs/node-glob#readme",
+      "description": "the most correct and second fastest glob implementation in JavaScript"
+    },
+    {
+      "name": "lru-cache",
+      "versions": [
+        "11.5.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/lru-cache@11.5.2/node_modules/lru-cache"
+      ],
+      "license": "BlueOak-1.0.0",
+      "author": "Isaac Z. Schlueter",
+      "homepage": "https://github.com/isaacs/node-lru-cache#readme",
+      "description": "A cache object that deletes the least-recently-used items."
+    },
+    {
+      "name": "minimatch",
+      "versions": [
+        "10.2.5"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/minimatch@10.2.5/node_modules/minimatch"
+      ],
+      "license": "BlueOak-1.0.0",
+      "author": "Isaac Z. Schlueter",
+      "homepage": "https://github.com/isaacs/minimatch#readme",
+      "description": "a glob matcher in javascript"
+    },
+    {
+      "name": "minipass",
+      "versions": [
+        "7.1.3"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/minipass@7.1.3/node_modules/minipass"
+      ],
+      "license": "BlueOak-1.0.0",
+      "author": "Isaac Z. Schlueter",
+      "homepage": "https://github.com/isaacs/minipass#readme",
+      "description": "minimal implementation of a PassThrough stream"
+    },
+    {
+      "name": "path-scurry",
+      "versions": [
+        "2.0.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/path-scurry@2.0.2/node_modules/path-scurry"
+      ],
+      "license": "BlueOak-1.0.0",
+      "author": "Isaac Z. Schlueter",
+      "homepage": "https://github.com/isaacs/path-scurry#readme",
+      "description": "walk paths fast and efficiently"
+    }
+  ],
+  "ISC": [
+    {
+      "name": "graceful-fs",
+      "versions": [
+        "4.2.11"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/graceful-fs@4.2.11/node_modules/graceful-fs"
+      ],
+      "license": "ISC",
+      "homepage": "https://github.com/isaacs/node-graceful-fs#readme",
+      "description": "A drop-in replacement for fs, making various improvements."
+    },
+    {
+      "name": "hosted-git-info",
+      "versions": [
+        "9.0.3"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/hosted-git-info@9.0.3/node_modules/hosted-git-info"
+      ],
+      "license": "ISC",
+      "author": "GitHub Inc.",
+      "homepage": "https://github.com/npm/hosted-git-info",
+      "description": "Provides metadata and conversions from repository urls for GitHub, Bitbucket and GitLab"
+    },
+    {
+      "name": "isexe",
+      "versions": [
+        "2.0.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/isexe@2.0.0/node_modules/isexe"
+      ],
+      "license": "ISC",
+      "author": "Isaac Z. Schlueter",
+      "homepage": "https://github.com/isaacs/isexe#readme",
+      "description": "Minimal module to check if a file is executable."
+    },
+    {
+      "name": "semver",
+      "versions": [
+        "7.8.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/semver@7.8.0/node_modules/semver"
+      ],
+      "license": "ISC",
+      "author": "GitHub Inc.",
+      "homepage": "https://github.com/npm/node-semver#readme",
+      "description": "The semantic version parser used by npm."
+    },
+    {
+      "name": "signal-exit",
+      "versions": [
+        "3.0.7"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/signal-exit@3.0.7/node_modules/signal-exit"
+      ],
+      "license": "ISC",
+      "author": "Ben Coe",
+      "homepage": "https://github.com/tapjs/signal-exit",
+      "description": "when you want to fire an event no matter how a process exits."
+    },
+    {
+      "name": "which",
+      "versions": [
+        "2.0.2"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/which@2.0.2/node_modules/which"
+      ],
+      "license": "ISC",
+      "author": "Isaac Z. Schlueter",
+      "homepage": "https://github.com/isaacs/node-which#readme",
+      "description": "Like which(1) unix command. Find the first instance of an executable in the PATH."
+    },
+    {
+      "name": "yaml",
+      "versions": [
+        "2.9.0"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/yaml@2.9.0/node_modules/yaml"
+      ],
+      "license": "ISC",
+      "author": "Eemeli Aro",
+      "homepage": "https://eemeli.org/yaml/",
+      "description": "JavaScript parser and stringifier for YAML"
+    }
+  ],
+  "0BSD": [
+    {
+      "name": "tslib",
+      "versions": [
+        "2.8.1"
+      ],
+      "paths": [
+        "/Users/herbertgao/VSCodeProject/hangar/node_modules/.pnpm/tslib@2.8.1/node_modules/tslib"
+      ],
+      "license": "0BSD",
+      "author": "Microsoft Corp.",
+      "homepage": "https://www.typescriptlang.org/",
+      "description": "Runtime library for TypeScript helper functions"
+    }
+  ]
+}

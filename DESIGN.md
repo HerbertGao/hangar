@@ -232,9 +232,11 @@ Adapter 可以在同一 RunAttempt 内规划、压缩上下文、调用 provider
 - 把 provider session 的完成状态直接映射为业务成功；
 - 绕过 ToolDescriptor 读取 knowledge provider 凭据。
 
-Pi 是首个 reference HarnessAdapter，不是固定“大脑”。AgentScope/LangGraph 可作为受边界约束的 SDK adapter 或外部
+Pi 是首个 reference HarnessAdapter，不是固定“大脑”。AgentScope/LangGraph/Mastra 可作为受边界约束的 SDK adapter 或外部
 完整方案；若采用其完整 Service，就必须替代对应 Control owner，不能在 Hangar 上再叠一份 session/schedule/effect
 状态机。外部候选必须通过同一 release、grant、effect-unknown、cancel/checkpoint、retry-owner 与 whole-tree-reap fixture。
+Mastra 接入还必须明确拒绝候选侧 auto recovery、schedules trigger owner、tool approval 治理受控 mutation，以及候选进程持有
+高风险业务提交凭据；未能结构性关闭任一项时不得进入 fixture 实现。
 
 ### 6.1 「受限子进程」的定义与勘验
 
@@ -463,6 +465,7 @@ Web、小程序、Telegram Bot、CLI 与未来 Agent principal 都是同一控�
 - `CLAUDE.md`：在仓库中工作的执行护栏；
 - `docs/proposals/control-core-v2-migration.md`：完整迁移论证；
 - `docs/proposals/personal-agent-builder.md`：产品选择、竞品与硬门依据；
+- `docs/proposals/mastra-candidate-evaluation.md`：Mastra 2026-08-21 候选取证附录（非架构 SOT；未查实项计 0）；
 - `openspec/config.yaml`：OpenSpec 生成上下文；
 - `main:SKILL.md`：历史 v0 CLI 的迁移期运行契约，只作行为 oracle，直到 v2 client contract 接管；
 - `main:openspec/specs/`：已交付 v0 行为的兼容 oracle；本分支无此目录，不能反向覆盖本文件的 v2 架构方向；

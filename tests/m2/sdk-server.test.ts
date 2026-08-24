@@ -94,7 +94,13 @@ async function setup() {
   const control = composition.control.control;
   value(
     control.publish(
-      commandMeta("owner", "publish-release", release.releaseId, "publish", release),
+      commandMeta(
+        "owner",
+        "publish-release",
+        release.releaseId,
+        "publish",
+        release,
+      ),
       release,
     ),
   );
@@ -139,18 +145,30 @@ async function setup() {
   );
   const action = {
     type: "action" as const,
-    action: { actionId: "a", kind: "tool" as const, inputDigest: "c".repeat(64) },
+    action: {
+      actionId: "a",
+      kind: "tool" as const,
+      inputDigest: "c".repeat(64),
+    },
   };
   value(
-    control.harness(token).submit(
-      commandMeta("owner", "register-action", approvalRun, "a", action, token),
-      action,
-    ),
+    control
+      .harness(token)
+      .submit(
+        commandMeta(
+          "owner",
+          "register-action",
+          approvalRun,
+          "a",
+          action,
+          token,
+        ),
+        action,
+      ),
   );
   const effect = {
     type: "effect-intent" as const,
     effect: {
-      effectId: "approval-sdk",
       actionId: "a",
       intentKey: "i",
       intentGeneration: 1,
@@ -158,12 +176,14 @@ async function setup() {
       payloadDigest: "d".repeat(64),
     },
   };
-  value(
-    control.harness(token).submit(
-      commandMeta("owner", "effect-intent", approvalRun, "e", effect, token),
-      effect,
-    ),
-  );
+  const approvalId = value(
+    control
+      .harness(token)
+      .submit(
+        commandMeta("owner", "effect-intent", approvalRun, "e", effect, token),
+        effect,
+      ),
+  ).effectId;
   const server = createHangarReadServer(composition, { heartbeatMs: 25 });
   const port = await new Promise<number>((resolve) =>
     server.listen(0, () => resolve(server.address()!.port)),
@@ -180,8 +200,11 @@ async function setup() {
     sdk,
     release,
     approvalRun,
+    approvalId,
     close: async () => {
-      (server as unknown as { closeAllConnections(): void }).closeAllConnections();
+      (
+        server as unknown as { closeAllConnections(): void }
+      ).closeAllConnections();
       await new Promise<void>((resolve) => server.close(() => resolve()));
       composition.close();
       owner.close();
@@ -196,7 +219,8 @@ test("generated SDK exercises all eight Control routes and SSE through real serv
     const agents = await f.sdk.listAgents();
     assert.equal((agents.data as { agents: unknown[] }).agents.length, 1);
     const releases = await f.sdk.listReleases("agent-sdk");
-    const release = (releases.data as { releases: Array<{ etag: string }> }).releases[0];
+    const release = (releases.data as { releases: Array<{ etag: string }> })
+      .releases[0];
     const admitted = await f.sdk.submitIntent(
       "agent-sdk",
       "emit",
@@ -227,11 +251,10 @@ test("generated SDK exercises all eight Control routes and SSE through real serv
     assert.equal(cancelled.status, 202);
 
     const approvalRun = await f.sdk.getRun(f.approvalRun);
-    const decided = await f.sdk.decideApproval(
-      "approval-sdk",
-      "approved",
-      { idempotencyKey: "sdk-decision", ifMatch: approvalRun.etag! },
-    );
+    const decided = await f.sdk.decideApproval(f.approvalId, "approved", {
+      idempotencyKey: "sdk-decision",
+      ifMatch: approvalRun.etag!,
+    });
     assert.equal(decided.status, 200);
   } finally {
     await f.close();
@@ -243,10 +266,10 @@ test("SDK rejects unknown response/event fields and never retries a write with a
     baseUrl: "http://unused",
     credentialHeaders: () => ({ Authorization: "Bearer x" }),
     fetchImpl: async () =>
-      new Response(
-        JSON.stringify({ agents: [], unexpected: true }),
-        { status: 200, headers: { "content-type": "application/json" } },
-      ),
+      new Response(JSON.stringify({ agents: [], unexpected: true }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      }),
   });
   await assert.rejects(
     () => extraResponseSdk.listAgents(),

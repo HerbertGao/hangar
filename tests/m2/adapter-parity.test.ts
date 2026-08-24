@@ -14,8 +14,7 @@ import {
 } from "../../packages/contracts/index.ts";
 import {
   commandMeta,
-  createEffectGateway,
-  createTrustedPiCleanupController,
+  createHarnessAdapterPort,
 } from "../../packages/control-core/index.ts";
 import {
   RecoveryAuthority,
@@ -151,22 +150,36 @@ async function setup(
   const expected = deriver.derive(release, "emit", request);
   acceptedDigest = expected.digest;
   const bridge = new PiHarnessBridge(
-    runtime.control.harness(token),
-    createEffectGateway(runtime.control),
-    runtime.outcomes,
-    createTrustedPiCleanupController(runtime.control),
+    createHarnessAdapterPort(runtime.control, token, "actor"),
     token,
     release,
     request,
     deriver,
     {
-      actorSubjectId: "actor",
       intentId: "emit",
       outcomeToolId: "outcome-submit",
       outcomeActionId: "outcome-action",
-      activationEpoch: 1,
     },
   );
+  const complete = (
+    evidence: Parameters<PiHarnessBridge["cleanup"]>[0],
+    terminalize = true,
+  ) => {
+    const result = bridge.cleanup(evidence);
+    if (!result.ok || !terminalize) return result;
+    const state = result.value.cause === "succeeded" ? "completed" : "failed";
+    const terminal = runtime.control.terminalize(
+      commandMeta(
+        "actor",
+        "terminalize",
+        runId,
+        `pi-terminal-${token.attempt}`,
+        { state },
+      ),
+      { runId, state },
+    );
+    return terminal.ok ? result : terminal;
+  };
   return {
     runtime,
     owner,
@@ -175,6 +188,7 @@ async function setup(
     request,
     expected,
     bridge,
+    complete,
     runId,
     close: async () => {
       runtime.close();
@@ -271,11 +285,11 @@ test("fake and Pi releases differ in identity but produce parity facts/outcome",
       pi.bridge,
       happyFrames(pi.release, pi.request, pi.expected.bytes),
     );
-    assert.deepEqual(fake.bridge.cleanup(cleanupEvidence), {
+    assert.deepEqual(fake.complete(cleanupEvidence), {
       ok: true,
       value: { cause: "succeeded" },
     });
-    assert.deepEqual(pi.bridge.cleanup(cleanupEvidence), {
+    assert.deepEqual(pi.complete(cleanupEvidence), {
       ok: true,
       value: { cause: "succeeded" },
     });
@@ -298,6 +312,50 @@ test("fake and Pi releases differ in identity but produce parity facts/outcome",
   } finally {
     await fake.close();
     await pi.close();
+  }
+});
+
+test("durable fault after accepted outcome forces failed terminal state", async () => {
+  const fixture = await setup("pi-sdk");
+  try {
+    const frames = happyFrames(
+      fixture.release,
+      fixture.request,
+      fixture.expected.bytes,
+    );
+    await drive(fixture.request, fixture.bridge, frames.slice(0, 4));
+    assert.equal(fixture.bridge.outcomeAccepted, true);
+    const acceptedIndex = value(
+      fixture.runtime.control.sourceFacts(),
+    ).findIndex(
+      ({ factKind }) => factKind === "outcome-accepted",
+    );
+    assert.ok(acceptedIndex >= 0);
+    assert.deepEqual(
+      await fixture.bridge.handle({
+        schemaVersion: "hangar-pi-ipc-v1",
+        type: "protocol-fault",
+        faultKind: "unknown-sdk-event",
+        diagnosticDigest: "0".repeat(64),
+      }),
+      { ok: false, error: "invalid_state" },
+    );
+    const faultIndex = value(
+      fixture.runtime.control.sourceFacts(),
+    ).findIndex(
+      ({ factKind }) => factKind === "attempt-fault-recorded",
+    );
+    assert.ok(faultIndex > acceptedIndex);
+    assert.deepEqual(fixture.complete(cleanupEvidence), {
+      ok: true,
+      value: { cause: "failed" },
+    });
+    assert.equal(
+      value(fixture.runtime.control.snapshot(fixture.runId)).state,
+      "failed",
+    );
+  } finally {
+    await fixture.close();
   }
 });
 
@@ -350,7 +408,7 @@ test("settled without outcome, forged and plausible-wrong artifacts end failed",
         });
       }
       await drive(fixture.request, fixture.bridge, frames);
-      assert.deepEqual(fixture.bridge.cleanup(cleanupEvidence), {
+      assert.deepEqual(fixture.complete(cleanupEvidence), {
         ok: true,
         value: { cause: "failed" },
       });
@@ -415,7 +473,7 @@ test("ambiguous prompt acceptance fails once; terminal ignores all late child fr
     // Prompt was sent by bridge constructor, but IPC dies before accepted.
     fixture.bridge.processExitOrFault(false);
     fixture.bridge.closeIpc();
-    assert.deepEqual(fixture.bridge.cleanup(cleanupEvidence), {
+    assert.deepEqual(fixture.complete(cleanupEvidence), {
       ok: true,
       value: { cause: "failed" },
     });
@@ -447,7 +505,7 @@ test("cleanup Attempt commit and terminalization are separate restart-safe trans
       fixture.bridge,
       happyFrames(fixture.release, fixture.request, fixture.expected.bytes),
     );
-    assert.deepEqual(fixture.bridge.cleanup(cleanupEvidence, false), {
+    assert.deepEqual(fixture.complete(cleanupEvidence, false), {
       ok: true,
       value: { cause: "succeeded" },
     });

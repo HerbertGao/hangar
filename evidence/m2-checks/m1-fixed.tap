@@ -1,0 +1,108 @@
+TAP version 13
+# (node:67719) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: ambiguous Effect is never redispatched and resume fences the old session
+ok 1 - ambiguous Effect is never redispatched and resume fences the old session
+  ---
+  duration_ms: 482.096042
+  type: 'test'
+  ...
+# (node:67720) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: fake child maps through one Control lifecycle
+ok 2 - fake child maps through one Control lifecycle
+  ---
+  duration_ms: 239.467791
+  type: 'test'
+  ...
+# Subtest: legacy-process child maps through one Control lifecycle
+ok 3 - legacy-process child maps through one Control lifecycle
+  ---
+  duration_ms: 98.832833
+  type: 'test'
+  ...
+# Subtest: launcher rejects release harness and closure drift before spawn
+ok 4 - launcher rejects release harness and closure drift before spawn
+  ---
+  duration_ms: 38.139459
+  type: 'test'
+  ...
+# Subtest: empty heartbeat artifact is rejected and cannot complete the Run
+ok 5 - empty heartbeat artifact is rejected and cannot complete the Run
+  ---
+  duration_ms: 78.800041
+  type: 'test'
+  ...
+# Subtest: nonzero child exit is observed and cannot complete the Run
+ok 6 - nonzero child exit is observed and cannot complete the Run
+  ---
+  duration_ms: 69.394083
+  type: 'test'
+  ...
+# Subtest: parent death triggers automatic process-group reap but remains non-production
+ok 7 - parent death triggers automatic process-group reap but remains non-production
+  ---
+  duration_ms: 86.040708
+  type: 'test'
+  ...
+# Subtest: independent restore authority fences source and competing target
+ok 8 - independent restore authority fences source and competing target
+  ---
+  duration_ms: 15.990083
+  type: 'test'
+  ...
+# (node:67721) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: release compilation is canonical and deeply immutable
+ok 9 - release compilation is canonical and deeply immutable
+  ---
+  duration_ms: 14.123334
+  type: 'test'
+  ...
+# Subtest: release compiler rejects drift and non-contract fields
+ok 10 - release compiler rejects drift and non-contract fields
+  ---
+  duration_ms: 0.226958
+  type: 'test'
+  ...
+# Subtest: Control admission cannot forge an unregistered process exit
+ok 11 - Control admission cannot forge an unregistered process exit
+  ---
+  duration_ms: 69.296875
+  type: 'test'
+  ...
+# (node:67722) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: pre-commit process crash leaves no fact, command, or projection
+ok 12 - pre-commit process crash leaves no fact, command, or projection
+  ---
+  duration_ms: 132.342708
+  type: 'test'
+  ...
+# Subtest: post-commit acknowledgement loss preserves the full idempotent bundle
+ok 13 - post-commit acknowledgement loss preserves the full idempotent bundle
+  ---
+  duration_ms: 136.577291
+  type: 'test'
+  ...
+# Subtest: restart rebuilds a complete lifecycle projection from facts
+ok 14 - restart rebuilds a complete lifecycle projection from facts
+  ---
+  duration_ms: 45.159292
+  type: 'test'
+  ...
+# Subtest: SQLite writer, authority identity, and bootstrap are fail-closed
+ok 15 - SQLite writer, authority identity, and bootstrap are fail-closed
+  ---
+  duration_ms: 2188.613584
+  type: 'test'
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2697.538375

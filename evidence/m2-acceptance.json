@@ -1,0 +1,130 @@
+{
+  "schemaVersion": "m2-acceptance-v1",
+  "recordedAtUtc": "2026-08-24T22:15:15.000Z",
+  "sourceBinding": {
+    "generatedAtUtc": "2026-08-24T22:30:00.000Z",
+    "baseCommit": "539b8942d4cf7b47b92a59f4fe7018c8daf918e7",
+    "semanticDiffSha256": "44a882a96f7ce7c33035caae648cd3b0bab3cbe69e14a94e9e20010169a96b35",
+    "semanticChangedPaths": 77,
+    "semanticTreeFiles": 348,
+    "semanticTreeManifestSha256": "d3fbef6024ba0bd49e57de52d12c5663db8764130842600b1eb7ff27d01ac2d3",
+    "selfExcludedPaths": [
+      "evidence/m2-acceptance.json",
+      "evidence/m2-freeze*",
+      "evidence/m2-review-context.json",
+      "evidence/m2-terminal.patch"
+    ],
+    "diffCommand": "git diff --cached --binary <base> -- . with the declared selfExcludedPaths",
+    "treeCommand": "sorted sha256 of git ls-files --cached --others --exclude-standard with the declared selfExcludedPaths",
+    "tapSha256": "919f318a895aad5b0cb9db2dba52e795518dce8dc1d073ecf990e88d287ce9c7",
+    "measurementLedgerSha256": "c9a048b2b195f9415fd676aa21c9ca4953cab02d734dfb2fe843fe79fa084e91",
+    "rollbackTreeSha256": "e972e61c39197a9b2a11088e4fca3ddedd9e4eafa17758a8bb96ee6b20ec0955",
+    "burnLedgerHead": "79be218288e2291699f627c1afb0fcdf594d82cb2ba6029e762d9be5c64f1cf3"
+  },
+  "qualification": {
+    "stageAcceptanceAuthority": "openspec/changes/implement-m2-pi-control-slice/tasks.md task 7.6; accepted iff checked",
+    "candidateQualified": false,
+    "productionQualified": false
+  },
+  "boundaryChecks": {
+    "command": "node --test tests/m2/boundaries.test.ts",
+    "tests": 3,
+    "pass": 3,
+    "fail": 0,
+    "coverage": [
+      "CLI/Web generated-SDK-only",
+      "Harness adapter exact import closure and authority-free port shape",
+      "HTTP handler closure excludes Control/store/SQLite",
+      "Telegram adapter exact port/SDK boundary and real acceptance wiring",
+      "product code excludes OpenSpec/M0/evidence reads"
+    ],
+    "reviewDisposition": "Three adversarial boundary rounds found and closed direct imports, hidden authority, durable fault/cause ownership, and dependency-closure gaps; final CR/RC remains Task 7.6."
+  },
+  "supplyChain": {
+    "frozenInstall": {
+      "command": "pnpm install --ignore-scripts --frozen-lockfile",
+      "result": "pass; package.json and pnpm-lock.yaml hashes unchanged; 139 lock entries pass active policy",
+      "lifecycleScriptsApproved": false
+    },
+    "audit": {
+      "command": "pnpm audit --audit-level high --json",
+      "evidence": "evidence/m2-checks/pnpm-audit.json",
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0
+      }
+    },
+    "licenses": {
+      "command": "pnpm licenses list --json",
+      "evidence": "evidence/m2-checks/pnpm-licenses.json",
+      "families": ["MIT", "Apache-2.0", "BSD-3-Clause", "BlueOak-1.0.0", "ISC", "0BSD"]
+    },
+    "secretScan": {
+      "evidence": "evidence/m2-checks/secret-scan.txt",
+      "fixedPatternMatches": 0,
+      "gitleaksRunner": "pi-lens full scan completed with no secret blocker"
+    },
+    "minimumReleaseAgeDisposition": "Not applied retroactively: the release-pinned Pi 0.84.2 lock contains 20 AWS/Smithy transitives published inside seven days. Re-resolving would change the preflighted lock; per stop-loss it remains fixed, audit-clean, blockExoticSubdeps=true, trustPolicy=no-downgrade."
+  },
+  "fixedSuite": {
+    "m1FixedEvidence": "evidence/m2-checks/m1-fixed.tap",
+    "m1Tests": 15,
+    "command": "node --test tests/m1/*.test.ts tests/m2/*.test.ts tests/m2/*.test.mjs",
+    "evidence": "evidence/m2-checks/m1-m2.tap",
+    "tests": 141,
+    "pass": 141,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 5375.021583
+  },
+  "browserAcceptance": {
+    "browser": "Google Chrome for Testing 151.0.7922.34",
+    "executable": "/Users/herbertgao/Library/Caches/ms-playwright/chromium-1234/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
+    "flows": [
+      "fresh no-cookie load performs no Control API request and emits no console error",
+      "bootstrap session exchange",
+      "Agent/release/intent selection",
+      "shadow-evaluator admission",
+      "SSE committed timeline",
+      "cancel confirmation and cancel-requested projection"
+    ],
+    "consoleErrors": 0,
+    "unexpectedFailedRequests": 0,
+    "rawNetworkConsoleEvidence": "evidence/m2-checks/browser-network-console.json",
+    "rawOperatorFlowEvidence": "evidence/m2-checks/browser-operator-flow.json",
+    "operatorFlowScreenshots": [
+      "evidence/m2-checks/browser-flow-01-fresh.png",
+      "evidence/m2-checks/browser-flow-02-session-agents.png",
+      "evidence/m2-checks/browser-flow-03-release.png",
+      "evidence/m2-checks/browser-flow-04-intent-sse.png",
+      "evidence/m2-checks/browser-flow-05-cancel.png"
+    ],
+    "screenshot": "evidence/m2-checks/hangar-view.png",
+    "freshLoadScreenshot": "evidence/m2-checks/hangar-view-fresh-load.png"
+  },
+  "staticChecks": {
+    "typescriptLsp": "59 M2 project files plus 2 explicit timeout retries, 0 errors",
+    "generatedContracts": "clean",
+    "openSpecStrict": "pass",
+    "gitDiffCheck": "pass",
+    "m0Advisory": "READY",
+    "piLensBlockingErrors": 0,
+    "m2SqliteSidecars": 0,
+    "m2Processes": 0,
+    "protectedLegacyData": "hangar.sqlite is a pre-M2 July App/Run/Approval/RunEvent database and was not modified",
+    "rawEvidence": {
+      "openSpecStrict": "evidence/m2-checks/openspec-strict.json",
+      "generatedContracts": "evidence/m2-checks/generated-contracts.txt",
+      "m0": "evidence/m2-checks/m0-validation.txt",
+      "typescriptLsp": "evidence/m2-checks/lsp-diagnostics.json",
+      "burnLedger": "evidence/m2-checks/burn-ledger-validation.txt",
+      "gitDiffCheck": "evidence/m2-checks/git-diff-check.txt",
+      "frozenInstall": "evidence/m2-checks/frozen-install.txt"
+    }
+  }
+}

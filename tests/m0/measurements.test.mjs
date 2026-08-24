@@ -264,14 +264,19 @@ test("measurement ledger records every M0 metric with durable raw evidence", asy
   assert.equal(advisory.impact.dependenciesAdded, 0);
   assert.equal(advisory.impact.daemonsAdded, 0);
   assert.equal(advisory.impact.productPackagesAdded, 0);
+  const historicalTcoParents = new Set([
+    "m0-e1-q3-final-tco-12-month-20260821",
+    "m0-e1-q3-r3-tco-12-month-20260821",
+    "m0-e1-composite-tco-12-month-20260821",
+    "m0-definition-bundle-tco-12-month-20260821",
+    "m0-definition-bundle-r2-tco-12-month-20260821",
+    "m0-definition-bundle-r3-tco-12-month-20260821",
+  ]);
   assert.ok(
-    new Set([
-      "m0-e1-q3-final-tco-12-month-20260821",
-      "m0-e1-q3-r3-tco-12-month-20260821",
-      "m0-e1-composite-tco-12-month-20260821",
-      "m0-definition-bundle-tco-12-month-20260821",
-      "m0-definition-bundle-r2-tco-12-month-20260821",
-      "m0-definition-bundle-r3-tco-12-month-20260821",
-    ]).has(ledger.records.at(-1).supersedesRecordId),
+    ledger.records.some(
+      ({ metricId, supersedesRecordId }) =>
+        metricId === "TCO_12_month" &&
+        historicalTcoParents.has(supersedesRecordId),
+    ),
   );
 });

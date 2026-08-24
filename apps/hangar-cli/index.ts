@@ -69,7 +69,12 @@ const failure = (
         : "transport";
   io.err(
     json
-      ? JSON.stringify({ ok: false, kind, message, ...(status ? { status } : {}) })
+      ? JSON.stringify({
+          ok: false,
+          kind,
+          message,
+          ...(status ? { status } : {}),
+        })
       : `${kind}: ${message}`,
   );
   return code;
@@ -85,7 +90,11 @@ export async function runCli(
   const positional = argv.filter((value) => !value.startsWith("--"));
   const command = positional[0];
   if (!environment.HANGAR_URL || !environment.HANGAR_TOKEN || !command) {
-    io.err(json ? JSON.stringify({ ok: false, kind: "usage", message: usage }) : usage);
+    io.err(
+      json
+        ? JSON.stringify({ ok: false, kind: "usage", message: usage })
+        : usage,
+    );
     return 2;
   }
   const sdk = new ControlSdk({
@@ -177,11 +186,19 @@ export async function runCli(
       );
       return 0;
     }
-    io.err(json ? JSON.stringify({ ok: false, kind: "usage", message: usage }) : usage);
+    io.err(
+      json
+        ? JSON.stringify({ ok: false, kind: "usage", message: usage })
+        : usage,
+    );
     return 2;
   } catch (error) {
     if (error instanceof TypeError && error.message === usage) {
-      io.err(json ? JSON.stringify({ ok: false, kind: "usage", message: usage }) : usage);
+      io.err(
+        json
+          ? JSON.stringify({ ok: false, kind: "usage", message: usage })
+          : usage,
+      );
       return 2;
     }
     return failure(io, json, error, writeStarted);

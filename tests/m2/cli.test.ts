@@ -113,14 +113,9 @@ test("operation/auth/transport classes map to fixed exit codes", async () => {
 
   const readTransport = io();
   assert.equal(
-    await runCli(
-      ["agents"],
-      environment,
-      readTransport.value,
-      async () => {
-        throw new TypeError("connection refused");
-      },
-    ),
+    await runCli(["agents"], environment, readTransport.value, async () => {
+      throw new TypeError("connection refused");
+    }),
     2,
   );
   assert.match(readTransport.stderr[0], /^transport:/);
@@ -151,27 +146,22 @@ test("usage/missing auth exits 2 and never sends", async () => {
   let calls = 0;
   const output = io();
   assert.equal(
-    await runCli(
-      ["intent"],
-      environment,
-      output.value,
-      async () => {
-        calls += 1;
-        return new Response("{}");
-      },
-    ),
+    await runCli(["intent"], environment, output.value, async () => {
+      calls += 1;
+      return new Response("{}");
+    }),
     2,
   );
   assert.equal(calls, 0);
-  assert.equal(
-    await runCli(["agents"], { HANGAR_URL: "x" }, output.value),
-    2,
-  );
+  assert.equal(await runCli(["agents"], { HANGAR_URL: "x" }, output.value), 2);
 });
 
 test("caller-owned identity is replayed exactly; facade has no legacy/storage imports", async () => {
   const keys: string[] = [];
-  const fakeFetch = async (_url: string | URL | Request, init?: RequestInit) => {
+  const fakeFetch = async (
+    _url: string | URL | Request,
+    init?: RequestInit,
+  ) => {
     const headers = new Headers(init?.headers);
     keys.push(headers.get("idempotency-key") ?? "");
     return new Response(

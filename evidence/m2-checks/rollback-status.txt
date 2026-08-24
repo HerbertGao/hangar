@@ -1,0 +1,13 @@
+?? evidence/m2-burn-ledger.json
+?? ledger/m2-burn-ledger.json
+?? openspec/changes/implement-m2-pi-control-slice/.openspec.yaml
+?? openspec/changes/implement-m2-pi-control-slice/design.md
+?? openspec/changes/implement-m2-pi-control-slice/proposal.md
+?? openspec/changes/implement-m2-pi-control-slice/specs/m2-control-clients/spec.md
+?? openspec/changes/implement-m2-pi-control-slice/specs/m2-harness-adapters/spec.md
+?? openspec/changes/implement-m2-pi-control-slice/specs/v2-control-contracts/spec.md
+?? openspec/changes/implement-m2-pi-control-slice/specs/v2-storage-contract/spec.md
+?? openspec/changes/implement-m2-pi-control-slice/tasks.md
+?? scripts/bootstrap-m2-burn-ledger.mjs
+?? scripts/m2-burn-ledger.mjs
+?? tests/m2/burn-ledger.test.mjs

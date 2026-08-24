@@ -220,6 +220,18 @@ TypeScript extensions 与自定义工具。[^pi-docs][^pi-rpc][^pi-extensions] �
 Hangar 应自己拥有调用时机、上下文快照、工具权限、预算、取消、重试、状态写入和高风险 effect。Pi 只返回一次
 turn 的事件和结果。若普通邮件游标或去重用确定性代码更合适，就不得为了“Hangar + Pi”品牌强行调用 Pi。
 
+### 4.5.1 Mastra 是当前形态最接近的新增候选，但三项 owner 缺口决定其必须先过硬门
+
+Mastra 已从 agent/workflow SDK 扩张到 Durable Agents、Background Tasks、Goals、Schedules、Signals、
+Mastra Server/client SDK、Auth/FGA、Sandbox 与 Studio；就目标形态而言，它比旧候选名单中的单一 runtime 更接近
+Hangar，因此必须补入完整方案 leaderboard，而不能按早期形态先验排除。完整取证与 `已实证 | 未查实`
+口径见 `docs/proposals/mastra-candidate-evaluation.md`（取证 2026-08-21）。
+
+同一取证也给出三条决定性缺口：官方未提供跨副本 lease/fencing，auto recovery 会让副本竞争同一 run；
+恢复会重新发起 LLM/tool call，并把幂等责任推给工具；sandbox/部署凭据与 whole-tree 边界依赖 provider，未提供
+Hangar §6.1 的正向保证。因此 Mastra 只能先作为受边界 Harness adapter 与可选 client/telemetry 依赖参加
+§6.3 七项硬门和与 Pi 相同的 fault fixture。功能数量、构筑速度或 Studio 体验不能补硬门缺证据。
+
 ### 4.6 Dify / Flowise 更像完整工作台，但其抽象和运维边界由平台决定
 
 Dify 和 Flowise 已经能高效完成画布编排、Agent、知识库和常见工具接入。它们适合希望尽快得到
@@ -463,6 +475,7 @@ reserve，候选与 Builder 不得读取。提交后运行故障和 mutation cas
 - `Hangar + Pi adapter`：可丢弃重写 spike，不默认复用当前 core；
 - `OpenClaw native/ACP`：同时测试原生使用和仅作 edge/runtime adapter，不以一个最重形态代替全部结果；
 - `LangGraph + 最小可用控制层`：必须把为补齐控制产品而写的代码和运维全部计入；
+- `Mastra + 最小可用控制层`：按同一七项硬门参赛；关闭候选 auto recovery/schedules owner/tool approval mutation，禁止候选进程持有高风险业务提交凭据，且把补齐 fencing、受控提交、凭据/containment 的代码与运维全部计入；
 - `LangSmith Fleet + external domain service`：计入 SaaS 数据/用量边界、外部 MCP/领域服务和退出成本。
 
 完整方案首先通过 §6.3 七项透明控制硬门；失败即淘汰，不进入加权排名。过门后 100 分为：新 Agent

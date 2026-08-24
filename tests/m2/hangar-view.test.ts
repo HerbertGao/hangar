@@ -112,7 +112,13 @@ async function setup() {
   const control = composition.control.control;
   value(
     control.publish(
-      commandMeta("owner", "publish-release", release.releaseId, "publish", release),
+      commandMeta(
+        "owner",
+        "publish-release",
+        release.releaseId,
+        "publish",
+        release,
+      ),
       release,
     ),
   );
@@ -153,7 +159,9 @@ async function setup() {
     control,
     release,
     close: async () => {
-      (server as unknown as { closeAllConnections(): void }).closeAllConnections();
+      (
+        server as unknown as { closeAllConnections(): void }
+      ).closeAllConnections();
       await new Promise<void>((resolve) => server.close(() => resolve()));
       composition.close();
       owner.close();
@@ -168,7 +176,9 @@ test("V1-style Hangar View uses session-only bootstrap and public SDK for comple
     executablePath: browserExecutable,
     headless: true,
   });
-  const context = await browser.newContext({ viewport: { width: 1365, height: 900 } });
+  const context = await browser.newContext({
+    viewport: { width: 1365, height: 900 },
+  });
   const page = await context.newPage();
   const consoleErrors: string[] = [];
   page.on("console", (message) => {
@@ -176,10 +186,15 @@ test("V1-style Hangar View uses session-only bootstrap and public SDK for comple
   });
   try {
     await page.goto(`http://127.0.0.1:${f.port}/`);
+    if (consoleErrors.length > 0)
+      throw new Error(consoleErrors.join("\n"));
     await page.getByLabel("Bootstrap credential").fill("view-bootstrap-secret");
     await page.getByRole("button", { name: "建立安全会话" }).click();
     await page.getByRole("button", { name: /heartbeat-operator/ }).waitFor();
-    assert.equal(await page.getByLabel("Bootstrap credential").inputValue(), "");
+    assert.equal(
+      await page.getByLabel("Bootstrap credential").inputValue(),
+      "",
+    );
     const residue = await page.evaluate(() => ({
       url: location.href,
       body: document.body.textContent ?? "",
@@ -218,7 +233,8 @@ test("V1-style Hangar View uses session-only bootstrap and public SDK for comple
     assert.ok(admitted);
     // SAFETY: trusted test reads the run-admitted contract payload to obtain its
     // attempt-bound token; UI still sees only SDK projections.
-    const token = (admitted!.payload as unknown as { token: AttemptToken }).token;
+    const token = (admitted!.payload as unknown as { token: AttemptToken })
+      .token;
     const action = {
       type: "action" as const,
       action: {
@@ -228,15 +244,23 @@ test("V1-style Hangar View uses session-only bootstrap and public SDK for comple
       },
     };
     value(
-      f.control.harness(token).submit(
-        commandMeta("fixture", "register-action", runId, "web-action", action, token),
-        action,
-      ),
+      f.control
+        .harness(token)
+        .submit(
+          commandMeta(
+            "fixture",
+            "register-action",
+            runId,
+            "web-action",
+            action,
+            token,
+          ),
+          action,
+        ),
     );
     const effect = {
       type: "effect-intent" as const,
       effect: {
-        effectId: "web-approval",
         actionId: "web-effect-action",
         intentKey: "web-approval",
         intentGeneration: 1,
@@ -244,16 +268,29 @@ test("V1-style Hangar View uses session-only bootstrap and public SDK for comple
         payloadDigest: "d".repeat(64),
       },
     };
-    value(
-      f.control.harness(token).submit(
-        commandMeta("fixture", "effect-intent", runId, "web-effect", effect, token),
-        effect,
-      ),
-    );
+    const webApprovalId = value(
+      f.control
+        .harness(token)
+        .submit(
+          commandMeta(
+            "fixture",
+            "effect-intent",
+            runId,
+            "web-effect",
+            effect,
+            token,
+          ),
+          effect,
+        ),
+    ).effectId;
+    assert.match(webApprovalId, /^[0-9a-f]{64}$/);
     await page.getByRole("button", { name: /heartbeat-operator/ }).click();
     await page.getByText("等待你的决定").waitFor();
     await page.getByRole("button", { name: "批准" }).click();
-    await page.getByRole("button", { name: "批准", exact: true }).last().click();
+    await page
+      .getByRole("button", { name: "批准", exact: true })
+      .last()
+      .click();
     await page.getByText("Approval 已记录").waitFor();
     await page.locator("#closeDrawer").click();
 
@@ -269,8 +306,11 @@ test("V1-style Hangar View uses session-only bootstrap and public SDK for comple
     f.composition.auth.revokeCredential("bootstrap", 1);
     await page.reload();
     await page.getByRole("button", { name: "建立安全会话" }).waitFor();
-    assert.equal(value(f.control.snapshot(runId)).state.startsWith("cancel"), true);
-    assert.equal(consoleErrors.length, 2);
+    assert.equal(
+      value(f.control.snapshot(runId)).state.startsWith("cancel"),
+      true,
+    );
+    assert.equal(consoleErrors.length, 1);
     assert.ok(
       consoleErrors.every((message) => message.includes("401 (Unauthorized)")),
       consoleErrors.join("\n"),

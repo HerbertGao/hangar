@@ -1,13 +1,12 @@
 import { createHash } from "node:crypto";
 
-import {
-  commandMeta,
-  type EffectGateway,
-  type HarnessSession,
-  type OutcomeAcceptor,
-  type TrustedPiCleanupController,
-} from "../control-core/index.ts";
-import type { AgentRelease, AttemptToken, Result } from "../contracts/index.ts";
+import type {
+  AgentRelease,
+  AttemptToken,
+  ErrorKind,
+  HarnessAdapterPort,
+  Result,
+} from "../contracts/index.ts";
 import {
   PiChildProtocolMachine,
   type ChildToParentMessage,
@@ -17,19 +16,14 @@ import {
 import type { ExpectedArtifactDeriver } from "./expected-artifact.ts";
 
 export interface PiHarnessBridgeOptions {
-  readonly actorSubjectId: string;
   readonly intentId: string;
   readonly outcomeToolId: string;
   readonly outcomeActionId: string;
-  readonly activationEpoch: number;
 }
 
 export class PiHarnessBridge {
   readonly #machine = new PiChildProtocolMachine();
-  readonly #session: HarnessSession;
-  readonly #gateway: EffectGateway;
-  readonly #outcomes: OutcomeAcceptor;
-  readonly #cleanup: TrustedPiCleanupController;
+  readonly #port: HarnessAdapterPort;
   readonly #token: AttemptToken;
   readonly #release: AgentRelease;
   readonly #request: PromptRequest;
@@ -43,20 +37,14 @@ export class PiHarnessBridge {
   #fault = false;
 
   constructor(
-    session: HarnessSession,
-    gateway: EffectGateway,
-    outcomes: OutcomeAcceptor,
-    cleanup: TrustedPiCleanupController,
+    port: HarnessAdapterPort,
     token: AttemptToken,
     release: AgentRelease,
     request: PromptRequest,
     expected: ExpectedArtifactDeriver,
     options: PiHarnessBridgeOptions,
   ) {
-    this.#session = session;
-    this.#gateway = gateway;
-    this.#outcomes = outcomes;
-    this.#cleanup = cleanup;
+    this.#port = port;
     this.#token = token;
     this.#release = release;
     this.#request = request;
@@ -79,9 +67,12 @@ export class PiHarnessBridge {
     return this.#outcomeAccepted;
   }
 
-  processExitOrFault(fault = false): void {
-    this.#fault ||= fault;
+  processExitOrFault(fault = false): Result<null> {
+    const recorded = fault
+      ? this.#recordFault()
+      : ({ ok: true, value: null } as const);
     this.#machine.processExitOrFault(fault);
+    return recorded;
   }
 
   closeIpc(): void {
@@ -90,15 +81,10 @@ export class PiHarnessBridge {
 
   async handle(frame: ChildToParentMessage): Promise<Result<null>> {
     const transition = this.#machine.childFrame(frame);
-    if (!transition.ok) {
-      this.#fault = true;
-      return { ok: false, error: "invalid_state" };
-    }
+    if (!transition.ok) return this.#faultResult("invalid_state");
     if (transition.ignored) return { ok: true, value: null };
-    if (frame.type === "protocol-fault") {
-      this.#fault = true;
-      return { ok: false, error: "invalid_state" };
-    }
+    if (frame.type === "protocol-fault")
+      return this.#faultResult("invalid_state");
     if (frame.type === "prompt-accepted" || frame.type === "settled")
       return { ok: true, value: null };
     if (frame.type === "sanitized-action-or-tool-event")
@@ -114,55 +100,39 @@ export class PiHarnessBridge {
       CleanupEvidence,
       "outcomeAccepted" | "durableCancelRequested"
     >,
-    terminalize = true,
   ): Result<{ cause: "succeeded" | "failed" }> {
+    if (this.#fault) {
+      const recorded = this.#recordFault();
+      if (!recorded.ok) return recorded;
+    }
     const completed = this.#machine.cleanupComplete({
       ...evidence,
       durableCancelRequested: false,
       outcomeAccepted: this.#outcomeAccepted && !this.#fault,
     });
-    const cause =
-      completed.state === "terminal(succeeded)" ? "succeeded" : "failed";
     if (!completed.ok || !completed.state.startsWith("terminal("))
       return { ok: false, error: "invalid_state" };
-    const cleanupEvidence = {
-      ipcDrained: evidence.ipcDrained,
-      stdoutDrained: evidence.stdoutDrained,
-      stderrDrained: evidence.stderrDrained,
-      wholeTreeReaped: evidence.wholeTreeReaped,
-      grantRevoked: evidence.grantRevoked,
-      outcomeAccepted: this.#outcomeAccepted && !this.#fault,
-    };
-    const committed = this.#cleanup.commit(
-      commandMeta(
-        this.#options.actorSubjectId,
-        "pi-cleanup",
-        this.#token.runId,
-        `pi-cleanup-${this.#token.attempt}`,
-        { cause, evidence: cleanupEvidence },
-        this.#token,
-      ),
-      this.#token,
-      cause,
-      cleanupEvidence,
+    return this.#port.commitCleanup(
+      `pi-cleanup-${this.#token.attempt}`,
+      {
+        ipcDrained: evidence.ipcDrained,
+        stdoutDrained: evidence.stdoutDrained,
+        stderrDrained: evidence.stderrDrained,
+        wholeTreeReaped: evidence.wholeTreeReaped,
+        grantRevoked: evidence.grantRevoked,
+      },
     );
-    if (!committed.ok) return committed;
-    if (terminalize) {
-      const state = cause === "succeeded" ? "completed" : "failed";
-      const terminal = this.#cleanup.terminalize(
-        commandMeta(
-          this.#options.actorSubjectId,
-          "terminalize",
-          this.#token.runId,
-          `pi-terminal-${this.#token.attempt}`,
-          { state },
-        ),
-        this.#token.runId,
-        cause,
-      );
-      if (!terminal.ok) return terminal;
-    }
-    return { ok: true, value: { cause } };
+  }
+
+  #recordFault(): Result<null> {
+    this.#fault = true;
+    return this.#port.recordFault(`pi-fault-${this.#token.attempt}`);
+  }
+
+  #faultResult(error: ErrorKind): Result<null> {
+    const recorded = this.#recordFault();
+    this.#machine.processExitOrFault(true);
+    return recorded.ok ? { ok: false, error } : recorded;
   }
 
   #handleToolEvent(
@@ -180,33 +150,20 @@ export class PiHarnessBridge {
           inputDigest: frame.payloadDigest,
         },
       };
-      const result = this.#session.submit(
-        commandMeta(
-          this.#options.actorSubjectId,
-          "register-action",
-          this.#token.runId,
-          `pi-action-${frame.actionId}`,
-          input,
-          this.#token,
-        ),
+      const result = this.#port.submit(
+        `pi-action-${frame.actionId}`,
         input,
       );
       if (result.ok) this.#actions.add(frame.actionId);
       return result;
     }
-    if (!this.#actions.has(frame.actionId)) {
-      this.#fault = true;
-      this.#machine.processExitOrFault(true);
-      return { ok: false, error: "invalid_state" };
-    }
+    if (!this.#actions.has(frame.actionId))
+      return this.#faultResult("invalid_state");
     if (
       frame.toolId === null ||
       !this.#release.spec.capabilities.includes(frame.toolId)
-    ) {
-      this.#fault = true;
-      this.#machine.processExitOrFault(true);
-      return { ok: false, error: "forbidden" };
-    }
+    )
+      return this.#faultResult("forbidden");
     if (frame.eventKind === "tool-end")
       this.#completedTools.set(frame.actionId, frame.toolId);
     return { ok: true, value: null };
@@ -218,11 +175,8 @@ export class PiHarnessBridge {
     if (
       !this.#actions.has(frame.actionId) ||
       !this.#release.spec.effectOperations.includes(frame.operation)
-    ) {
-      this.#fault = true;
-      this.#machine.processExitOrFault(true);
-      return { ok: false, error: "forbidden" };
-    }
+    )
+      return this.#faultResult("forbidden");
     const signature = createHash("sha256")
       .update(
         JSON.stringify({
@@ -237,20 +191,12 @@ export class PiHarnessBridge {
     const prior = this.#fixtureEffects.get(frame.intentKey);
     if (prior) {
       if (prior === signature) return { ok: true, value: null };
-      this.#fault = true;
-      this.#machine.processExitOrFault(true);
-      return { ok: false, error: "idempotency_conflict" };
+      return this.#faultResult("idempotency_conflict");
     }
     this.#fixtureEffects.set(frame.intentKey, signature);
-    const effectId = createHash("sha256")
-      .update(
-        `${this.#token.runId}\0${frame.intentKey}\0${frame.intentGeneration}`,
-      )
-      .digest("hex");
     const intent = {
       type: "effect-intent" as const,
       effect: {
-        effectId,
         actionId: frame.actionId,
         intentKey: frame.intentKey,
         intentGeneration: frame.intentGeneration,
@@ -258,71 +204,10 @@ export class PiHarnessBridge {
         payloadDigest: frame.payloadDigest,
       },
     };
-    const submitted = this.#session.submit(
-      commandMeta(
-        this.#options.actorSubjectId,
-        "effect-intent",
-        this.#token.runId,
-        `pi-effect-${frame.intentKey}`,
-        intent,
-        this.#token,
-      ),
+    return this.#port.submitEffect(
+      `pi-effect-${frame.intentKey}`,
       intent,
     );
-    if (!submitted.ok) return submitted;
-    const approval = {
-      decision: "approved" as const,
-      releaseId: this.#release.releaseId,
-      activationEpoch: this.#options.activationEpoch,
-      expiresAtUnixMs: Number.MAX_SAFE_INTEGER,
-    };
-    const approved = this.#gateway.approve(
-      commandMeta(
-        this.#options.actorSubjectId,
-        "approve-effect",
-        this.#token.runId,
-        `pi-effect-approve-${frame.intentKey}`,
-        { runId: this.#token.runId, effectId, approval },
-      ),
-      this.#token.runId,
-      effectId,
-      approval,
-    );
-    if (!approved.ok) return approved;
-    const binding = { runId: this.#token.runId, effectId };
-    const dispatched = await this.#gateway.dispatch(
-      {
-        start: commandMeta(
-          this.#options.actorSubjectId,
-          "dispatch-effect",
-          this.#token.runId,
-          `pi-effect-start-${frame.intentKey}`,
-          binding,
-        ),
-        outcome: commandMeta(
-          this.#options.actorSubjectId,
-          "record-effect-outcome",
-          this.#token.runId,
-          `pi-effect-outcome-${frame.intentKey}`,
-          binding,
-        ),
-        unknown: commandMeta(
-          this.#options.actorSubjectId,
-          "mark-effect-unknown",
-          this.#token.runId,
-          `pi-effect-unknown-${frame.intentKey}`,
-          binding,
-        ),
-      },
-      this.#token.runId,
-      effectId,
-      async () => {
-        throw new Error("fixture response lost");
-      },
-    );
-    return !dispatched.ok && dispatched.error === "unknown_effect"
-      ? { ok: true, value: null }
-      : dispatched;
   }
 
   #handleArtifact(
@@ -346,11 +231,8 @@ export class PiHarnessBridge {
       frame.schemaVersionId !== descriptor.resultSchema.version ||
       childDigest !== frame.artifactDigest ||
       (prior !== undefined && prior !== frame.artifactDigest)
-    ) {
-      this.#fault = true;
-      this.#machine.processExitOrFault(true);
-      return { ok: false, error: "invalid_input" };
-    }
+    )
+      return this.#faultResult("invalid_input");
     const expected = this.#expected.derive(
       this.#release,
       this.#options.intentId,
@@ -361,11 +243,8 @@ export class PiHarnessBridge {
       expected.bytes.every(
         (byte, index) => byte === frame.artifactBytes[index],
       );
-    if (expected.digest !== frame.artifactDigest || !exactBytes) {
-      this.#fault = true;
-      this.#machine.processExitOrFault(true);
-      return { ok: false, error: "invalid_state" };
-    }
+    if (expected.digest !== frame.artifactDigest || !exactBytes)
+      return this.#faultResult("invalid_state");
     if (prior === frame.artifactDigest) return { ok: true, value: null };
     this.#artifacts.set(frame.actionId, frame.artifactDigest);
     const observation = {
@@ -377,15 +256,8 @@ export class PiHarnessBridge {
         grantGeneration: this.#request.grantGeneration,
       },
     };
-    const observed = this.#session.submit(
-      commandMeta(
-        this.#options.actorSubjectId,
-        "tool-observation",
-        this.#token.runId,
-        `pi-observation-${frame.actionId}`,
-        observation,
-        this.#token,
-      ),
+    const observed = this.#port.submit(
+      `pi-observation-${frame.actionId}`,
       observation,
     );
     if (!observed.ok) return observed;
@@ -393,37 +265,12 @@ export class PiHarnessBridge {
       type: "outcome-proposal" as const,
       proposal: { artifactDigest: frame.artifactDigest },
     };
-    const proposed = this.#session.submit(
-      commandMeta(
-        this.#options.actorSubjectId,
-        "outcome-proposal",
-        this.#token.runId,
-        `pi-proposal-${frame.actionId}`,
-        proposal,
-        this.#token,
-      ),
+    const proposed = this.#port.submit(
+      `pi-proposal-${frame.actionId}`,
       proposal,
     );
     if (!proposed.ok) return proposed;
-    const accepted = this.#outcomes.accept(
-      commandMeta(
-        this.#options.actorSubjectId,
-        "accept-outcome",
-        this.#token.runId,
-        `pi-accept-${frame.actionId}`,
-        {
-          runId: this.#token.runId,
-          attempt: this.#token.attempt,
-          artifactDigest: frame.artifactDigest,
-        },
-      ),
-      {
-        runId: this.#token.runId,
-        attempt: this.#token.attempt,
-        artifactDigest: frame.artifactDigest,
-      },
-    );
-    if (accepted.ok) this.#outcomeAccepted = true;
-    return accepted.ok ? { ok: true, value: null } : accepted;
+    this.#outcomeAccepted = proposed.value.outcomeAccepted;
+    return { ok: true, value: null };
   }
 }

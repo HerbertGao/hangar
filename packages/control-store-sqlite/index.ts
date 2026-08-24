@@ -123,6 +123,7 @@ function applyEffectProjection(db: DatabaseSync, draft: FactDraft): void {
   if (draft.factKind === "effect-intent") {
     const runId = string("runId");
     const effectId = string("effectId");
+    const effectIdentity = ["run-action", runId, effectId].join(":");
     db.prepare(
       "INSERT INTO effects(" +
         "effect_identity, effect_id, subject_kind, owner_id," +
@@ -130,7 +131,7 @@ function applyEffectProjection(db: DatabaseSync, draft: FactDraft): void {
         "payload_digest, state" +
         ") VALUES (?, ?, 'run-action', ?, ?, ?, ?, ?, ?, 'pending')",
     ).run(
-      `run-action:${runId}:${effectId}`,
+      effectIdentity,
       effectId,
       runId,
       runId,
@@ -143,6 +144,7 @@ function applyEffectProjection(db: DatabaseSync, draft: FactDraft): void {
   }
   if (draft.factKind === "control-command-effect-created") {
     const effectId = string("effectId");
+    const effectIdentity = ["control-command", effectId].join(":");
     db.prepare(
       "INSERT INTO effects(" +
         "effect_identity, effect_id, subject_kind, owner_id," +
@@ -150,7 +152,7 @@ function applyEffectProjection(db: DatabaseSync, draft: FactDraft): void {
         "target, payload_base64url, payload_digest, state" +
         ") VALUES (?, ?, 'control-command', ?, ?, ?, ?, ?, ?, ?, ?, 'approved')",
     ).run(
-      `control-command:${effectId}`,
+      effectIdentity,
       effectId,
       string("controlInteractionIdentity"),
       string("controlInteractionIdentity"),
@@ -255,6 +257,7 @@ function createSchema(db: DatabaseSync): void {
          delivery_key IS NOT NULL AND delivery_generation IS NOT NULL AND mapping_version IS NOT NULL AND
          target IS NOT NULL AND payload_base64url IS NOT NULL)
       ),
+      UNIQUE(effect_id),
       UNIQUE(run_id, intent_key, intent_generation),
       UNIQUE(control_interaction_identity, delivery_key, delivery_generation)
     );

@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "m2-browser-network-console-v1",
+  "capturedAtUtc": "2026-08-24T21:59:36.843Z",
+  "url": "http://127.0.0.1:61084/",
+  "title": "Hangar · 虚拟办公室",
+  "loginVisible": true,
+  "consoleErrors": [],
+  "failedResponses": [],
+  "dynamicApiRequests": [],
+  "screenshot": "evidence/m2-checks/hangar-view-fresh-load.png"
+}

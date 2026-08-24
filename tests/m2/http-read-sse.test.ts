@@ -395,10 +395,7 @@ test("SSE cursor failures converge; revocation closes stream and disconnect neve
       "running",
     );
 
-    const revoked = await rawSse(
-      f.port,
-      "/v1/runs/run-http-1/events",
-    );
+    const revoked = await rawSse(f.port, "/v1/runs/run-http-1/events");
     f.composition.auth.revokeCredential("cli_bearer", 1);
     await new Promise((resolve) => setTimeout(resolve, 100));
     assert.ok(revoked.getData().endsWith("0\r\n\r\n"), revoked.getData());

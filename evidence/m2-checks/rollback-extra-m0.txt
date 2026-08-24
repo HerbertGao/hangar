@@ -1,0 +1,3 @@
+extra non-required M0 attempt: fail-closed
+findings: repository_identity_mismatch(hangar-main-v0); revision_unavailable(inbox-upstream)
+reason: disposable local clone intentionally has different repository identity/upstream availability

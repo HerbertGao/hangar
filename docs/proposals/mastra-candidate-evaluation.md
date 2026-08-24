@@ -2,7 +2,7 @@
 
 > 状态：候选评估，不是架构 SOT。`DESIGN.md`、`ROADMAP.md`、`openspec/config.yaml` 仍是权威。
 > 定位：`docs/proposals/personal-agent-builder.md` §4「为什么不直接用现成平台」与 §6.3「透明控制硬门」的附录。
-> 取证：2026-08-21，来源为 Mastra 官方文档与官方博客（见文末）。未经文档实证的判断一律标 `未查实`，
+> 取证：2026-08-21，裁决依据仅使用 Mastra 官方文档与官方博客（见文末）；第三方材料只作背景补充，不进入裁决。未经官方文档实证的判断一律标 `未查实`，
 > 不计入裁决依据。
 > 裁决：Mastra 是 Harness adapter 与 client/telemetry 依赖的**第一候选**，不是控制 owner；
 > 它需要参加与其它外部候选完全相同的 §6.3 资格赛，不因功能重叠而获得豁免或特权。
@@ -153,4 +153,4 @@ until the API is stable.”
 - Workflows（snapshots / suspend-resume / error-handling / scheduled）：<https://mastra.ai/docs/workflows/snapshots>
 - Sandbox 部署：<https://mastra.ai/docs/deployment/sandbox>
 - Studio 部署：<https://mastra.ai/docs/studio/deployment>
-- 第三方评估（durability 边界）：<https://www.developersdigest.tech/blog/mastra-durable-typescript-agents>
+- 第三方背景材料（不进入裁决，只用于交叉检查 durability 讨论）：<https://www.developersdigest.tech/blog/mastra-durable-typescript-agents>

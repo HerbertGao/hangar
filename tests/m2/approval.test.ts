@@ -2,10 +2,12 @@ import assert from "node:assert/strict";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { DatabaseSync } from "node:sqlite";
 import test from "node:test";
 
 import {
   compileRelease,
+  digestJson,
   type AgentSpec,
   type AuthorityContext,
   type ExecutionClosure,
@@ -30,7 +32,7 @@ const spec: AgentSpec = {
   harnessKind: "fake",
   checkpointSchema: "checkpoint-v1",
   capabilities: [],
-  effectOperations: ["fixture.commit"],
+  effectOperations: ["fixture.commit", "fixture.alternate"],
   intentDescriptors: [],
 };
 const closure: ExecutionClosure = {
@@ -141,7 +143,6 @@ async function setup() {
   const effect = {
     type: "effect-intent" as const,
     effect: {
-      effectId: "effect-1",
       actionId: "action-1",
       intentKey: "intent-1",
       intentGeneration: 1,
@@ -149,16 +150,20 @@ async function setup() {
       payloadDigest: "c".repeat(64),
     },
   };
-  value(
+  const effectId = value(
     runtime.control
       .harness(token)
       .submit(
         commandMeta("actor", "effect-intent", runId, "effect", effect, token),
         effect,
       ),
-  );
+  ).effectId;
   return {
     runId,
+    controlPath,
+    token,
+    effect,
+    effectId,
     release,
     get runtime() {
       return runtime;
@@ -192,26 +197,31 @@ async function setup() {
   };
 }
 
-const decisionInput = (runId: string, decision: "approved" | "denied") => ({
-  runId,
-  approvalId: "effect-1",
+type ApprovalFixture = { runId: string; effectId: string };
+const decisionInput = (
+  fixture: ApprovalFixture,
+  decision: "approved" | "denied",
+) => ({
+  runId: fixture.runId,
+  approvalId: fixture.effectId,
   decision,
 });
 const decisionMeta = (
-  runId: string,
+  fixture: ApprovalFixture,
   key: string,
   decision: "approved" | "denied",
 ) =>
   commandMeta(
     "operator",
     "decide-approval",
-    "effect-1",
+    fixture.effectId,
     key,
-    decisionInput(runId, decision),
+    decisionInput(fixture, decision),
   );
 
-const dispatchMeta = (runId: string, prefix: string) => {
-  const input = { runId, effectId: "effect-1" };
+const dispatchMeta = (fixture: ApprovalFixture, prefix: string) => {
+  const runId = fixture.runId;
+  const input = { runId, effectId: fixture.effectId };
   return {
     start: commandMeta(
       "gateway",
@@ -243,8 +253,8 @@ test("approved decision is durable, wakes Gateway, and authorized loser sees sto
     const pending = value(f.runtime.control.readRun(queryAuthority, f.runId));
     assert.equal(pending.value.pendingApprovals[0].expiresAtUnixMs, 1_100);
 
-    const approved = decisionInput(f.runId, "approved");
-    const meta = decisionMeta(f.runId, "approve-ack", "approved");
+    const approved = decisionInput(f, "approved");
+    const meta = decisionMeta(f, "approve-ack", "approved");
     f.setCrashAfter();
     assert.deepEqual(f.runtime.control.decideApproval(meta, approved), {
       ok: false,
@@ -252,29 +262,29 @@ test("approved decision is durable, wakes Gateway, and authorized loser sees sto
     });
     assert.deepEqual(f.runtime.control.decideApproval(meta, approved), {
       ok: true,
-      value: { approvalId: "effect-1", state: "approved", result: "accepted" },
+      value: { approvalId: f.effectId, state: "approved", result: "accepted" },
     });
     assert.deepEqual(f.gateway.pendingWakes(), {
       ok: true,
-      value: [{ runId: f.runId, effectId: "effect-1" }],
+      value: [{ runId: f.runId, effectId: f.effectId }],
     });
 
     // Different command identity racing with opposite decision gets stored winner.
     assert.deepEqual(
       f.runtime.control.decideApproval(
-        decisionMeta(f.runId, "deny-loser", "denied"),
-        decisionInput(f.runId, "denied"),
+        decisionMeta(f, "deny-loser", "denied"),
+        decisionInput(f, "denied"),
       ),
       {
         ok: true,
-        value: { approvalId: "effect-1", state: "approved", result: "stored" },
+        value: { approvalId: f.effectId, state: "approved", result: "stored" },
       },
     );
     // Same key but changed payload remains idempotency conflict.
     assert.deepEqual(
       f.runtime.control.decideApproval(
-        decisionMeta(f.runId, "approve-ack", "denied"),
-        decisionInput(f.runId, "denied"),
+        decisionMeta(f, "approve-ack", "denied"),
+        decisionInput(f, "denied"),
       ),
       { ok: false, error: "idempotency_conflict" },
     );
@@ -283,7 +293,7 @@ test("approved decision is durable, wakes Gateway, and authorized loser sees sto
     f.reopen();
     assert.deepEqual(f.gateway.pendingWakes(), {
       ok: true,
-      value: [{ runId: f.runId, effectId: "effect-1" }],
+      value: [{ runId: f.runId, effectId: f.effectId }],
     });
   } finally {
     await f.close();
@@ -296,14 +306,14 @@ test("deny and TimeAuthority expiry create final local results without dispatch"
     assert.equal(
       value(
         denied.runtime.control.decideApproval(
-          decisionMeta(denied.runId, "deny", "denied"),
-          decisionInput(denied.runId, "denied"),
+          decisionMeta(denied, "deny", "denied"),
+          decisionInput(denied, "denied"),
         ),
       ).state,
       "denied",
     );
     assert.equal(
-      value(denied.runtime.control.snapshot(denied.runId)).effects["effect-1"],
+      value(denied.runtime.control.snapshot(denied.runId)).effects[denied.effectId],
       "not-committed",
     );
     assert.deepEqual(denied.gateway.pendingWakes(), { ok: true, value: [] });
@@ -317,15 +327,15 @@ test("deny and TimeAuthority expiry create final local results without dispatch"
     assert.equal(
       value(
         expired.runtime.control.decideApproval(
-          decisionMeta(expired.runId, "expired", "approved"),
-          decisionInput(expired.runId, "approved"),
+          decisionMeta(expired, "expired", "approved"),
+          decisionInput(expired, "approved"),
         ),
       ).state,
       "expired",
     );
     assert.equal(
       value(expired.runtime.control.snapshot(expired.runId)).effects[
-        "effect-1"
+        expired.effectId
       ],
       "not-committed",
     );
@@ -339,17 +349,17 @@ test("dispatch preflight revokes invalid authority, expires stale claim, and cla
   try {
     value(
       revoked.runtime.control.decideApproval(
-        decisionMeta(revoked.runId, "approve", "approved"),
-        decisionInput(revoked.runId, "approved"),
+        decisionMeta(revoked, "approve", "approved"),
+        decisionInput(revoked, "approved"),
       ),
     );
     revoked.setAuthorityValid(false);
     let calls = 0;
     assert.deepEqual(
       await revoked.gateway.dispatch(
-        dispatchMeta(revoked.runId, "revoked"),
+        dispatchMeta(revoked, "revoked"),
         revoked.runId,
-        "effect-1",
+        revoked.effectId,
         async () => {
           calls += 1;
           return "committed";
@@ -361,7 +371,7 @@ test("dispatch preflight revokes invalid authority, expires stale claim, and cla
     assert.deepEqual(revoked.gateway.pendingWakes(), { ok: true, value: [] });
     assert.equal(
       value(revoked.runtime.control.snapshot(revoked.runId)).effects[
-        "effect-1"
+        revoked.effectId
       ],
       "not-committed",
     );
@@ -373,8 +383,8 @@ test("dispatch preflight revokes invalid authority, expires stale claim, and cla
   try {
     value(
       staleEpoch.runtime.control.decideApproval(
-        decisionMeta(staleEpoch.runId, "approve", "approved"),
-        decisionInput(staleEpoch.runId, "approved"),
+        decisionMeta(staleEpoch, "approve", "approved"),
+        decisionInput(staleEpoch, "approved"),
       ),
     );
     value(
@@ -401,9 +411,9 @@ test("dispatch preflight revokes invalid authority, expires stale claim, and cla
     let calls = 0;
     assert.deepEqual(
       await staleEpoch.gateway.dispatch(
-        dispatchMeta(staleEpoch.runId, "stale-epoch"),
+        dispatchMeta(staleEpoch, "stale-epoch"),
         staleEpoch.runId,
-        "effect-1",
+        staleEpoch.effectId,
         async () => {
           calls += 1;
           return "committed";
@@ -420,17 +430,17 @@ test("dispatch preflight revokes invalid authority, expires stale claim, and cla
   try {
     value(
       expired.runtime.control.decideApproval(
-        decisionMeta(expired.runId, "approve", "approved"),
-        decisionInput(expired.runId, "approved"),
+        decisionMeta(expired, "approve", "approved"),
+        decisionInput(expired, "approved"),
       ),
     );
     expired.setNow(1_100);
     let calls = 0;
     assert.deepEqual(
       await expired.gateway.dispatch(
-        dispatchMeta(expired.runId, "expired"),
+        dispatchMeta(expired, "expired"),
         expired.runId,
-        "effect-1",
+        expired.effectId,
         async () => {
           calls += 1;
           return "committed";
@@ -447,16 +457,16 @@ test("dispatch preflight revokes invalid authority, expires stale claim, and cla
   try {
     value(
       once.runtime.control.decideApproval(
-        decisionMeta(once.runId, "approve", "approved"),
-        decisionInput(once.runId, "approved"),
+        decisionMeta(once, "approve", "approved"),
+        decisionInput(once, "approved"),
       ),
     );
     let calls = 0;
     assert.deepEqual(
       await once.gateway.dispatch(
-        dispatchMeta(once.runId, "first"),
+        dispatchMeta(once, "first"),
         once.runId,
-        "effect-1",
+        once.effectId,
         async () => {
           calls += 1;
           return "committed";
@@ -468,9 +478,9 @@ test("dispatch preflight revokes invalid authority, expires stale claim, and cla
     assert.equal(
       (
         await once.gateway.dispatch(
-          dispatchMeta(once.runId, "second"),
+          dispatchMeta(once, "second"),
           once.runId,
-          "effect-1",
+          once.effectId,
           async () => {
             calls += 1;
             return "committed";
@@ -482,5 +492,195 @@ test("dispatch preflight revokes invalid authority, expires stale claim, and cla
     assert.equal(calls, 1);
   } finally {
     await once.close();
+  }
+});
+
+test("Control exclusively issues stable Effect identity", async () => {
+  const f = await setup();
+  try {
+    assert.equal(
+      f.effectId,
+      digestJson(["effect-v1", f.runId, "intent-1", 1]),
+    );
+
+    const ackLostEffect = {
+      type: "effect-intent" as const,
+      effect: {
+        actionId: "action-1",
+        intentKey: "ack-lost",
+        intentGeneration: 2,
+        operation: "fixture.commit",
+        payloadDigest: "d".repeat(64),
+      },
+    };
+    const ackLostMeta = commandMeta(
+      "actor",
+      "effect-intent",
+      f.runId,
+      "effect-ack-lost",
+      ackLostEffect,
+      f.token,
+    );
+    f.setCrashAfter();
+    assert.deepEqual(
+      f.runtime.control.harness(f.token).submit(ackLostMeta, ackLostEffect),
+      { ok: false, error: "invalid_state" },
+    );
+    const recoveredId = value(
+      f.runtime.control.harness(f.token).submit(ackLostMeta, ackLostEffect),
+    ).effectId;
+    assert.equal(
+      recoveredId,
+      digestJson(["effect-v1", f.runId, "ack-lost", 2]),
+    );
+
+    const operationConflict = {
+      ...ackLostEffect,
+      effect: {
+        ...ackLostEffect.effect,
+        operation: "fixture.alternate",
+      },
+    };
+    assert.deepEqual(
+      f.runtime.control.harness(f.token).submit(
+        commandMeta(
+          "actor",
+          "effect-intent",
+          f.runId,
+          "effect-operation-conflict",
+          operationConflict,
+          f.token,
+        ),
+        operationConflict,
+      ),
+      { ok: false, error: "idempotency_conflict" },
+    );
+
+    const digestConflict = {
+      ...ackLostEffect,
+      effect: {
+        ...ackLostEffect.effect,
+        payloadDigest: "e".repeat(64),
+      },
+    };
+    assert.deepEqual(
+      f.runtime.control.harness(f.token).submit(
+        commandMeta(
+          "actor",
+          "effect-intent",
+          f.runId,
+          "effect-digest-conflict",
+          digestConflict,
+          f.token,
+        ),
+        digestConflict,
+      ),
+      { ok: false, error: "idempotency_conflict" },
+    );
+
+    const callerChosen = {
+      ...ackLostEffect,
+      effect: { ...ackLostEffect.effect, effectId: "caller-chosen" },
+    };
+    assert.deepEqual(
+      f.runtime.control.harness(f.token).submit(
+        commandMeta(
+          "actor",
+          "effect-intent",
+          f.runId,
+          "caller-chosen-effect",
+          callerChosen,
+          f.token,
+        ),
+        callerChosen as never,
+      ),
+      { ok: false, error: "invalid_input" },
+    );
+
+    const otherRunId = "run-approval-other";
+    const otherAdmit = {
+      runId: otherRunId,
+      agentId: spec.agentId,
+      releaseId: f.release.releaseId,
+      activationEpoch: 1,
+    };
+    const otherToken = value(
+      f.runtime.control.admit(
+        commandMeta("actor", "admit", otherRunId, "admit-other", otherAdmit, {
+          releaseId: f.release.releaseId,
+          activationEpoch: 1,
+        }),
+        otherAdmit,
+      ),
+    );
+    const otherAction = {
+      type: "action" as const,
+      action: {
+        actionId: "action-1",
+        kind: "tool" as const,
+        inputDigest: "b".repeat(64),
+      },
+    };
+    value(
+      f.runtime.control.harness(otherToken).submit(
+        commandMeta(
+          "actor",
+          "register-action",
+          otherRunId,
+          "action-other",
+          otherAction,
+          otherToken,
+        ),
+        otherAction,
+      ),
+    );
+    const otherEffectId = value(
+      f.runtime.control.harness(otherToken).submit(
+        commandMeta(
+          "actor",
+          "effect-intent",
+          otherRunId,
+          "effect-other",
+          f.effect,
+          otherToken,
+        ),
+        f.effect,
+      ),
+    ).effectId;
+    assert.equal(
+      otherEffectId,
+      digestJson(["effect-v1", otherRunId, "intent-1", 1]),
+    );
+    assert.notEqual(otherEffectId, f.effectId);
+
+    f.closeRuntime();
+    const rawDb = new DatabaseSync(f.controlPath);
+    try {
+      assert.throws(
+        () =>
+          rawDb
+            .prepare(
+              "INSERT INTO effects(" +
+                "effect_identity,effect_id,subject_kind,owner_id,run_id,action_id," +
+                "intent_key,intent_generation,payload_digest,state" +
+                ") VALUES (?,?,'run-action',?,?,?,?,?,?,'pending')",
+            )
+            .run(
+              "run-action:forged:duplicate-effect-id",
+              f.effectId,
+              "forged-run",
+              "forged-run",
+              "forged-action",
+              "forged-intent",
+              0,
+              "f".repeat(64),
+            ),
+        /UNIQUE constraint failed: effects\.effect_id/,
+      );
+    } finally {
+      rawDb.close();
+    }
+  } finally {
+    await f.close();
   }
 });

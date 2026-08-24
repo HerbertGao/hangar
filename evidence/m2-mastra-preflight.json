@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "m2-mastra-preflight-v1",
+  "candidate": "mastra",
+  "evidenceDate": "2026-08-21",
+  "executedAtUtc": "2026-08-24T17:10:00.000Z",
+  "changeArchive": "openspec/changes/archive/2026-08-24-add-mastra-harness-candidate",
+  "rubricSource": "docs/proposals/personal-agent-builder.md#63-透明控制硬门所有-controlresult-候选",
+  "candidateEvidence": "docs/proposals/mastra-candidate-evaluation.md",
+  "missingEvidenceScoresZero": true,
+  "hardGates": [
+    {
+      "id": 1,
+      "name": "immutable-execution-identity",
+      "status": "fail",
+      "score": 0,
+      "reason": "官方文档未实证版本化 AgentRelease 或可验证的 runtime/model/tool/entitlement 发布身份；Studio 版本化发布与回滚仍在待查清单。",
+      "evidenceRefs": [
+        "docs/proposals/mastra-candidate-evaluation.md#3-逐条对照",
+        "docs/proposals/mastra-candidate-evaluation.md#8-待查项"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "expandable-run-causality",
+      "status": "unverified",
+      "score": 0,
+      "reason": "Studio/metrics/scorers/traces 已实证，但没有证据证明可按同一 authoritative Run 展开触发、冻结上下文、状态 diff、失败与下一状态；缺证据按 0。",
+      "evidenceRefs": [
+        "docs/proposals/mastra-candidate-evaluation.md#2-mastra-的当前形态",
+        "docs/proposals/mastra-candidate-evaluation.md#8-待查项"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "adapter-replaceability",
+      "status": "unverified",
+      "score": 0,
+      "reason": "未实证在不改变领域存储、Effect 契约和 client 的情况下替换 Mastra runtime adapter；功能重叠不构成替换证明。",
+      "evidenceRefs": [
+        "docs/proposals/mastra-candidate-evaluation.md#5-接入形态与边界"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "multi-client-single-control-path",
+      "status": "unverified",
+      "score": 0,
+      "reason": "Mastra Server/client SDK/Auth/FGA 已实证，但 Web/Telegram/CLI 对同一 represented subject 与 intent 经过同一 release、permission、Run、Approval 与 audit 路径尚无 sealed fixture。",
+      "evidenceRefs": [
+        "docs/proposals/mastra-candidate-evaluation.md#2-mastra-的当前形态"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "single-effect-commit-owner",
+      "status": "fail",
+      "score": 0,
+      "reason": "未提供 intent→policy/approval→claim→dispatch→unknown→reconciliation 的受控提交层；官方恢复语义会重发 LLM/tool call并要求工具自行幂等。",
+      "evidenceRefs": [
+        "docs/proposals/mastra-candidate-evaluation.md#4-三条决定性证据"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "single-lifecycle-owner",
+      "status": "fail",
+      "score": 0,
+      "reason": "官方声明无 distributed lease/lock；多副本 recovery.durableAgents:auto 会竞争恢复相同 runs，无法证明 stop/crash/retry/resume 与 terminal 单一 owner。",
+      "evidenceRefs": [
+        "docs/proposals/mastra-candidate-evaluation.md#4-三条决定性证据"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "definition-export-rebuild",
+      "status": "unverified",
+      "score": 0,
+      "reason": "未实证从 clean checkout 可完整导出或重建 Agent 定义及不可导出的 runtime 语义；Studio 发布/回滚仍为待查。",
+      "evidenceRefs": [
+        "docs/proposals/mastra-candidate-evaluation.md#8-待查项"
+      ]
+    }
+  ],
+  "hardGatePass": false,
+  "weightedRankingEntered": false,
+  "runtimeInstallAttempted": false,
+  "spikeStarted": false,
+  "dependencyResidue": [],
+  "disposition": "retain-harness-pi",
+  "blockedNextTasks": [
+    "implement-m2-pi-control-slice:6.2"
+  ],
+  "reverseStopLossTriggered": false,
+  "candidateProductionQualified": false
+}

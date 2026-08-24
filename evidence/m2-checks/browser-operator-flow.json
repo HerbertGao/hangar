@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "m2-browser-operator-flow-v1",
+  "capturedAtUtc": "2026-08-24T22:26:25.135Z",
+  "browser": "Google Chrome for Testing 151.0.7922.34",
+  "baseUrl": "http://127.0.0.1:61084/",
+  "runId": "a70944d02203c60e09b5b4e485940ace9b063a78201502c8acd2a3ad8cb8b829",
+  "finalRunState": "cancel-requested",
+  "steps": [
+    {
+      "name": "01-fresh",
+      "screenshot": "evidence/m2-checks/browser-flow-01-fresh.png",
+      "assertion": "login visible; zero Control API requests"
+    },
+    {
+      "name": "02-session-agents",
+      "screenshot": "evidence/m2-checks/browser-flow-02-session-agents.png",
+      "assertion": "session 204 and Agent list visible"
+    },
+    {
+      "name": "03-release",
+      "screenshot": "evidence/m2-checks/browser-flow-03-release.png",
+      "assertion": "release and release-owned intent visible"
+    },
+    {
+      "name": "04-intent-sse",
+      "screenshot": "evidence/m2-checks/browser-flow-04-intent-sse.png",
+      "assertion": "intent 201, Run projection, and run-admitted SSE event visible"
+    },
+    {
+      "name": "05-cancel",
+      "screenshot": "evidence/m2-checks/browser-flow-05-cancel.png",
+      "assertion": "cancel 202 and cancel-requested projection/event visible"
+    }
+  ],
+  "consoleMessages": [],
+  "apiResponses": [
+    {
+      "method": "POST",
+      "path": "/auth/session",
+      "status": 204
+    },
+    {
+      "method": "GET",
+      "path": "/v1/agents",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/v1/agents/heartbeat-operator/releases",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/v1/agents/heartbeat-operator/intents/emit",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/v1/runs/a70944d02203c60e09b5b4e485940ace9b063a78201502c8acd2a3ad8cb8b829",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/v1/runs/a70944d02203c60e09b5b4e485940ace9b063a78201502c8acd2a3ad8cb8b829/events",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/v1/runs/a70944d02203c60e09b5b4e485940ace9b063a78201502c8acd2a3ad8cb8b829/cancel",
+      "status": 202
+    },
+    {
+      "method": "GET",
+      "path": "/v1/runs/a70944d02203c60e09b5b4e485940ace9b063a78201502c8acd2a3ad8cb8b829",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/v1/runs/a70944d02203c60e09b5b4e485940ace9b063a78201502c8acd2a3ad8cb8b829",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/v1/runs/a70944d02203c60e09b5b4e485940ace9b063a78201502c8acd2a3ad8cb8b829/events",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/v1/runs/a70944d02203c60e09b5b4e485940ace9b063a78201502c8acd2a3ad8cb8b829",
+      "status": 200
+    }
+  ],
+  "failedResponses": [],
+  "assertions": {
+    "freshLoadApiRequests": 0,
+    "consoleErrorsOrWarnings": 0,
+    "failedResponses": 0,
+    "sessionEstablished": true,
+    "intentCreated": true,
+    "sseConnected": true,
+    "cancelAccepted": true
+  }
+}

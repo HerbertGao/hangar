@@ -1,0 +1,904 @@
+TAP version 13
+# (node:47601) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: ambiguous Effect is never redispatched and resume fences the old session
+ok 1 - ambiguous Effect is never redispatched and resume fences the old session
+  ---
+  duration_ms: 857.606334
+  type: 'test'
+  ...
+# (node:47602) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: fake child maps through one Control lifecycle
+ok 2 - fake child maps through one Control lifecycle
+  ---
+  duration_ms: 429.587791
+  type: 'test'
+  ...
+# Subtest: legacy-process child maps through one Control lifecycle
+ok 3 - legacy-process child maps through one Control lifecycle
+  ---
+  duration_ms: 195.646125
+  type: 'test'
+  ...
+# Subtest: launcher rejects release harness and closure drift before spawn
+ok 4 - launcher rejects release harness and closure drift before spawn
+  ---
+  duration_ms: 126.302
+  type: 'test'
+  ...
+# Subtest: empty heartbeat artifact is rejected and cannot complete the Run
+ok 5 - empty heartbeat artifact is rejected and cannot complete the Run
+  ---
+  duration_ms: 164.469334
+  type: 'test'
+  ...
+# Subtest: nonzero child exit is observed and cannot complete the Run
+ok 6 - nonzero child exit is observed and cannot complete the Run
+  ---
+  duration_ms: 131.68675
+  type: 'test'
+  ...
+# Subtest: parent death triggers automatic process-group reap but remains non-production
+ok 7 - parent death triggers automatic process-group reap but remains non-production
+  ---
+  duration_ms: 222.45475
+  type: 'test'
+  ...
+# Subtest: independent restore authority fences source and competing target
+ok 8 - independent restore authority fences source and competing target
+  ---
+  duration_ms: 62.239042
+  type: 'test'
+  ...
+# (node:47603) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: release compilation is canonical and deeply immutable
+ok 9 - release compilation is canonical and deeply immutable
+  ---
+  duration_ms: 43.506042
+  type: 'test'
+  ...
+# Subtest: release compiler rejects drift and non-contract fields
+ok 10 - release compiler rejects drift and non-contract fields
+  ---
+  duration_ms: 0.73675
+  type: 'test'
+  ...
+# Subtest: Control admission cannot forge an unregistered process exit
+ok 11 - Control admission cannot forge an unregistered process exit
+  ---
+  duration_ms: 32.17625
+  type: 'test'
+  ...
+# (node:47604) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: pre-commit process crash leaves no fact, command, or projection
+ok 12 - pre-commit process crash leaves no fact, command, or projection
+  ---
+  duration_ms: 194.167584
+  type: 'test'
+  ...
+# Subtest: post-commit acknowledgement loss preserves the full idempotent bundle
+ok 13 - post-commit acknowledgement loss preserves the full idempotent bundle
+  ---
+  duration_ms: 289.38225
+  type: 'test'
+  ...
+# Subtest: restart rebuilds a complete lifecycle projection from facts
+ok 14 - restart rebuilds a complete lifecycle projection from facts
+  ---
+  duration_ms: 44.56825
+  type: 'test'
+  ...
+# Subtest: SQLite writer, authority identity, and bootstrap are fail-closed
+ok 15 - SQLite writer, authority identity, and bootstrap are fail-closed
+  ---
+  duration_ms: 2201.566583
+  type: 'test'
+  ...
+# (node:47605) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: fake and Pi releases differ in identity but produce parity facts/outcome
+ok 16 - fake and Pi releases differ in identity but produce parity facts/outcome
+  ---
+  duration_ms: 78.779834
+  type: 'test'
+  ...
+# Subtest: durable fault after accepted outcome forces failed terminal state
+ok 17 - durable fault after accepted outcome forces failed terminal state
+  ---
+  duration_ms: 22.721584
+  type: 'test'
+  ...
+# Subtest: settled without outcome, forged and plausible-wrong artifacts end failed
+ok 18 - settled without outcome, forged and plausible-wrong artifacts end failed
+  ---
+  duration_ms: 80.738334
+  type: 'test'
+  ...
+# Subtest: fixture EffectIntent uses real Gateway unknown once and duplicate frame does not redispatch
+ok 19 - fixture EffectIntent uses real Gateway unknown once and duplicate frame does not redispatch
+  ---
+  duration_ms: 23.520709
+  type: 'test'
+  ...
+# Subtest: ambiguous prompt acceptance fails once; terminal ignores all late child frames
+ok 20 - ambiguous prompt acceptance fails once; terminal ignores all late child frames
+  ---
+  duration_ms: 13.590542
+  type: 'test'
+  ...
+# Subtest: cleanup Attempt commit and terminalization are separate restart-safe transactions
+ok 21 - cleanup Attempt commit and terminalization are separate restart-safe transactions
+  ---
+  duration_ms: 13.073875
+  type: 'test'
+  ...
+# (node:47606) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: approved decision is durable, wakes Gateway, and authorized loser sees stored state
+ok 22 - approved decision is durable, wakes Gateway, and authorized loser sees stored state
+  ---
+  duration_ms: 106.27925
+  type: 'test'
+  ...
+# Subtest: deny and TimeAuthority expiry create final local results without dispatch
+ok 23 - deny and TimeAuthority expiry create final local results without dispatch
+  ---
+  duration_ms: 30.715792
+  type: 'test'
+  ...
+# Subtest: dispatch preflight revokes invalid authority, expires stale claim, and claims at most once
+ok 24 - dispatch preflight revokes invalid authority, expires stale claim, and claims at most once
+  ---
+  duration_ms: 110.011459
+  type: 'test'
+  ...
+# Subtest: Control exclusively issues stable Effect identity
+ok 25 - Control exclusively issues stable Effect identity
+  ---
+  duration_ms: 49.353584
+  type: 'test'
+  ...
+# (node:47607) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: credential mapping and single-session exchange produce replay-stable secure header block
+ok 26 - credential mapping and single-session exchange produce replay-stable secure header block
+  ---
+  duration_ms: 114.483292
+  type: 'test'
+  ...
+# Subtest: client actor/delegation/runtime fields are rejected by the unique route schema
+ok 27 - client actor/delegation/runtime fields are rejected by the unique route schema
+  ---
+  duration_ms: 4.568541
+  type: 'test'
+  ...
+# (node:47673) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: establish is none-or-complete and ACK-loss replay returns identical headers
+ok 28 - establish is none-or-complete and ACK-loss replay returns identical headers
+  ---
+  duration_ms: 44.406
+  type: 'test'
+  ...
+# Subtest: establish ignores ambient old cookies; expiry returns 410 then explicit renew
+ok 29 - establish ignores ambient old cookies; expiry returns 410 then explicit renew
+  ---
+  duration_ms: 61.825333
+  type: 'test'
+  ...
+# Subtest: old predecessor replay never creates next generation; successor hint owns next renew
+ok 30 - old predecessor replay never creates next generation; successor hint owns next renew
+  ---
+  duration_ms: 28.886375
+  type: 'test'
+  ...
+# Subtest: key rotation affects only new sessions; missing retained key fails closed
+ok 31 - key rotation affects only new sessions; missing retained key fails closed
+  ---
+  duration_ms: 55.871958
+  type: 'test'
+  ...
+# Subtest: revocation, CSRF/origin, CLI bearer and Telegram delegation are server-owned
+ok 32 - revocation, CSRF/origin, CLI bearer and Telegram delegation are server-owned
+  ---
+  duration_ms: 8.11425
+  type: 'test'
+  ...
+# Subtest: CLI and Web depend only on generated Control SDK surfaces
+ok 33 - CLI and Web depend only on generated Control SDK surfaces
+  ---
+  duration_ms: 4.238792
+  type: 'test'
+  ...
+# Subtest: Harness, HTTP, and Telegram adapters preserve dependency boundaries
+ok 34 - Harness, HTTP, and Telegram adapters preserve dependency boundaries
+  ---
+  duration_ms: 17.64325
+  type: 'test'
+  ...
+# Subtest: product code reads no planning evidence and acceptance uses real Telegram ports
+ok 35 - product code reads no planning evidence and acceptance uses real Telegram ports
+  ---
+  duration_ms: 218.939625
+  type: 'test'
+  ...
+# Subtest: real ledger validates; genesis record immutable; lib hash matches one-shot
+ok 36 - real ledger validates; genesis record immutable; lib hash matches one-shot
+  ---
+  duration_ms: 16.044916
+  type: 'test'
+  ...
+# Subtest: bootstrap one-shot refuses to replay once the ledger exists
+ok 37 - bootstrap one-shot refuses to replay once the ledger exists
+  ---
+  duration_ms: 45.473708
+  type: 'test'
+  ...
+# Subtest: genesis clamps balances and derives state for B in {8.25, 72, 75, 80, 90}
+ok 38 - genesis clamps balances and derives state for B in {8.25, 72, 75, 80, 90}
+  ---
+  duration_ms: 0.547708
+  type: 'test'
+  ...
+# Subtest: genesis without planning backfill is rejected
+ok 39 - genesis without planning backfill is rejected
+  ---
+  duration_ms: 0.256375
+  type: 'test'
+  ...
+# Subtest: recordHash computed over a non-canonical preimage is rejected
+ok 40 - recordHash computed over a non-canonical preimage is rejected
+  ---
+  duration_ms: 2.120959
+  type: 'test'
+  ...
+# Subtest: non-canonical number tokens in raw text are rejected even when JSON.parse accepts them
+ok 41 - non-canonical number tokens in raw text are rejected even when JSON.parse accepts them
+  ---
+  duration_ms: 2.053209
+  type: 'test'
+  ...
+# Subtest: second append against a stale head fails CAS and leaves the ledger untouched
+ok 42 - second append against a stale head fails CAS and leaves the ledger untouched
+  ---
+  duration_ms: 37.934459
+  type: 'test'
+  ...
+# Subtest: reserve beyond the remaining balance is rejected
+ok 43 - reserve beyond the remaining balance is rejected
+  ---
+  duration_ms: 19.352584
+  type: 'test'
+  ...
+# Subtest: reserve deducts at append time; actual refunds reserved-actual; overrun allowed while non-negative
+ok 44 - reserve deducts at append time; actual refunds reserved-actual; overrun allowed while non-negative
+  ---
+  duration_ms: 65.419666
+  type: 'test'
+  ...
+# Subtest: actual that would drive the balance negative is rejected
+ok 45 - actual that would drive the balance negative is rejected
+  ---
+  duration_ms: 19.855333
+  type: 'test'
+  ...
+# Subtest: settle-crashed-reservation keeps the reserve-debited balance and never double-debits
+ok 46 - settle-crashed-reservation keeps the reserve-debited balance and never double-debits
+  ---
+  duration_ms: 25.510709
+  type: 'test'
+  ...
+# Subtest: actual/settle must reference a known open reservation with matching taskGroup and bucket
+ok 47 - actual/settle must reference a known open reservation with matching taskGroup and bucket
+  ---
+  duration_ms: 25.4155
+  type: 'test'
+  ...
+# Subtest: enter-closure is blocked by open reservations, irreversible, and forbids later product reserves
+ok 48 - enter-closure is blocked by open reservations, irreversible, and forbids later product reserves
+  ---
+  duration_ms: 51.110542
+  type: 'test'
+  ...
+# Subtest: product budget exhausted with no open reservations forces enter-closure
+ok 49 - product budget exhausted with no open reservations forces enter-closure
+  ---
+  duration_ms: 37.631292
+  type: 'test'
+  ...
+# Subtest: closure budget exhausted forces stop; stop is terminal
+ok 50 - closure budget exhausted forces stop; stop is terminal
+  ---
+  duration_ms: 53.728041
+  type: 'test'
+  ...
+# Subtest: recordId and reservationId sequences are enforced
+ok 51 - recordId and reservationId sequences are enforced
+  ---
+  duration_ms: 13.434584
+  type: 'test'
+  ...
+# Subtest: timestamp format and ordering are enforced
+ok 52 - timestamp format and ordering are enforced
+  ---
+  duration_ms: 11.500792
+  type: 'test'
+  ...
+# Subtest: unknown fields and kinds are rejected
+ok 53 - unknown fields and kinds are rejected
+  ---
+  duration_ms: 1.34875
+  type: 'test'
+  ...
+# Subtest: invalid JSON and wrong schemaVersion are rejected
+ok 54 - invalid JSON and wrong schemaVersion are rejected
+  ---
+  duration_ms: 0.463333
+  type: 'test'
+  ...
+# Subtest: append refuses while another append holds the lockfile
+ok 55 - append refuses while another append holds the lockfile
+  ---
+  duration_ms: 11.627417
+  type: 'test'
+  ...
+# (node:47837) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: cancel atomically revokes predispatch obligation, fences late work, then cleanup terminalizes
+ok 56 - cancel atomically revokes predispatch obligation, fences late work, then cleanup terminalizes
+  ---
+  duration_ms: 109.302791
+  type: 'test'
+  ...
+# Subtest: started unknown effect keeps Run pending until real reconciliation final
+ok 57 - started unknown effect keeps Run pending until real reconciliation final
+  ---
+  duration_ms: 77.409625
+  type: 'test'
+  ...
+# Subtest: cancel accepted result survives ACK loss and conflicting payload does not duplicate facts
+ok 58 - cancel accepted result survives ACK loss and conflicting payload does not duplicate facts
+  ---
+  duration_ms: 48.977416
+  type: 'test'
+  ...
+# Subtest: CLI success has fixed text/json output and exit 0
+ok 59 - CLI success has fixed text/json output and exit 0
+  ---
+  duration_ms: 3.859625
+  type: 'test'
+  ...
+# Subtest: operation/auth/transport classes map to fixed exit codes
+ok 60 - operation/auth/transport classes map to fixed exit codes
+  ---
+  duration_ms: 1.077667
+  type: 'test'
+  ...
+# Subtest: usage/missing auth exits 2 and never sends
+ok 61 - usage/missing auth exits 2 and never sends
+  ---
+  duration_ms: 0.361791
+  type: 'test'
+  ...
+# Subtest: caller-owned identity is replayed exactly; facade has no legacy/storage imports
+ok 62 - caller-owned identity is replayed exactly; facade has no legacy/storage imports
+  ---
+  duration_ms: 1.263375
+  type: 'test'
+  ...
+# (node:47895) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: eligible stale-epoch rejection survives ACK loss as completed replay
+ok 63 - eligible stale-epoch rejection survives ACK loss as completed replay
+  ---
+  duration_ms: 62.788917
+  type: 'test'
+  ...
+# Subtest: rejection transaction crash before commit is absent, retry becomes complete
+ok 64 - rejection transaction crash before commit is absent, retry becomes complete
+  ---
+  duration_ms: 48.012167
+  type: 'test'
+  ...
+# Subtest: current disclosure authorization gates exact replay and payload conflict
+ok 65 - current disclosure authorization gates exact replay and payload conflict
+  ---
+  duration_ms: 29.581542
+  type: 'test'
+  ...
+# Subtest: malformed command metadata remains unregistered
+ok 66 - malformed command metadata remains unregistered
+  ---
+  duration_ms: 47.151417
+  type: 'test'
+  ...
+# Subtest: head analyzer enforces header caps and Content-Length/TE conflicts
+ok 67 - head analyzer enforces header caps and Content-Length/TE conflicts
+  ---
+  duration_ms: 1.984458
+  type: 'test'
+  ...
+# Subtest: safety-header duplicates rejected ASCII case-insensitively over rawHeaders
+ok 68 - safety-header duplicates rejected ASCII case-insensitively over rawHeaders
+  ---
+  duration_ms: 0.3495
+  type: 'test'
+  ...
+# Subtest: strict JSON rejects duplicate/escape-equivalent keys, surrogates, unsafe numbers, trailing bytes
+ok 69 - strict JSON rejects duplicate/escape-equivalent keys, surrogates, unsafe numbers, trailing bytes
+  ---
+  duration_ms: 1.834792
+  type: 'test'
+  ...
+# Subtest: cookie parser enforces protected-name uniqueness and strict shapes pre-auth
+ok 70 - cookie parser enforces protected-name uniqueness and strict shapes pre-auth
+  ---
+  duration_ms: 0.313041
+  type: 'test'
+  ...
+# Subtest: guarded server returns safe errors before parsing/auth and passes clean bodies
+ok 71 - guarded server returns safe errors before parsing/auth and passes clean bodies
+  ---
+  duration_ms: 464.930333
+  type: 'test'
+  ...
+# Subtest: wire error envelope has fixed schemaVersion and kind/message shape
+ok 72 - wire error envelope has fixed schemaVersion and kind/message shape
+  ---
+  duration_ms: 0.172708
+  type: 'test'
+  ...
+# Subtest: registry exposes exactly the eight v1 routes plus auth session
+ok 73 - registry exposes exactly the eight v1 routes plus auth session
+  ---
+  duration_ms: 0.535875
+  type: 'test'
+  ...
+# Subtest: header classification default-denies unknown app headers and ignores transport
+ok 74 - header classification default-denies unknown app headers and ignores transport
+  ---
+  duration_ms: 1.039792
+  type: 'test'
+  ...
+# Subtest: SSE cursor aliases are typed-rejected before any lookup
+ok 75 - SSE cursor aliases are typed-rejected before any lookup
+  ---
+  duration_ms: 0.699625
+  type: 'test'
+  ...
+# Subtest: occurrence key is canonical-order-stable; idempotency key derives from it
+ok 76 - occurrence key is canonical-order-stable; idempotency key derives from it
+  ---
+  duration_ms: 0.482083
+  type: 'test'
+  ...
+# Subtest: update interaction ref verifies MAC/expiry/size and fails closed
+ok 77 - update interaction ref verifies MAC/expiry/size and fails closed
+  ---
+  duration_ms: 1.802625
+  type: 'test'
+  ...
+# Subtest: control interaction refs bind response kind/digest and verify symmetrically
+ok 78 - control interaction refs bind response kind/digest and verify symmetrically
+  ---
+  duration_ms: 0.80225
+  type: 'test'
+  ...
+# (node:48043) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: legacy schema fails migration preflight before sidecar or byte mutation
+ok 79 - legacy schema fails migration preflight before sidecar or byte mutation
+  ---
+  duration_ms: 20.951541
+  type: 'test'
+  ...
+# Subtest: subject-specific DDL rejects mixed run-action/control-command columns
+ok 80 - subject-specific DDL rejects mixed run-action/control-command columns
+  ---
+  duration_ms: 25.088833
+  type: 'test'
+  ...
+# Subtest: pre-Effect deny is durable across ACK loss with zero Effect facts
+ok 81 - pre-Effect deny is durable across ACK loss with zero Effect facts
+  ---
+  duration_ms: 16.598459
+  type: 'test'
+  ...
+# Subtest: allow binds first occurrence; mismatch quarantines without second Effect
+ok 82 - allow binds first occurrence; mismatch quarantines without second Effect
+  ---
+  duration_ms: 17.345208
+  type: 'test'
+  ...
+# Subtest: connector/mapping fence applies predispatch but not after dispatch-started
+ok 83 - connector/mapping fence applies predispatch but not after dispatch-started
+  ---
+  duration_ms: 17.7665
+  type: 'test'
+  ...
+# Subtest: restart recovers payload from Control DB; unknown never auto-redispatches
+ok 84 - restart recovers payload from Control DB; unknown never auto-redispatches
+  ---
+  duration_ms: 10.575417
+  type: 'test'
+  ...
+# (node:48134) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: any non-final control delivery fails restore preflight without mutation
+ok 85 - any non-final control delivery fails restore preflight without mutation
+  ---
+  duration_ms: 54.670458
+  type: 'test'
+  ...
+# Subtest: all-final backup permits Agent restore but leaves connector disabled
+ok 86 - all-final backup permits Agent restore but leaves connector disabled
+  ---
+  duration_ms: 36.767333
+  type: 'test'
+  ...
+# Subtest: delivery created after snapshot is absent from restore target and never redispatched
+ok 87 - delivery created after snapshot is absent from restore target and never redispatched
+  ---
+  duration_ms: 32.240708
+  type: 'test'
+  ...
+# (node:48183) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: missing Telegram write precondition abandons before real Control server
+ok 88 - missing Telegram write precondition abandons before real Control server
+  ---
+  duration_ms: 75.95925
+  type: 'test'
+  ...
+# Subtest: real Telegram adapter and browser share Control facts; opposite decisions have one winner
+ok 89 - real Telegram adapter and browser share Control facts; opposite decisions have one winner
+  ---
+  duration_ms: 2709.89525
+  type: 'test'
+  ...
+# Subtest: Telegram protocol double fails hard on malformed/timeout without advancing adapter truth
+ok 90 - Telegram protocol double fails hard on malformed/timeout without advancing adapter truth
+  ---
+  duration_ms: 23.846583
+  type: 'test'
+  ...
+# (node:48195) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: subscribe-before-head closes read/subscribe race and advances serialized cursor
+ok 91 - subscribe-before-head closes read/subscribe race and advances serialized cursor
+  ---
+  duration_ms: 58.63775
+  type: 'test'
+  ...
+# Subtest: permanent notification loss delays only one heartbeat and reauthorizes
+ok 92 - permanent notification loss delays only one heartbeat and reauthorizes
+  ---
+  duration_ms: 63.27525
+  type: 'test'
+  ...
+# Subtest: slow consumer bound closes cursor; restart resumes from durable last id
+ok 93 - slow consumer bound closes cursor; restart resumes from durable last id
+  ---
+  duration_ms: 40.567833
+  type: 'test'
+  ...
+# (node:48236) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: V1-style Hangar View uses session-only bootstrap and public SDK for complete operator flow
+ok 94 - V1-style Hangar View uses session-only bootstrap and public SDK for complete operator flow
+  ---
+  duration_ms: 3256.219375
+  type: 'test'
+  ...
+# Subtest: view controller imports only generated SDK and contains no credential storage/CLI path
+ok 95 - view controller imports only generated SDK and contains no credential storage/CLI path
+  ---
+  duration_ms: 0.37075
+  type: 'test'
+  ...
+# (node:48309) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real HTTP read routes return only registry-validated projections
+ok 96 - real HTTP read routes return only registry-validated projections
+  ---
+  duration_ms: 118.930625
+  type: 'test'
+  ...
+# Subtest: SSE reconnects from durable cursor; notification loss delays one heartbeat
+ok 97 - SSE reconnects from durable cursor; notification loss delays one heartbeat
+  ---
+  duration_ms: 39.124458
+  type: 'test'
+  ...
+# Subtest: SSE cursor failures converge; revocation closes stream and disconnect never cancels Run
+ok 98 - SSE cursor failures converge; revocation closes stream and disconnect never cancels Run
+  ---
+  duration_ms: 180.774292
+  type: 'test'
+  ...
+# (node:48345) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: auth session route is bootstrap-only and emits one 204 cookie header block
+ok 99 - auth session route is bootstrap-only and emits one 204 cookie header block
+  ---
+  duration_ms: 67.676208
+  type: 'test'
+  ...
+# Subtest: intent and cancel routes enforce credential/idempotency/precondition and cookie CSRF
+ok 100 - intent and cancel routes enforce credential/idempotency/precondition and cookie CSRF
+  ---
+  duration_ms: 91.471708
+  type: 'test'
+  ...
+# Subtest: approval opposite decisions converge on one stored winner; same key payload conflict
+ok 101 - approval opposite decisions converge on one stored winner; same key payload conflict
+  ---
+  duration_ms: 42.078708
+  type: 'test'
+  ...
+# Subtest: real server rejects CL/TE, short/zero/oversize bodies before command
+ok 102 - real server rejects CL/TE, short/zero/oversize bodies before command
+  ---
+  duration_ms: 156.322167
+  type: 'test'
+  ...
+# (node:48390) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: shadow-evaluator admission binds release intent/input/prompt atomically
+ok 103 - shadow-evaluator admission binds release intent/input/prompt atomically
+  ---
+  duration_ms: 35.543666
+  type: 'test'
+  ...
+# Subtest: unknown/stale intent, body, scope and unqualified production fail with zero Run facts
+ok 104 - unknown/stale intent, body, scope and unqualified production fail with zero Run facts
+  ---
+  duration_ms: 19.598209
+  type: 'test'
+  ...
+# Subtest: intent admission ACK loss replays same Run; changed payload conflicts
+ok 105 - intent admission ACK loss replays same Run; changed payload conflicts
+  ---
+  duration_ms: 10.200917
+  type: 'test'
+  ...
+# Subtest: descriptor version, schema digest, scope, or policy change forces a new releaseId
+ok 106 - descriptor version, schema digest, scope, or policy change forces a new releaseId
+  ---
+  duration_ms: 3.813125
+  type: 'test'
+  ...
+# Subtest: control-metadata input rejects bodies, secrets, and runtime-only fields
+ok 107 - control-metadata input rejects bodies, secrets, and runtime-only fields
+  ---
+  duration_ms: 0.523375
+  type: 'test'
+  ...
+# Subtest: v1 release bytes verify under v1 rules and are never reinterpreted by the v2 compiler
+ok 108 - v1 release bytes verify under v1 rules and are never reinterpreted by the v2 compiler
+  ---
+  duration_ms: 0.935875
+  type: 'test'
+  ...
+# Subtest: heartbeat-style fixtures declare no host filesystem tools
+ok 109 - heartbeat-style fixtures declare no host filesystem tools
+  ---
+  duration_ms: 0.337375
+  type: 'test'
+  ...
+# Subtest: M2 measurement roots cover every delivered component and terminal Mastra N/A
+ok 110 - M2 measurement roots cover every delivered component and terminal Mastra N/A
+  ---
+  duration_ms: 13.893625
+  type: 'test'
+  ...
+# Subtest: virtual corpus is immutable/bounded and host paths are not expressible
+ok 111 - virtual corpus is immutable/bounded and host paths are not expressible
+  ---
+  duration_ms: 2.958917
+  type: 'test'
+  ...
+# Subtest: virtual tool/session modules import no filesystem and expose only three tools
+ok 112 - virtual tool/session modules import no filesystem and expose only three tools
+  ---
+  duration_ms: 32.519917
+  type: 'test'
+  ...
+# Subtest: child environment contains one provider credential and no ambient authority
+ok 113 - child environment contains one provider credential and no ambient authority
+  ---
+  duration_ms: 0.259209
+  type: 'test'
+  ...
+# Subtest: real SDK child proves qualification and whole process group reaps
+ok 114 - real SDK child proves qualification and whole process group reaps
+  ---
+  duration_ms: 884.633291
+  type: 'test'
+  ...
+# Subtest: parent death closes IPC and leaves no orphan child
+ok 115 - parent death closes IPC and leaves no orphan child
+  ---
+  duration_ms: 793.378541
+  type: 'test'
+  ...
+# Subtest: first prompt invokes once; exact duplicate returns stored acceptance; conflict faults
+ok 116 - first prompt invokes once; exact duplicate returns stored acceptance; conflict faults
+  ---
+  duration_ms: 6.229541
+  type: 'test'
+  ...
+# Subtest: closed IPC union rejects credential/unknown/oversize and spontaneous frames
+ok 117 - closed IPC union rejects credential/unknown/oversize and spontaneous frames
+  ---
+  duration_ms: 2.445083
+  type: 'test'
+  ...
+# Subtest: process exit is non-terminal; buffered accepted/settled frames drain before cleanup
+ok 118 - process exit is non-terminal; buffered accepted/settled frames drain before cleanup
+  ---
+  duration_ms: 2.498166
+  type: 'test'
+  ...
+# Subtest: cleanup needs every drain/reap/revoke proof and cause precedence is closed
+ok 119 - cleanup needs every drain/reap/revoke proof and cause precedence is closed
+  ---
+  duration_ms: 1.331333
+  type: 'test'
+  ...
+# Subtest: SDK retry/compaction stay internal; unknown SDK event faults without settled
+ok 120 - SDK retry/compaction stay internal; unknown SDK event faults without settled
+  ---
+  duration_ms: 1.007084
+  type: 'test'
+  ...
+# Subtest: stdout/stderr are bounded diagnostics, never protocol frames
+ok 121 - stdout/stderr are bounded diagnostics, never protocol frames
+  ---
+  duration_ms: 0.487375
+  type: 'test'
+  ...
+# (node:48640) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: public Run/event projections default-drop tokens, raw facts, secrets, paths and stacks
+ok 122 - public Run/event projections default-drop tokens, raw facts, secrets, paths and stacks
+  ---
+  duration_ms: 98.022083
+  type: 'test'
+  ...
+# Subtest: unknown projection family/scope and malformed AuthorityContext fail closed
+ok 123 - unknown projection family/scope and malformed AuthorityContext fail closed
+  ---
+  duration_ms: 0.308875
+  type: 'test'
+  ...
+# (node:48739) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: projection family manifest and scope gate default-deny
+ok 124 - projection family manifest and scope gate default-deny
+  ---
+  duration_ms: 55.140333
+  type: 'test'
+  ...
+# Subtest: run query returns minimal committed projection with pending approvals
+ok 125 - run query returns minimal committed projection with pending approvals
+  ---
+  duration_ms: 20.157875
+  type: 'test'
+  ...
+# Subtest: run-event cursor is canonical and cross-run/future/invisible failures converge
+ok 126 - run-event cursor is canonical and cross-run/future/invisible failures converge
+  ---
+  duration_ms: 20.150875
+  type: 'test'
+  ...
+# (node:48745) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: generated SDK exercises all eight Control routes and SSE through real server
+ok 127 - generated SDK exercises all eight Control routes and SSE through real server
+  ---
+  duration_ms: 170.387833
+  type: 'test'
+  ...
+# Subtest: SDK rejects unknown response/event fields and never retries a write with a new key
+ok 128 - SDK rejects unknown response/event fields and never retries a write with a new key
+  ---
+  duration_ms: 1.949209
+  type: 'test'
+  ...
+# (node:48822) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: composition defaults loopback and keeps AuthStore physically/minimally separate
+ok 129 - composition defaults loopback and keeps AuthStore physically/minimally separate
+  ---
+  duration_ms: 30.946833
+  type: 'test'
+  ...
+# Subtest: same DB path or nonloopback without TLS/Secure cookies rejects before startup
+ok 130 - same DB path or nonloopback without TLS/Secure cookies rejects before startup
+  ---
+  duration_ms: 5.171708
+  type: 'test'
+  ...
+# (node:48860) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: happy path persists correlation→control tuple→delivery tuple and advances cursor
+ok 131 - happy path persists correlation→control tuple→delivery tuple and advances cursor
+  ---
+  duration_ms: 55.716708
+  type: 'test'
+  ...
+# Subtest: same occurrence with changed raw/claims quarantines and creates no second command
+ok 132 - same occurrence with changed raw/claims quarantines and creates no second command
+  ---
+  duration_ms: 66.21225
+  type: 'test'
+  ...
+# Subtest: control response loss stays control-unknown and never retries before quarantine
+ok 133 - control response loss stays control-unknown and never retries before quarantine
+  ---
+  duration_ms: 41.005166
+  type: 'test'
+  ...
+# Subtest: Effect ACK loss stays delivery-unknown; stored read snapshot/payload never changes
+ok 134 - Effect ACK loss stays delivery-unknown; stored read snapshot/payload never changes
+  ---
+  duration_ms: 75.527834
+  type: 'test'
+  ...
+# Subtest: cancel/decision redelivery preserves ETag and authenticated occurrence identity
+ok 135 - cancel/decision redelivery preserves ETag and authenticated occurrence identity
+  ---
+  duration_ms: 52.191834
+  type: 'test'
+  ...
+# Subtest: missing write precondition abandons before any Control or delivery call
+ok 136 - missing write precondition abandons before any Control or delivery call
+  ---
+  duration_ms: 10.889292
+  type: 'test'
+  ...
+# Subtest: two adapter workers compete through single disposition CAS
+ok 137 - two adapter workers compete through single disposition CAS
+  ---
+  duration_ms: 36.263417
+  type: 'test'
+  ...
+# Subtest: mapping rotation abandons pending before send; source imports contain no Bot API/core/store
+ok 138 - mapping rotation abandons pending before send; source imports contain no Bot API/core/store
+  ---
+  duration_ms: 28.09375
+  type: 'test'
+  ...
+# (node:48957) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: TelegramGatewayPort signs updates and keeps raw text/token outside refs
+ok 139 - TelegramGatewayPort signs updates and keeps raw text/token outside refs
+  ---
+  duration_ms: 14.866583
+  type: 'test'
+  ...
+# Subtest: verified dual refs create and dispatch a control-command Effect
+ok 140 - verified dual refs create and dispatch a control-command Effect
+  ---
+  duration_ms: 21.040792
+  type: 'test'
+  ...
+# Subtest: target/key/payload mismatches are denied before Effect creation
+ok 141 - target/key/payload mismatches are denied before Effect creation
+  ---
+  duration_ms: 9.660042
+  type: 'test'
+  ...
+1..141
+# tests 141
+# suites 0
+# pass 141
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5375.021583

@@ -254,7 +254,6 @@ export interface EffectApprovalInput {
 }
 
 export interface EffectIntentInput {
-  readonly effectId: string;
   readonly actionId: string;
   readonly intentKey: string;
   readonly intentGeneration: number;
@@ -288,6 +287,40 @@ export type HarnessInput =
       readonly type: "outcome-proposal";
       readonly proposal: OutcomeProposalInput;
     };
+
+export type HarnessSubmitResult = null | { readonly effectId: string };
+
+export interface HarnessCleanupEvidence {
+  readonly ipcDrained: boolean;
+  readonly stdoutDrained: boolean;
+  readonly stderrDrained: boolean;
+  readonly wholeTreeReaped: boolean;
+  readonly grantRevoked: boolean;
+}
+
+/** Narrow Control-owned boundary consumed by external Harness adapters. */
+export interface HarnessAdapterPort {
+  submit(
+    idempotencyKey: string,
+    input: Exclude<
+      HarnessInput,
+      { type: "effect-intent" } | { type: "outcome-proposal" }
+    >,
+  ): Result<null>;
+  submit(
+    idempotencyKey: string,
+    input: Extract<HarnessInput, { type: "outcome-proposal" }>,
+  ): Result<{ readonly outcomeAccepted: true }>;
+  submitEffect(
+    idempotencyKey: string,
+    input: Extract<HarnessInput, { type: "effect-intent" }>,
+  ): Promise<Result<null>>;
+  recordFault(idempotencyKey: string): Result<null>;
+  commitCleanup(
+    idempotencyKey: string,
+    evidence: HarnessCleanupEvidence,
+  ): Result<{ readonly cause: "succeeded" | "failed" }>;
+}
 
 export interface ProcessIdentity {
   readonly pid: number;

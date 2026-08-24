@@ -23,7 +23,10 @@ import {
   type EffectState,
   type ErrorKind,
   type ExecutionMode,
+  type HarnessAdapterPort,
+  type HarnessCleanupEvidence,
   type HarnessInput,
+  type HarnessSubmitResult,
   type HealthSummary,
   type IntentAdmissionInput,
   type IntentAdmissionResult,
@@ -247,6 +250,7 @@ interface InternalRun {
   checkpoints: Map<number, InternalCheckpoint>;
   proposedOutcomes: Map<number, string>;
   acceptedOutcomes: Map<number, string>;
+  faultedAttempts: Set<number>;
   processes: Map<number, ProcessIdentity>;
   reaped: Set<number>;
   revoked: Set<number>;
@@ -607,6 +611,7 @@ function reduceFacts(facts: readonly SourceFact[]): ControlState {
           checkpoints: new Map(),
           proposedOutcomes: new Map(),
           acceptedOutcomes: new Map(),
+          faultedAttempts: new Set(),
           processes: new Map(),
           reaped: new Set(),
           revoked: new Set(),
@@ -889,6 +894,11 @@ function reduceFacts(facts: readonly SourceFact[]): ControlState {
         state.runs
           .get(value.runId)!
           .acceptedOutcomes.set(value.attempt, value.artifactDigest);
+        break;
+      }
+      case "attempt-fault-recorded": {
+        const value = payload<{ runId: string; attempt: number }>(fact);
+        state.runs.get(value.runId)!.faultedAttempts.add(value.attempt);
         break;
       }
       case "attempt-settled": {
@@ -1217,6 +1227,14 @@ function bindCommandMeta(
   return matched ? ok(matched) : fail("invalid_input");
 }
 
+type EffectHarnessInput = Extract<HarnessInput, { type: "effect-intent" }>;
+type NonEffectHarnessInput = Exclude<HarnessInput, { type: "effect-intent" }>;
+type OutcomeHarnessInput = Extract<HarnessInput, { type: "outcome-proposal" }>;
+type PassiveHarnessInput = Exclude<
+  HarnessInput,
+  { type: "effect-intent" } | { type: "outcome-proposal" }
+>;
+
 export class HarnessSession {
   readonly #control: Control;
   readonly #token: AttemptToken;
@@ -1226,7 +1244,13 @@ export class HarnessSession {
     this.#token = token;
   }
 
-  submit(meta: CommandMeta, input: HarnessInput): Result<null> {
+  submit(
+    meta: CommandMeta,
+    input: EffectHarnessInput,
+  ): Result<{ readonly effectId: string }>;
+  submit(meta: CommandMeta, input: NonEffectHarnessInput): Result<null>;
+  submit(meta: CommandMeta, input: HarnessInput): Result<HarnessSubmitResult>;
+  submit(meta: CommandMeta, input: HarnessInput): Result<HarnessSubmitResult> {
     const bound = bindCommandMeta(meta, input, this.#token);
     return bound.ok
       ? this.#control.submitHarness(bound.value, this.#token, input)
@@ -1791,7 +1815,7 @@ export class Control {
     meta: CommandMeta,
     token: AttemptToken,
     input: HarnessInput,
-  ): Result<null> {
+  ): Result<HarnessSubmitResult> {
     const raw = input as unknown;
     const type =
       raw && typeof raw === "object" && !Array.isArray(raw)
@@ -1851,7 +1875,6 @@ export class Control {
     } else if (type === "effect-intent") {
       const envelope = exactRecord(raw, ["type", "effect"]);
       const value = exactRecord(envelope?.effect, [
-        "effectId",
         "actionId",
         "intentKey",
         "intentGeneration",
@@ -1861,7 +1884,6 @@ export class Control {
       if (
         !value ||
         ![
-          value.effectId,
           value.actionId,
           value.intentKey,
           value.operation,
@@ -1871,7 +1893,6 @@ export class Control {
       )
         return fail("invalid_input");
       const effect: EffectIntentInput = {
-        effectId: value.effectId as string,
         actionId: value.actionId as string,
         intentKey: value.intentKey as string,
         intentGeneration: value.intentGeneration as number,
@@ -1959,6 +1980,7 @@ export class Control {
       if (!validToken(run, token)) return fail("stale_attempt");
       if (!currentActivation(state, run!)) return fail("stale_epoch");
       const drafts: FactDraft[] = [];
+      let submitResult: HarnessSubmitResult = null;
       if (decoded.type === "action") {
         if (
           decodedMeta.commandKind !== "register-action" ||
@@ -2024,23 +2046,25 @@ export class Control {
           decoded.effect.intentGeneration < 0
         )
           return fail("invalid_input");
-        const prior = run!.effects.get(decoded.effect.effectId);
+        const effectId = digestJson([
+          "effect-v1",
+          token.runId,
+          decoded.effect.intentKey,
+          decoded.effect.intentGeneration,
+        ]);
         const sameIntent = [...run!.effects.entries()].find(
           ([, effect]) =>
             effect.intentKey === decoded.effect.intentKey &&
             effect.intentGeneration === decoded.effect.intentGeneration,
         );
-        if (prior) {
-          const exact =
-            prior.intentKey === decoded.effect.intentKey &&
-            prior.intentGeneration === decoded.effect.intentGeneration &&
-            prior.operation === decoded.effect.operation &&
-            prior.payloadDigest === decoded.effect.payloadDigest;
-          return exact
-            ? plan(snapshot, [], null)
+        if (sameIntent) {
+          const [priorId, prior] = sameIntent;
+          return prior.operation === decoded.effect.operation &&
+            prior.payloadDigest === decoded.effect.payloadDigest
+            ? plan(snapshot, [], { effectId: priorId })
             : fail("idempotency_conflict");
         }
-        if (sameIntent) return fail("idempotency_conflict");
+        submitResult = { effectId };
         const expiresAtUnixMs =
           this.#now() + (this.#options.approvalTtlMs ?? 60_000);
         drafts.push(
@@ -2050,6 +2074,7 @@ export class Control {
             payload: asPayload({
               runId: token.runId,
               attempt: token.attempt,
+              effectId,
               ...decoded.effect,
             }),
           },
@@ -2058,7 +2083,7 @@ export class Control {
             factKind: "approval-opened",
             payload: asPayload({
               runId: token.runId,
-              effectId: decoded.effect.effectId,
+              effectId,
               expiresAtUnixMs,
             }),
           },
@@ -2126,7 +2151,7 @@ export class Control {
           }),
         });
       }
-      return plan(snapshot, drafts, null);
+      return plan(snapshot, drafts, submitResult);
     });
   }
 
@@ -2583,22 +2608,57 @@ export class Control {
     });
   }
 
+  recordHarnessFault(
+    authority: symbol,
+    meta: CommandMeta,
+    token: AttemptToken,
+  ): Result<null> {
+    if (authority !== PI_CHILD_OWNER) return fail("forbidden");
+    const input = { reasonCode: "adapter-fault" as const };
+    const decodedMeta = matchingCommandMeta(
+      meta,
+      "harness-fault",
+      token.runId,
+      input,
+      token,
+    );
+    if (!decodedMeta) return fail("invalid_input");
+    return this.#transact(decodedMeta, input, (snapshot) => {
+      const run = reduceFacts(snapshot.facts).runs.get(token.runId);
+      if (!run || !matchesStoredToken(run, token)) return fail("stale_attempt");
+      if (run.cancelRequested) return fail("terminal_conflict");
+      if (["succeeded", "failed", "cancelled"].includes(
+        run.attempts.get(token.attempt) ?? "",
+      ))
+        return fail("terminal_conflict");
+      if (run.faultedAttempts.has(token.attempt))
+        return plan(snapshot, [], null);
+      return plan(
+        snapshot,
+        [
+          {
+            aggregateId: token.runId,
+            factKind: "attempt-fault-recorded",
+            payload: asPayload({
+              runId: token.runId,
+              attempt: token.attempt,
+              reasonCode: input.reasonCode,
+            }),
+          },
+        ],
+        null,
+      );
+    });
+  }
+
   recordPiCleanup(
     authority: symbol,
     meta: CommandMeta,
     token: AttemptToken,
-    cause: "succeeded" | "failed",
-    evidence: {
-      ipcDrained: boolean;
-      stdoutDrained: boolean;
-      stderrDrained: boolean;
-      wholeTreeReaped: boolean;
-      grantRevoked: boolean;
-      outcomeAccepted: boolean;
-    },
+    evidence: HarnessCleanupEvidence,
   ): Result<{ runId: string; attempt: number; state: "succeeded" | "failed" }> {
     if (authority !== PI_CHILD_OWNER) return fail("forbidden");
-    const input = { cause, evidence };
+    const input = { evidence };
     const decodedMeta = matchingCommandMeta(
       meta,
       "pi-cleanup",
@@ -2612,16 +2672,18 @@ export class Control {
       !evidence.stdoutDrained ||
       !evidence.stderrDrained ||
       !evidence.wholeTreeReaped ||
-      !evidence.grantRevoked ||
-      (cause === "succeeded" && !evidence.outcomeAccepted)
+      !evidence.grantRevoked
     )
       return fail("invalid_state");
     return this.#transact(decodedMeta, input, (snapshot) => {
       const run = reduceFacts(snapshot.facts).runs.get(token.runId);
       if (!run || !matchesStoredToken(run, token)) return fail("stale_attempt");
       if (run.cancelRequested) return fail("terminal_conflict");
-      if (cause === "succeeded" && !run.acceptedOutcomes.has(token.attempt))
-        return fail("invalid_state");
+      const cause =
+        run.acceptedOutcomes.has(token.attempt) &&
+        !run.faultedAttempts.has(token.attempt)
+          ? ("succeeded" as const)
+          : ("failed" as const);
       const existing = run.attempts.get(token.attempt);
       if (["succeeded", "failed"].includes(existing ?? ""))
         return existing === cause
@@ -3538,12 +3600,10 @@ export class Control {
         (candidate) => candidate.effects.has(input.approvalId),
       );
       if (!run) return fail("not_found");
-      return this.decideApprovalFromWire(
-        authority,
-        idempotencyKey,
-        ifMatch,
-        { runId: run.runId, ...input },
-      );
+      return this.decideApprovalFromWire(authority, idempotencyKey, ifMatch, {
+        runId: run.runId,
+        ...input,
+      });
     } catch {
       return fail("invalid_state");
     }
@@ -3564,10 +3624,7 @@ export class Control {
     const approval = current.value.value.pendingApprovals.find(
       ({ approvalId }) => approvalId === input.approvalId,
     );
-    if (
-      approval &&
-      digestJson(current.value.value) !== ifMatch
-    )
+    if (approval && digestJson(current.value.value) !== ifMatch)
       return fail("stale_epoch");
     const actor = actorSubjectId(authority);
     return this.decideApproval(
@@ -4258,23 +4315,9 @@ export class TrustedPiCleanupController {
   commit(
     meta: CommandMeta,
     token: AttemptToken,
-    cause: "succeeded" | "failed",
-    evidence: {
-      ipcDrained: boolean;
-      stdoutDrained: boolean;
-      stderrDrained: boolean;
-      wholeTreeReaped: boolean;
-      grantRevoked: boolean;
-      outcomeAccepted: boolean;
-    },
+    evidence: HarnessCleanupEvidence,
   ) {
-    return this.#control.recordPiCleanup(
-      PI_CHILD_OWNER,
-      meta,
-      token,
-      cause,
-      evidence,
-    );
+    return this.#control.recordPiCleanup(PI_CHILD_OWNER, meta, token, evidence);
   }
 
   terminalize(meta: CommandMeta, runId: string, cause: "succeeded" | "failed") {
@@ -4533,5 +4576,195 @@ export class EffectGateway {
 
 export const createEffectGateway = (control: Control): EffectGateway =>
   new EffectGateway(control);
+
+class ControlHarnessAdapter implements HarnessAdapterPort {
+  readonly #control: Control;
+  readonly #session: HarnessSession;
+  readonly #gateway: EffectGateway;
+  readonly #outcomes: OutcomeAcceptor;
+  readonly #cleanup: TrustedPiCleanupController;
+  readonly #token: AttemptToken;
+  readonly #actorSubjectId: string;
+
+  constructor(
+    control: Control,
+    token: AttemptToken,
+    actorSubjectId: string,
+  ) {
+    this.#control = control;
+    this.#token = token;
+    this.#actorSubjectId = actorSubjectId;
+    this.#session = control.harness(token);
+    this.#gateway = new EffectGateway(control);
+    this.#outcomes = new TrustedOutcomeAcceptor(control);
+    this.#cleanup = new TrustedPiCleanupController(control);
+  }
+
+  submit(
+    idempotencyKey: string,
+    input: PassiveHarnessInput,
+  ): Result<null>;
+  submit(
+    idempotencyKey: string,
+    input: OutcomeHarnessInput,
+  ): Result<{ readonly outcomeAccepted: true }>;
+  submit(
+    idempotencyKey: string,
+    input: PassiveHarnessInput | OutcomeHarnessInput,
+  ): Result<null | { readonly outcomeAccepted: true }> {
+    const commandKind =
+      input.type === "action"
+        ? "register-action"
+        : input.type === "tool-observation"
+          ? "tool-observation"
+          : input.type === "checkpoint"
+            ? "checkpoint"
+            : "outcome-proposal";
+    const submitted = this.#session.submit(
+      commandMeta(
+        this.#actorSubjectId,
+        commandKind,
+        this.#token.runId,
+        idempotencyKey,
+        input,
+        this.#token,
+      ),
+      input,
+    );
+    if (!submitted.ok || input.type !== "outcome-proposal") return submitted;
+    const outcome = {
+      runId: this.#token.runId,
+      attempt: this.#token.attempt,
+      artifactDigest: input.proposal.artifactDigest,
+    };
+    const accepted = this.#outcomes.accept(
+      commandMeta(
+        this.#actorSubjectId,
+        "accept-outcome",
+        this.#token.runId,
+        `${idempotencyKey}-accept`,
+        outcome,
+      ),
+      outcome,
+    );
+    return accepted.ok ? ok({ outcomeAccepted: true as const }) : accepted;
+  }
+
+  async submitEffect(
+    idempotencyKey: string,
+    input: EffectHarnessInput,
+  ): Promise<Result<null>> {
+    const submitted = this.#session.submit(
+      commandMeta(
+        this.#actorSubjectId,
+        "effect-intent",
+        this.#token.runId,
+        idempotencyKey,
+        input,
+        this.#token,
+      ),
+      input,
+    );
+    if (!submitted.ok) return submitted;
+    const run = this.#control.snapshot(this.#token.runId);
+    if (!run.ok) return run;
+    const effectId = submitted.value.effectId;
+    const approval = {
+      decision: "approved" as const,
+      releaseId: run.value.releaseId,
+      activationEpoch: run.value.activationEpoch,
+      expiresAtUnixMs: Number.MAX_SAFE_INTEGER,
+    };
+    const approvalInput = { runId: this.#token.runId, effectId, approval };
+    const approved = this.#gateway.approve(
+      commandMeta(
+        this.#actorSubjectId,
+        "approve-effect",
+        this.#token.runId,
+        `${idempotencyKey}-approve`,
+        approvalInput,
+      ),
+      this.#token.runId,
+      effectId,
+      approval,
+    );
+    if (!approved.ok) return approved;
+    const dispatchInput = { runId: this.#token.runId, effectId };
+    const dispatched = await this.#gateway.dispatch(
+      {
+        start: commandMeta(
+          this.#actorSubjectId,
+          "dispatch-effect",
+          this.#token.runId,
+          `${idempotencyKey}-start`,
+          dispatchInput,
+        ),
+        outcome: commandMeta(
+          this.#actorSubjectId,
+          "record-effect-outcome",
+          this.#token.runId,
+          `${idempotencyKey}-outcome`,
+          dispatchInput,
+        ),
+        unknown: commandMeta(
+          this.#actorSubjectId,
+          "mark-effect-unknown",
+          this.#token.runId,
+          `${idempotencyKey}-unknown`,
+          dispatchInput,
+        ),
+      },
+      this.#token.runId,
+      effectId,
+      async () => {
+        throw new Error("fixture response lost");
+      },
+    );
+    return !dispatched.ok && dispatched.error === "unknown_effect"
+      ? ok(null)
+      : dispatched;
+  }
+
+  recordFault(idempotencyKey: string): Result<null> {
+    const input = { reasonCode: "adapter-fault" as const };
+    return this.#control.recordHarnessFault(
+      PI_CHILD_OWNER,
+      commandMeta(
+        this.#actorSubjectId,
+        "harness-fault",
+        this.#token.runId,
+        idempotencyKey,
+        input,
+        this.#token,
+      ),
+      this.#token,
+    );
+  }
+
+  commitCleanup(
+    idempotencyKey: string,
+    evidence: HarnessCleanupEvidence,
+  ): Result<{ readonly cause: "succeeded" | "failed" }> {
+    const committed = this.#cleanup.commit(
+      commandMeta(
+        this.#actorSubjectId,
+        "pi-cleanup",
+        this.#token.runId,
+        idempotencyKey,
+        { evidence },
+        this.#token,
+      ),
+      this.#token,
+      evidence,
+    );
+    return committed.ok ? ok({ cause: committed.value.state }) : committed;
+  }
+}
+
+export const createHarnessAdapterPort = (
+  control: Control,
+  token: AttemptToken,
+  actorSubjectId: string,
+): HarnessAdapterPort => new ControlHarnessAdapter(control, token, actorSubjectId);
 
 export const newSessionId = (): string => randomUUID();

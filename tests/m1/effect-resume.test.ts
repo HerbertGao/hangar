@@ -167,38 +167,28 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
         },
       ),
     );
-    value(
+    const initialEffect = {
+      type: "effect-intent" as const,
+      effect: {
+        actionId: "effect-action",
+        intentKey: "commit",
+        intentGeneration: 0,
+        operation: "fixture.commit",
+        payloadDigest: fixtureDigest("initial-effect"),
+      },
+    };
+    const effect1 = value(
       session0.submit(
         meta(
           "effect-intent",
           token0.runId,
           "intent",
-          {
-            type: "effect-intent",
-            effect: {
-              effectId: "effect-1",
-              actionId: "effect-action",
-              intentKey: "commit",
-              intentGeneration: 0,
-              operation: "fixture.commit",
-              payloadDigest: fixtureDigest("initial-effect"),
-            },
-          },
+          initialEffect,
           token0,
         ),
-        {
-          type: "effect-intent",
-          effect: {
-            effectId: "effect-1",
-            actionId: "effect-action",
-            intentKey: "commit",
-            intentGeneration: 0,
-            operation: "fixture.commit",
-            payloadDigest: fixtureDigest("initial-effect"),
-          },
-        },
+        initialEffect,
       ),
-    );
+    ).effectId;
     const unapprovedGateway = createEffectGateway(control);
     let unapprovedCalls = 0;
     assert.deepEqual(
@@ -208,26 +198,26 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
             "dispatch-effect",
             token0.runId,
             "unapproved",
-            { runId: token0.runId, effectId: "effect-1" },
+            { runId: token0.runId, effectId: effect1 },
             token0,
           ),
           outcome: meta(
             "record-effect-outcome",
             token0.runId,
             "unapproved-outcome",
-            { runId: token0.runId, effectId: "effect-1" },
+            { runId: token0.runId, effectId: effect1 },
             token0,
           ),
           unknown: meta(
             "mark-effect-unknown",
             token0.runId,
             "unapproved-unknown",
-            { runId: token0.runId, effectId: "effect-1" },
+            { runId: token0.runId, effectId: effect1 },
             token0,
           ),
         },
         token0.runId,
-        "effect-1",
+        effect1,
         async () => {
           unapprovedCalls += 1;
           return "committed";
@@ -242,32 +232,12 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
           "effect-intent",
           token0.runId,
           "duplicate-intent",
-          {
-            type: "effect-intent",
-            effect: {
-              effectId: "effect-2",
-              actionId: "effect-action",
-              intentKey: "commit",
-              intentGeneration: 0,
-              operation: "fixture.commit",
-              payloadDigest: fixtureDigest("initial-effect"),
-            },
-          },
+          initialEffect,
           token0,
         ),
-        {
-          type: "effect-intent",
-          effect: {
-            effectId: "effect-2",
-            actionId: "effect-action",
-            intentKey: "commit",
-            intentGeneration: 0,
-            operation: "fixture.commit",
-            payloadDigest: fixtureDigest("initial-effect"),
-          },
-        },
+        initialEffect,
       ),
-      { ok: false, error: "idempotency_conflict" },
+      { ok: true, value: { effectId: effect1 } },
     );
     value(
       session0.submit(
@@ -284,7 +254,7 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
               artifactDigest: fixtureDigest("checkpoint"),
               obligationOwner: "effect-gateway",
               obligationGeneration: 0,
-              effectId: "effect-1",
+              effectId: effect1,
             },
           },
           token0,
@@ -298,7 +268,7 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
             artifactDigest: fixtureDigest("checkpoint"),
             obligationOwner: "effect-gateway",
             obligationGeneration: 0,
-            effectId: "effect-1",
+            effectId: effect1,
           },
         },
       ),
@@ -319,7 +289,7 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
               artifactDigest: fixtureDigest("different-checkpoint"),
               obligationOwner: "effect-gateway",
               obligationGeneration: 0,
-              effectId: "effect-1",
+              effectId: effect1,
             },
           },
           token0,
@@ -333,7 +303,7 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
             artifactDigest: fixtureDigest("different-checkpoint"),
             obligationOwner: "effect-gateway",
             obligationGeneration: 0,
-            effectId: "effect-1",
+            effectId: effect1,
           },
         },
       ),
@@ -350,13 +320,13 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
           "expired-approval",
           {
             runId: token0.runId,
-            effectId: "effect-1",
+            effectId: effect1,
             approval: expiredApproval,
           },
           token0,
         ),
         token0.runId,
-        "effect-1",
+        effect1,
         expiredApproval,
       ),
       { ok: false, error: "invalid_state" },
@@ -365,14 +335,14 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
       "approve-effect",
       token0.runId,
       "approve-effect-1",
-      { runId: token0.runId, effectId: "effect-1", approval },
+      { runId: token0.runId, effectId: effect1, approval },
       token0,
     );
     assert.deepEqual(
       gateway.approve(
         { ...approvalMeta, payloadDigest: "0".repeat(64) },
         token0.runId,
-        "effect-1",
+        effect1,
         approval,
       ),
       { ok: false, error: "invalid_input" },
@@ -381,23 +351,23 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
       gateway.approve(
         { ...approvalMeta, preconditionDigest: "0".repeat(64) },
         token0.runId,
-        "effect-1",
+        effect1,
         approval,
       ),
       { ok: false, error: "invalid_input" },
     );
-    value(gateway.approve(approvalMeta, token0.runId, "effect-1", approval));
+    value(gateway.approve(approvalMeta, token0.runId, effect1, approval));
     assert.deepEqual(
       gateway.approve(
         meta(
           "approve-effect",
           token0.runId,
           "duplicate-approval",
-          { runId: token0.runId, effectId: "effect-1", approval: approval },
+          { runId: token0.runId, effectId: effect1, approval: approval },
           token0,
         ),
         token0.runId,
-        "effect-1",
+        effect1,
         approval,
       ),
       { ok: false, error: "invalid_state" },
@@ -426,7 +396,7 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
         fence.databaseIdentity,
         fence.targetId,
         token0.runId,
-        "effect-1",
+        effect1,
         externalMarker,
       ],
       {
@@ -472,16 +442,16 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
     control = store.control;
     processOwner = createTrustedProcessController(control);
     let run = value(control.snapshot(token0.runId));
-    assert.equal(run.effects["effect-1"], "dispatch-started");
+    assert.equal(run.effects[effect1], "dispatch-started");
     gateway = createEffectGateway(control);
     value(
       gateway.recoverUnknown(
         meta("mark-effect-unknown", token0.runId, "recover-unknown", {
           runId: token0.runId,
-          effectId: "effect-1",
+          effectId: effect1,
         }),
         token0.runId,
-        "effect-1",
+        effect1,
       ),
     );
     let redispatches = 0;
@@ -490,23 +460,23 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
         {
           start: meta("dispatch-effect", token0.runId, "redispatch", {
             runId: token0.runId,
-            effectId: "effect-1",
+            effectId: effect1,
           }),
           outcome: meta(
             "record-effect-outcome",
             token0.runId,
             "redispatch-outcome",
-            { runId: token0.runId, effectId: "effect-1" },
+            { runId: token0.runId, effectId: effect1 },
           ),
           unknown: meta(
             "mark-effect-unknown",
             token0.runId,
             "redispatch-unknown",
-            { runId: token0.runId, effectId: "effect-1" },
+            { runId: token0.runId, effectId: effect1 },
           ),
         },
         token0.runId,
-        "effect-1",
+        effect1,
         async () => {
           redispatches += 1;
           return "committed";
@@ -519,11 +489,11 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
       gateway.reconcile(
         meta("reconcile-effect", token0.runId, "invalid-reconcile", {
           runId: token0.runId,
-          effectId: "effect-1",
+          effectId: effect1,
           outcome: "pending",
         }),
         token0.runId,
-        "effect-1",
+        effect1,
         // @ts-expect-error exercises runtime outcome validation.
         "pending",
       ),
@@ -537,57 +507,47 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
       gateway.reconcile(
         meta("reconcile-effect", token0.runId, "reconcile", {
           runId: token0.runId,
-          effectId: "effect-1",
+          effectId: effect1,
           outcome: "committed",
         }),
         token0.runId,
-        "effect-1",
+        effect1,
         "committed",
       ),
     );
-    value(
+    const secondEffect = {
+      type: "effect-intent" as const,
+      effect: {
+        actionId: "effect-action",
+        intentKey: "commit-2",
+        intentGeneration: 0,
+        operation: "fixture.commit",
+        payloadDigest: fixtureDigest("second-effect"),
+      },
+    };
+    const effect2 = value(
       control.harness(token0).submit(
         meta(
           "effect-intent",
           token0.runId,
           "intent-2",
-          {
-            type: "effect-intent",
-            effect: {
-              effectId: "effect-2",
-              actionId: "effect-action",
-              intentKey: "commit-2",
-              intentGeneration: 0,
-              operation: "fixture.commit",
-              payloadDigest: fixtureDigest("second-effect"),
-            },
-          },
+          secondEffect,
           token0,
         ),
-        {
-          type: "effect-intent",
-          effect: {
-            effectId: "effect-2",
-            actionId: "effect-action",
-            intentKey: "commit-2",
-            intentGeneration: 0,
-            operation: "fixture.commit",
-            payloadDigest: fixtureDigest("second-effect"),
-          },
-        },
+        secondEffect,
       ),
-    );
+    ).effectId;
     value(
       gateway.approve(
         meta(
           "approve-effect",
           token0.runId,
           "approve-effect-2",
-          { runId: token0.runId, effectId: "effect-2", approval: approval },
+          { runId: token0.runId, effectId: effect2, approval: approval },
           token0,
         ),
         token0.runId,
-        "effect-2",
+        effect2,
         approval,
       ),
     );
@@ -597,18 +557,18 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
         {
           start: meta("dispatch-effect", token0.runId, "null-meta-start", {
             runId: token0.runId,
-            effectId: "effect-2",
+            effectId: effect2,
           }),
           outcome: meta(
             "record-effect-outcome",
             token0.runId,
             "null-meta-outcome",
-            { runId: token0.runId, effectId: "effect-2" },
+            { runId: token0.runId, effectId: effect2 },
           ),
           unknown: null as never,
         },
         token0.runId,
-        "effect-2",
+        effect2,
         async () => {
           nullMetadataCalls += 1;
           return "committed";
@@ -626,19 +586,19 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
             "dispatch-effect",
             token0.runId,
             "dispatch",
-            { runId: token0.runId, effectId: "effect-1" },
+            { runId: token0.runId, effectId: effect1 },
           ),
           outcome: meta("record-effect-outcome", token0.runId, "o2", {
             runId: token0.runId,
-            effectId: "effect-2",
+            effectId: effect2,
           }),
           unknown: meta("mark-effect-unknown", token0.runId, "u2", {
             runId: token0.runId,
-            effectId: "effect-2",
+            effectId: effect2,
           }),
         },
         token0.runId,
-        "effect-2",
+        effect2,
         async () => {
           wrongEffectCalls += 1;
           await appendFile(externalMarker, "unexpected\n");
@@ -654,23 +614,23 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
         {
           start: meta("dispatch-effect", token0.runId, "effect-2-dispatch", {
             runId: token0.runId,
-            effectId: "effect-2",
+            effectId: effect2,
           }),
           outcome: meta(
             "record-effect-outcome",
             token0.runId,
             "effect-2-outcome",
-            { runId: token0.runId, effectId: "effect-2" },
+            { runId: token0.runId, effectId: effect2 },
           ),
           unknown: meta(
             "mark-effect-unknown",
             token0.runId,
             "effect-2-unknown",
-            { runId: token0.runId, effectId: "effect-2" },
+            { runId: token0.runId, effectId: effect2 },
           ),
         },
         token0.runId,
-        "effect-2",
+        effect2,
         async () => {
           secondEffectCalls += 1;
           return "not-committed";
@@ -682,49 +642,39 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
       (await readFile(externalMarker, "utf8")).trim().split("\n"),
       ["committed"],
     );
-    value(
+    const thirdEffect = {
+      type: "effect-intent" as const,
+      effect: {
+        actionId: "effect-action",
+        intentKey: "commit-3",
+        intentGeneration: 0,
+        operation: "fixture.commit",
+        payloadDigest: fixtureDigest("third-effect"),
+      },
+    };
+    const effect3 = value(
       control.harness(token0).submit(
         meta(
           "effect-intent",
           token0.runId,
           "intent-3",
-          {
-            type: "effect-intent",
-            effect: {
-              effectId: "effect-3",
-              actionId: "effect-action",
-              intentKey: "commit-3",
-              intentGeneration: 0,
-              operation: "fixture.commit",
-              payloadDigest: fixtureDigest("third-effect"),
-            },
-          },
+          thirdEffect,
           token0,
         ),
-        {
-          type: "effect-intent",
-          effect: {
-            effectId: "effect-3",
-            actionId: "effect-action",
-            intentKey: "commit-3",
-            intentGeneration: 0,
-            operation: "fixture.commit",
-            payloadDigest: fixtureDigest("third-effect"),
-          },
-        },
+        thirdEffect,
       ),
-    );
+    ).effectId;
     value(
       gateway.approve(
         meta(
           "approve-effect",
           token0.runId,
           "approve-effect-3",
-          { runId: token0.runId, effectId: "effect-3", approval: approval },
+          { runId: token0.runId, effectId: effect3, approval: approval },
           token0,
         ),
         token0.runId,
-        "effect-3",
+        effect3,
         approval,
       ),
     );
@@ -802,23 +752,23 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
         {
           start: meta("dispatch-effect", token0.runId, "effect-3-dispatch", {
             runId: token0.runId,
-            effectId: "effect-3",
+            effectId: effect3,
           }),
           outcome: meta(
             "record-effect-outcome",
             token0.runId,
             "effect-3-outcome",
-            { runId: token0.runId, effectId: "effect-3" },
+            { runId: token0.runId, effectId: effect3 },
           ),
           unknown: meta(
             "mark-effect-unknown",
             token0.runId,
             "effect-3-unknown",
-            { runId: token0.runId, effectId: "effect-3" },
+            { runId: token0.runId, effectId: effect3 },
           ),
         },
         token0.runId,
-        "effect-3",
+        effect3,
         invalidConnector,
       ),
       { ok: false, error: "unknown_effect" },
@@ -830,23 +780,23 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
         {
           start: meta("dispatch-effect", token0.runId, "effect-3-retry", {
             runId: token0.runId,
-            effectId: "effect-3",
+            effectId: effect3,
           }),
           outcome: meta(
             "record-effect-outcome",
             token0.runId,
             "effect-3-retry-outcome",
-            { runId: token0.runId, effectId: "effect-3" },
+            { runId: token0.runId, effectId: effect3 },
           ),
           unknown: meta(
             "mark-effect-unknown",
             token0.runId,
             "effect-3-retry-unknown",
-            { runId: token0.runId, effectId: "effect-3" },
+            { runId: token0.runId, effectId: effect3 },
           ),
         },
         token0.runId,
-        "effect-3",
+        effect3,
         async () => {
           invalidOutcomeRedispatches += 1;
           return "not-committed";
@@ -859,11 +809,11 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
       gateway.reconcile(
         meta("reconcile-effect", token0.runId, "effect-3-reconcile", {
           runId: token0.runId,
-          effectId: "effect-3",
+          effectId: effect3,
           outcome: "not-committed",
         }),
         token0.runId,
-        "effect-3",
+        effect3,
         "not-committed",
       ),
     );
@@ -1003,7 +953,6 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
           {
             type: "effect-intent",
             effect: {
-              effectId: "cross-attempt-effect",
               actionId: "effect-action",
               intentKey: "cross-attempt",
               intentGeneration: 0,
@@ -1016,7 +965,6 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
         {
           type: "effect-intent",
           effect: {
-            effectId: "cross-attempt-effect",
             actionId: "effect-action",
             intentKey: "cross-attempt",
             intentGeneration: 0,
@@ -1042,7 +990,7 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
               artifactDigest: fixtureDigest("cross-attempt-checkpoint"),
               obligationOwner: "effect-gateway",
               obligationGeneration: 0,
-              effectId: "effect-1",
+              effectId: effect1,
             },
           },
           token1,
@@ -1056,7 +1004,7 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
             artifactDigest: fixtureDigest("cross-attempt-checkpoint"),
             obligationOwner: "effect-gateway",
             obligationGeneration: 0,
-            effectId: "effect-1",
+            effectId: effect1,
           },
         },
       ),
@@ -1091,16 +1039,28 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
     const effectFactCount = value(control.sourceFacts()).filter(
       ({ factKind }) => factKind === "effect-intent",
     ).length;
-    value(
-      control.harness(token1).submit(
-        meta(
-          "effect-intent",
-          token1.runId,
-          "exact-effect-replay",
+    assert.equal(
+      value(
+        control.harness(token1).submit(
+          meta(
+            "effect-intent",
+            token1.runId,
+            "exact-effect-replay",
+            {
+              type: "effect-intent",
+              effect: {
+                actionId: "replay-action",
+                intentKey: "commit",
+                intentGeneration: 0,
+                operation: "fixture.commit",
+                payloadDigest: fixtureDigest("initial-effect"),
+              },
+            },
+            token1,
+          ),
           {
             type: "effect-intent",
             effect: {
-              effectId: "effect-1",
               actionId: "replay-action",
               intentKey: "commit",
               intentGeneration: 0,
@@ -1108,20 +1068,9 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
               payloadDigest: fixtureDigest("initial-effect"),
             },
           },
-          token1,
         ),
-        {
-          type: "effect-intent",
-          effect: {
-            effectId: "effect-1",
-            actionId: "replay-action",
-            intentKey: "commit",
-            intentGeneration: 0,
-            operation: "fixture.commit",
-            payloadDigest: fixtureDigest("initial-effect"),
-          },
-        },
-      ),
+      ).effectId,
+      effect1,
     );
     assert.equal(
       value(control.sourceFacts()).filter(
@@ -1148,7 +1097,7 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
     assert.equal(terminal.state, "completed");
     run = value(control.snapshot(token1.runId));
     assert.equal(run.currentAttempt, 1);
-    assert.equal(run.effects["effect-1"], "committed");
+    assert.equal(run.effects[effect1], "committed");
     for (const factKind of [
       "effect-approved",
       "effect-claimed",
@@ -1157,7 +1106,7 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
       assert.equal(
         value(control.sourceFacts()).filter(
           (fact) =>
-            fact.factKind === factKind && fact.payload.effectId === "effect-1",
+            fact.factKind === factKind && fact.payload.effectId === effect1,
         ).length,
         1,
       );
@@ -1373,38 +1322,28 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
         },
       ),
     );
-    value(
+    const staleEffect = {
+      type: "effect-intent" as const,
+      effect: {
+        actionId: "stale-action",
+        intentKey: "stale",
+        intentGeneration: 0,
+        operation: "fixture.commit",
+        payloadDigest: fixtureDigest("stale-effect"),
+      },
+    };
+    const staleEffectId = value(
       staleSession.submit(
         meta(
           "effect-intent",
           staleToken.runId,
           "stale-intent",
-          {
-            type: "effect-intent",
-            effect: {
-              effectId: "stale-effect",
-              actionId: "stale-action",
-              intentKey: "stale",
-              intentGeneration: 0,
-              operation: "fixture.commit",
-              payloadDigest: fixtureDigest("stale-effect"),
-            },
-          },
+          staleEffect,
           staleToken,
         ),
-        {
-          type: "effect-intent",
-          effect: {
-            effectId: "stale-effect",
-            actionId: "stale-action",
-            intentKey: "stale",
-            intentGeneration: 0,
-            operation: "fixture.commit",
-            payloadDigest: fixtureDigest("stale-effect"),
-          },
-        },
+        staleEffect,
       ),
-    );
+    ).effectId;
     value(
       control.activate(
         meta(
@@ -1516,23 +1455,23 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
         {
           start: meta("dispatch-effect", staleToken.runId, "stale-dispatch", {
             runId: staleToken.runId,
-            effectId: "stale-effect",
+            effectId: staleEffectId,
           }),
           outcome: meta(
             "record-effect-outcome",
             staleToken.runId,
             "stale-outcome",
-            { runId: staleToken.runId, effectId: "stale-effect" },
+            { runId: staleToken.runId, effectId: staleEffectId },
           ),
           unknown: meta(
             "mark-effect-unknown",
             staleToken.runId,
             "stale-unknown",
-            { runId: staleToken.runId, effectId: "stale-effect" },
+            { runId: staleToken.runId, effectId: staleEffectId },
           ),
         },
         staleToken.runId,
-        "stale-effect",
+        staleEffectId,
         async () => {
           staleDispatchCalls += 1;
           return "committed";

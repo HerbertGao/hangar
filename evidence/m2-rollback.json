@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "m2-rollback-proof-v1",
+  "recordedAtUtc": "2026-08-24T22:11:11.000Z",
+  "implementationStart": {
+    "head": "4b7b459c5223564fbb92df4373257a5204e73431",
+    "capturedAtUtc": "2026-08-23T12:17:56Z",
+    "trackedEntries": 247,
+    "treeSha256": "e972e61c39197a9b2a11088e4fca3ddedd9e4eafa17758a8bb96ee6b20ec0955"
+  },
+  "method": {
+    "source": "post-R2 final-fix working tree mirrored into a disposable local clone",
+    "restore": "retain the closed planning/evidence set outside the clone; git reset --hard to pinned head; git clean -ffdx; restore only retained files",
+    "retained": [
+      "openspec/changes/implement-m2-pi-control-slice/",
+      "scripts/bootstrap-m2-burn-ledger.mjs",
+      "scripts/m2-burn-ledger.mjs",
+      "tests/m2/burn-ledger.test.mjs",
+      "ledger/m2-burn-ledger.json",
+      "evidence/m2-burn-ledger.json"
+    ],
+    "protectedMainData": "hangar.sqlite was not copied, opened for write, reset, or deleted"
+  },
+  "treeComparison": {
+    "result": "exact",
+    "restoredTreeEvidence": "evidence/m2-checks/rollback-ls-tree.txt",
+    "restoredTreeSha256": "e972e61c39197a9b2a11088e4fca3ddedd9e4eafa17758a8bb96ee6b20ec0955",
+    "trackedDiff": 0,
+    "statusEvidence": "evidence/m2-checks/rollback-status.txt",
+    "statusLines": 13,
+    "unexpectedStatusLines": 0,
+    "productPathsRemaining": 0
+  },
+  "behavior": {
+    "command": "node --test tests/m1/*.test.ts",
+    "evidence": "evidence/m2-checks/rollback-m1.tap",
+    "tests": 15,
+    "pass": 15,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "typescriptLsp": {
+      "files": 12,
+      "errors": 0,
+      "toolchain": "external type-only @types/node mounted before cold project open and removed after scan"
+    }
+  },
+  "residue": {
+    "sqliteOrSidecars": 0,
+    "processes": 0,
+    "nodeModules": 0,
+    "mastraRuntimeImports": 0,
+    "playwrightRuntimeImports": 0,
+    "finalStatusEqualsPretestStatus": true
+  },
+  "extraNonRequiredM0Attempt": {
+    "result": "fail-closed",
+    "evidence": "evidence/m2-checks/rollback-extra-m0.txt",
+    "findings": [
+      "repository_identity_mismatch",
+      "revision_unavailable"
+    ],
+    "disposition": "not a rollback behavior regression: Task 7.5 does not require M0 in a clone with a deliberately different repository identity/upstream; main checkout remains M0 READY"
+  }
+}

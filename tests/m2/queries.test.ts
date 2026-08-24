@@ -148,7 +148,6 @@ async function setup() {
   const effect = {
     type: "effect-intent" as const,
     effect: {
-      effectId: "effect-1",
       actionId: "action-1",
       intentKey: "intent-1",
       intentGeneration: 1,
@@ -156,7 +155,7 @@ async function setup() {
       payloadDigest: "c".repeat(64),
     },
   };
-  value(
+  const effectId = value(
     runtime.control
       .harness(token1)
       .submit(
@@ -164,15 +163,16 @@ async function setup() {
           "actor",
           "effect-intent",
           "run-1",
-          "effect-1",
+          "effect-submit",
           effect,
           token1,
         ),
         effect,
       ),
-  );
+  ).effectId;
   return {
     runtime,
+    effectId,
     owner,
     hidden,
     release,
@@ -230,7 +230,7 @@ test("run query returns minimal committed projection with pending approvals", as
         operation: pending.operation,
       },
       {
-        approvalId: "effect-1",
+        approvalId: f.effectId,
         runId: "run-1",
         state: "pending",
         operation: "fixture.commit",

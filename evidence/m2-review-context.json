@@ -1,0 +1,105 @@
+{
+  "schemaVersion": "m2-final-review-context-v1",
+  "contextId": "86be839fa87c4b5f9d0e3701b2dc40c06f6bd6673e9e99cd05525010730fd12f",
+  "createdAtUtc": "2026-08-24T22:30:00.000Z",
+  "repositoryRoot": "/Users/herbertgao/VSCodeProject/hangar",
+  "baseCommit": "539b8942d4cf7b47b92a59f4fe7018c8daf918e7",
+  "commitStatus": "all reviewed content is staged; signed checkpoint remains pending because the configured 1Password SSH signer returned an error; signing was not bypassed",
+  "scope": {
+    "change": "openspec/changes/implement-m2-pi-control-slice",
+    "requirements": 18,
+    "scenarios": 217,
+    "tasksCheckedBeforeTerminalPatch": 38,
+    "tasksTotal": 39,
+    "semanticChangedPaths": 77,
+    "semanticTreeFiles": 348
+  },
+  "anchors": {
+    "semanticDiffSha256": "44a882a96f7ce7c33035caae648cd3b0bab3cbe69e14a94e9e20010169a96b35",
+    "semanticTreeManifestSha256": "d3fbef6024ba0bd49e57de52d12c5663db8764130842600b1eb7ff27d01ac2d3",
+    "tapSha256": "919f318a895aad5b0cb9db2dba52e795518dce8dc1d073ecf990e88d287ce9c7",
+    "measurementLedgerSha256": "c9a048b2b195f9415fd676aa21c9ca4953cab02d734dfb2fe843fe79fa084e91",
+    "burnLedgerHead": "79be218288e2291699f627c1afb0fcdf594d82cb2ba6029e762d9be5c64f1cf3",
+    "rollbackTreeSha256": "e972e61c39197a9b2a11088e4fca3ddedd9e4eafa17758a8bb96ee6b20ec0955",
+    "terminalPatchSha256": "c6e4b14aaff711cde45c8f78745398a69bdd048fd9c24ebbf6e1d84258471458"
+  },
+  "checks": {
+    "fullSuite": {
+      "command": "node --test tests/m1/*.test.ts tests/m2/*.test.ts tests/m2/*.test.mjs",
+      "evidence": "evidence/m2-checks/m1-m2.tap",
+      "tests": 141,
+      "pass": 141,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0
+    },
+    "m1Fixed": {
+      "evidence": "evidence/m2-checks/m1-fixed.tap",
+      "tests": 15,
+      "pass": 15
+    },
+    "m0": "M0 advisory: READY",
+    "openSpecStrict": "pass",
+    "generatedContracts": "clean",
+    "typescriptLsp": "0 errors; two project-wide timeout files explicitly retried clean",
+    "projectWideBlockingDiagnostics": 0,
+    "browserRawEvidence": [
+      "evidence/m2-checks/browser-network-console.json",
+      "evidence/m2-checks/browser-operator-flow.json"
+    ],
+    "boundaryTest": "tests/m2/boundaries.test.ts",
+    "measurementTest": "tests/m2/measurements.test.ts",
+    "rollbackEvidence": "evidence/m2-rollback.json"
+  },
+  "budget": {
+    "state": "closure",
+    "productRemaining": 0,
+    "closureRemaining": 3.5,
+    "openReservations": 0,
+    "records": 64
+  },
+  "qualification": {
+    "stageAcceptance": "pending the pre-generated task 7.6 checkbox patch",
+    "candidateQualified": false,
+    "productionQualified": false,
+    "automaticM3Entry": false
+  },
+  "preFreezeReviewLoop": [
+    {
+      "round": "R1",
+      "result": "CHANGES-REQUESTED",
+      "fixes": [
+        "remove Telegram cross-route ETag fetch and unreachable operations",
+        "add accepted-outcome-then-durable-fault regression",
+        "add raw fresh-browser console/network evidence and source bindings"
+      ]
+    },
+    {
+      "round": "R2",
+      "codeReviewer": "PASS",
+      "realityChecker": "PASS-GATE-OPEN",
+      "blockers": 0,
+      "majors": 0,
+      "fixesAfterRound": 0
+    }
+  ],
+  "invalidatedFrozenRound": {
+    "contextId": "f76ad4b4846b402180d5888b246a9918c7362ff17b485da0bfc4675aaa4bcbb3",
+    "codeReviewer": "APPROVE",
+    "realityChecker": "CHANGES-REQUESTED",
+    "disposition": "context discarded before terminal patch",
+    "fixes": [
+      "capture full bootstrap-to-cancel raw browser request/console trace with step screenshots",
+      "freeze raw OpenSpec strict/generated/M0/LSP/budget/diff/install outputs"
+    ]
+  },
+  "terminal": {
+    "patch": "evidence/m2-terminal.patch",
+    "allowedMutationAfterApproval": "only task 7.6 checkbox from unchecked to checked",
+    "requiredPostPatchChecks": [
+      "openspec-cn validate implement-m2-pi-control-slice --type change --strict --json",
+      "git diff --check"
+    ]
+  }
+}

@@ -1173,6 +1173,22 @@ const macEqual = (left: string, right: string): boolean => {
  * base64url envelope, enforcing the 2KiB header bound. Claims must never
  * contain actor/scope/delegation or raw update text — the schema is closed.
  */
+export function decodeUpdateInteractionClaims(
+  encoded: string,
+): UpdateInteractionClaims {
+  if (encoded.length > MAX_REF_BYTES) throw new TypeError("ref_exceeds_2kib");
+  let signed: SignedRef;
+  try {
+    // SAFETY: strict JSON is schema-validated immediately below.
+    signed = parseStrictJson(Buffer.from(encoded, "base64url")) as unknown as SignedRef;
+  } catch {
+    throw new TypeError("malformed_update_ref");
+  }
+  const parsed = UPDATE_CLAIMS_SCHEMA.safeParse(signed.claims);
+  if (!parsed.success) throw new TypeError("malformed_update_ref");
+  return parsed.data;
+}
+
 export function signUpdateInteractionRef(
   claims: UpdateInteractionClaims,
   secret: string,

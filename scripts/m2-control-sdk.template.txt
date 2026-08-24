@@ -1,0 +1,327 @@
+import {
+  LAST_EVENT_ID_SCHEMA,
+  ROUTES,
+  decodeUpdateInteractionClaims,
+  deriveDeliveryKey,
+  deriveTelegramIdempotencyKey,
+  type RouteSpec,
+} from "../control-api/index.ts";
+
+export {
+  decodeUpdateInteractionClaims,
+  deriveDeliveryKey,
+  deriveTelegramIdempotencyKey,
+};
+import { GENERATED_ROUTES } from "./routes.generated.ts";
+
+export class ControlSdkError extends Error {
+  readonly kind: "http" | "protocol";
+  readonly status?: number;
+
+  constructor(kind: "http" | "protocol", message: string, status?: number) {
+    super(message);
+    this.kind = kind;
+    this.status = status;
+  }
+}
+
+export type ControlFetch = (
+  input: string | URL,
+  init?: RequestInit,
+) => Promise<Response>;
+
+export interface ControlSdkOptions {
+  readonly baseUrl: string;
+  readonly credentialHeaders: () => Readonly<Record<string, string>>;
+  readonly fetchImpl?: ControlFetch;
+}
+
+const route = (routeId: string): RouteSpec => {
+  const found = ROUTES.find((candidate) => candidate.routeId === routeId);
+  if (!found) throw new ControlSdkError("protocol", `missing route:${routeId}`);
+  return found;
+};
+
+const path = (
+  template: string,
+  params: Readonly<Record<string, string>>,
+): string =>
+  template.replace(/:([A-Za-z0-9_]+)/g, (_match, name) => {
+    const value = params[name];
+    if (!value) throw new ControlSdkError("protocol", `missing path:${name}`);
+    return encodeURIComponent(value);
+  });
+
+export interface SseEvent {
+  readonly id: string;
+  readonly runId: string;
+  readonly eventKind: string;
+}
+
+export function decodeSseRecord(
+  record: string,
+  runId: string,
+): SseEvent | null {
+  if (record.startsWith(":")) return null;
+  const lines = record.split("\n").filter((line) => line.length > 0);
+  if (lines.length !== 3)
+    throw new ControlSdkError("protocol", "invalid SSE fields");
+  const id = lines[0].startsWith("id: ") ? lines[0].slice(4) : "";
+  const eventKind = lines[1].startsWith("event: ") ? lines[1].slice(7) : "";
+  const data = lines[2].startsWith("data: ") ? lines[2].slice(6) : "";
+  if (!LAST_EVENT_ID_SCHEMA.safeParse(id).success || !eventKind || !data)
+    throw new ControlSdkError("protocol", "invalid SSE envelope");
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(data);
+  } catch {
+    throw new ControlSdkError("protocol", "invalid SSE JSON");
+  }
+  if (
+    !parsed ||
+    typeof parsed !== "object" ||
+    Array.isArray(parsed) ||
+    Object.keys(parsed).sort().join("\0") !==
+      ["eventKind", "id", "runId"].sort().join("\0")
+  )
+    throw new ControlSdkError("protocol", "unknown SSE response field");
+  const value = parsed as Record<string, unknown>;
+  if (value.id !== id || value.runId !== runId || value.eventKind !== eventKind)
+    throw new ControlSdkError("protocol", "SSE binding mismatch");
+  return { id, runId, eventKind };
+}
+
+export class ControlSdk {
+  readonly #baseUrl: string;
+  readonly #credentialHeaders: () => Readonly<Record<string, string>>;
+  readonly #fetch: ControlFetch;
+
+  constructor(options: ControlSdkOptions) {
+    this.#baseUrl = options.baseUrl.replace(/\/$/, "");
+    this.#credentialHeaders = options.credentialHeaders;
+    this.#fetch = options.fetchImpl ?? fetch;
+  }
+
+  listAgents(options: { channelContext?: string } = {}) {
+    return this.#json(
+      GENERATED_ROUTES.agentsList,
+      {},
+      undefined,
+      undefined,
+      options.channelContext,
+    );
+  }
+
+  listReleases(
+    agentId: string,
+    options: { channelContext?: string } = {},
+  ) {
+    return this.#json(
+      GENERATED_ROUTES.releasesList,
+      { agentId },
+      undefined,
+      undefined,
+      options.channelContext,
+    );
+  }
+
+  getRun(runId: string, options: { channelContext?: string } = {}) {
+    return this.#json(
+      GENERATED_ROUTES.runsRead,
+      { runId },
+      undefined,
+      undefined,
+      options.channelContext,
+    );
+  }
+
+  health(options: { channelContext?: string } = {}) {
+    return this.#json(
+      GENERATED_ROUTES.healthRead,
+      {},
+      undefined,
+      undefined,
+      options.channelContext,
+    );
+  }
+
+  submitIntent(
+    agentId: string,
+    intent: string,
+    body: {
+      descriptorVersion: number;
+      executionMode: "shadow-evaluator" | "production";
+      input: Readonly<Record<string, string | number | boolean | null>>;
+    },
+    options: {
+      idempotencyKey: string;
+      ifMatch: string;
+      channelContext?: string;
+    },
+  ) {
+    return this.#json(
+      GENERATED_ROUTES.intentSubmit,
+      { agentId, intent },
+      body,
+      options,
+      options.channelContext,
+    );
+  }
+
+  cancelRun(
+    runId: string,
+    options: {
+      idempotencyKey: string;
+      ifMatch: string;
+      channelContext?: string;
+    },
+  ) {
+    return this.#json(
+      GENERATED_ROUTES.runsCancel,
+      { runId },
+      { reasonCode: "user-requested" },
+      options,
+      options.channelContext,
+    );
+  }
+
+  decideApproval(
+    approvalId: string,
+    decision: "approved" | "denied",
+    options: {
+      idempotencyKey: string;
+      ifMatch: string;
+      channelContext?: string;
+    },
+  ) {
+    return this.#json(
+      GENERATED_ROUTES.approvalsDecide,
+      { approvalId },
+      { decision },
+      options,
+      options.channelContext,
+    );
+  }
+
+  async *events(
+    runId: string,
+    options: { lastEventId?: string; signal?: AbortSignal } = {},
+  ): AsyncGenerator<SseEvent> {
+    if (
+      options.lastEventId !== undefined &&
+      !LAST_EVENT_ID_SCHEMA.safeParse(options.lastEventId).success
+    )
+      throw new ControlSdkError("protocol", "invalid lastEventId");
+    const definition = GENERATED_ROUTES.runsEvents;
+    const response = await this.#fetch(
+      `${this.#baseUrl}${path(definition.pathTemplate, { runId })}`,
+      {
+        method: definition.method,
+        headers: {
+          ...this.#credentialHeaders(),
+          Accept: "text/event-stream",
+          ...(options.lastEventId
+            ? { "Last-Event-ID": options.lastEventId }
+            : {}),
+        },
+        signal: options.signal,
+      },
+    );
+    if (!response.ok || !response.body)
+      throw new ControlSdkError(
+        "http",
+        `SSE HTTP ${response.status}`,
+        response.status,
+      );
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let pending = "";
+    for (;;) {
+      const { value, done } = await reader.read();
+      pending += decoder
+        .decode(value, { stream: !done })
+        .replace(/\r\n/g, "\n");
+      let boundary = pending.indexOf("\n\n");
+      while (boundary >= 0) {
+        const frame = pending.slice(0, boundary);
+        pending = pending.slice(boundary + 2);
+        const event = decodeSseRecord(frame, runId);
+        if (event) yield event;
+        boundary = pending.indexOf("\n\n");
+      }
+      if (done) break;
+    }
+    if (pending.trim())
+      throw new ControlSdkError("protocol", "truncated SSE frame");
+  }
+
+  async #json(
+    generated: {
+      routeId: string;
+      method: "GET" | "POST";
+      pathTemplate: string;
+    },
+    params: Readonly<Record<string, string>>,
+    body?: unknown,
+    write?: { idempotencyKey: string; ifMatch: string },
+    channelContext?: string,
+  ): Promise<{
+    data: unknown;
+    status: number;
+    etag: string | null;
+    interactionRef: string | null;
+  }> {
+    const definition = route(generated.routeId);
+    if (body !== undefined && !definition.bodySchema?.safeParse(body).success)
+      throw new ControlSdkError("protocol", "request schema mismatch");
+    const response = await this.#fetch(
+      `${this.#baseUrl}${path(generated.pathTemplate, params)}`,
+      {
+        method: generated.method,
+        headers: {
+          ...this.#credentialHeaders(),
+          ...(body === undefined ? {} : { "Content-Type": "application/json" }),
+          ...(write
+            ? {
+                "Idempotency-Key": write.idempotencyKey,
+                "If-Match": write.ifMatch,
+              }
+            : {}),
+          ...(channelContext
+            ? { "X-Hangar-Channel-Context": channelContext }
+            : {}),
+        },
+        ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+      },
+    );
+    const text = await response.text();
+    let parsed: unknown;
+    try {
+      parsed = text ? JSON.parse(text) : null;
+    } catch {
+      throw new ControlSdkError(
+        "protocol",
+        "invalid response JSON",
+        response.status,
+      );
+    }
+    if (!response.ok)
+      throw new ControlSdkError(
+        "http",
+        `HTTP ${response.status}`,
+        response.status,
+      );
+    const validated = definition.responseSchema?.safeParse(parsed);
+    if (!validated?.success)
+      throw new ControlSdkError(
+        "protocol",
+        "unknown or invalid response field",
+      );
+    return {
+      data: validated.data,
+      status: response.status,
+      etag: response.headers.get("etag"),
+      interactionRef: response.headers.get("x-hangar-interaction-ref"),
+    };
+  }
+}

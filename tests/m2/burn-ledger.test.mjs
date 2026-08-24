@@ -141,7 +141,7 @@ function tampered(file, mutate) {
 test("real ledger validates; genesis record immutable; lib hash matches one-shot", () => {
   const result = validateLedgerText(readFileSync(REAL_LEDGER, "utf8"));
   assert.equal(result.ok, true, result.errors.join("; "));
-  assert.equal(result.state, "product");
+  assert.equal(result.state, "closure");
   const records = result.records;
   // The live ledger is append-only: the head moves with every reservation,
   // so the frozen invariants are the GENESIS record and chain integrity.

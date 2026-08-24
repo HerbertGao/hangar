@@ -985,6 +985,308 @@
         "productPathsCreated": 0,
         "entryIsConformance": false
       }
+    },
+    "m2ControlSlice": {
+      "capturedAtUtc": "2026-08-24T20:30:00.000Z",
+      "environment": {
+        "os": "darwin",
+        "architecture": "arm64",
+        "node": "v22.23.1",
+        "productionEligible": false
+      },
+      "sharedPlatform": {
+        "personHours": 28.5,
+        "personMilliseconds": 102600000,
+        "basis": "sum of accepted shared task-group actuals in ledger/m2-burn-ledger.json; excludes component-specific 3.x/4.x/5.x enablement"
+      },
+      "appendIntegrity": {
+        "historicalRecordsPreserved": 132,
+        "historicalPrefixSha256": "03b9aa0f773889c119f5a2ea41cf94c8367a5d497d180a08cff4ebc3d729485f",
+        "recordsAppended": 63,
+        "totalRecords": 195
+      },
+      "methodology": {
+        "time": "fresh local process or explicit ready boundary; /usr/bin/time -l for cold/parent peak",
+        "rss": "bytes; combined process-tree sample where noted",
+        "disk": "delivered scoped source plus direct/runtime dependency footprint; dev browser cache separately disclosed",
+        "glue": "nonblank, non-comment logical lines in declared component sourceScope",
+        "cost": "accepted burn-ledger actuals converted with 3,600,000 person-ms/hour",
+        "qualification": "local provisional only; candidateQualified=false; productionQualified=false"
+      },
+      "components": {
+        "pi": {
+          "status": "measured",
+          "environmentId": "m2-pi-darwin-arm64-local-2026-08-24",
+          "commands": [
+            "/usr/bin/time -l node /tmp/measure-m2-pi.ts",
+            "du -sk node_modules/.pnpm and scoped source byte/logical-line inventory"
+          ],
+          "boundaries": {
+            "start": "PiChildLauncher construction",
+            "ready": "public SDK child qualification received",
+            "cold": "fresh Node process start to exit after reap"
+          },
+          "metrics": {
+            "T_ready": 793.702834,
+            "C_platform": 102600000,
+            "C_enable": 28800000,
+            "glue_LOC": 1444,
+            "cold_start": 1410,
+            "idle_RSS": 0,
+            "peak_RSS": 283951104,
+            "disk": 145758872,
+            "process_count": {
+              "steady": 0,
+              "peak": 2
+            },
+            "TCO_12_month": "CNY 0.00"
+          },
+          "resourceNotes": "peak RSS is sampled parent+real child; /usr/bin/time parent peak was 195723264 bytes; production dependency disk excludes dev-only Playwright package/core",
+          "deployment": "self-hosted on-demand Control-owned dedicated child",
+          "exitCost": {
+            "personHoursBasis": 8,
+            "action": "remove Pi adapter/child and pinned Pi dependency; Control/contracts/store remain"
+          },
+          "licenseBoundary": {
+            "direct": "@earendil-works/pi-coding-agent 0.84.2 MIT",
+            "transitiveFamilies": [
+              "MIT",
+              "Apache-2.0",
+              "BSD-3-Clause",
+              "BlueOak-1.0.0",
+              "ISC",
+              "0BSD"
+            ]
+          },
+          "selfHostedManaged": "self-hosted fixture only; managed provider inference is outside fixed TCO and production qualification",
+          "tcoScope": "incremental fixed M2 infrastructure only; variable model/provider usage unpriced; productionQualified=false",
+          "sourceScope": [
+            "packages/pi-harness/*.ts",
+            "packages/pi-child-protocol/index.ts",
+            "apps/pi-sdk-child/child.ts"
+          ]
+        },
+        "server": {
+          "status": "measured",
+          "environmentId": "m2-server-darwin-arm64-local-2026-08-24",
+          "commands": [
+            "/usr/bin/time -l node /tmp/measure-m2-server.ts",
+            "scoped source/dependency inventory"
+          ],
+          "boundaries": {
+            "start": "fresh authority/Auth/Control SQLite creation",
+            "ready": "TCP listen callback",
+            "cold": "fresh Node process start to clean close"
+          },
+          "metrics": {
+            "T_ready": 14.543958,
+            "C_platform": 102600000,
+            "C_enable": 7200000,
+            "glue_LOC": 838,
+            "cold_start": 300,
+            "idle_RSS": 110821376,
+            "peak_RSS": 110936064,
+            "disk": 6583181,
+            "process_count": {
+              "steady": 1,
+              "peak": 1
+            },
+            "TCO_12_month": "CNY 0.00"
+          },
+          "deployment": "single self-hosted loopback Node process with physically separate Control/Auth SQLite files",
+          "exitCost": {
+            "personHoursBasis": 2,
+            "action": "remove HTTP composition/handler modules; durable Control data remains readable by core"
+          },
+          "licenseBoundary": {
+            "direct": "zod 4.4.3 MIT",
+            "runtime": "Node standard library + repository code"
+          },
+          "selfHostedManaged": "self-hosted only in M2; no managed service dependency",
+          "tcoScope": "incremental fixed infrastructure on existing host; storage/network/model usage excluded; productionQualified=false",
+          "sourceScope": [
+            "apps/hangar-server/index.ts",
+            "apps/hangar-server/http.ts"
+          ]
+        },
+        "cli": {
+          "status": "measured",
+          "environmentId": "m2-cli-darwin-arm64-local-2026-08-24",
+          "commands": [
+            "/usr/bin/time -l env -u HANGAR_URL -u HANGAR_TOKEN node apps/hangar-cli/index.ts",
+            "scoped source/dependency inventory"
+          ],
+          "boundaries": {
+            "start": "fresh Node process",
+            "ready": "deterministic usage output and exit 2",
+            "cold": "same one-shot boundary"
+          },
+          "metrics": {
+            "T_ready": 110,
+            "C_platform": 102600000,
+            "C_enable": 900000,
+            "glue_LOC": 526,
+            "cold_start": 110,
+            "idle_RSS": 0,
+            "peak_RSS": 104349696,
+            "disk": 6573519,
+            "process_count": {
+              "steady": 0,
+              "peak": 1
+            },
+            "TCO_12_month": "CNY 0.00"
+          },
+          "deployment": "one-shot generated-SDK facade in operator shell",
+          "exitCost": {
+            "personHoursBasis": 0.25,
+            "action": "delete CLI facade; generated SDK/server remain"
+          },
+          "licenseBoundary": {
+            "direct": "zod 4.4.3 MIT through generated SDK",
+            "runtime": "Node standard library"
+          },
+          "selfHostedManaged": "operator-hosted one-shot; no managed component",
+          "tcoScope": "no resident process or incremental fixed service cost; productionQualified=false",
+          "sourceScope": [
+            "apps/hangar-cli/index.ts",
+            "packages/control-sdk/index.ts",
+            "packages/control-sdk/routes.generated.ts"
+          ]
+        },
+        "web": {
+          "status": "measured",
+          "environmentId": "m2-web-darwin-arm64-local-2026-08-24",
+          "commands": [
+            "/usr/bin/time -l node /tmp/measure-m2-web.ts",
+            "Playwright Chromium 151 accessibility/operator acceptance",
+            "scoped static asset inventory"
+          ],
+          "boundaries": {
+            "start": "fresh server composition",
+            "ready": "Chromium login DOM visible",
+            "cold": "fresh Node+external browser process to clean close"
+          },
+          "metrics": {
+            "T_ready": 1200.983458,
+            "C_platform": 102600000,
+            "C_enable": 6300000,
+            "glue_LOC": 514,
+            "cold_start": 1770,
+            "idle_RSS": 1012465664,
+            "peak_RSS": 1012465664,
+            "disk": 32021,
+            "process_count": {
+              "steadyHangar": 1,
+              "peakIncludingExternalBrowser": 8
+            },
+            "TCO_12_month": "CNY 0.00"
+          },
+          "resourceNotes": "RSS/process count includes external Chrome and Playwright driver; /usr/bin/time parent peak was 224428032 bytes; 373116928-byte browser acceptance cache is dev-only and excluded from delivered disk",
+          "deployment": "static assets served by Hangar server; user browser is external",
+          "exitCost": {
+            "personHoursBasis": 1.75,
+            "action": "delete static view assets; generated SDK and server API remain"
+          },
+          "licenseBoundary": {
+            "deliveredRuntime": "no frontend dependency",
+            "acceptanceOnly": "Playwright 1.62.1 Apache-2.0"
+          },
+          "selfHostedManaged": "self-hosted static assets with operator-owned browser",
+          "tcoScope": "no incremental fixed hosting beyond existing server; external browser/device excluded; productionQualified=false",
+          "sourceScope": [
+            "apps/hangar-view/public/app.js",
+            "apps/hangar-view/public/index.html",
+            "packages/control-sdk/browser.generated.js"
+          ]
+        },
+        "telegram": {
+          "status": "measured",
+          "environmentId": "m2-telegram-darwin-arm64-local-2026-08-24",
+          "commands": [
+            "/usr/bin/time -l node /tmp/measure-m2-telegram.ts",
+            "scoped source/dependency inventory"
+          ],
+          "boundaries": {
+            "start": "fresh transport SQLite creation",
+            "ready": "TelegramLongPollingAdapter construction",
+            "cold": "fresh Node process to clean store close"
+          },
+          "metrics": {
+            "T_ready": 2.588125,
+            "C_platform": 102600000,
+            "C_enable": 2700000,
+            "glue_LOC": 954,
+            "cold_start": 220,
+            "idle_RSS": 106102784,
+            "peak_RSS": 106201088,
+            "disk": 6591194,
+            "process_count": {
+              "steady": 1,
+              "peak": 1
+            },
+            "TCO_12_month": "CNY 0.00"
+          },
+          "deployment": "self-hosted long-poll process with separate transport SQLite; Bot token only in Gateway connector",
+          "exitCost": {
+            "personHoursBasis": 0.75,
+            "action": "disable connector and delete adapter/transport store after terminal dispositions; Control truth remains"
+          },
+          "licenseBoundary": {
+            "direct": "zod 4.4.3 MIT through generated SDK",
+            "transport": "Node SQLite standard library"
+          },
+          "selfHostedManaged": "self-hosted Bot API connector; Telegram service is external and unpriced",
+          "tcoScope": "incremental fixed local infrastructure only; Telegram/network operations unpriced; productionQualified=false",
+          "sourceScope": [
+            "packages/telegram-adapter/index.ts",
+            "packages/telegram-gateway/*.ts",
+            "packages/telegram-transport-store-sqlite/index.ts"
+          ],
+          "metricCorrections": {
+            "glue_LOC": {
+              "previous": 954,
+              "value": 933,
+              "recordedAtUtc": "2026-08-24T22:09:04.560Z",
+              "reason": "final review removed unreachable agents/releases branches and cross-route ETag fetch"
+            },
+            "disk": {
+              "previous": 6591194,
+              "value": 6590211,
+              "recordedAtUtc": "2026-08-24T22:09:04.560Z",
+              "reason": "same final Telegram adapter source correction; fixed zod footprint unchanged"
+            }
+          }
+        },
+        "mastra": {
+          "status": "N/A",
+          "environmentId": "m2-mastra-not-run-2026-08-24",
+          "disposition": "retain-harness-pi",
+          "dispositionEvidence": "evidence/m2-mastra-preflight.json",
+          "reason": "all seven hard gates failed or remained unverified before runtime installation; no spike/runtime was run",
+          "boundaries": {
+            "start": "N/A",
+            "ready": "N/A",
+            "cold": "N/A"
+          },
+          "metrics": {
+            "T_ready": "N/A",
+            "C_platform": "N/A",
+            "C_enable": "N/A",
+            "glue_LOC": "N/A",
+            "cold_start": "N/A",
+            "idle_RSS": "N/A",
+            "peak_RSS": "N/A",
+            "disk": "N/A",
+            "process_count": "N/A",
+            "TCO_12_month": "N/A"
+          },
+          "deployment": "N/A",
+          "exitCost": "N/A; no runtime dependency installed",
+          "licenseBoundary": "N/A; no runtime dependency installed",
+          "selfHostedManaged": "N/A",
+          "tcoScope": "N/A"
+        }
+      }
     }
   }
 }
