@@ -31,4 +31,13 @@ strangler cutover 本身（cutover 仍会按 `DESIGN.md` §11 逐 Agent 进行�
 
 ## 当前进度
 
-M0 尚未完成——按 `ROADMAP.md`，M0 未通过前不实现与 SOT 冲突的大规模 v2 代码。
+截至 2026-08-25：
+
+- M0 保持 `NON-AUTHORIZING ADVISORY`，只提供定义与诊断，不授权 candidate/production；
+- M1 Heartbeat 纵向切片已完成并归档；
+- M2 Pi Harness、typed Control API、CLI、Web 与 Telegram client 已完成 39/39 tasks，主 specs 已同步，变更归档于
+  `openspec/changes/archive/2026-08-25-implement-m2-pi-control-slice/`；
+- 下一期是 M3 Inbox Builder Challenge 与 suggestion-only shadow。当前没有活跃 OpenSpec change，需先单独提出并冻结
+  Suggestion envelope、Observation→Suggestion、evidence ref、dedupe/revision、feedback scope 与 TTL；schedule 仍由另一具名 change 拥有。
+
+M2 stage 已关闭，但 candidate qualification 与 production qualification 仍为 `false`，不会自动进入 M3 实现或生产切换。

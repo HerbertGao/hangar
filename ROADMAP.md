@@ -4,6 +4,17 @@
 > 规则：每个阶段都有主动开发预算、可演示交付物、出口闸和止损；闸不过，不进入下一阶段。
 > 历史版本：`docs/archive/v0-sot-2026-08-04/ROADMAP.md`（该文件不在本分支，见 `README.md`「本分支说明」）。
 
+## 当前进度（2026-08-25）
+
+- M0：`NON-AUTHORIZING ADVISORY` 保持 READY，但不授权 candidate/production；
+- M1：Heartbeat v2 纵向切片已完成并归档；
+- M2：Pi Harness、typed Control API、CLI、Web 与 Telegram client 已通过出口闸，39/39 tasks 完成，主 specs 已同步，
+  归档于 `openspec/changes/archive/2026-08-25-implement-m2-pi-control-slice/`；
+- 下一步：创建独立 M3 提案，先冻结 Suggestion Center 的通用契约与 suggestion-only negative authority，再规划 Inbox
+  Builder Challenge/shadow/cutover；schedule occurrence/misfire/catch-up 继续由另一具名 change 拥有。
+
+M2 stage acceptance 不提升 candidate/production qualification（均保持 `false`），也不自动授权 M3 实现。
+
 ## 总路线
 
 ```text
@@ -111,7 +122,7 @@ ProcessSpec 是否必要的唯一证据来源。它们共用一条纪律：**租
 
 ### 当前 observation 状态
 
-Heartbeat stage acceptance只由`m1-heartbeat-runtime`拥有；6.1/6.2仅可在逐项证据、固定检查与fresh双lane review全部通过后关闭。关闭stage不改变candidate/production qualification（均保持false）；此前及此后都不得用M0 advisory补票。M2只能在这两个任务关闭后开始planning。
+Heartbeat stage acceptance只由`m1-heartbeat-runtime`拥有；6.1/6.2仅可在逐项证据、固定检查与fresh双lane review全部通过后关闭。关闭stage不改变candidate/production qualification（均保持false）；此前及此后都不得用M0 advisory补票。M2 planning只能在这两个任务关闭后开始；该前置已随M1归档满足。
 
 ### 止损
 
@@ -126,14 +137,16 @@ runtime 掩盖核心未闭合。
 
 ### 任务
 
-- [ ] 实现 `harness-pi` reference adapter；
-- [ ] 实现 typed HTTP/SSE Control API；
-- [ ] 从同一 Zod schema 生成 TypeScript SDK 与 OpenAPI；
-- [ ] 用生成的 SDK 建立 v2 CLI facade，保留 JSON/退出码习惯；
-- [ ] hangar-view 改为 API client，不再启动 CLI 子进程；
-- [ ] Telegram Bot 或小程序二选一作为第二 client；
-- [ ] 实现 actor attribution、idempotency key 与 projection policy；
-- [ ] 保留迁移期 legacy CLI，标记版本和删除条件。
+> 状态：Completed。实施进度由已归档 OpenSpec change 的 39/39 tasks 拥有；本节仅保留范围清单，不维护第二套复选框。
+
+- 实现 `harness-pi` reference adapter；
+- 实现 typed HTTP/SSE Control API；
+- 从同一 Zod schema 生成 TypeScript SDK 与 OpenAPI；
+- 用生成的 SDK 建立 v2 CLI facade，保留 JSON/退出码习惯；
+- hangar-view 改为 API client，不再启动 CLI 子进程；
+- Telegram Bot 作为第二 client；
+- 实现 actor attribution、idempotency key 与 projection policy；
+- 保留迁移期 legacy CLI，标记版本和删除条件。
 
 ### 出口闸
 
@@ -148,6 +161,8 @@ runtime 掩盖核心未闭合。
 ### 目标
 
 证明 Hangar 能在 30 分钟～2 小时构筑一个接近完整 Inbox 的 Agent，并安全接管真实运行。
+
+> 状态：Proposal preparation。当前没有活跃 M3 change；必须先完成 Suggestion 协议提案与 review，才可开始实现。
 
 ### Builder Challenge
 
