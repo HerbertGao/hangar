@@ -1180,7 +1180,9 @@ export function decodeUpdateInteractionClaims(
   let signed: SignedRef;
   try {
     // SAFETY: strict JSON is schema-validated immediately below.
-    signed = parseStrictJson(Buffer.from(encoded, "base64url")) as unknown as SignedRef;
+    signed = parseStrictJson(
+      Buffer.from(encoded, "base64url"),
+    ) as unknown as SignedRef;
   } catch {
     throw new TypeError("malformed_update_ref");
   }

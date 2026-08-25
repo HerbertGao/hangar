@@ -44,7 +44,9 @@ test("public Run/event projections default-drop tokens, raw facts, secrets, path
   const directory = await mkdtemp(join(tmpdir(), "hangar-m2-redaction-"));
   const authorityPath = join(directory, "authority.sqlite");
   const owner = new RecoveryAuthority(authorityPath);
-  const fence = value(owner.initialize("database-redaction", "target-redaction"));
+  const fence = value(
+    owner.initialize("database-redaction", "target-redaction"),
+  );
   const runtime = openSqliteControl(join(directory, "control.sqlite"), {
     authorityPath,
     fence,
@@ -68,7 +70,13 @@ test("public Run/event projections default-drop tokens, raw facts, secrets, path
     const release = compileRelease(spec, closure);
     value(
       runtime.control.publish(
-        commandMeta("actor", "publish-release", release.releaseId, "publish", release),
+        commandMeta(
+          "actor",
+          "publish-release",
+          release.releaseId,
+          "publish",
+          release,
+        ),
         release,
       ),
     );
@@ -101,9 +109,7 @@ test("public Run/event projections default-drop tokens, raw facts, secrets, path
       ),
     );
     const run = value(runtime.control.readRun(context, input.runId));
-    const events = value(
-      runtime.control.readRunEvents(context, input.runId),
-    );
+    const events = value(runtime.control.readRunEvents(context, input.runId));
     const output = JSON.stringify({ run, events });
     for (const forbidden of [
       "sessionId",
@@ -140,8 +146,5 @@ test("unknown projection family/scope and malformed AuthorityContext fail closed
     ok: false,
     error: "invalid_input",
   });
-  assert.equal(
-    context.effectiveScope.includes("future:read"),
-    false,
-  );
+  assert.equal(context.effectiveScope.includes("future:read"), false);
 });

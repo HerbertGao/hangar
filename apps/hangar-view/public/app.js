@@ -57,7 +57,11 @@ function settleIdentity(key, error) {
 }
 
 async function boot() {
-  if (!document.cookie.split("; ").some((entry) => entry.startsWith("hangar_csrf="))) {
+  if (
+    !document.cookie
+      .split("; ")
+      .some((entry) => entry.startsWith("hangar_csrf="))
+  ) {
     $("login").hidden = false;
     setLive("unknown", "等待认证");
     return;

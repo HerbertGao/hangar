@@ -230,9 +230,7 @@ export class TelegramTransportStore {
 
   recordDelivery(
     occurrenceKey: string,
-    result:
-      | { status: "effect"; effectId: string }
-      | { status: "denied" },
+    result: { status: "effect"; effectId: string } | { status: "denied" },
   ): boolean {
     const disposition =
       result.status === "effect" ? "delivery-recorded" : "delivery-denied";
@@ -318,9 +316,10 @@ export class TelegramTransportStore {
       responseKind: nullable("response_kind"),
       deliveryKey: nullable("delivery_key"),
       deliveryOperation: nullable("delivery_operation"),
-      payloadBytes: row.payload_base64url === null
-        ? null
-        : Buffer.from(string("payload_base64url"), "base64url"),
+      payloadBytes:
+        row.payload_base64url === null
+          ? null
+          : Buffer.from(string("payload_base64url"), "base64url"),
       payloadDigest: nullable("payload_digest"),
       effectId: nullable("effect_id"),
       updatedAtUnixMs: Number(row.updated_at),

@@ -313,7 +313,9 @@ test("deny and TimeAuthority expiry create final local results without dispatch"
       "denied",
     );
     assert.equal(
-      value(denied.runtime.control.snapshot(denied.runId)).effects[denied.effectId],
+      value(denied.runtime.control.snapshot(denied.runId)).effects[
+        denied.effectId
+      ],
       "not-committed",
     );
     assert.deepEqual(denied.gateway.pendingWakes(), { ok: true, value: [] });
@@ -498,10 +500,7 @@ test("dispatch preflight revokes invalid authority, expires stale claim, and cla
 test("Control exclusively issues stable Effect identity", async () => {
   const f = await setup();
   try {
-    assert.equal(
-      f.effectId,
-      digestJson(["effect-v1", f.runId, "intent-1", 1]),
-    );
+    assert.equal(f.effectId, digestJson(["effect-v1", f.runId, "intent-1", 1]));
 
     const ackLostEffect = {
       type: "effect-intent" as const,
@@ -542,17 +541,19 @@ test("Control exclusively issues stable Effect identity", async () => {
       },
     };
     assert.deepEqual(
-      f.runtime.control.harness(f.token).submit(
-        commandMeta(
-          "actor",
-          "effect-intent",
-          f.runId,
-          "effect-operation-conflict",
+      f.runtime.control
+        .harness(f.token)
+        .submit(
+          commandMeta(
+            "actor",
+            "effect-intent",
+            f.runId,
+            "effect-operation-conflict",
+            operationConflict,
+            f.token,
+          ),
           operationConflict,
-          f.token,
         ),
-        operationConflict,
-      ),
       { ok: false, error: "idempotency_conflict" },
     );
 
@@ -564,17 +565,19 @@ test("Control exclusively issues stable Effect identity", async () => {
       },
     };
     assert.deepEqual(
-      f.runtime.control.harness(f.token).submit(
-        commandMeta(
-          "actor",
-          "effect-intent",
-          f.runId,
-          "effect-digest-conflict",
+      f.runtime.control
+        .harness(f.token)
+        .submit(
+          commandMeta(
+            "actor",
+            "effect-intent",
+            f.runId,
+            "effect-digest-conflict",
+            digestConflict,
+            f.token,
+          ),
           digestConflict,
-          f.token,
         ),
-        digestConflict,
-      ),
       { ok: false, error: "idempotency_conflict" },
     );
 
@@ -583,17 +586,19 @@ test("Control exclusively issues stable Effect identity", async () => {
       effect: { ...ackLostEffect.effect, effectId: "caller-chosen" },
     };
     assert.deepEqual(
-      f.runtime.control.harness(f.token).submit(
-        commandMeta(
-          "actor",
-          "effect-intent",
-          f.runId,
-          "caller-chosen-effect",
-          callerChosen,
-          f.token,
+      f.runtime.control
+        .harness(f.token)
+        .submit(
+          commandMeta(
+            "actor",
+            "effect-intent",
+            f.runId,
+            "caller-chosen-effect",
+            callerChosen,
+            f.token,
+          ),
+          callerChosen as never,
         ),
-        callerChosen as never,
-      ),
       { ok: false, error: "invalid_input" },
     );
 
@@ -622,30 +627,34 @@ test("Control exclusively issues stable Effect identity", async () => {
       },
     };
     value(
-      f.runtime.control.harness(otherToken).submit(
-        commandMeta(
-          "actor",
-          "register-action",
-          otherRunId,
-          "action-other",
+      f.runtime.control
+        .harness(otherToken)
+        .submit(
+          commandMeta(
+            "actor",
+            "register-action",
+            otherRunId,
+            "action-other",
+            otherAction,
+            otherToken,
+          ),
           otherAction,
-          otherToken,
         ),
-        otherAction,
-      ),
     );
     const otherEffectId = value(
-      f.runtime.control.harness(otherToken).submit(
-        commandMeta(
-          "actor",
-          "effect-intent",
-          otherRunId,
-          "effect-other",
+      f.runtime.control
+        .harness(otherToken)
+        .submit(
+          commandMeta(
+            "actor",
+            "effect-intent",
+            otherRunId,
+            "effect-other",
+            f.effect,
+            otherToken,
+          ),
           f.effect,
-          otherToken,
         ),
-        f.effect,
-      ),
     ).effectId;
     assert.equal(
       otherEffectId,

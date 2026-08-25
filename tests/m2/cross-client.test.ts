@@ -26,12 +26,8 @@ import {
   type MappedControlRequest,
   type TelegramControlMapper,
 } from "../../packages/telegram-adapter/index.ts";
-import {
-  TelegramTransportConnector,
-} from "../../packages/telegram-gateway/index.ts";
-import {
-  TelegramHttpTransport,
-} from "../../packages/telegram-gateway/http-transport.ts";
+import { TelegramTransportConnector } from "../../packages/telegram-gateway/index.ts";
+import { TelegramHttpTransport } from "../../packages/telegram-gateway/http-transport.ts";
 import { TelegramTransportStore } from "../../packages/telegram-transport-store-sqlite/index.ts";
 import { RecoveryAuthority } from "../../packages/control-store-sqlite/index.ts";
 
@@ -54,7 +50,10 @@ const freePort = async (): Promise<number> => {
 
 async function setup() {
   const directory = await mkdtemp(join(tmpdir(), "hangar-m2-cross-client-"));
-  const [serverPort, telegramPort] = await Promise.all([freePort(), freePort()]);
+  const [serverPort, telegramPort] = await Promise.all([
+    freePort(),
+    freePort(),
+  ]);
   const authorityPath = join(directory, "authority.sqlite");
   const owner = new RecoveryAuthority(authorityPath);
   const fence = value(owner.initialize("database-cross", "target-cross"));
@@ -141,7 +140,13 @@ async function setup() {
   const control = composition.control.control;
   value(
     control.publish(
-      commandMeta("owner", "publish-release", release.releaseId, "publish", release),
+      commandMeta(
+        "owner",
+        "publish-release",
+        release.releaseId,
+        "publish",
+        release,
+      ),
       release,
     ),
   );
@@ -197,7 +202,9 @@ async function setup() {
     response.writeHead(200, { "content-type": "application/json" });
     response.end(JSON.stringify({ ok: true, result: { message_id: 1 } }));
   });
-  await new Promise<void>((resolve) => telegramDouble.listen(telegramPort, resolve));
+  await new Promise<void>((resolve) =>
+    telegramDouble.listen(telegramPort, resolve),
+  );
 
   const gateway = composition.gateway;
   const protocolMapper = {
@@ -206,7 +213,9 @@ async function setup() {
       return {
         userId: String(update.user_id),
         chatId: String(update.chat_id),
-        messageIdOrCallbackId: String(update.message_id ?? update.callback_id ?? ""),
+        messageIdOrCallbackId: String(
+          update.message_id ?? update.callback_id ?? "",
+        ),
         mappingVersion: Number(update.mapping_version),
         controlOperation: command.operation as
           | "submit-intent"
@@ -268,9 +277,7 @@ async function setup() {
           executionMode: "shadow-evaluator" as const,
           input: { trigger: String(command.trigger) },
           ifMatch:
-            command.omitIfMatch === true
-              ? undefined
-              : `"${release.releaseId}"`,
+            command.omitIfMatch === true ? undefined : `"${release.releaseId}"`,
         };
         return mapped as unknown as MappedControlRequest;
       }
@@ -316,8 +323,12 @@ async function setup() {
     },
     close: async () => {
       transportStore.close();
-      (server as unknown as { closeAllConnections(): void }).closeAllConnections();
-      (telegramDouble as unknown as { closeAllConnections(): void }).closeAllConnections();
+      (
+        server as unknown as { closeAllConnections(): void }
+      ).closeAllConnections();
+      (
+        telegramDouble as unknown as { closeAllConnections(): void }
+      ).closeAllConnections();
       await Promise.all([
         new Promise<void>((resolve) => server.close(() => resolve())),
         new Promise<void>((resolve) => telegramDouble.close(() => resolve())),
@@ -425,7 +436,10 @@ test("real Telegram adapter and browser share Control facts; opposite decisions 
         aggregateId === firstEffectId,
     );
     assert.ok(effectFactIndex >= 0);
-    await f.connector.dispatch(dispatchMeta(firstEffectId, "intent-delivery"), firstEffectId);
+    await f.connector.dispatch(
+      dispatchMeta(firstEffectId, "intent-delivery"),
+      firstEffectId,
+    );
     assert.equal(
       f.telegramCalls.some(({ method }) => method === "sendMessage"),
       true,
@@ -499,7 +513,8 @@ test("real Telegram adapter and browser share Control facts; opposite decisions 
       ({ factKind, aggregateId }) =>
         factKind === "run-admitted" && aggregateId === telegramRunId,
     )!;
-    const token = (admitted.payload as unknown as { token: AttemptToken }).token;
+    const token = (admitted.payload as unknown as { token: AttemptToken })
+      .token;
     const action = {
       type: "action" as const,
       action: {
@@ -509,10 +524,19 @@ test("real Telegram adapter and browser share Control facts; opposite decisions 
       },
     };
     value(
-      f.control.harness(token).submit(
-        commandMeta("fixture", "register-action", telegramRunId, "cross-action", action, token),
-        action,
-      ),
+      f.control
+        .harness(token)
+        .submit(
+          commandMeta(
+            "fixture",
+            "register-action",
+            telegramRunId,
+            "cross-action",
+            action,
+            token,
+          ),
+          action,
+        ),
     );
     const effect = {
       type: "effect-intent" as const,
@@ -525,10 +549,19 @@ test("real Telegram adapter and browser share Control facts; opposite decisions 
       },
     };
     const approvalId = value(
-      f.control.harness(token).submit(
-        commandMeta("fixture", "effect-intent", telegramRunId, "cross-effect", effect, token),
-        effect,
-      ),
+      f.control
+        .harness(token)
+        .submit(
+          commandMeta(
+            "fixture",
+            "effect-intent",
+            telegramRunId,
+            "cross-effect",
+            effect,
+            token,
+          ),
+          effect,
+        ),
     ).effectId;
     const webSnapshot = await page.evaluate(async (runId) => {
       const moduleUrl = "/control-sdk.js";
@@ -629,7 +662,10 @@ test("Telegram protocol double fails hard on malformed/timeout without advancing
     timeoutMs: 25,
   });
   try {
-    await assert.rejects(() => transport.poll("TOKEN", null, 1), /malformed_json/);
+    await assert.rejects(
+      () => transport.poll("TOKEN", null, 1),
+      /malformed_json/,
+    );
   } finally {
     await new Promise<void>((resolve) => malformed.close(() => resolve()));
   }
@@ -642,7 +678,12 @@ test("Telegram protocol double fails hard on malformed/timeout without advancing
   await new Promise<void>((resolve) => slow.listen(slowPort, resolve));
   const timeout = new TelegramHttpTransport({
     baseUrl: `http://127.0.0.1:${slowPort}`,
-    mapper: { normalize: () => { throw new Error("not reached"); }, delivery: () => ({}) },
+    mapper: {
+      normalize: () => {
+        throw new Error("not reached");
+      },
+      delivery: () => ({}),
+    },
     timeoutMs: 10,
   });
   try {

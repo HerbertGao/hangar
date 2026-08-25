@@ -1,15 +1,13 @@
-import type {
-  RawTelegramUpdate,
-  TelegramTransport,
-} from "./index.ts";
+import type { RawTelegramUpdate, TelegramTransport } from "./index.ts";
 import type { ControlCommandConnector } from "../control-core/index.ts";
 
 export interface TelegramProtocolMapper {
-  normalize(update: Readonly<Record<string, unknown>>): Omit<
-    RawTelegramUpdate,
-    "updateId" | "rawBytes"
-  >;
-  delivery(input: Parameters<ControlCommandConnector>[0]): Readonly<Record<string, unknown>>;
+  normalize(
+    update: Readonly<Record<string, unknown>>,
+  ): Omit<RawTelegramUpdate, "updateId" | "rawBytes">;
+  delivery(
+    input: Parameters<ControlCommandConnector>[0],
+  ): Readonly<Record<string, unknown>>;
 }
 
 export class TelegramHttpTransport implements TelegramTransport {
@@ -36,7 +34,8 @@ export class TelegramHttpTransport implements TelegramTransport {
       limit,
       timeout: 0,
     });
-    if (!Array.isArray(payload.result)) throw new Error("telegram_malformed_result");
+    if (!Array.isArray(payload.result))
+      throw new Error("telegram_malformed_result");
     const updates = payload.result.map((raw) => {
       if (!raw || typeof raw !== "object" || Array.isArray(raw))
         throw new Error("telegram_malformed_update");
@@ -70,7 +69,11 @@ export class TelegramHttpTransport implements TelegramTransport {
             ? "answerCallbackQuery"
             : undefined;
     if (!method) throw new Error("telegram_unknown_delivery_operation");
-    const result = await this.#call(botToken, method, this.#mapper.delivery(input));
+    const result = await this.#call(
+      botToken,
+      method,
+      this.#mapper.delivery(input),
+    );
     return result.ok === true ? "committed" : "not-committed";
   }
 
@@ -95,7 +98,12 @@ export class TelegramHttpTransport implements TelegramTransport {
     } catch {
       throw new Error("telegram_malformed_json");
     }
-    if (!response.ok || !parsed || typeof parsed !== "object" || Array.isArray(parsed))
+    if (
+      !response.ok ||
+      !parsed ||
+      typeof parsed !== "object" ||
+      Array.isArray(parsed)
+    )
       throw new Error("telegram_transport_failure");
     return parsed as Readonly<Record<string, unknown>>;
   }

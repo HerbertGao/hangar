@@ -45,7 +45,7 @@ const faultRelease = (): AgentRelease =>
       checkpointSchema: "checkpoint-v1",
       capabilities: ["tool.read"],
       effectOperations: [],
-        intentDescriptors: [],
+      intentDescriptors: [],
     },
     {
       entryId: "fault-worker",
@@ -174,7 +174,7 @@ test("restart rebuilds a complete lifecycle projection from facts", async () => 
         harnessKind: "fake",
         checkpointSchema: "checkpoint-v1",
         capabilities: ["tool.read"],
-                effectOperations: ["fixture.commit"],
+        effectOperations: ["fixture.commit"],
         intentDescriptors: [],
       },
       {
@@ -270,16 +270,12 @@ test("restart rebuilds a complete lifecycle projection from facts", async () => 
       },
     };
     const rebuildEffectId = value(
-      control.harness(token).submit(
-        meta(
-          "effect-intent",
-          token.runId,
-          "effect",
+      control
+        .harness(token)
+        .submit(
+          meta("effect-intent", token.runId, "effect", rebuildEffect, token),
           rebuildEffect,
-          token,
         ),
-        rebuildEffect,
-      ),
     ).effectId;
     const gateway = createEffectGateway(control);
     const rebuildApproval = {

@@ -112,16 +112,13 @@ export class PiHarnessBridge {
     });
     if (!completed.ok || !completed.state.startsWith("terminal("))
       return { ok: false, error: "invalid_state" };
-    return this.#port.commitCleanup(
-      `pi-cleanup-${this.#token.attempt}`,
-      {
-        ipcDrained: evidence.ipcDrained,
-        stdoutDrained: evidence.stdoutDrained,
-        stderrDrained: evidence.stderrDrained,
-        wholeTreeReaped: evidence.wholeTreeReaped,
-        grantRevoked: evidence.grantRevoked,
-      },
-    );
+    return this.#port.commitCleanup(`pi-cleanup-${this.#token.attempt}`, {
+      ipcDrained: evidence.ipcDrained,
+      stdoutDrained: evidence.stdoutDrained,
+      stderrDrained: evidence.stderrDrained,
+      wholeTreeReaped: evidence.wholeTreeReaped,
+      grantRevoked: evidence.grantRevoked,
+    });
   }
 
   #recordFault(): Result<null> {
@@ -150,10 +147,7 @@ export class PiHarnessBridge {
           inputDigest: frame.payloadDigest,
         },
       };
-      const result = this.#port.submit(
-        `pi-action-${frame.actionId}`,
-        input,
-      );
+      const result = this.#port.submit(`pi-action-${frame.actionId}`, input);
       if (result.ok) this.#actions.add(frame.actionId);
       return result;
     }
@@ -204,10 +198,7 @@ export class PiHarnessBridge {
         payloadDigest: frame.payloadDigest,
       },
     };
-    return this.#port.submitEffect(
-      `pi-effect-${frame.intentKey}`,
-      intent,
-    );
+    return this.#port.submitEffect(`pi-effect-${frame.intentKey}`, intent);
   }
 
   #handleArtifact(

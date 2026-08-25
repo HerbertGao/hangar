@@ -59,7 +59,11 @@ test("M2 measurement roots cover every delivered component and terminal Mastra N
         environmentId === component.environmentId,
     );
     assert.deepEqual(
-      [...new Set(records.map(({ metricId }: { metricId: string }) => metricId))].sort(),
+      [
+        ...new Set(
+          records.map(({ metricId }: { metricId: string }) => metricId),
+        ),
+      ].sort(),
       [...metricIds].sort(),
       name,
     );

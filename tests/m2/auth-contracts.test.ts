@@ -8,7 +8,8 @@ import test from "node:test";
 import { Authenticator } from "../../packages/auth-store-sqlite/index.ts";
 import { ROUTES } from "../../packages/control-api/index.ts";
 
-const cookie = (header: string): string => header.slice(header.indexOf("=") + 1).split(";")[0];
+const cookie = (header: string): string =>
+  header.slice(header.indexOf("=") + 1).split(";")[0];
 
 test("credential mapping and single-session exchange produce replay-stable secure header block", async () => {
   const directory = await mkdtemp(join(tmpdir(), "hangar-m2-auth-contract-"));
@@ -41,9 +42,15 @@ test("credential mapping and single-session exchange produce replay-stable secur
     assert.ok(first.ok);
     assert.deepEqual(auth.exchangeSession(input), first);
     assert.equal(first.headers.setCookie.length, 3);
-    assert.match(first.headers.setCookie[0], /hangar_session=.*HttpOnly; SameSite=Strict/);
+    assert.match(
+      first.headers.setCookie[0],
+      /hangar_session=.*HttpOnly; SameSite=Strict/,
+    );
     assert.match(first.headers.setCookie[1], /hangar_csrf=.*SameSite=Strict/);
-    assert.match(first.headers.setCookie[2], /hangar_session_hint=.*SameSite=Strict/);
+    assert.match(
+      first.headers.setCookie[2],
+      /hangar_session_hint=.*SameSite=Strict/,
+    );
     const session = cookie(first.headers.setCookie[0]);
     const csrf = cookie(first.headers.setCookie[1]);
     const context = auth.authenticateSession(session);
@@ -62,7 +69,10 @@ test("credential mapping and single-session exchange produce replay-stable secur
     now = 2_001;
     const gone = auth.exchangeSession(input);
     assert.ok(!gone.ok && gone.status === 410 && gone.predecessorHint);
-    assert.equal(readFileSync(path).includes(Buffer.from("bootstrap-secret")), false);
+    assert.equal(
+      readFileSync(path).includes(Buffer.from("bootstrap-secret")),
+      false,
+    );
   } finally {
     auth.close();
     await rm(directory, { recursive: true, force: true });

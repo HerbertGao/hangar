@@ -56,18 +56,25 @@ const signedUpdate = (
   };
 };
 
-async function setup(options: {
-  mapped?: MappedControlRequest;
-  sdkFailure?: boolean;
-  deliveryFailure?: boolean;
-  mappingValid?: boolean;
-} = {}) {
-  const directory = await mkdtemp(join(tmpdir(), "hangar-m2-telegram-adapter-"));
+async function setup(
+  options: {
+    mapped?: MappedControlRequest;
+    sdkFailure?: boolean;
+    deliveryFailure?: boolean;
+    mappingValid?: boolean;
+  } = {},
+) {
+  const directory = await mkdtemp(
+    join(tmpdir(), "hangar-m2-telegram-adapter-"),
+  );
   let now = 1_000;
   let sdkFailure = options.sdkFailure ?? false;
   let deliveryFailure = options.deliveryFailure ?? false;
   let mappingValid = options.mappingValid ?? true;
-  const store = new TelegramTransportStore(join(directory, "transport.sqlite"), () => now);
+  const store = new TelegramTransportStore(
+    join(directory, "transport.sqlite"),
+    () => now,
+  );
   const sdkCalls: Array<{ method: string; options: unknown }> = [];
   const sdkResponse = (version: string) => ({
     data: { run: { runId: "run-1", state: version }, pendingApprovals: [] },
@@ -103,11 +110,18 @@ async function setup(options: {
       if (sdkFailure) throw new Error("control response lost");
       return {
         ...sdkResponse(responseVersion),
-        data: { approvalId: "approval-1", state: "approved", result: "accepted" },
+        data: {
+          approvalId: "approval-1",
+          state: "approved",
+          result: "accepted",
+        },
       };
     },
   };
-  const updates: Array<{ rawUpdate: Uint8Array; updateInteractionRef: string }> = [];
+  const updates: Array<{
+    rawUpdate: Uint8Array;
+    updateInteractionRef: string;
+  }> = [];
   const deliveryCalls: unknown[] = [];
   const port: TelegramGatewayPort = {
     pollUpdates: async () => ({
@@ -131,19 +145,14 @@ async function setup(options: {
     }),
   };
   const mapper = {
-    map: async () => options.mapped ?? ({ kind: "run", runId: "run-1" } as const),
+    map: async () =>
+      options.mapped ?? ({ kind: "run", runId: "run-1" } as const),
   };
-  const adapter = new TelegramLongPollingAdapter(
-    sdk,
-    port,
-    store,
-    mapper,
-    {
-      serviceAuthorityRef: "service-ref",
-      nowUnixMs: () => now,
-      mappingValid: () => mappingValid,
-    },
-  );
+  const adapter = new TelegramLongPollingAdapter(sdk, port, store, mapper, {
+    serviceAuthorityRef: "service-ref",
+    nowUnixMs: () => now,
+    mappingValid: () => mappingValid,
+  });
   return {
     directory,
     store,

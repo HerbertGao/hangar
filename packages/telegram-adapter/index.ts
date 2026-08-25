@@ -20,10 +20,16 @@ export type MappedControlRequest =
       readonly intentId: string;
       readonly descriptorVersion: number;
       readonly executionMode: "shadow-evaluator" | "production";
-      readonly input: Readonly<Record<string, string | number | boolean | null>>;
+      readonly input: Readonly<
+        Record<string, string | number | boolean | null>
+      >;
       readonly ifMatch: string;
     }
-  | { readonly kind: "cancel"; readonly runId: string; readonly ifMatch: string }
+  | {
+      readonly kind: "cancel";
+      readonly runId: string;
+      readonly ifMatch: string;
+    }
   | {
       readonly kind: "decision";
       readonly runId: string;
@@ -34,10 +40,7 @@ export type MappedControlRequest =
 
 export type TelegramControlSdk = Pick<
   ControlSdk,
-  | "getRun"
-  | "submitIntent"
-  | "cancelRun"
-  | "decideApproval"
+  "getRun" | "submitIntent" | "cancelRun" | "decideApproval"
 >;
 
 export interface TelegramControlMapper {
@@ -68,7 +71,10 @@ const RESPONSE_KIND = {
 } as const;
 
 const DELIVERY_OPERATION: Readonly<
-  Record<MappedControlRequest["kind"], "send-message" | "edit-message" | "answer-callback">
+  Record<
+    MappedControlRequest["kind"],
+    "send-message" | "edit-message" | "answer-callback"
+  >
 > = {
   run: "edit-message",
   intent: "send-message",
@@ -170,7 +176,8 @@ export class TelegramLongPollingAdapter {
         );
         return;
       }
-      const rawPrecondition = (mapped as { readonly ifMatch?: unknown }).ifMatch;
+      const rawPrecondition = (mapped as { readonly ifMatch?: unknown })
+        .ifMatch;
       if (
         mapped.kind !== "run" &&
         (typeof rawPrecondition !== "string" || rawPrecondition.length === 0)
@@ -194,7 +201,9 @@ export class TelegramLongPollingAdapter {
           deliveryOperation,
           responseKind,
         );
-        const payloadBytes = new TextEncoder().encode(JSON.stringify(response.data));
+        const payloadBytes = new TextEncoder().encode(
+          JSON.stringify(response.data),
+        );
         if (payloadBytes.byteLength > 16_384) {
           this.#store.quarantineUnknown(record.occurrenceKey);
           return;
@@ -273,10 +282,10 @@ export class TelegramLongPollingAdapter {
         ifMatch: mapped.ifMatch,
         channelContext,
       });
-    return this.#sdk.decideApproval(
-      mapped.approvalId,
-      mapped.decision,
-      { idempotencyKey, ifMatch: mapped.ifMatch, channelContext },
-    );
+    return this.#sdk.decideApproval(mapped.approvalId, mapped.decision, {
+      idempotencyKey,
+      ifMatch: mapped.ifMatch,
+      channelContext,
+    });
   }
 }

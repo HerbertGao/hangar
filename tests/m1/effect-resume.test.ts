@@ -179,13 +179,7 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
     };
     const effect1 = value(
       session0.submit(
-        meta(
-          "effect-intent",
-          token0.runId,
-          "intent",
-          initialEffect,
-          token0,
-        ),
+        meta("effect-intent", token0.runId, "intent", initialEffect, token0),
         initialEffect,
       ),
     ).effectId;
@@ -526,16 +520,12 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
       },
     };
     const effect2 = value(
-      control.harness(token0).submit(
-        meta(
-          "effect-intent",
-          token0.runId,
-          "intent-2",
+      control
+        .harness(token0)
+        .submit(
+          meta("effect-intent", token0.runId, "intent-2", secondEffect, token0),
           secondEffect,
-          token0,
         ),
-        secondEffect,
-      ),
     ).effectId;
     value(
       gateway.approve(
@@ -653,16 +643,12 @@ test("ambiguous Effect is never redispatched and resume fences the old session",
       },
     };
     const effect3 = value(
-      control.harness(token0).submit(
-        meta(
-          "effect-intent",
-          token0.runId,
-          "intent-3",
+      control
+        .harness(token0)
+        .submit(
+          meta("effect-intent", token0.runId, "intent-3", thirdEffect, token0),
           thirdEffect,
-          token0,
         ),
-        thirdEffect,
-      ),
     ).effectId;
     value(
       gateway.approve(

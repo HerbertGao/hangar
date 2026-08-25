@@ -186,8 +186,7 @@ test("V1-style Hangar View uses session-only bootstrap and public SDK for comple
   });
   try {
     await page.goto(`http://127.0.0.1:${f.port}/`);
-    if (consoleErrors.length > 0)
-      throw new Error(consoleErrors.join("\n"));
+    if (consoleErrors.length > 0) throw new Error(consoleErrors.join("\n"));
     await page.getByLabel("Bootstrap credential").fill("view-bootstrap-secret");
     await page.getByRole("button", { name: "建立安全会话" }).click();
     await page.getByRole("button", { name: /heartbeat-operator/ }).waitFor();

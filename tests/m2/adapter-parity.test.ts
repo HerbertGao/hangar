@@ -327,9 +327,7 @@ test("durable fault after accepted outcome forces failed terminal state", async 
     assert.equal(fixture.bridge.outcomeAccepted, true);
     const acceptedIndex = value(
       fixture.runtime.control.sourceFacts(),
-    ).findIndex(
-      ({ factKind }) => factKind === "outcome-accepted",
-    );
+    ).findIndex(({ factKind }) => factKind === "outcome-accepted");
     assert.ok(acceptedIndex >= 0);
     assert.deepEqual(
       await fixture.bridge.handle({
@@ -340,9 +338,7 @@ test("durable fault after accepted outcome forces failed terminal state", async 
       }),
       { ok: false, error: "invalid_state" },
     );
-    const faultIndex = value(
-      fixture.runtime.control.sourceFacts(),
-    ).findIndex(
+    const faultIndex = value(fixture.runtime.control.sourceFacts()).findIndex(
       ({ factKind }) => factKind === "attempt-fault-recorded",
     );
     assert.ok(faultIndex > acceptedIndex);

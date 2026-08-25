@@ -2627,9 +2627,11 @@ export class Control {
       const run = reduceFacts(snapshot.facts).runs.get(token.runId);
       if (!run || !matchesStoredToken(run, token)) return fail("stale_attempt");
       if (run.cancelRequested) return fail("terminal_conflict");
-      if (["succeeded", "failed", "cancelled"].includes(
-        run.attempts.get(token.attempt) ?? "",
-      ))
+      if (
+        ["succeeded", "failed", "cancelled"].includes(
+          run.attempts.get(token.attempt) ?? "",
+        )
+      )
         return fail("terminal_conflict");
       if (run.faultedAttempts.has(token.attempt))
         return plan(snapshot, [], null);
@@ -4586,11 +4588,7 @@ class ControlHarnessAdapter implements HarnessAdapterPort {
   readonly #token: AttemptToken;
   readonly #actorSubjectId: string;
 
-  constructor(
-    control: Control,
-    token: AttemptToken,
-    actorSubjectId: string,
-  ) {
+  constructor(control: Control, token: AttemptToken, actorSubjectId: string) {
     this.#control = control;
     this.#token = token;
     this.#actorSubjectId = actorSubjectId;
@@ -4600,10 +4598,7 @@ class ControlHarnessAdapter implements HarnessAdapterPort {
     this.#cleanup = new TrustedPiCleanupController(control);
   }
 
-  submit(
-    idempotencyKey: string,
-    input: PassiveHarnessInput,
-  ): Result<null>;
+  submit(idempotencyKey: string, input: PassiveHarnessInput): Result<null>;
   submit(
     idempotencyKey: string,
     input: OutcomeHarnessInput,
@@ -4765,6 +4760,7 @@ export const createHarnessAdapterPort = (
   control: Control,
   token: AttemptToken,
   actorSubjectId: string,
-): HarnessAdapterPort => new ControlHarnessAdapter(control, token, actorSubjectId);
+): HarnessAdapterPort =>
+  new ControlHarnessAdapter(control, token, actorSubjectId);
 
 export const newSessionId = (): string => randomUUID();
